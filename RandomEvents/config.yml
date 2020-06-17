@@ -1,0 +1,23 @@
+#################################################################
+#						 MobileShop								#
+#						Configuration							#
+#################################################################
+#Create logs
+logs: true
+
+#Use 9;18;27;36... for shopSize
+shopSize: 18
+shopPages: 1
+#Use 1.5 ; 2.0 ; 2.5 ... for the shopSize multiplier for player 
+shopVIPPermissionsMultiplier:
+  - mobileshop.shop.vip.size: 2.0
+
+#Map Permission
+shopVIPPermissionsPages:
+  - mobileshop.shop.vip.pages: 2
+
+#Thats the message that will be replaced by the name of the shop
+replaceMsg: '#shop'
+
+#Put it to 0 if you dont want to have cooldown to put your #shop in the chat
+cooldown: 120

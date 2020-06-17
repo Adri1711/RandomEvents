@@ -1,0 +1,7 @@
+.metadata/
+*.class
+.classpath
+.project
+*/META-INF/MANIFEST.MF
+*/bin/*
+*/.settings/*

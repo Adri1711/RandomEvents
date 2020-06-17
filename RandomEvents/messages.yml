@@ -1,0 +1,26 @@
+shop:
+  delete: Your shop has been deleted succesfully!
+  dontHave: You dont have a shop!
+  create: Your shop has been created succesfully!
+  alreadyHave: You already has a shop!
+  addItem1: You added the item for
+  addItem2: to the shop!
+  full: Your shop is full!
+  hasItems: Your shop has items yet, remove it if you want to delete the shop!
+  noItem: You dont an item in your hand!
+  noExist: This shop doesnt exist!
+  firstPage: '&2First Page'
+  nextPage: '&2Next Page'
+  previousPage: '&2Previous Page'
+  lastPage: '&2Last Page'
+  notconnected: '&2User not connected'
+  over:
+  - Left-Click
+  - To see the shop
+item:
+  buy: You have succesfully bought the item for
+  bought: bought %item% for
+  buyer: '&2'
+noMoney: You dont have money to buy this item!
+inventoryFull: Your inventory is full!
+onCooldown: &4Wait to put your shop again!

@@ -1,0 +1,11 @@
+name: RandomEvents
+main: com.adri1711.randomevents.RandomEvents
+version: 1.0
+depend: [Lib1711]
+commands:
+   revent:
+      description: Shows the command menu too
+      usage: /revent
+   randomevent:
+      description: Shows the command menu too
+      usage: /randomevent

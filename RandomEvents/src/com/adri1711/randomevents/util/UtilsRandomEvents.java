@@ -1,0 +1,441 @@
+package com.adri1711.randomevents.util;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.FireworkMeta;
+
+import com.adri1711.randomevents.RandomEvents;
+import com.adri1711.randomevents.match.Match;
+import com.adri1711.randomevents.match.MatchActive;
+import com.adri1711.randomevents.match.enums.Creacion;
+import com.google.common.io.Files;
+
+public class UtilsRandomEvents {
+
+	public static void pasaACreation(RandomEvents plugin, Player player, Integer position) {
+
+		player.sendMessage(Constantes.TAG_PLUGIN + " " + Creacion.getByPosition(position).getMessage());
+
+		if (position.equals((Creacion.values().length - 1))) {
+			// plugin.getPlayersCreation().remove(player);
+			// plugin.getPlayersWaves().put(player, 0);
+			// player.sendMessage(Constantes.TAG_PLUGIN + " " +
+			// Wave.getByPosition(0).getMessage());
+		} else {
+			plugin.getPlayersCreation().put(player, position);
+
+		}
+
+	}
+
+	//
+
+	public static void terminaCreacionMatch(RandomEvents plugin, Player player) {
+		Match match = plugin.getPlayerMatches().get(player);
+		try {
+			String json = UtilidadesJson.fromMatchToJSON(match);
+			if (json != null) {
+				File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//events");
+				if (!dataFolder.exists()) {
+					dataFolder.mkdir();
+				}
+
+				File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//events",
+						match.getMinigame().getCodigo() + "_"
+								+ ChatColor.stripColor(match.getName().replaceAll("<color>", "§")).replaceAll(" ", "_")
+								+ ".json");
+				if (!bossFile.exists()) {
+					bossFile.createNewFile();
+				}
+				FileWriter fw = new FileWriter(bossFile, true);
+
+				PrintWriter pw = new PrintWriter(fw);
+
+				pw.println(json);
+
+				pw.flush();
+
+				pw.close();
+				player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.END_OF_ARENA_CREATION);
+			} else {
+				System.out.println("JSON was null.");
+				player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.ERROR_NO_ESPERADO);
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.ERROR_NO_ESPERADO);
+
+		}
+
+	}
+
+	public static void guardaInventario(RandomEvents plugin, Player player) {
+		try {
+			String json = UtilidadesJson.fromInventoryToJSON(player.getInventory().getContents());
+			if (json != null) {
+				File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories");
+				if (!dataFolder.exists()) {
+					dataFolder.mkdir();
+				}
+
+				File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories",
+						player.getName() + ".json");
+				if (!bossFile.exists()) {
+					bossFile.createNewFile();
+				}
+				FileWriter fw = new FileWriter(bossFile, true);
+
+				PrintWriter pw = new PrintWriter(fw);
+
+				pw.println(json);
+
+				pw.flush();
+
+				pw.close();
+			} else {
+				System.out.println("JSON was null.");
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+
+		}
+
+	}
+
+	public static void sacaInventario(RandomEvents plugin, Player player) {
+		File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories");
+		if (!dataFolder.exists()) {
+			dataFolder.mkdir();
+		}
+		File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories",
+				player.getName() + ".json");
+		ItemStack[] inventario = null;
+		if (bossFile.exists()) {
+			BufferedReader br = null;
+			FileReader fr = null;
+			try {
+				fr = new FileReader(bossFile);
+				br = new BufferedReader(fr);
+				inventario = UtilidadesJson.fromJSONToInventory(br);
+
+			} catch (FileNotFoundException e) {
+				System.out.println(e.getMessage());
+			} finally {
+				try {
+					if (fr != null)
+						fr.close();
+					if (br != null)
+						br.close();
+				} catch (IOException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+
+			try {
+				if (inventario != null) {
+					bossFile.delete();
+					player.getInventory().clear();
+					player.getInventory().setContents(inventario);
+					player.updateInventory();
+				}
+			} catch (Exception exc) {
+				System.out.println(exc.getMessage());
+			}
+		}
+	}
+
+	
+
+	public static List<Match> cargarPartidas(RandomEvents plugin) {
+		List<Match> listaPartidas = new ArrayList<Match>();
+		File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//events");
+		if (!dataFolder.exists()) {
+			dataFolder.mkdir();
+		}
+		for (File file : dataFolder.listFiles()) {
+			BufferedReader br = null;
+			FileReader fr = null;
+			try {
+				fr = new FileReader(file);
+				br = new BufferedReader(fr);
+				Match match = UtilidadesJson.fromJSONToMatch(br);
+				listaPartidas.add(match);
+
+			} catch (FileNotFoundException e) {
+				System.out.println(e.getMessage());
+			} finally {
+				try {
+					if (fr != null)
+						fr.close();
+					if (br != null)
+						br.close();
+				} catch (IOException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+
+		}
+		return listaPartidas;
+	}
+
+	public static String readAll(File file) {
+		String content = "";
+		try {
+			List<String> lineas = Files.readLines(file, StandardCharsets.UTF_8);
+			for (String linea : lineas) {
+				content += linea;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return content;
+	}
+
+	public static String preparaNombrePartida(MatchActive match) {
+		String resultado = "";
+
+		resultado = match.getMatch().getName().replaceAll("&", "§") + " ( " + match.getPlayers().size() + " / "
+				+ match.getMatch().getAmountPlayers() + " )";
+		return resultado;
+	}
+
+	public static String leerArchivo(File file) {
+		BufferedReader objReader = null;
+		String archivo = "";
+		try {
+			String strCurrentLine;
+
+			objReader = new BufferedReader(new FileReader(file.getPath()));
+
+			while ((strCurrentLine = objReader.readLine()) != null) {
+
+				archivo += strCurrentLine;
+			}
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+
+		} finally {
+
+			try {
+				if (objReader != null)
+					objReader.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+		return archivo;
+	}
+
+	public static void mandaMensaje(List<Player> players, String message, Boolean tag) {
+		message = message.replaceAll("<color>", "§");
+		if (tag) {
+			message = Constantes.TAG_PLUGIN + " " + message;
+		}
+		for (Player p : players) {
+			p.sendMessage(message);
+		}
+	}
+
+	public static void mandaMensaje(List<Player> players, List<String> messages, Boolean tag) {
+		String message = "";
+		for (String msg : messages) {
+			if (tag) {
+				message += Constantes.TAG_PLUGIN + " " + msg.replaceAll("<color>", "§") + "\n";
+			} else {
+				message += msg.replaceAll("<color>", "§") + "\n";
+			}
+		}
+		for (Player p : players) {
+			p.sendMessage(message);
+		}
+	}
+
+	public static void tiraCohete(Location l) {
+		Firework fw = (Firework) l.getWorld().spawnEntity(l, EntityType.FIREWORK);
+		FireworkMeta fwm = fw.getFireworkMeta();
+
+		Random r = new Random();
+
+		int rt = r.nextInt(4) + 1;
+		FireworkEffect.Type type = FireworkEffect.Type.BALL;
+		if (rt == 1)
+			type = FireworkEffect.Type.BALL;
+		if (rt == 2)
+			type = FireworkEffect.Type.BALL_LARGE;
+		if (rt == 3)
+			type = FireworkEffect.Type.BURST;
+		if (rt == 4)
+			type = FireworkEffect.Type.CREEPER;
+		if (rt == 5) {
+			type = FireworkEffect.Type.STAR;
+		}
+
+		int r1i = r.nextInt(17) + 1;
+		int r2i = r.nextInt(17) + 1;
+		Color c1 = getColor(r1i);
+		Color c2 = getColor(r2i);
+
+		FireworkEffect effect = FireworkEffect.builder().flicker(r.nextBoolean()).withColor(c1).withFade(c2).with(type)
+				.trail(r.nextBoolean()).build();
+
+		fwm.addEffect(effect);
+
+		int rp = r.nextInt(2) + 1;
+		fwm.setPower(rp);
+
+		fw.setFireworkMeta(fwm);
+	}
+
+	public static Color getColor(int i) {
+		Color c = null;
+		if (i == 1) {
+			c = Color.AQUA;
+		}
+		if (i == 2) {
+			c = Color.BLACK;
+		}
+		if (i == 3) {
+			c = Color.BLUE;
+		}
+		if (i == 4) {
+			c = Color.FUCHSIA;
+		}
+		if (i == 5) {
+			c = Color.GRAY;
+		}
+		if (i == 6) {
+			c = Color.GREEN;
+		}
+		if (i == 7) {
+			c = Color.LIME;
+		}
+		if (i == 8) {
+			c = Color.MAROON;
+		}
+		if (i == 9) {
+			c = Color.NAVY;
+		}
+		if (i == 10) {
+			c = Color.OLIVE;
+		}
+		if (i == 11) {
+			c = Color.ORANGE;
+		}
+		if (i == 12) {
+			c = Color.PURPLE;
+		}
+		if (i == 13) {
+			c = Color.RED;
+		}
+		if (i == 14) {
+			c = Color.SILVER;
+		}
+		if (i == 15) {
+			c = Color.TEAL;
+		}
+		if (i == 16) {
+			c = Color.WHITE;
+		}
+		if (i == 17) {
+			c = Color.YELLOW;
+		}
+
+		return c;
+	}
+
+	public static Sound buscaSonido(String s, String s2) {
+		Sound sound = null;
+		for (Sound sou : Sound.values()) {
+			if (sou.toString().contains(s) && sou.toString().contains(s2)) {
+				sound = sou;
+				break;
+			}
+		}
+		return sound;
+	}
+
+	public static void playSound(List<Player> player, Sound sonido) {
+		if (sonido != null) {
+			for (Player p : player) {
+				playSound(p, sonido);
+			}
+		}
+	}
+
+	public static void playSound(Player player, Sound sonido) {
+		if (sonido != null) {
+			player.playSound(player.getLocation(), sonido, 10.0F, 1.0F);
+		}
+	}
+
+	public static String sacaNombrePartida(String displayName) {
+		return displayName.split("\\(")[0].trim();
+	}
+
+	public static String cambiarMensajeConEtiqueta(String message) {
+		return message.replaceAll("&", "<color>").replaceAll("§", "<color>");
+	}
+
+	public static void normalizaColorsMatch(Match match) {
+		match.setName(match.getName().replace("<color>", "§"));
+
+	}
+
+	public static void borraPlayerPorName(List<Player> players, Player player) {
+		Player p = null;
+		for (Player jugador : players) {
+			if (jugador.getName().equals(player.getName())) {
+				p = jugador;
+			}
+		}
+		if (p != null) {
+			players.remove(p);
+		}
+
+	}
+
+	public static Player obtieneJugador(Set<Player> players, String name) {
+		Player p = null;
+
+		for (Player player : players) {
+			if (player.getName().equalsIgnoreCase(name)) {
+				p = player;
+			}
+		}
+		return p;
+	}
+
+	public static MatchActive escogeMatchActiveAleatoria(RandomEvents plugin, List<Match> matches) {
+		
+		MatchActive matchActive=new MatchActive(matches.get(plugin.getRandom().nextInt(matches.size())),plugin);
+		
+		
+		
+		return matchActive;
+	}
+
+}
