@@ -96,6 +96,16 @@ public class Constantes {
 	public static final String CLICK_HERE = "§9§l[Click here to join]";
 	
 	public static final String LAST_PART = "§6§l ( %players% / %neededPlayers% )";
+	
+	public static final String WINNERS = "§6§l%players% won the Random Event! Congratulations!";
+
+	public static final String CONTENTS = "contents";
+	public static final String EQUIPMENT = "equipment";
+
+	public static final String DISPOSE_LEATHER_ITEMS = "§c§lFor security reasons please leave your leather items before entering the event";
+	
+	
+
 
 
 	

@@ -10,12 +10,12 @@ import com.adri1711.randomevents.util.Constantes;
 
 public class Comandos {
 
-	public static final String COMANDO_ALIASE1 = "bossbattle";
+	public static final String COMANDO_ALIASE1 = "revent";
 
-	public static final String COMANDO_ALIASE2 = "bbattle";
+	public static final String COMANDO_ALIASE2 = "randomevent";
 
 	public static void muestraMenu(Player player) {
-		String menu = "§6----------------- §9§RandomEvents §6---------------------";
+		String menu = "§6----------------- §9§lRandomEvents §6---------------------";
 		menu += Constantes.SALTO_LINEA;
 		menu += "   §6/revent:\n          §9-> §6Shows this menu";
 

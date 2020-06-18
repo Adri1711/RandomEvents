@@ -1,23 +1,24 @@
 #################################################################
-#						 MobileShop								#
+#						RandomEvents							#
 #						Configuration							#
 #################################################################
-#Create logs
-logs: true
 
-#Use 9;18;27;36... for shopSize
-shopSize: 18
-shopPages: 1
-#Use 1.5 ; 2.0 ; 2.5 ... for the shopSize multiplier for player 
-shopVIPPermissionsMultiplier:
-  - mobileshop.shop.vip.size: 2.0
+secondsTimer: 60
 
-#Map Permission
-shopVIPPermissionsPages:
-  - mobileshop.shop.vip.pages: 2
+probabilityRandomEvent: 5
 
-#Thats the message that will be replaced by the name of the shop
-replaceMsg: '#shop'
+minPlayers: 40
 
-#Put it to 0 if you dont want to have cooldown to put your #shop in the chat
-cooldown: 120
+commandsOnUserJoin:
+- 'psa %player%'
+
+spawn:
+  ==: org.bukkit.Location
+  world: world
+  x: 0.0
+  y: 60.0
+  z: 0.0
+  pitch: 0.0
+  yaw: 0.0
+
+

@@ -19,10 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import net.minecraft.server.v1_8_R3.MojangsonParseException;
-import net.minecraft.server.v1_8_R3.MojangsonParser;
-import net.minecraft.server.v1_8_R3.NBTBase;
-import net.minecraft.server.v1_8_R3.NBTTagCompound;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -74,7 +71,7 @@ public class GsonFactory {
             prettyGson = new GsonBuilder().enableComplexMapKeySerialization()
             .addSerializationExclusionStrategy(new ExposeExlusion())
                     .addDeserializationExclusionStrategy(new ExposeExlusion())
-                    .registerTypeHierarchyAdapter(ItemStack.class, new ItemStackGsonAdapter())
+                    .registerTypeHierarchyAdapter(ItemStack.class, new ItemStackAdapter())
                     .registerTypeAdapter(PotionEffect.class, new PotionEffectGsonAdapter())
                     .registerTypeAdapter(Location.class, new LocationGsonAdapter())
                     .registerTypeAdapter(Date.class, new DateGsonAdapter())
@@ -172,37 +169,6 @@ public class GsonFactory {
         }
     }
  
-    private static String nbtToString(NBTBase base) {
-        return base.toString().replace(",}", "}").replace(",]", "]").replaceAll("[0-9]+\\:", "");
-    }
- 
-    private static net.minecraft.server.v1_8_R3.ItemStack removeSlot(ItemStack item) {
-        if (item == null)
-            return null;
-        net.minecraft.server.v1_8_R3.ItemStack nmsi = CraftItemStack.asNMSCopy(item);
-        if (nmsi == null)
-            return null;
-        NBTTagCompound nbtt = nmsi.getTag();
-        if (nbtt != null) {
-            nbtt.remove("Slot");
-            nmsi.setTag(nbtt);
-        }
-        return nmsi;
-    }
- 
-    private static ItemStack removeSlotNBT (ItemStack item) {
-        if (item == null)
-            return null;
-        net.minecraft.server.v1_8_R3.ItemStack nmsi = CraftItemStack.asNMSCopy(item);
-        if (nmsi == null)
-            return null;
-        NBTTagCompound nbtt = nmsi.getTag();
-        if(nbtt != null) {
-            nbtt.remove("Slot");
-            nmsi.setTag(nbtt);
-        }
-        return CraftItemStack.asBukkitCopy(nmsi);
-    }
  
     private static class NewItemStackAdapter extends TypeAdapter<ItemStack> {
         @Override
@@ -211,11 +177,8 @@ public class GsonFactory {
                 jsonWriter.nullValue();
                 return;
             }
-            net.minecraft.server.v1_8_R3.ItemStack item = removeSlot(itemStack);
-            if (item == null) {
-                jsonWriter.nullValue();
-                return;
-            }
+            ItemStack item = itemStack;
+           
             try {
                 jsonWriter.beginObject();
                 jsonWriter.name("type");
@@ -228,12 +191,7 @@ public class GsonFactory {
  
  
                 jsonWriter.value(itemStack.getDurability());
-                jsonWriter.name("tag");
- 
-                if (item != null && item.getTag() != null) {
-                    jsonWriter.value(nbtToString(item.getTag()));
-                } else
-                    jsonWriter.value("");
+               
                 jsonWriter.endObject();
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -252,20 +210,15 @@ public class GsonFactory {
             int amount = jsonReader.nextInt();
             jsonReader.nextName();
             int data = jsonReader.nextInt();
-            net.minecraft.server.v1_8_R3.ItemStack item = new net.minecraft.server.v1_8_R3.ItemStack(CraftMagicNumbers.getItem(type), amount, data);
+            ItemStack item= new ItemStack(type);
+            item.setAmount(amount);
+            item.setDurability(Integer.valueOf(data).shortValue());
+//            ItemStack item = new ItemStack(type, amount, data);
             jsonReader.nextName();
             String next = jsonReader.nextString();
-            if (next.startsWith("{")) {
-                NBTTagCompound compound = null;
-                try {
-                    compound = MojangsonParser.parse(ChatColor.translateAlternateColorCodes('&', next));
-                } catch (MojangsonParseException e) {
-                    e.printStackTrace();
-                }
-                item.setTag(compound);
-            }
+            
             jsonReader.endObject();
-            return CraftItemStack.asBukkitCopy(item);
+            return item;
         }
     }
  
@@ -279,7 +232,7 @@ public class GsonFactory {
                 jsonWriter.nullValue();
                 return;
             }
-            jsonWriter.value(getRaw(removeSlotNBT(itemStack)));
+            jsonWriter.value(getRaw(itemStack));
         }
  
         @Override
@@ -344,6 +297,127 @@ public class GsonFactory {
  
             return item;
         }
+    }
+    
+    
+    
+    
+    
+    
+    
+    private static class ItemStackAdapter extends TypeAdapter<ItemStack>{
+
+    	private static Type seriType = new TypeToken<Map<String, Object>>(){}.getType();
+    	
+    	@Override
+    	public void write(JsonWriter jsonWriter, ItemStack itemStack) throws IOException {
+    		if(itemStack == null) {
+    			jsonWriter.nullValue();
+    			return;
+    		}
+    		jsonWriter.value(getRaw(itemStack));
+    	}
+
+    	@Override
+    	public ItemStack read(JsonReader jsonReader) throws IOException {
+    		if(jsonReader.peek() == JsonToken.NULL) {
+    			jsonReader.nextNull();
+    			return null;
+    		}
+    		return fromRaw(jsonReader.nextString());
+    	}
+
+    	private String getRaw (ItemStack item) {
+    		Map<String, Object> serial = item.serialize();
+
+    		if(serial.get("meta") != null) {
+    			ItemMeta itemMeta = item.getItemMeta();
+
+    			Map<String, Object> originalMeta = itemMeta.serialize();
+    			Map<String, Object> meta = new HashMap<String, Object>();
+    			for(Entry<String, Object> entry : originalMeta.entrySet())
+    				meta.put(entry.getKey(), entry.getValue());
+    			Object o;
+    			for(Entry<String, Object> entry : meta.entrySet()) {
+    				o = entry.getValue();
+    				if(o instanceof ConfigurationSerializable) {
+    					ConfigurationSerializable serializable = (ConfigurationSerializable) o;
+    					Map<String, Object> serialized = recursiveSerialization(serializable);
+    					meta.put(entry.getKey(), serialized);
+    				}
+    			}
+    			serial.put("meta", meta);
+    		}
+
+    		return g.toJson(serial);
+    	}
+
+    	@SuppressWarnings("unchecked")
+    	private ItemStack fromRaw (String raw) {
+    		Map<String, Object> keys = g.fromJson(raw, seriType);
+
+    		if(keys.get("amount") != null) {
+    			Double d = (Double) keys.get("amount");
+    			Integer i = d.intValue();
+    			keys.put("amount", i);
+    		}
+
+    		ItemStack item;
+    		try {
+    			item = ItemStack.deserialize(keys);
+    		}catch(Exception e) {
+    			return null;
+    		}
+
+    		if(item == null)
+    			return null;
+
+    		if(keys.containsKey("meta")) {
+    			Map<String, Object> itemmeta = (Map<String, Object>) keys.get("meta");
+    			itemmeta = recursiveDoubleToInteger(itemmeta);
+    			ItemMeta meta = (ItemMeta) ConfigurationSerialization.deserializeObject(itemmeta, ConfigurationSerialization.getClassByAlias("ItemMeta"));
+    			item.setItemMeta(meta);
+    		}
+
+    		return item;
+    	}
+    	
+    	
+    	@SuppressWarnings("unchecked")
+    	private static Map<String, Object> recursiveDoubleToInteger(Map<String, Object> originalMap) {
+    		Map<String, Object> map = new HashMap<String, Object>();
+    		for(Entry<String, Object> entry : originalMap.entrySet()) {
+    			Object o = entry.getValue();
+    			if(o instanceof Double) {
+    				Double d = (Double) o;
+    				Integer i = d.intValue();
+    				map.put(entry.getKey(), i);
+    			}else if(o instanceof Map) {
+    				Map<String, Object> subMap = (Map<String, Object>) o;
+    				map.put(entry.getKey(), recursiveDoubleToInteger(subMap));
+    			}else{
+    				map.put(entry.getKey(), o);
+    			}
+    		}
+    		return map;
+    	}
+    	
+    	private static Map<String, Object> recursiveSerialization(ConfigurationSerializable o) {
+    		Map<String, Object> originalMap = o.serialize();
+    		Map<String, Object> map = new HashMap<String, Object>();
+    		for(Entry<String, Object> entry : originalMap.entrySet()) {
+    			Object o2 = entry.getValue();
+    			if(o2 instanceof ConfigurationSerializable) {
+    				ConfigurationSerializable serializable = (ConfigurationSerializable) o2;
+    				Map<String, Object> newMap = recursiveSerialization(serializable);
+    				newMap.put("SERIAL-ADAPTER-CLASS-KEY", ConfigurationSerialization.getAlias(serializable.getClass()));
+    				map.put(entry.getKey(), newMap);
+    			}
+    		}
+    		map.put("SERIAL-ADAPTER-CLASS-KEY", ConfigurationSerialization.getAlias(o.getClass()));
+    		return map;
+    	}
+    	
     }
  
     private static class PotionEffectGsonAdapter extends TypeAdapter<PotionEffect> {

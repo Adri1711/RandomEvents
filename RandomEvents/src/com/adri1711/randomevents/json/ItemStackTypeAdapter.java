@@ -42,6 +42,7 @@ public class ItemStackTypeAdapter implements JsonSerializer<ItemStack>, JsonDese
 		obj.add("lore", new JsonPrimitive(lore.substring(0, lore.length() - 1)));
 
 		obj.add("type", new JsonPrimitive(item.getType().name()));
+		
 
 		return obj;
 	}

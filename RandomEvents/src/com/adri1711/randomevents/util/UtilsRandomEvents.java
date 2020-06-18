@@ -9,9 +9,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -27,26 +26,40 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 
 import com.adri1711.randomevents.RandomEvents;
+import com.adri1711.randomevents.match.InventoryPers;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
+import com.adri1711.randomevents.match.MinigameType;
 import com.adri1711.randomevents.match.enums.Creacion;
 import com.google.common.io.Files;
 
 public class UtilsRandomEvents {
 
 	public static void pasaACreation(RandomEvents plugin, Player player, Integer position) {
-
+		Boolean ponerPlayerCreation = Boolean.TRUE;
 		player.sendMessage(Constantes.TAG_PLUGIN + " " + Creacion.getByPosition(position).getMessage());
+		switch (Creacion.getByPosition(position)) {
+		case MINIGAME_TYPE:
+			for (MinigameType m : MinigameType.values()) {
+				player.sendMessage("§6§l" + m.ordinal() + " - " + m.getMessage());
+			}
+			break;
+		case MOB_NAME:
+			for (EntityType m : EntityType.values()) {
+				player.sendMessage("§6§l" + m.ordinal() + " - " + m.name());
+			}
+			break;
+		case END:
+			terminaCreacionMatch(plugin, player);
+			ponerPlayerCreation = Boolean.FALSE;
 
-		if (position.equals((Creacion.values().length - 1))) {
-			// plugin.getPlayersCreation().remove(player);
-			// plugin.getPlayersWaves().put(player, 0);
-			// player.sendMessage(Constantes.TAG_PLUGIN + " " +
-			// Wave.getByPosition(0).getMessage());
-		} else {
-			plugin.getPlayersCreation().put(player, position);
+		default:
+			break;
 
 		}
+
+		if (ponerPlayerCreation)
+			plugin.getPlayersCreation().put(player, position);
 
 	}
 
@@ -55,7 +68,7 @@ public class UtilsRandomEvents {
 	public static void terminaCreacionMatch(RandomEvents plugin, Player player) {
 		Match match = plugin.getPlayerMatches().get(player);
 		try {
-			String json = UtilidadesJson.fromMatchToJSON(match);
+			String json = UtilidadesJson.fromMatchToJSON(plugin, match);
 			if (json != null) {
 				File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//events");
 				if (!dataFolder.exists()) {
@@ -78,6 +91,9 @@ public class UtilsRandomEvents {
 				pw.flush();
 
 				pw.close();
+				plugin.getPlayersCreation().remove(player);
+				plugin.getPlayerMatches().remove(player);
+				plugin.getMatches().add(match);
 				player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.END_OF_ARENA_CREATION);
 			} else {
 				System.out.println("JSON was null.");
@@ -93,7 +109,20 @@ public class UtilsRandomEvents {
 
 	public static void guardaInventario(RandomEvents plugin, Player player) {
 		try {
-			String json = UtilidadesJson.fromInventoryToJSON(player.getInventory().getContents());
+			InventoryPers inventario = new InventoryPers();
+
+			ItemStack[] contenido = player.getInventory().getContents();
+			List<ItemStack> contenidoList = Arrays.asList(contenido);
+			contenidoList.removeAll(Arrays.asList(player.getInventory().getArmorContents()));
+
+			inventario.setContents((ItemStack[]) contenidoList.toArray());
+
+			inventario.setHelmet(player.getInventory().getHelmet());
+			inventario.setBoots(player.getInventory().getBoots());
+			inventario.setLeggings(player.getInventory().getLeggings());
+			inventario.setChestplate(player.getInventory().getChestplate());
+
+			String json = UtilidadesJson.fromInventoryToJSON(plugin, inventario);
 			if (json != null) {
 				File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories");
 				if (!dataFolder.exists()) {
@@ -131,14 +160,22 @@ public class UtilsRandomEvents {
 		}
 		File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories",
 				player.getName() + ".json");
-		ItemStack[] inventario = null;
+		InventoryPers inventario = null;
 		if (bossFile.exists()) {
 			BufferedReader br = null;
 			FileReader fr = null;
 			try {
 				fr = new FileReader(bossFile);
 				br = new BufferedReader(fr);
-				inventario = UtilidadesJson.fromJSONToInventory(br);
+				try {
+
+					inventario = UtilidadesJson.fromJSONToInventory(plugin, br);
+				} catch (Exception e) {
+					System.out.println("[RandomEvents] Error al cargar el inventario de " + player.getName()
+							+ ", probablemente una leather armor con color");
+					System.out.println("[RandomEvents]" + br);
+
+				}
 
 			} catch (FileNotFoundException e) {
 				System.out.println(e.getMessage());
@@ -156,8 +193,14 @@ public class UtilsRandomEvents {
 			try {
 				if (inventario != null) {
 					bossFile.delete();
-					player.getInventory().clear();
-					player.getInventory().setContents(inventario);
+					UtilsRandomEvents.borraInventario(player);
+
+					player.getInventory().setContents(inventario.getContents());
+					player.getInventory().setHelmet(inventario.getHelmet());
+					player.getInventory().setLeggings(inventario.getLeggings());
+					player.getInventory().setBoots(inventario.getBoots());
+					player.getInventory().setChestplate(inventario.getChestplate());
+
 					player.updateInventory();
 				}
 			} catch (Exception exc) {
@@ -165,8 +208,6 @@ public class UtilsRandomEvents {
 			}
 		}
 	}
-
-	
 
 	public static List<Match> cargarPartidas(RandomEvents plugin) {
 		List<Match> listaPartidas = new ArrayList<Match>();
@@ -180,8 +221,9 @@ public class UtilsRandomEvents {
 			try {
 				fr = new FileReader(file);
 				br = new BufferedReader(fr);
-				Match match = UtilidadesJson.fromJSONToMatch(br);
-				listaPartidas.add(match);
+				Match match = UtilidadesJson.fromJSONToMatch(plugin, br);
+				if (match != null)
+					listaPartidas.add(match);
 
 			} catch (FileNotFoundException e) {
 				System.out.println(e.getMessage());
@@ -430,12 +472,54 @@ public class UtilsRandomEvents {
 	}
 
 	public static MatchActive escogeMatchActiveAleatoria(RandomEvents plugin, List<Match> matches) {
-		
-		MatchActive matchActive=new MatchActive(matches.get(plugin.getRandom().nextInt(matches.size())),plugin);
-		
-		
-		
+
+		MatchActive matchActive = new MatchActive(matches.get(plugin.getRandom().nextInt(matches.size())), plugin);
+
 		return matchActive;
+	}
+
+	public static void borraInventario(Player player) {
+		player.getInventory().clear();
+		player.getInventory().setHelmet(null);
+		player.getInventory().setLeggings(null);
+		player.getInventory().setBoots(null);
+		player.getInventory().setChestplate(null);
+		player.getEquipment().setArmorContents(null);
+		player.updateInventory();
+	}
+
+	public static boolean checkLeatherItems(Player player) {
+		Boolean leather = false;
+		leather = leather || UtilsRandomEvents.compruebaItem(player.getInventory().getHelmet());
+		leather = leather || UtilsRandomEvents.compruebaItem(player.getInventory().getChestplate());
+		leather = leather || UtilsRandomEvents.compruebaItem(player.getInventory().getLeggings());
+		leather = leather || UtilsRandomEvents.compruebaItem(player.getInventory().getBoots());
+
+		for (ItemStack item : player.getInventory().getContents()) {
+			if (!leather) {
+				leather = UtilsRandomEvents.compruebaItem(item);
+			}
+
+		}
+		return !leather;
+	}
+
+	private static Boolean compruebaItem(ItemStack item) {
+		Boolean leather = false;
+		if (item != null) {
+			switch (item.getType()) {
+			case LEATHER_BOOTS:
+			case LEATHER_CHESTPLATE:
+			case LEATHER_HELMET:
+			case LEATHER_LEGGINGS:
+				leather = true;
+				break;
+			default:
+				break;
+			}
+		}
+		return leather;
+
 	}
 
 }

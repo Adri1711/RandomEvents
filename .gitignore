@@ -5,3 +5,5 @@
 */META-INF/MANIFEST.MF
 */bin/*
 */.settings/*
+.recommenders/caches/identified-project-coordinates.json
+.recommenders/caches/manual-mappings.json

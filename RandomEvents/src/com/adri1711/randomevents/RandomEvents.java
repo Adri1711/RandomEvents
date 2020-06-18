@@ -11,6 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -19,6 +20,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.adri1711.api.API1711;
 import com.adri1711.randomevents.commands.Comandos;
 import com.adri1711.randomevents.commands.ComandosExecutor;
+import com.adri1711.randomevents.listeners.Chat;
 import com.adri1711.randomevents.listeners.Death;
 import com.adri1711.randomevents.listeners.Join;
 import com.adri1711.randomevents.listeners.Quit;
@@ -27,81 +29,96 @@ import com.adri1711.randomevents.match.MatchActive;
 import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 
-
 public class RandomEvents extends JavaPlugin {
-	
+
 	private Location spawn;
-	
+
 	private Integer secondsTimer;
+
+	private Integer minPlayers;
 
 	private ComandosExecutor comandosExecutor;
 
 	private API1711 api;
-	
+
 	private Integer probabilityRandomEvent;
-	
+
 	private Random random;
-	
+
 	private MatchActive matchActive;
-	
+
 	private List<Match> matches;
-	
+
 	private Map<Player, Match> playerMatches;
-	
+
 	private Map<Player, Integer> playersCreation;
 
+	private Map<Player, EntityType> playersEntity;
+
+	private List<String> commandsOnUserJoin;
 
 	public void onEnable() {
 		loadConfig();
-
-		inicializaVariables();
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
+		this.comandosExecutor = new ComandosExecutor();
+		inicializaVariables();
 
-		
 		getServer().getPluginManager().registerEvents((Listener) new Quit(this), (Plugin) this);
+		getServer().getPluginManager().registerEvents((Listener) new Chat(this), (Plugin) this);
 		getServer().getPluginManager().registerEvents((Listener) new Death(this), (Plugin) this);
 		getServer().getPluginManager().registerEvents((Listener) new Join(this), (Plugin) this);
 
 		getLogger().info(" Author adri1711- activado");
+		comienzaTemporizador();
 
 	}
 
 	public void onDisable() {
-		
+
 		getServer().getScheduler().cancelTasks((Plugin) this);
 		getLogger().info(" Author adri1711 - desactivado");
 	}
 
 	public void inicializaVariables() {
-		
+		this.random = new Random();
+
 		this.spawn = (Location) getConfig().get("spawn");
+
+		this.minPlayers = Integer.valueOf(getConfig().getInt("minPlayers"));
+		this.commandsOnUserJoin = (List<String>) getConfig().getStringList("commandsOnUserJoin");
 		this.secondsTimer = Integer.valueOf(getConfig().getInt("secondsTimer"));
-		
+
 		this.probabilityRandomEvent = Integer.valueOf(getConfig().getInt("probabilityRandomEvent"));
-		
-		this.matches=UtilsRandomEvents.cargarPartidas(this);
-		
-		this.playerMatches=new HashMap<Player,Match>();
-		this.playersCreation=new HashMap<Player, Integer>();
-		
+
+		this.matches = UtilsRandomEvents.cargarPartidas(this);
+
+		this.playerMatches = new HashMap<Player, Match>();
+		this.playersCreation = new HashMap<Player, Integer>();
 
 	}
-	
-	public void comienzaTemporizador(){
-		matchActive=null;
-		RandomEvents plugin=this;
+
+	public void comienzaTemporizador() {
+		matchActive = null;
+
 		Bukkit.getServer().getScheduler().runTaskLater((Plugin) this, new Runnable() {
 			public void run() {
-				if(matches!=null && !matches.isEmpty()){
-					if(probabilityRandomEvent>random.nextInt(100)){
-						matchActive=UtilsRandomEvents.escogeMatchActiveAleatoria(plugin,matches);
-					}else{
+				if (matches != null && !matches.isEmpty() && Bukkit.getOnlinePlayers().size() >= minPlayers) {
+					if (probabilityRandomEvent > random.nextInt(100)) {
+						matchActive = UtilsRandomEvents.escogeMatchActiveAleatoria(getPlugin(), matches);
+					} else {
 						comienzaTemporizador();
 					}
-				}	
+				} else {
+					comienzaTemporizador();
+				}
 			}
-		}, 20 * secondsTimer);	
-		
+		}, 20 * secondsTimer);
+
+	}
+
+	protected RandomEvents getPlugin() {
+
+		return this;
 	}
 
 	public void doingReload() {
@@ -132,21 +149,17 @@ public class RandomEvents extends JavaPlugin {
 		}
 		return true;
 	}
-	
-	
+
 	public void loadConfiguration() {
 		getConfig().options().copyDefaults(true);
 		saveDefaultConfig();
 	}
 
 	public void defaultConfiguration() {
-		
 
 		getConfig().options().copyDefaults(true);
 		saveConfig();
 	}
-
-
 
 	public boolean loadConfig() {
 		if (!(new File(getDataFolder() + File.separator + "config.yml")).exists()) {
@@ -169,8 +182,6 @@ public class RandomEvents extends JavaPlugin {
 		return true;
 	}
 
-
-	
 	public Location getSpawn() {
 		return spawn;
 	}
@@ -250,7 +261,29 @@ public class RandomEvents extends JavaPlugin {
 	public void setMatches(List<Match> matches) {
 		this.matches = matches;
 	}
-	
-	
+
+	public Map<Player, EntityType> getPlayersEntity() {
+		return playersEntity;
+	}
+
+	public void setPlayersEntity(Map<Player, EntityType> playersEntity) {
+		this.playersEntity = playersEntity;
+	}
+
+	public Integer getMinPlayers() {
+		return minPlayers;
+	}
+
+	public void setMinPlayers(Integer minPlayers) {
+		this.minPlayers = minPlayers;
+	}
+
+	public List<String> getCommandsOnUserJoin() {
+		return commandsOnUserJoin;
+	}
+
+	public void setCommandsOnUserJoin(List<String> commandsOnUserJoin) {
+		this.commandsOnUserJoin = commandsOnUserJoin;
+	}
 
 }

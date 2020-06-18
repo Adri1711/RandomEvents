@@ -1,16 +1,20 @@
 package com.adri1711.randomevents.match;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Location;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.entity.EntityType;
 
 public class Match {
 
 	private String name;
 
-	private ItemStack[] inventario;
+	private InventoryPers inventory;
+	
+	//TODO private ItemStack[] equipment;
 	
 	private Integer amountPlayers;
 	
@@ -22,7 +26,9 @@ public class Match {
 	
 	private List<Location> spawns;
 	
-	private List<Location> mobsSpawn;
+	private Double secondsMobSpawn;
+	
+	private Map<Location,EntityType> mobsSpawn;
 	
 	private Location eventSpawn;
 	
@@ -31,10 +37,11 @@ public class Match {
 
 	public Match() {
 		super();
-		this.inventario=new ItemStack[0];
+		this.inventory=new InventoryPers();
+		//TODO this.equipment=new ItemStack[0];
 		this.rewards = new ArrayList<String>();
 		this.spawns=new ArrayList<Location>();
-		this.mobsSpawn=new ArrayList<Location>();
+		this.mobsSpawn=new HashMap<Location,EntityType>();
 	}
 
 
@@ -46,6 +53,26 @@ public class Match {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+
+	public InventoryPers getInventory() {
+		return inventory;
+	}
+
+
+	public void setInventory(InventoryPers inventory) {
+		this.inventory = inventory;
+	}
+
+
+//	public ItemStack[] getEquipment() {
+//		return equipment;
+//	}
+//
+//
+//	public void setEquipment(ItemStack[] equipment) {
+//		this.equipment = equipment;
+//	}
 
 
 	public Integer getAmountPlayers() {
@@ -98,12 +125,22 @@ public class Match {
 	}
 
 
-	public List<Location> getMobsSpawn() {
+	public Double getSecondsMobSpawn() {
+		return secondsMobSpawn;
+	}
+
+
+	public void setSecondsMobSpawn(Double secondsMobSpawn) {
+		this.secondsMobSpawn = secondsMobSpawn;
+	}
+
+
+	public Map<Location, EntityType> getMobsSpawn() {
 		return mobsSpawn;
 	}
 
 
-	public void setMobsSpawn(List<Location> mobsSpawn) {
+	public void setMobsSpawn(Map<Location, EntityType> mobsSpawn) {
 		this.mobsSpawn = mobsSpawn;
 	}
 
@@ -129,17 +166,28 @@ public class Match {
 
 
 	@Override
+	public String toString() {
+		return "Match [name=" + name + ", inventory=" + inventory + ", amountPlayers=" + amountPlayers
+				+ ", amountPlayersMin=" + amountPlayersMin + ", playerSpawn=" + playerSpawn + ", minigame=" + minigame
+				+ ", spawns=" + spawns + ", secondsMobSpawn=" + secondsMobSpawn + ", mobsSpawn=" + mobsSpawn
+				+ ", eventSpawn=" + eventSpawn + ", rewards=" + rewards + "]";
+	}
+
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((amountPlayers == null) ? 0 : amountPlayers.hashCode());
 		result = prime * result + ((amountPlayersMin == null) ? 0 : amountPlayersMin.hashCode());
 		result = prime * result + ((eventSpawn == null) ? 0 : eventSpawn.hashCode());
+		result = prime * result + ((inventory == null) ? 0 : inventory.hashCode());
 		result = prime * result + ((minigame == null) ? 0 : minigame.hashCode());
 		result = prime * result + ((mobsSpawn == null) ? 0 : mobsSpawn.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((playerSpawn == null) ? 0 : playerSpawn.hashCode());
 		result = prime * result + ((rewards == null) ? 0 : rewards.hashCode());
+		result = prime * result + ((secondsMobSpawn == null) ? 0 : secondsMobSpawn.hashCode());
 		result = prime * result + ((spawns == null) ? 0 : spawns.hashCode());
 		return result;
 	}
@@ -169,6 +217,11 @@ public class Match {
 				return false;
 		} else if (!eventSpawn.equals(other.eventSpawn))
 			return false;
+		if (inventory == null) {
+			if (other.inventory != null)
+				return false;
+		} else if (!inventory.equals(other.inventory))
+			return false;
 		if (minigame != other.minigame)
 			return false;
 		if (mobsSpawn == null) {
@@ -191,6 +244,11 @@ public class Match {
 				return false;
 		} else if (!rewards.equals(other.rewards))
 			return false;
+		if (secondsMobSpawn == null) {
+			if (other.secondsMobSpawn != null)
+				return false;
+		} else if (!secondsMobSpawn.equals(other.secondsMobSpawn))
+			return false;
 		if (spawns == null) {
 			if (other.spawns != null)
 				return false;
@@ -200,29 +258,6 @@ public class Match {
 	}
 
 
-	@Override
-	public String toString() {
-		return "Match [name=" + name + ", amountPlayers=" + amountPlayers + ", amountPlayersMin=" + amountPlayersMin
-				+ ", playerSpawn=" + playerSpawn + ", minigame=" + minigame + ", spawns=" + spawns + ", mobsSpawn="
-				+ mobsSpawn + ", eventSpawn=" + eventSpawn + ", rewards=" + rewards + "]";
-	}
-
-
-	public ItemStack[] getInventario() {
-		return inventario;
-	}
-
-
-	public void setInventario(ItemStack[] inventario) {
-		this.inventario = inventario;
-	}
 	
-	
-	
-	
-
-
-	
-	
-
 }
+

@@ -1,17 +1,23 @@
 package com.adri1711.randomevents.match;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import com.adri1711.randomevents.RandomEvents;
+import com.adri1711.randomevents.commands.ComandosEnum;
 import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 
@@ -29,7 +35,7 @@ public class MatchActive {
 
 	private List<Entity> mobs;
 
-	private Map<Integer, List<String>> equipos;
+	private Map<Integer, List<Player>> equipos;
 
 	private Map<String, Entity> mascotas;
 
@@ -47,8 +53,20 @@ public class MatchActive {
 		super();
 		this.match = match;
 		this.plugin = plugin;
+		this.random = new Random();
+
 		this.players = new ArrayList<String>();
+
+		this.playersObj = new ArrayList<Player>();
+
 		this.mobs = new ArrayList<Entity>();
+
+		this.equipos = new HashMap<Integer, List<Player>>();
+
+		this.mascotas = new HashMap<String, Entity>();
+
+		this.puntuacion = new HashMap<String, Integer>();
+
 		this.playing = Boolean.FALSE;
 		this.password = "" + random.nextInt(10000);
 		this.firstAnnounce = Boolean.TRUE;
@@ -58,19 +76,32 @@ public class MatchActive {
 	public void uneAPlayer(Player player) {
 		if (!getPlayers().contains(player.getName())) {
 			if (getPlayers().size() < match.getAmountPlayers()) {
-				UtilsRandomEvents.guardaInventario(plugin, player);
-				player.getInventory().clear();
-				player.updateInventory();
+				if (UtilsRandomEvents.checkLeatherItems(player)) {
+					UtilsRandomEvents.guardaInventario(plugin, player);
+					UtilsRandomEvents.borraInventario(player);
+					hazComandosDeUnion(player);
+					getPlayers().add(player.getName());
+					getPlayersObj().add(player);
+					UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("BAT", "HURT"));
 
-				getPlayers().add(player.getName());
-				getPlayersObj().add(player);
-				UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("BAT", "HURT"));
+					player.teleport(match.getPlayerSpawn());
+				} else {
+					player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.DISPOSE_LEATHER_ITEMS);
 
-				player.teleport(match.getPlayerSpawn());
+				}
 
 			} else {
 				player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.PARTIDA_LLENA);
 			}
+
+		}
+	}
+
+	private void hazComandosDeUnion(Player player) {
+		for (String cmd : plugin.getCommandsOnUserJoin()) {
+
+			Bukkit.dispatchCommand((CommandSender) Bukkit.getConsoleSender(),
+					cmd.replaceAll("%player%", player.getName()));
 
 		}
 	}
@@ -81,11 +112,39 @@ public class MatchActive {
 				UtilsRandomEvents.borraPlayerPorName(getPlayersObj(), player);
 			}
 			getPlayers().remove(player.getName());
-			
+			UtilsRandomEvents.borraInventario(player);
+			if (mascotas.containsKey(player)) {
+				mascotas.get(player).remove();
+				mascotas.remove(player);
+			}
+			Integer equipo=getEquipo(player);
+			if(equipo!=null){
+				echaDeEquipo(equipo,player);
+			}
 			player.teleport(plugin.getSpawn());
 
+			UtilsRandomEvents.sacaInventario(plugin, player);
 		}
 		compruebaPartida();
+	}
+
+	public void echaDeEquipo(Integer equipo, Player player) {
+		equipos.get(equipo).remove(player);
+		if(equipos.get(equipo).isEmpty()){
+			equipos.remove(equipo);
+		}
+		
+	}
+
+	public Integer getEquipo(Player player) {
+		Integer equipo=null;
+		for(Integer numeroEquipo:equipos.keySet()){
+			if(equipos.get(numeroEquipo).contains(player)){
+				equipo=numeroEquipo;
+			}
+		}
+		return equipo;
+		
 	}
 
 	private void compruebaPartida() {
@@ -93,7 +152,7 @@ public class MatchActive {
 			for (Entity entity : getMobs()) {
 				entity.remove();
 			}
-			finalizaPartida(Boolean.FALSE);
+			finalizaPartida(getPlayersObj(), Boolean.FALSE);
 		}
 		if (getPlayersObj().size() == 1) {
 			daRecompensas();
@@ -112,8 +171,7 @@ public class MatchActive {
 			}
 			getPlayers().remove(player.getName());
 
-			player.getInventory().clear();
-			player.updateInventory();
+			UtilsRandomEvents.borraInventario(player);
 
 			player.teleport(plugin.getSpawn());
 
@@ -136,10 +194,47 @@ public class MatchActive {
 			break;
 		}
 
+		String cadenaGanadores = "";
+		if (ganadores.size() == 1) {
+			cadenaGanadores = ganadores.get(0).getName();
+		} else {
+			for (Player p : ganadores) {
+				if (ganadores.indexOf(p) == 0) {
+					cadenaGanadores = p.getName();
+				} else {
+					if (ganadores.indexOf(p) == (ganadores.size() - 1)) {
+						cadenaGanadores += " and " + p.getName();
+					} else {
+						cadenaGanadores += ", " + p.getName();
+					}
+				}
+			}
+		}
+		for (Player play : Bukkit.getOnlinePlayers()) {
+			play.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.WINNERS.replace("%players%", cadenaGanadores));
+		}
+		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
+			public void run() {
+				finalizaPartida(ganadores, Boolean.FALSE);
+			}
+		}, 20 * 5L);
+	}
+
+	public void finalizaPartida(List<Player> ganadores, Boolean abrupto) {
+		for (Entity ent : getMobs()) {
+			ent.remove();
+		}
+		for (Player p : getPlayersObj()) {
+			UtilsRandomEvents.borraInventario(p);
+
+			p.teleport(plugin.getSpawn());
+
+			UtilsRandomEvents.sacaInventario(plugin, p);
+
+		}
 		for (Player player : ganadores) {
 			// UtilsStats.aumentaStats(player.getName(), getMatch().getName(),
 			// StatsEnum.PARTIDAS_SUPERADAS, plugin);
-			player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.WIN_RANDOM_EVENTS);
 			for (String comando : match.getRewards()) {
 				Boolean ejecutaComando = Boolean.TRUE;
 				String[] trozosComandos = comando.split(" ");
@@ -164,25 +259,6 @@ public class MatchActive {
 							comando.replaceAll("%player%", player.getName()));
 				}
 			}
-		}
-		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
-			public void run() {
-				finalizaPartida(Boolean.FALSE);
-			}
-		}, 20 * 5L);
-	}
-
-	public void finalizaPartida(Boolean abrupto) {
-		for (Entity ent : getMobs()) {
-			ent.remove();
-		}
-		for (Player p : getPlayersObj()) {
-			p.getInventory().clear();
-			p.updateInventory();
-			p.teleport(plugin.getSpawn());
-
-			UtilsRandomEvents.sacaInventario(plugin, p);
-
 		}
 
 		reiniciaValoresPartida();
@@ -229,6 +305,7 @@ public class MatchActive {
 				if (playSound) {
 					UtilsRandomEvents.playSound(getPlayersObj(), UtilsRandomEvents.buscaSonido("ENDERDRAGON", "GROWL"));
 				}
+				comienzaPartida();
 				// spawnMobs(bWave.getMobs(), getPlugin());
 			}
 
@@ -236,36 +313,103 @@ public class MatchActive {
 
 	}
 
+	public void comienzaPartida() {
+		switch (match.getMinigame()) {
+		case BATTLE_ROYALE:
+			for (Player p : playersObj) {
+				p.teleport(match.getSpawns().get(playersObj.indexOf(p)));
+				ponInventarioMatch(p);
+			}
+			break;
+		case BATTLE_ROYALE_TEAM_2:
+			for (Player p : playersObj) {
+				Integer indice = playersObj.indexOf(p);
+				p.teleport(match.getSpawns().get(indice));
+				ponInventarioMatch(p);
+
+				if (indice % 2 == 0) {
+					List<Player> players = new ArrayList<Player>();
+					players.add(p);
+					equipos.put(indice / 2, players);
+				} else {
+					equipos.get((indice - 1) / 2).add(p);
+				}
+
+			}
+			break;
+		case BATTLE_ROYALE_CABALLO:
+			for (Player p : playersObj) {
+				p.teleport(match.getSpawns().get(playersObj.indexOf(p)));
+				ponInventarioMatch(p);
+
+				Horse horse = (Horse) p.getWorld().spawnEntity(p.getLocation(), EntityType.HORSE); // Spawns
+																									// the
+																									// horse
+				horse.getInventory().setSaddle(new ItemStack(Material.SADDLE, 1)); // Gives
+																					// horse
+																					// saddle
+				horse.setTamed(true); // Sets horse to tamed
+				horse.setOwner(p); // Makes the horse the players
+				horse.setPassenger(p);
+
+				getMobs().add(horse);
+				getMascotas().put(p.getName(), horse);
+
+				horse.setPassenger(p);
+
+			}
+			break;
+		}
+
+	}
+
+	private void ponInventarioMatch(Player p) {
+		p.getInventory().setContents(match.getInventory().getContents());
+		p.getInventory().setHelmet(match.getInventory().getHelmet());
+		p.getInventory().setLeggings(match.getInventory().getLeggings());
+		p.getInventory().setBoots(match.getInventory().getBoots());
+		p.getInventory().setChestplate(match.getInventory().getChestplate());
+
+		p.updateInventory();
+
+	}
+
 	public void matchWaitingPlayers() {
 
 		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 			public void run() {
-				if (match.getAmountPlayers().equals(getPlayers().size())) {
+
+				if (match.getAmountPlayersMin() <= (getPlayers().size())) {
 					if (!getPlaying())
 						matchBegin();
 				} else {
-					if (!getPlayers().isEmpty()) {
-						String waiting = Constantes.WAITING_FOR_PLAYERS;
-						UtilsRandomEvents
-								.mandaMensaje(getPlayersObj(),
-										waiting.replaceAll("%players%", "" + getPlayers().size())
-												.replaceAll("%neededPlayers%", match.getAmountPlayersMin().toString()),
-										Boolean.TRUE);
-					}
-					String firstPart = "";
+					// if (!getPlayers().isEmpty()) {
+					// String waiting = Constantes.WAITING_FOR_PLAYERS;
+					// UtilsRandomEvents
+					// .mandaMensaje(getPlayersObj(),
+					// waiting.replaceAll("%players%", "" + getPlayers().size())
+					// .replaceAll("%neededPlayers%",
+					// match.getAmountPlayersMin().toString()),
+					// Boolean.TRUE);
+					// }
+					String firstPart = Constantes.TAG_PLUGIN + " ";
 
 					if (firstAnnounce) {
-						firstPart = Constantes.FIRST_ANNOUNCE;
+						firstPart += Constantes.FIRST_ANNOUNCE;
+						firstAnnounce = Boolean.FALSE;
 					} else {
-						firstPart = Constantes.NEXT_ANNOUNCE;
+						firstPart += Constantes.NEXT_ANNOUNCE;
 
 					}
 					String lastPart = Constantes.LAST_PART;
-
-					plugin.getApi().send(plugin.getServer().getConsoleSender(), firstPart, Constantes.CLICK_HERE,
-							new ArrayList<String>(), "revent join " + password,
-							lastPart.replaceAll("%players%", "" + getPlayers().size()).replaceAll("%neededPlayers%",
-									match.getAmountPlayersMin().toString()));
+					for (Player p : Bukkit.getOnlinePlayers()) {
+						if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())) {
+							plugin.getApi().send(p, firstPart, Constantes.CLICK_HERE, new ArrayList<String>(),
+									"/revent join " + password,
+									lastPart.replaceAll("%players%", "" + getPlayers().size())
+											.replaceAll("%neededPlayers%", match.getAmountPlayersMin().toString()));
+						}
+					}
 
 					matchWaitingPlayers();
 				}
@@ -306,11 +450,11 @@ public class MatchActive {
 		this.mobs = mobs;
 	}
 
-	public Map<Integer, List<String>> getEquipos() {
+	public Map<Integer, List<Player>> getEquipos() {
 		return equipos;
 	}
 
-	public void setEquipos(Map<Integer, List<String>> equipos) {
+	public void setEquipos(Map<Integer, List<Player>> equipos) {
 		this.equipos = equipos;
 	}
 
