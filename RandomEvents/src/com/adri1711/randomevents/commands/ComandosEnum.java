@@ -17,6 +17,9 @@ public enum ComandosEnum {
 	CMD_SPAWNSET("spawnset", 1, "randomevent.admin.spawnset",
 			"   §6/revent spawnset:\n          §9-> §6Set the spawn, where players will be teleported after finishing a Random Event", "spawnSet",true),
 	
+	CMD_BEGIN("begin", 1, "randomevent.admin.force",
+			"   §6/revent begin:\n          §9-> §6Begin the Random Event", "forceRandomEvent",true),
+	
 	CMD_CREATE("create", 1, "randomevent.admin.create",
 			"   §6/revent create:\n          §9-> §6Begin the creation of a Random Event", "createRandomEvent",true),
 

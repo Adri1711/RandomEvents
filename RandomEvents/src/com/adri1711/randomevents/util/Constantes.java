@@ -48,6 +48,10 @@ public class Constantes {
 	public static final String PARTIDA_LLENA = "§c§lThe match is already full";
 
 	public static final String ALREADY_PLAYING_MATCH = "§c§lYou can't leave the match if it has begun";
+	
+	public static final String MATCH_BEGUN = "§c§lThe event has begun, you cant join now";
+	
+	public static final String ALREADY_MATCH = "§c§lYou can't create another event while one is still running";
 
 	public static final String WAITING_FOR_PLAYERS = "§6§lWaiting for players. ( %players% / %neededPlayers% )";
 
@@ -74,6 +78,7 @@ public class Constantes {
 	public static final String TOP_2 = "§6§lTop 2";
 	public static final String TOP_3 = "§6§lTop 3";
 
+	public static final String EVENT_ANNOUNCE = "§6§lThe event §e§l'%event%' §6§lbegins in: ";
 	public static final String SECONDS_3_REMAINING = "§6§l3";
 	public static final String SECONDS_2_REMAINING = "§6§l2";
 	public static final String SECONDS_1_REMAINING = "§6§l1";
@@ -97,12 +102,24 @@ public class Constantes {
 	
 	public static final String LAST_PART = "§6§l ( %players% / %neededPlayers% )";
 	
-	public static final String WINNERS = "§6§l%players% won the Random Event! Congratulations!";
+	public static final String WINNERS = "§e§l%players% §6§lwon the Random Event '%event%' ! Congratulations!";
+	
+	public static final String WINNERS_POINTS = "§e§l%players% §6§lwon the Random Event '%event%' with %points% points ! Congratulations!";
 
 	public static final String CONTENTS = "contents";
 	public static final String EQUIPMENT = "equipment";
 
 	public static final String DISPOSE_LEATHER_ITEMS = "§c§lFor security reasons please leave your leather items before entering the event";
+	
+	public static final String SHOW_ALONE = "§6§lYou are playing alone, good luck!";
+	
+	public static final String SHOW_TEAM = "§6§lYour team is: §e§l%players%";
+	
+	public static final String TIME_REMAINING = "§6§l%minutes% remaining";
+	
+	public static final String NOW_POINTS = "§6§lYou have now §e§l%points% §6§lpoints";
+
+
 	
 	
 

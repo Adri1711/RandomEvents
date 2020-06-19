@@ -24,6 +24,7 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.potion.PotionEffect;
 
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.match.InventoryPers;
@@ -35,7 +36,7 @@ import com.google.common.io.Files;
 
 public class UtilsRandomEvents {
 
-	public static void pasaACreation(RandomEvents plugin, Player player, Integer position) {
+	public static Boolean pasaACreation(RandomEvents plugin, Player player, Integer position) {
 		Boolean ponerPlayerCreation = Boolean.TRUE;
 		player.sendMessage(Constantes.TAG_PLUGIN + " " + Creacion.getByPosition(position).getMessage());
 		switch (Creacion.getByPosition(position)) {
@@ -52,21 +53,45 @@ public class UtilsRandomEvents {
 		case END:
 			terminaCreacionMatch(plugin, player);
 			ponerPlayerCreation = Boolean.FALSE;
-
+			break;
 		default:
 			break;
 
 		}
 
-		if (ponerPlayerCreation)
-			plugin.getPlayersCreation().put(player, position);
+		if (ponerPlayerCreation) {
+			plugin.getPlayersCreation().put(player.getName(), position);
+		} else {
+			plugin.getPlayersCreation().remove(player.getName(), position);
+		}
+		return ponerPlayerCreation;
 
+	}
+
+	public static String preparaStringTiempo(Integer tiempo) {
+
+		Integer horas = Double.valueOf(tiempo / 3600.0).intValue();
+		Integer minutos = Double.valueOf((tiempo - 3600 * horas) / 60.0).intValue();
+		Integer segundos = Double.valueOf((tiempo - 3600 * horas) - 60 * minutos).intValue();
+		String resultado = "";
+		if (horas != 0) {
+			resultado += horas + " h ";
+		}
+		if (minutos != 0) {
+			resultado += minutos + " min ";
+		}
+
+		if (segundos != 0) {
+			resultado += segundos + " seconds ";
+		}
+
+		return resultado;
 	}
 
 	//
 
 	public static void terminaCreacionMatch(RandomEvents plugin, Player player) {
-		Match match = plugin.getPlayerMatches().get(player);
+		Match match = plugin.getPlayerMatches().get(player.getName());
 		try {
 			String json = UtilidadesJson.fromMatchToJSON(plugin, match);
 			if (json != null) {
@@ -91,8 +116,8 @@ public class UtilsRandomEvents {
 				pw.flush();
 
 				pw.close();
-				plugin.getPlayersCreation().remove(player);
-				plugin.getPlayerMatches().remove(player);
+				plugin.getPlayersCreation().remove(player.getName());
+				plugin.getPlayerMatches().remove(player.getName());
 				plugin.getMatches().add(match);
 				player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.END_OF_ARENA_CREATION);
 			} else {
@@ -202,6 +227,13 @@ public class UtilsRandomEvents {
 					player.getInventory().setChestplate(inventario.getChestplate());
 
 					player.updateInventory();
+
+					if (player.getActivePotionEffects() != null) {
+						for (PotionEffect effect : p.getActivePotionEffects()) {
+							player.removePotionEffect(effect.getType());
+						}
+
+					}
 				}
 			} catch (Exception exc) {
 				System.out.println(exc.getMessage());

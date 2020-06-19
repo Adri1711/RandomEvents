@@ -22,24 +22,37 @@ public class ComandosExecutor {
 				}
 
 			} else {
-				player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.INVALID_PASSWORD);
+				player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.MATCH_BEGUN);
 			}
 
 		}
 
 		// UtilsGUI.showGUI(player, plugin);
 	}
+	
+	
+	
+	public void forceRandomEvent(RandomEvents plugin, Player player) {
+		if(plugin.getMatchActive()==null){
+			plugin.setForzado(Boolean.TRUE);
+			plugin.setMatchActive(UtilsRandomEvents.escogeMatchActiveAleatoria(plugin, plugin.getMatches()));
+		}else{
+			player.sendMessage(Constantes.TAG_PLUGIN+" "+Constantes.MATCH_BEGUN);
+		}
+		
+
+	}
 
 	public void cancelCreationRandomEvent(RandomEvents plugin, Player player) {
-		plugin.getPlayerMatches().remove(player);
-		plugin.getPlayersCreation().remove(player);
+		plugin.getPlayerMatches().remove(player.getName());
+		plugin.getPlayersCreation().remove(player.getName());
 		player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.CANCEL_OF_ARENA_CREATION);
 
 	}
 
 	public void createRandomEvent(RandomEvents plugin, Player player) {
 		Integer position = 0;
-		plugin.getPlayersCreation().put(player, position);
+		plugin.getPlayersCreation().put(player.getName(), position);
 		UtilsRandomEvents.pasaACreation(plugin, player, position);
 	}
 

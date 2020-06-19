@@ -27,55 +27,56 @@ public class Chat implements Listener {
 	@EventHandler
 	public void onPlayerChat(AsyncPlayerChatEvent event) {
 		Player player = event.getPlayer();
-		if (plugin.getPlayersCreation().containsKey(player)) {
-			checkMessageCreation(event.getMessage(), player, plugin.getPlayersCreation().get(player));
+		if (plugin.getPlayersCreation().containsKey(player.getName())) {
+			checkMessageCreation(event.getMessage(), player, plugin.getPlayersCreation().get(player.getName()));
 			event.setCancelled(Boolean.TRUE);
 
 		}
 	}
 
 	private void checkMessageCreation(String message, Player player, Integer position) {
-		Match match = plugin.getPlayerMatches().get(player);
+		Match match = plugin.getPlayerMatches().get(player.getName());
+		Boolean actualiza=Boolean.TRUE;
 		if (match == null)
 			match = new Match();
 
 		switch (Creacion.getByPosition(position)) {
 		case BATTLE_NAME:
 			match.setName(UtilsRandomEvents.cambiarMensajeConEtiqueta(message).trim());
-			UtilsRandomEvents.pasaACreation(plugin, player, position + 1);
+			actualiza=UtilsRandomEvents.pasaACreation(plugin, player, position + 1);
 			break;
 
 		case AMOUNT_PLAYERS:
 			try {
 				match.setAmountPlayers(Integer.valueOf(message.trim()));
-				UtilsRandomEvents.pasaACreation(plugin, player, position + 1);
+				actualiza=UtilsRandomEvents.pasaACreation(plugin, player, position + 1);
 			} catch (Exception e) {
 				player.sendMessage(Constantes.INVALID_INPUT);
-				UtilsRandomEvents.pasaACreation(plugin, player, position);
+				actualiza=UtilsRandomEvents.pasaACreation(plugin, player, position);
 			}
 			break;
 		case AMOUNT_PLAYERS_MIN:
 			try {
 				match.setAmountPlayersMin(Integer.valueOf(message.trim()));
-				UtilsRandomEvents.pasaACreation(plugin, player, position + 1);
+				actualiza=UtilsRandomEvents.pasaACreation(plugin, player, position + 1);
 			} catch (Exception e) {
 				player.sendMessage(Constantes.INVALID_INPUT);
-				UtilsRandomEvents.pasaACreation(plugin, player, position);
+				actualiza=UtilsRandomEvents.pasaACreation(plugin, player, position);
 			}
 			break;
 		case SPAWN_PLAYER:
 			if (message.equals(Constantes.DONE)) {
 				match.setPlayerSpawn(player.getLocation());
-				UtilsRandomEvents.pasaACreation(plugin, player, position + 1);
+				actualiza=UtilsRandomEvents.pasaACreation(plugin, player, position + 1);
 			}
 			break;
 		case ARENA_SPAWNS:
 			if (message.equals(Constantes.DONE)) {
 				match.getSpawns().add(player.getLocation());
 				if (match.getSpawns().size() == match.getAmountPlayers()) {
-					UtilsRandomEvents.pasaACreation(plugin, player, position + 2);
+					actualiza=UtilsRandomEvents.pasaACreation(plugin, player, position + 2);
 				} else {
-					UtilsRandomEvents.pasaACreation(plugin, player, position + 1);
+					actualiza=UtilsRandomEvents.pasaACreation(plugin, player, position + 1);
 
 				}
 			}
@@ -84,9 +85,9 @@ public class Chat implements Listener {
 			if (message.equals(Constantes.DONE)) {
 				match.getSpawns().add(player.getLocation());
 				if (match.getSpawns().size() == match.getAmountPlayers()) {
-					UtilsRandomEvents.pasaACreation(plugin, player, position + 1);
+					actualiza=UtilsRandomEvents.pasaACreation(plugin, player, position + 1);
 				} else {
-					UtilsRandomEvents.pasaACreation(plugin, player, position);
+					actualiza=UtilsRandomEvents.pasaACreation(plugin, player, position);
 
 				}
 			}
@@ -105,19 +106,19 @@ public class Chat implements Listener {
 				match.getInventory().setChestplate(player.getInventory().getChestplate());
 
 				
-				UtilsRandomEvents.pasaACreation(plugin, player, position + 1);
+				actualiza=UtilsRandomEvents.pasaACreation(plugin, player, position + 1);
 			}
 			break;
 		case REWARDS:
 			match.getRewards().add(message);
-			UtilsRandomEvents.pasaACreation(plugin, player, position + 1);
+			actualiza=UtilsRandomEvents.pasaACreation(plugin, player, position + 1);
 			break;
 		case ANOTHER_REWARDS:
 			if (message.equals(Constantes.DONE)) {
-				UtilsRandomEvents.pasaACreation(plugin, player, position + 1);
+				actualiza=UtilsRandomEvents.pasaACreation(plugin, player, position + 1);
 			} else {
 				match.getRewards().add(message);
-				UtilsRandomEvents.pasaACreation(plugin, player, position);
+				actualiza=UtilsRandomEvents.pasaACreation(plugin, player, position);
 			}
 			break;
 		case MINIGAME_TYPE:
@@ -129,16 +130,20 @@ public class Chat implements Listener {
 					case BATTLE_ROYALE:
 					case BATTLE_ROYALE_CABALLO:
 					case BATTLE_ROYALE_TEAM_2:
-						UtilsRandomEvents.pasaACreation(plugin, player, 999);
+					case KNOCKBACK_DUEL:
+						actualiza=UtilsRandomEvents.pasaACreation(plugin, player, 999);
 						break;
+					case TOP_KILLER:
+					case TOP_KILLER_TEAM_2:
+						actualiza=UtilsRandomEvents.pasaACreation(plugin, player, 14);
 					}
 				} else {
 					player.sendMessage(Constantes.INVALID_INPUT);
-					UtilsRandomEvents.pasaACreation(plugin, player, position);
+					actualiza=UtilsRandomEvents.pasaACreation(plugin, player, position);
 				}
 			} catch (Exception e) {
 				player.sendMessage(Constantes.INVALID_INPUT);
-				UtilsRandomEvents.pasaACreation(plugin, player, position);
+				actualiza=UtilsRandomEvents.pasaACreation(plugin, player, position);
 			}
 			break;
 		case MOB_NAME:
@@ -151,11 +156,28 @@ public class Chat implements Listener {
 			break;
 		case TIMER_MOB_SPAWN:
 			break;
-			
+		case PLAY_TIME:
+			try {
+				match.setTiempoPartida(Integer.valueOf(message.trim()));
+				actualiza=UtilsRandomEvents.pasaACreation(plugin, player, 999);
+			} catch (Exception e) {
+				player.sendMessage(Constantes.INVALID_INPUT);
+				actualiza=UtilsRandomEvents.pasaACreation(plugin, player, position);
+			}
+			break;
 		default:
 			break;
 		}
-		plugin.getPlayerMatches().put(player, match);
+		if(actualiza){
+			System.out.println("paso por el actualiza");
+
+			plugin.getPlayerMatches().put(player.getName(), match);
+			plugin.getPlayerMatches().put(player.getName(), match);
+		}else{
+			System.out.println("paso por el remove");
+			plugin.getPlayerMatches().remove(player.getName());
+			plugin.getPlayerMatches().remove(player.getName());
+		}
 	}
 
 }

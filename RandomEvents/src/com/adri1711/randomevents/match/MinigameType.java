@@ -5,7 +5,14 @@ public enum MinigameType {
 
 	BATTLE_ROYALE_TEAM_2("BRT2","Ultimo equipo en pie"),
 	
-	BATTLE_ROYALE_CABALLO("LJ","Lucha de jinetes");
+	BATTLE_ROYALE_CABALLO("LJ","Lucha de jinetes"),
+	
+	TOP_KILLER("TKLL","Caza Estelar"),
+	
+	TOP_KILLER_TEAM_2("TKLLT2","Caza Estelar Equipos de 2"),
+	
+	KNOCKBACK_DUEL("KBD","Duelo de knockback");
+;
 	
 	private String codigo;
 	private String message;

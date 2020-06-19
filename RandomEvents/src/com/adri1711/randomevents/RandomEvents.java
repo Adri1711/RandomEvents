@@ -49,13 +49,15 @@ public class RandomEvents extends JavaPlugin {
 
 	private List<Match> matches;
 
-	private Map<Player, Match> playerMatches;
+	private Map<String, Match> playerMatches;
 
-	private Map<Player, Integer> playersCreation;
+	private Map<String, Integer> playersCreation;
 
-	private Map<Player, EntityType> playersEntity;
+	private Map<String, EntityType> playersEntity;
 
 	private List<String> commandsOnUserJoin;
+
+	private Boolean forzado = Boolean.FALSE;
 
 	public void onEnable() {
 		loadConfig();
@@ -92,28 +94,31 @@ public class RandomEvents extends JavaPlugin {
 
 		this.matches = UtilsRandomEvents.cargarPartidas(this);
 
-		this.playerMatches = new HashMap<Player, Match>();
-		this.playersCreation = new HashMap<Player, Integer>();
+		this.playerMatches = new HashMap<String, Match>();
+		this.playersCreation = new HashMap<String, Integer>();
+		this.playersEntity = new HashMap<String, EntityType>();
 
 	}
 
 	public void comienzaTemporizador() {
 		matchActive = null;
-
-		Bukkit.getServer().getScheduler().runTaskLater((Plugin) this, new Runnable() {
-			public void run() {
-				if (matches != null && !matches.isEmpty() && Bukkit.getOnlinePlayers().size() >= minPlayers) {
-					if (probabilityRandomEvent > random.nextInt(100)) {
-						matchActive = UtilsRandomEvents.escogeMatchActiveAleatoria(getPlugin(), matches);
+		if (!forzado) {
+			Bukkit.getServer().getScheduler().runTaskLater((Plugin) this, new Runnable() {
+				public void run() {
+					if (matches != null && !matches.isEmpty() && Bukkit.getOnlinePlayers().size() >= minPlayers) {
+						if (!forzado) {
+							if (probabilityRandomEvent > random.nextInt(100)) {
+								matchActive = UtilsRandomEvents.escogeMatchActiveAleatoria(getPlugin(), matches);
+							} else {
+								comienzaTemporizador();
+							}
+						}
 					} else {
 						comienzaTemporizador();
 					}
-				} else {
-					comienzaTemporizador();
 				}
-			}
-		}, 20 * secondsTimer);
-
+			}, 20 * secondsTimer);
+		}
 	}
 
 	protected RandomEvents getPlugin() {
@@ -214,19 +219,19 @@ public class RandomEvents extends JavaPlugin {
 		this.matchActive = matchActive;
 	}
 
-	public Map<Player, Match> getPlayerMatches() {
+	public Map<String, Match> getPlayerMatches() {
 		return playerMatches;
 	}
 
-	public void setPlayerMatches(Map<Player, Match> playerMatches) {
+	public void setPlayerMatches(Map<String, Match> playerMatches) {
 		this.playerMatches = playerMatches;
 	}
 
-	public Map<Player, Integer> getPlayersCreation() {
+	public Map<String, Integer> getPlayersCreation() {
 		return playersCreation;
 	}
 
-	public void setPlayersCreation(Map<Player, Integer> playersCreation) {
+	public void setPlayersCreation(Map<String, Integer> playersCreation) {
 		this.playersCreation = playersCreation;
 	}
 
@@ -262,11 +267,11 @@ public class RandomEvents extends JavaPlugin {
 		this.matches = matches;
 	}
 
-	public Map<Player, EntityType> getPlayersEntity() {
+	public Map<String, EntityType> getPlayersEntity() {
 		return playersEntity;
 	}
 
-	public void setPlayersEntity(Map<Player, EntityType> playersEntity) {
+	public void setPlayersEntity(Map<String, EntityType> playersEntity) {
 		this.playersEntity = playersEntity;
 	}
 
@@ -285,5 +290,19 @@ public class RandomEvents extends JavaPlugin {
 	public void setCommandsOnUserJoin(List<String> commandsOnUserJoin) {
 		this.commandsOnUserJoin = commandsOnUserJoin;
 	}
+
+	public void reiniciaPartida() {
+		forzado = Boolean.FALSE;
+		comienzaTemporizador();
+	}
+
+	public Boolean getForzado() {
+		return forzado;
+	}
+
+	public void setForzado(Boolean forzado) {
+		this.forzado = forzado;
+	}
+	
 
 }

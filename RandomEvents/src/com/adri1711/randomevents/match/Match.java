@@ -33,6 +33,8 @@ public class Match {
 	private Location eventSpawn;
 	
 	private List<String> rewards;
+	
+	private Integer tiempoPartida;
 
 
 	public Match() {
@@ -255,6 +257,16 @@ public class Match {
 		} else if (!spawns.equals(other.spawns))
 			return false;
 		return true;
+	}
+
+
+	public Integer getTiempoPartida() {
+		return tiempoPartida;
+	}
+
+
+	public void setTiempoPartida(Integer tiempoPartida) {
+		this.tiempoPartida = tiempoPartida;
 	}
 
 

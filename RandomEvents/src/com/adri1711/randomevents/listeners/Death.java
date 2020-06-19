@@ -8,9 +8,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.match.MinigameType;
+import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 
 public class Death implements Listener {
@@ -21,29 +23,39 @@ public class Death implements Listener {
 		this.plugin = plugin;
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler
 	public void damage(EntityDamageEvent ev) // Listens to EntityDamageEvent
 	{
-		if (ev.getEntity() instanceof Player) {
-			Player player = (Player) ev.getEntity();
-			if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayers().contains(player.getName())) {
-				if (!plugin.getMatchActive().getPlaying()) {
-					ev.setCancelled(true);
-				} else {
-
-					if (((player.getHealth() - ev.getFinalDamage()) <= 0)) {
+		if (ev.getCause() != DamageCause.ENTITY_ATTACK) {
+			if (ev.getEntity() instanceof Player) {
+				Player player = (Player) ev.getEntity();
+				if (plugin.getMatchActive() != null
+						&& plugin.getMatchActive().getPlayers().contains(player.getName())) {
+					if (!plugin.getMatchActive().getPlaying()) {
 						ev.setCancelled(true);
-						switch (plugin.getMatchActive().getMatch().getMinigame()) {
-						case BATTLE_ROYALE:
-						case BATTLE_ROYALE_CABALLO:
-						case BATTLE_ROYALE_TEAM_2:
-							plugin.getMatchActive().echaDePartida(player);
-							player.setHealth(20);
-							UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
+					} else {
 
-							break;
-						default:
-							break;
+						if (((player.getHealth() - ev.getFinalDamage()) <= 0)) {
+							ev.setCancelled(true);
+							switch (plugin.getMatchActive().getMatch().getMinigame()) {
+							case BATTLE_ROYALE:
+							case KNOCKBACK_DUEL:
+							case BATTLE_ROYALE_CABALLO:
+							case BATTLE_ROYALE_TEAM_2:
+								plugin.getMatchActive().echaDePartida(player);
+								UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
+
+								break;
+							case TOP_KILLER:
+							case TOP_KILLER_TEAM_2:
+								System.out.println("EntityDamageEvent");
+								plugin.getMatchActive().reiniciaPlayer(player);
+								UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
+
+								break;
+							default:
+								break;
+							}
 						}
 					}
 				}
@@ -68,6 +80,7 @@ public class Death implements Listener {
 										.getEquipo(player).equals(plugin.getMatchActive().getEquipo(damager))) {
 							ev.setCancelled(true);
 						} else {
+							System.out.println("me pilla como un player");
 
 							if (((player.getHealth() - ev.getFinalDamage()) <= 0)) {
 								ev.setCancelled(true);
@@ -79,7 +92,48 @@ public class Death implements Listener {
 									player.setHealth(20);
 									UtilsRandomEvents.playSound(player,
 											UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
+									UtilsRandomEvents.playSound(damager, UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
 
+									break;
+								case KNOCKBACK_DUEL:
+									ev.setDamage(0);
+									break;
+								case TOP_KILLER:
+								case TOP_KILLER_TEAM_2:
+									System.out.println("EntityDamageEvent");
+
+									System.out.println("he entrado por el bueno");
+									plugin.getMatchActive().reiniciaPlayer(player);
+									UtilsRandomEvents.playSound(player,
+											UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
+									System.out.println("Aqui se supone que me manda sonido por matarlo");
+
+									UtilsRandomEvents.playSound(damager, UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
+									if (plugin.getMatchActive().getPuntuacion().containsKey(damager.getName())) {
+										plugin.getMatchActive().getPuntuacion().put(damager.getName(),
+												plugin.getMatchActive().getPuntuacion().get(damager.getName()) + 1);
+
+									} else {
+										plugin.getMatchActive().getPuntuacion().put(damager.getName(), 1);
+									}
+
+									damager.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.NOW_POINTS.replace(
+											"%points%",
+											plugin.getMatchActive().getPuntuacion().get(damager.getName()).toString()));
+
+									break;
+								default:
+									break;
+								}
+							} else {
+								switch (plugin.getMatchActive().getMatch().getMinigame()) {
+								case BATTLE_ROYALE:
+								case BATTLE_ROYALE_CABALLO:
+								case BATTLE_ROYALE_TEAM_2:
+								case TOP_KILLER:
+									break;
+								case KNOCKBACK_DUEL:
+									ev.setDamage(0);
 									break;
 								default:
 									break;
@@ -87,7 +141,9 @@ public class Death implements Listener {
 							}
 
 						}
+
 					} else {
+						System.out.println("no me pilla como un player");
 						if (((player.getHealth() - ev.getFinalDamage()) <= 0)) {
 							ev.setCancelled(true);
 							switch (plugin.getMatchActive().getMatch().getMinigame()) {
@@ -99,9 +155,31 @@ public class Death implements Listener {
 								UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
 
 								break;
+							case KNOCKBACK_DUEL:
+								ev.setDamage(0);
+								break;
+							case TOP_KILLER:
+								plugin.getMatchActive().reiniciaPlayer(player);
+								UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
+
+								break;
 							default:
 								break;
 							}
+						} else {
+							switch (plugin.getMatchActive().getMatch().getMinigame()) {
+							case BATTLE_ROYALE:
+							case BATTLE_ROYALE_CABALLO:
+							case BATTLE_ROYALE_TEAM_2:
+							case TOP_KILLER:
+								break;
+							case KNOCKBACK_DUEL:
+								ev.setDamage(0);
+								break;
+							default:
+								break;
+							}
+
 						}
 					}
 				}
