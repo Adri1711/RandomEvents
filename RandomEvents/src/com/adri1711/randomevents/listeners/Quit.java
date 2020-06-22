@@ -1,6 +1,5 @@
 package com.adri1711.randomevents.listeners;
 
-import java.util.List;
 
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
@@ -28,7 +27,7 @@ public class Quit implements Listener {
 		Player player = evt.getPlayer();
 		if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayers().contains(player.getName())) {
 			UtilsRandomEvents.borraInventario(player);
-			plugin.getMatchActive().echaDePartida(player);
+			plugin.getMatchActive().echaDePartida(player,true,false);
 		}
 
 	}

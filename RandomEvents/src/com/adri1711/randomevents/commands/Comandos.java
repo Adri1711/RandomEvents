@@ -44,12 +44,12 @@ public class Comandos {
 
 				}
 			} else {
-				player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.COMANDO_NO_VALIDO);
+				player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.INVALID_CMD);
 			}
 
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
-			player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.ERROR_NO_ESPERADO);
+			player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.ERROR);
 			System.out.println(e.getMessage());
 		}
 
@@ -70,12 +70,12 @@ public class Comandos {
 
 				}
 			} else {
-				player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.COMANDO_NO_VALIDO);
+				player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.INVALID_CMD);
 			}
 
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
-			player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.ERROR_NO_ESPERADO);
+			player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.ERROR);
 			System.out.println(e.getMessage());
 		}
 	}

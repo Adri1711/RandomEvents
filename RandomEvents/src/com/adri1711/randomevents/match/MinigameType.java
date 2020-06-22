@@ -11,8 +11,11 @@ public enum MinigameType {
 	
 	TOP_KILLER_TEAM_2("TKLLT2","Caza Estelar Equipos de 2"),
 	
-	KNOCKBACK_DUEL("KBD","Duelo de knockback");
-;
+	KNOCKBACK_DUEL("KBD","Duelo de knockback"),
+	
+	ESCAPE_ARROW("EARR","Evita la flecha"),
+
+	GEM_CRAWLER("GEMC","Atrapa la gema");
 	
 	private String codigo;
 	private String message;

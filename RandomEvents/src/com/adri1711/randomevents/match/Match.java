@@ -28,7 +28,12 @@ public class Match {
 	
 	private Double secondsMobSpawn;
 	
-	private Map<Location,EntityType> mobsSpawn;
+
+	private Location location1;
+	
+	private Location location2;
+	
+	private EntityType mob;
 	
 	private Location eventSpawn;
 	
@@ -43,7 +48,6 @@ public class Match {
 		//TODO this.equipment=new ItemStack[0];
 		this.rewards = new ArrayList<String>();
 		this.spawns=new ArrayList<Location>();
-		this.mobsSpawn=new HashMap<Location,EntityType>();
 	}
 
 
@@ -137,14 +141,7 @@ public class Match {
 	}
 
 
-	public Map<Location, EntityType> getMobsSpawn() {
-		return mobsSpawn;
-	}
-
-
-	public void setMobsSpawn(Map<Location, EntityType> mobsSpawn) {
-		this.mobsSpawn = mobsSpawn;
-	}
+	
 
 
 	public Location getEventSpawn() {
@@ -167,12 +164,56 @@ public class Match {
 	}
 
 
+	
+
+
+	public Integer getTiempoPartida() {
+		return tiempoPartida;
+	}
+
+
+	public void setTiempoPartida(Integer tiempoPartida) {
+		this.tiempoPartida = tiempoPartida;
+	}
+
+
+	public Location getLocation1() {
+		return location1;
+	}
+
+
+	public void setLocation1(Location location1) {
+		this.location1 = location1;
+	}
+
+
+	public Location getLocation2() {
+		return location2;
+	}
+
+
+	public void setLocation2(Location location2) {
+		this.location2 = location2;
+	}
+
+
+	public EntityType getMob() {
+		return mob;
+	}
+
+
+	public void setMob(EntityType mob) {
+		this.mob = mob;
+	}
+
+
 	@Override
 	public String toString() {
 		return "Match [name=" + name + ", inventory=" + inventory + ", amountPlayers=" + amountPlayers
 				+ ", amountPlayersMin=" + amountPlayersMin + ", playerSpawn=" + playerSpawn + ", minigame=" + minigame
-				+ ", spawns=" + spawns + ", secondsMobSpawn=" + secondsMobSpawn + ", mobsSpawn=" + mobsSpawn
-				+ ", eventSpawn=" + eventSpawn + ", rewards=" + rewards + "]";
+				+ ", spawns=" + spawns + ", secondsMobSpawn=" + secondsMobSpawn + ", location1=" + location1
+				+ ", location2=" + location2 + ", mob=" + mob + ", eventSpawn=" + eventSpawn + ", rewards=" + rewards
+				+ ", tiempoPartida=" + tiempoPartida + "]";
 	}
 
 
@@ -184,13 +225,16 @@ public class Match {
 		result = prime * result + ((amountPlayersMin == null) ? 0 : amountPlayersMin.hashCode());
 		result = prime * result + ((eventSpawn == null) ? 0 : eventSpawn.hashCode());
 		result = prime * result + ((inventory == null) ? 0 : inventory.hashCode());
+		result = prime * result + ((location1 == null) ? 0 : location1.hashCode());
+		result = prime * result + ((location2 == null) ? 0 : location2.hashCode());
 		result = prime * result + ((minigame == null) ? 0 : minigame.hashCode());
-		result = prime * result + ((mobsSpawn == null) ? 0 : mobsSpawn.hashCode());
+		result = prime * result + ((mob == null) ? 0 : mob.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((playerSpawn == null) ? 0 : playerSpawn.hashCode());
 		result = prime * result + ((rewards == null) ? 0 : rewards.hashCode());
 		result = prime * result + ((secondsMobSpawn == null) ? 0 : secondsMobSpawn.hashCode());
 		result = prime * result + ((spawns == null) ? 0 : spawns.hashCode());
+		result = prime * result + ((tiempoPartida == null) ? 0 : tiempoPartida.hashCode());
 		return result;
 	}
 
@@ -224,12 +268,19 @@ public class Match {
 				return false;
 		} else if (!inventory.equals(other.inventory))
 			return false;
+		if (location1 == null) {
+			if (other.location1 != null)
+				return false;
+		} else if (!location1.equals(other.location1))
+			return false;
+		if (location2 == null) {
+			if (other.location2 != null)
+				return false;
+		} else if (!location2.equals(other.location2))
+			return false;
 		if (minigame != other.minigame)
 			return false;
-		if (mobsSpawn == null) {
-			if (other.mobsSpawn != null)
-				return false;
-		} else if (!mobsSpawn.equals(other.mobsSpawn))
+		if (mob != other.mob)
 			return false;
 		if (name == null) {
 			if (other.name != null)
@@ -256,20 +307,17 @@ public class Match {
 				return false;
 		} else if (!spawns.equals(other.spawns))
 			return false;
+		if (tiempoPartida == null) {
+			if (other.tiempoPartida != null)
+				return false;
+		} else if (!tiempoPartida.equals(other.tiempoPartida))
+			return false;
 		return true;
 	}
 
 
-	public Integer getTiempoPartida() {
-		return tiempoPartida;
-	}
-
-
-	public void setTiempoPartida(Integer tiempoPartida) {
-		this.tiempoPartida = tiempoPartida;
-	}
-
-
+	
+	
 	
 }
 

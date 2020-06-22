@@ -19,12 +19,14 @@ import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.util.Vector;
 
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.match.InventoryPers;
@@ -122,11 +124,11 @@ public class UtilsRandomEvents {
 				player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.END_OF_ARENA_CREATION);
 			} else {
 				System.out.println("JSON was null.");
-				player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.ERROR_NO_ESPERADO);
+				player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.ERROR);
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-			player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.ERROR_NO_ESPERADO);
+			player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.ERROR);
 
 		}
 
@@ -158,16 +160,20 @@ public class UtilsRandomEvents {
 						player.getName() + ".json");
 				if (!bossFile.exists()) {
 					bossFile.createNewFile();
+
+					FileWriter fw = new FileWriter(bossFile, true);
+
+					PrintWriter pw = new PrintWriter(fw);
+
+					pw.println(json);
+
+					pw.flush();
+
+					pw.close();
+				}else{
+					System.out.println("[RandomEvents] Error :: The player "+player.getName()+" already has an inventory");
+					System.out.println(json);
 				}
-				FileWriter fw = new FileWriter(bossFile, true);
-
-				PrintWriter pw = new PrintWriter(fw);
-
-				pw.println(json);
-
-				pw.flush();
-
-				pw.close();
 			} else {
 				System.out.println("JSON was null.");
 			}
@@ -229,7 +235,7 @@ public class UtilsRandomEvents {
 					player.updateInventory();
 
 					if (player.getActivePotionEffects() != null) {
-						for (PotionEffect effect : p.getActivePotionEffects()) {
+						for (PotionEffect effect : player.getActivePotionEffects()) {
 							player.removePotionEffect(effect.getType());
 						}
 
@@ -503,9 +509,10 @@ public class UtilsRandomEvents {
 		return p;
 	}
 
-	public static MatchActive escogeMatchActiveAleatoria(RandomEvents plugin, List<Match> matches) {
+	public static MatchActive escogeMatchActiveAleatoria(RandomEvents plugin, List<Match> matches, Boolean forzada) {
 
-		MatchActive matchActive = new MatchActive(matches.get(plugin.getRandom().nextInt(matches.size())), plugin);
+		MatchActive matchActive = new MatchActive(matches.get(plugin.getRandom().nextInt(matches.size())), plugin,
+				forzada);
 
 		return matchActive;
 	}
@@ -551,6 +558,54 @@ public class UtilsRandomEvents {
 			}
 		}
 		return leather;
+
+	}
+
+	public static List<Location> getAllPossibleLocations(Location loc1, Location loc2) {
+
+		List<Location> locations = new ArrayList<Location>();
+		if (loc1 != null && loc2 != null) {
+			for (Double x = loc1.getX() > loc2.getX() ? loc2.getX() : loc1.getX(); (loc1.getX() > loc2.getX())
+					? (x <= loc1.getX()) : (x <= loc2.getX()); x += 0.2) {
+				for (Double y = loc1.getY() > loc2.getY() ? loc2.getY() : loc1.getY(); (loc1.getY() > loc2.getY())
+						? (y <= loc1.getY()) : (y <= loc2.getY()); y++) {
+					for (Double z = loc1.getZ() > loc2.getZ() ? loc2.getZ() : loc1.getZ(); (loc1.getZ() > loc2.getZ())
+							? (z <= loc1.getZ()) : (z <= loc2.getZ()); z += 0.2) {
+
+						Location lll = new Location(loc1.getWorld(), x.doubleValue(), y.doubleValue(), z.doubleValue());
+						locations.add(lll);
+					}
+				}
+			}
+		}
+		return locations;
+	}
+
+	public static void spawnPowerUp(Location l, RandomEvents plugin) {
+
+		l.getWorld().dropItem(l, plugin.getPowerUpItem());
+
+	}
+
+	public static void dropItem(Location l, ItemStack item) {
+
+		l.getWorld().dropItem(l, item);
+
+	}
+
+	public static void spawnEntity(Location l, EntityType entityType, RandomEvents plugin) {
+
+		Entity entity = l.getWorld().spawnEntity(l, entityType);
+
+		if (entityType == EntityType.ARROW) {
+			Double multiplicadorX = plugin.getRandom().nextDouble() > 0.5 ? 1. : -1.;
+			Double multiplicadorZ = plugin.getRandom().nextDouble() > 0.5 ? 1. : -1.;
+
+			Integer validadorX = plugin.getRandom().nextInt(10) < 1 ? 1 : 0;
+			Integer validadorZ = plugin.getRandom().nextInt(10) < 1 ? 1 : 0;
+			entity.setVelocity(new Vector(plugin.getRandom().nextDouble() * multiplicadorX * validadorX, -2,
+					plugin.getRandom().nextDouble() * multiplicadorZ * validadorZ));
+		}
 
 	}
 

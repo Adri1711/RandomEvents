@@ -3,6 +3,8 @@ package com.adri1711.randomevents.commands;
 import org.bukkit.entity.Player;
 
 import com.adri1711.randomevents.RandomEvents;
+import com.adri1711.randomevents.match.Match;
+import com.adri1711.randomevents.match.MatchActive;
 import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 
@@ -29,17 +31,38 @@ public class ComandosExecutor {
 
 		// UtilsGUI.showGUI(player, plugin);
 	}
-	
-	
-	
-	public void forceRandomEvent(RandomEvents plugin, Player player) {
-		if(plugin.getMatchActive()==null){
-			plugin.setForzado(Boolean.TRUE);
-			plugin.setMatchActive(UtilsRandomEvents.escogeMatchActiveAleatoria(plugin, plugin.getMatches()));
-		}else{
-			player.sendMessage(Constantes.TAG_PLUGIN+" "+Constantes.MATCH_BEGUN);
+
+	public void showRandomEvents(RandomEvents plugin, Player player) {
+		player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.MATCHES);
+		for (Match m : plugin.getMatches()) {
+			player.sendMessage("§6§l" + plugin.getMatches().indexOf(m) + " - " + m.getName());
 		}
-		
+
+	}
+
+	public void forceRandomEvent(RandomEvents plugin, Player player) {
+		if (plugin.getMatchActive() == null) {
+			plugin.setForzado(Boolean.TRUE);
+			plugin.setMatchActive(UtilsRandomEvents.escogeMatchActiveAleatoria(plugin, plugin.getMatches(),true));
+			player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.MATCH_BEGIN_SOON);
+		} else {
+			player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.MATCH_BEGUN);
+		}
+
+	}
+
+	public void forceRandomEvent(RandomEvents plugin, Player player, String number) {
+		if (plugin.getMatchActive() == null) {
+			try {
+				plugin.setForzado(Boolean.TRUE);
+				plugin.setMatchActive(new MatchActive(plugin.getMatches().get(Integer.valueOf(number)), plugin,true));
+				player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.MATCH_BEGIN_SOON);
+			} catch (Exception e) {
+				player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.INVALID_INPUT);
+			}
+		} else {
+			player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.MATCH_BEGUN);
+		}
 
 	}
 
@@ -70,7 +93,7 @@ public class ComandosExecutor {
 
 	public void leaveRandomEvent(RandomEvents plugin, Player player) {
 		if (plugin.getMatchActive().getPlayers().contains(player.getName())) {
-			plugin.getMatchActive().dejarPartida(player,false);
+			plugin.getMatchActive().dejarPartida(player, false);
 		} else {
 			player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.NOT_IN_MATCH);
 		}

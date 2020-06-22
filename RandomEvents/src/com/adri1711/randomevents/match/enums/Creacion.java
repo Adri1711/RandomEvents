@@ -30,10 +30,27 @@ public enum Creacion {
 	MOB_SPAWN(12,
 			"§6§lGo to the arena you created and write 'Done' to set the spawn location of the mob, 'New' to choose another mob or 'End' to end the creation of the RandomEvent"),
 
-	EVENT_SPAWN(13, "§6§lGo to the arena you created and write 'Done' to set the spawn location for the event"),
+	PLAY_TIME(13, "§6§lChoose the play time in seconds"),
+	
+	ARROW_LOCATION1(14,
+			"§6§lSet the first location of the cuboid of spawn of arrows, say 'Done'"),
+	
+	ARROW_LOCATION2(15,
+			"§6§lSet the second location of the cuboid of spawn of arrows, say 'Done'"),
+	
+	TIMER_ARROW_SPAWN(16, "§6§lWrite the number of seconds (it can have decimals) to respawn each arrow"),
+	
+	
+	GEM_LOCATION1(17,
+			"§6§lSet the first location of the cuboid of spawn of gems, say 'Done'"),
+	
+	GEM_LOCATION2(18,
+			"§6§lSet the second location of the cuboid of spawn of gems, say 'Done'"),
+	
+	TIMER_GEM_SPAWN(19, "§6§lWrite the number of seconds (it can have decimals) to respawn each gem"),
 
-	PLAY_TIME(14, "§6§lChoose the play time in seconds"),
 
+	
 	END(999, "§6§lYou finished the creation of the random event!");
 
 	private Integer position;

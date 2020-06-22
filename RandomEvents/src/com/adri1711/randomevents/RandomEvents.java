@@ -8,12 +8,15 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -23,7 +26,9 @@ import com.adri1711.randomevents.commands.ComandosExecutor;
 import com.adri1711.randomevents.listeners.Chat;
 import com.adri1711.randomevents.listeners.Death;
 import com.adri1711.randomevents.listeners.Join;
+import com.adri1711.randomevents.listeners.PickUp;
 import com.adri1711.randomevents.listeners.Quit;
+import com.adri1711.randomevents.listeners.Use;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
 import com.adri1711.randomevents.util.Constantes;
@@ -43,6 +48,8 @@ public class RandomEvents extends JavaPlugin {
 
 	private Integer probabilityRandomEvent;
 
+	private Integer probabilityPowerUp;
+
 	private Random random;
 
 	private MatchActive matchActive;
@@ -59,16 +66,26 @@ public class RandomEvents extends JavaPlugin {
 
 	private Boolean forzado = Boolean.FALSE;
 
+	private ItemStack powerUpItem;
+
 	public void onEnable() {
 		loadConfig();
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
 		this.comandosExecutor = new ComandosExecutor();
+
+		this.powerUpItem = new ItemStack(Material.EMERALD);
+		ItemMeta itemMeta = this.powerUpItem.getItemMeta();
+		itemMeta.setDisplayName("§2§lPowerUP");
+		this.powerUpItem.setItemMeta(itemMeta);
+
 		inicializaVariables();
 
 		getServer().getPluginManager().registerEvents((Listener) new Quit(this), (Plugin) this);
 		getServer().getPluginManager().registerEvents((Listener) new Chat(this), (Plugin) this);
 		getServer().getPluginManager().registerEvents((Listener) new Death(this), (Plugin) this);
 		getServer().getPluginManager().registerEvents((Listener) new Join(this), (Plugin) this);
+		getServer().getPluginManager().registerEvents((Listener) new Use(this), (Plugin) this);
+		getServer().getPluginManager().registerEvents((Listener) new PickUp(this), (Plugin) this);
 
 		getLogger().info(" Author adri1711- activado");
 		comienzaTemporizador();
@@ -92,6 +109,8 @@ public class RandomEvents extends JavaPlugin {
 
 		this.probabilityRandomEvent = Integer.valueOf(getConfig().getInt("probabilityRandomEvent"));
 
+		this.setProbabilityPowerUp(Integer.valueOf(getConfig().getInt("probabilityPowerUp")));
+
 		this.matches = UtilsRandomEvents.cargarPartidas(this);
 
 		this.playerMatches = new HashMap<String, Match>();
@@ -101,14 +120,14 @@ public class RandomEvents extends JavaPlugin {
 	}
 
 	public void comienzaTemporizador() {
-		matchActive = null;
 		if (!forzado) {
+			matchActive = null;
 			Bukkit.getServer().getScheduler().runTaskLater((Plugin) this, new Runnable() {
 				public void run() {
 					if (matches != null && !matches.isEmpty() && Bukkit.getOnlinePlayers().size() >= minPlayers) {
 						if (!forzado) {
 							if (probabilityRandomEvent > random.nextInt(100)) {
-								matchActive = UtilsRandomEvents.escogeMatchActiveAleatoria(getPlugin(), matches);
+								matchActive = UtilsRandomEvents.escogeMatchActiveAleatoria(getPlugin(), matches,false);
 							} else {
 								comienzaTemporizador();
 							}
@@ -147,7 +166,7 @@ public class RandomEvents extends JavaPlugin {
 					Comandos.ejecutaComandoDosArgumentos(this, player, args);
 					break;
 				default:
-					player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.COMANDO_NO_VALIDO);
+					player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.INVALID_CMD);
 					break;
 				}
 			}
@@ -291,8 +310,10 @@ public class RandomEvents extends JavaPlugin {
 		this.commandsOnUserJoin = commandsOnUserJoin;
 	}
 
-	public void reiniciaPartida() {
-		forzado = Boolean.FALSE;
+	public void reiniciaPartida(Boolean forzada) {
+		if (forzada) {
+			forzado = Boolean.FALSE;
+		}
 		comienzaTemporizador();
 	}
 
@@ -303,6 +324,21 @@ public class RandomEvents extends JavaPlugin {
 	public void setForzado(Boolean forzado) {
 		this.forzado = forzado;
 	}
-	
+
+	public Integer getProbabilityPowerUp() {
+		return probabilityPowerUp;
+	}
+
+	public void setProbabilityPowerUp(Integer probabilityPowerUp) {
+		this.probabilityPowerUp = probabilityPowerUp;
+	}
+
+	public ItemStack getPowerUpItem() {
+		return powerUpItem;
+	}
+
+	public void setPowerUpItem(ItemStack powerUpItem) {
+		this.powerUpItem = powerUpItem;
+	}
 
 }

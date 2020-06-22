@@ -42,16 +42,20 @@ public class Death implements Listener {
 							case KNOCKBACK_DUEL:
 							case BATTLE_ROYALE_CABALLO:
 							case BATTLE_ROYALE_TEAM_2:
-								plugin.getMatchActive().echaDePartida(player);
+								plugin.getMatchActive().echaDePartida(player,true);
 								UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
 
 								break;
 							case TOP_KILLER:
 							case TOP_KILLER_TEAM_2:
-								System.out.println("EntityDamageEvent");
 								plugin.getMatchActive().reiniciaPlayer(player);
 								UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
 
+								break;
+							case GEM_CRAWLER:
+								plugin.getMatchActive().reiniciaPlayer(player);
+								UtilsRandomEvents.playSound(player,
+										UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
 								break;
 							default:
 								break;
@@ -80,7 +84,6 @@ public class Death implements Listener {
 										.getEquipo(player).equals(plugin.getMatchActive().getEquipo(damager))) {
 							ev.setCancelled(true);
 						} else {
-							System.out.println("me pilla como un player");
 
 							if (((player.getHealth() - ev.getFinalDamage()) <= 0)) {
 								ev.setCancelled(true);
@@ -88,7 +91,7 @@ public class Death implements Listener {
 								case BATTLE_ROYALE:
 								case BATTLE_ROYALE_CABALLO:
 								case BATTLE_ROYALE_TEAM_2:
-									plugin.getMatchActive().echaDePartida(player);
+									plugin.getMatchActive().echaDePartida(player,true);
 									player.setHealth(20);
 									UtilsRandomEvents.playSound(player,
 											UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
@@ -96,17 +99,15 @@ public class Death implements Listener {
 
 									break;
 								case KNOCKBACK_DUEL:
+								case ESCAPE_ARROW:
+
 									ev.setDamage(0);
 									break;
 								case TOP_KILLER:
 								case TOP_KILLER_TEAM_2:
-									System.out.println("EntityDamageEvent");
-
-									System.out.println("he entrado por el bueno");
 									plugin.getMatchActive().reiniciaPlayer(player);
 									UtilsRandomEvents.playSound(player,
 											UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
-									System.out.println("Aqui se supone que me manda sonido por matarlo");
 
 									UtilsRandomEvents.playSound(damager, UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
 									if (plugin.getMatchActive().getPuntuacion().containsKey(damager.getName())) {
@@ -122,6 +123,17 @@ public class Death implements Listener {
 											plugin.getMatchActive().getPuntuacion().get(damager.getName()).toString()));
 
 									break;
+									
+								case GEM_CRAWLER:
+									plugin.getMatchActive().reiniciaPlayer(player);
+									UtilsRandomEvents.playSound(player,
+											UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
+
+									UtilsRandomEvents.playSound(damager, UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
+									
+
+									break;
+
 								default:
 									break;
 								}
@@ -133,6 +145,7 @@ public class Death implements Listener {
 								case TOP_KILLER:
 									break;
 								case KNOCKBACK_DUEL:
+								case ESCAPE_ARROW:
 									ev.setDamage(0);
 									break;
 								default:
@@ -143,14 +156,14 @@ public class Death implements Listener {
 						}
 
 					} else {
-						System.out.println("no me pilla como un player");
 						if (((player.getHealth() - ev.getFinalDamage()) <= 0)) {
 							ev.setCancelled(true);
 							switch (plugin.getMatchActive().getMatch().getMinigame()) {
 							case BATTLE_ROYALE:
 							case BATTLE_ROYALE_CABALLO:
 							case BATTLE_ROYALE_TEAM_2:
-								plugin.getMatchActive().echaDePartida(player);
+							case ESCAPE_ARROW:
+								plugin.getMatchActive().echaDePartida(player,true);
 								player.setHealth(20);
 								UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
 
@@ -159,9 +172,10 @@ public class Death implements Listener {
 								ev.setDamage(0);
 								break;
 							case TOP_KILLER:
+							case GEM_CRAWLER:
 								plugin.getMatchActive().reiniciaPlayer(player);
 								UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
-
+							
 								break;
 							default:
 								break;
@@ -172,6 +186,7 @@ public class Death implements Listener {
 							case BATTLE_ROYALE_CABALLO:
 							case BATTLE_ROYALE_TEAM_2:
 							case TOP_KILLER:
+							case ESCAPE_ARROW:
 								break;
 							case KNOCKBACK_DUEL:
 								ev.setDamage(0);

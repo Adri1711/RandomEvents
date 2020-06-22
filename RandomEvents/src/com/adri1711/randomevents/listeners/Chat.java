@@ -3,6 +3,8 @@ package com.adri1711.randomevents.listeners;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.Location;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -131,11 +133,18 @@ public class Chat implements Listener {
 					case BATTLE_ROYALE_CABALLO:
 					case BATTLE_ROYALE_TEAM_2:
 					case KNOCKBACK_DUEL:
-						actualiza=UtilsRandomEvents.pasaACreation(plugin, player, 999);
+						actualiza=UtilsRandomEvents.pasaACreation(plugin, player,  Creacion.END.getPosition());
 						break;
 					case TOP_KILLER:
 					case TOP_KILLER_TEAM_2:
-						actualiza=UtilsRandomEvents.pasaACreation(plugin, player, 14);
+						actualiza=UtilsRandomEvents.pasaACreation(plugin, player, Creacion.PLAY_TIME.getPosition());
+						break;
+					case ESCAPE_ARROW:
+						actualiza=UtilsRandomEvents.pasaACreation(plugin, player, Creacion.ARROW_LOCATION1.getPosition());
+						break;
+					case GEM_CRAWLER:
+						actualiza=UtilsRandomEvents.pasaACreation(plugin, player, Creacion.GEM_LOCATION1.getPosition());
+						break;
 					}
 				} else {
 					player.sendMessage(Constantes.INVALID_INPUT);
@@ -150,8 +159,7 @@ public class Chat implements Listener {
 			break;
 		case END:
 			break;
-		case EVENT_SPAWN:
-			break;
+		
 		case MOB_SPAWN:
 			break;
 		case TIMER_MOB_SPAWN:
@@ -159,7 +167,37 @@ public class Chat implements Listener {
 		case PLAY_TIME:
 			try {
 				match.setTiempoPartida(Integer.valueOf(message.trim()));
-				actualiza=UtilsRandomEvents.pasaACreation(plugin, player, 999);
+				actualiza=UtilsRandomEvents.pasaACreation(plugin, player, Creacion.END.getPosition());
+			} catch (Exception e) {
+				player.sendMessage(Constantes.INVALID_INPUT);
+				actualiza=UtilsRandomEvents.pasaACreation(plugin, player, position);
+			}
+			break;
+		case ARROW_LOCATION1:
+			if (message.equals(Constantes.DONE)) {
+				match.setLocation1(player.getLocation());
+				match.setMob(EntityType.ARROW);
+				actualiza=UtilsRandomEvents.pasaACreation(plugin, player, position + 1);
+			}
+			break;
+		case GEM_LOCATION1:		
+			if (message.equals(Constantes.DONE)) {
+				match.setLocation1(player.getLocation());
+				actualiza=UtilsRandomEvents.pasaACreation(plugin, player, position + 1);
+			}
+			break;
+		case ARROW_LOCATION2:
+		case GEM_LOCATION2:		
+			if (message.equals(Constantes.DONE)) {
+				match.setLocation2(player.getLocation());
+				actualiza=UtilsRandomEvents.pasaACreation(plugin, player, position + 1);
+			}
+			break;
+		case TIMER_ARROW_SPAWN:
+		case TIMER_GEM_SPAWN:
+			try {
+				match.setSecondsMobSpawn(Double.valueOf(message.trim()));
+				actualiza=UtilsRandomEvents.pasaACreation(plugin, player, Creacion.END.getPosition());
 			} catch (Exception e) {
 				player.sendMessage(Constantes.INVALID_INPUT);
 				actualiza=UtilsRandomEvents.pasaACreation(plugin, player, position);
@@ -169,12 +207,9 @@ public class Chat implements Listener {
 			break;
 		}
 		if(actualiza){
-			System.out.println("paso por el actualiza");
-
 			plugin.getPlayerMatches().put(player.getName(), match);
 			plugin.getPlayerMatches().put(player.getName(), match);
 		}else{
-			System.out.println("paso por el remove");
 			plugin.getPlayerMatches().remove(player.getName());
 			plugin.getPlayerMatches().remove(player.getName());
 		}

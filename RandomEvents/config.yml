@@ -7,6 +7,8 @@ secondsTimer: 60
 
 probabilityRandomEvent: 5
 
+probabilityPowerUp: 1
+
 minPlayers: 40
 
 commandsOnUserJoin:

@@ -1,26 +1,34 @@
-shop:
-  delete: Your shop has been deleted succesfully!
-  dontHave: You dont have a shop!
-  create: Your shop has been created succesfully!
-  alreadyHave: You already has a shop!
-  addItem1: You added the item for
-  addItem2: to the shop!
-  full: Your shop is full!
-  hasItems: Your shop has items yet, remove it if you want to delete the shop!
-  noItem: You dont an item in your hand!
-  noExist: This shop doesnt exist!
-  firstPage: '&2First Page'
-  nextPage: '&2Next Page'
-  previousPage: '&2Previous Page'
-  lastPage: '&2Last Page'
-  notconnected: '&2User not connected'
-  over:
-  - Left-Click
-  - To see the shop
-item:
-  buy: You have succesfully bought the item for
-  bought: bought %item% for
-  buyer: '&2'
-noMoney: You dont have money to buy this item!
-inventoryFull: Your inventory is full!
-onCooldown: &4Wait to put your shop again!
+INVALID_INPUT : "§c§lInvalid input, try another one";
+ERROR : "§c§lSome error ocurred, check the server log.";
+INVALID_CMD : "§c§lInvalid command, do /randomevent or /revent to see the valid commands";
+NO_PERMISSION : "§c§lYou don't have permission to do that!";
+END_OF_ARENA_CREATION : "§6§lYou successfully created a RandomEvents!";
+CANCEL_OF_ARENA_CREATION : "§6§lYou canceled the creation of a RandomEvents!";
+PLUGIN_RELOAD : "§6§lPlugin reloaded!";
+MATCH_FULL : "§c§lThe match is already full";
+ALREADY_PLAYING_MATCH : "§c§lYou can't leave the match if it has begun";
+MATCH_BEGUN : "§c§lThe event has begun, you cant join now";
+MATCHES : "§6§lMatches:";
+ALREADY_MATCH : "§c§lYou can't create another event while one is still running";
+SPAWN_SET : "§6§lYou have set the spawn succesfully";
+NOT_IN_MATCH : "§c§lYou are not in an event";
+WIN_RANDOM_EVENTS : "§6§lCongratulations! You won the event";
+EVENT_ANNOUNCE : "§6§lThe event §e§l'%event%'§6§l of type  §e§l'%type%'§6§l, begins in: ";
+INVALID_PASSWORD : "§c§lInvalid password for the event";
+FIRST_ANNOUNCE : "§6§lA Random Event has just begun, ";
+NEXT_ANNOUNCE : "§6§lA Random Event is still waiting for players, ";
+CLICK_HERE : "§9§l[Click here to join]";
+LAST_PART : "§6§l ( %players% / %neededPlayers% )";
+WINNERS : "§e§l%players% §6§lwon the Random Event §e§l'%event%'§6§l ! Congratulations!";
+WINNERS_POINTS : "§e§l%players% §6§lwon the Random Event '%event%' with %points% points ! Congratulations!";
+DISPOSE_LEATHER_ITEMS : "§c§lFor security reasons please leave your leather items before entering the event";
+SHOW_ALONE : "§6§lYou are playing alone, good luck!";
+SHOW_TEAM : "§6§lYour team is: §e§l%players%";
+TIME_REMAINING : "§6§l%minutes% remaining";
+NOW_POINTS : "§6§lYou have now §e§l%points% §6§lpoints";
+NOW_GEMS : "§6§lThe player §e§l%player% §6§lhas now §e§l%points% §6§lgems";
+NOW_PROTECTED : "§6§lYou are now protected for 3 seconds";
+MATCH_BEGIN_SOON : "§6§lThe Random Event will begin soon";
+LOST_GEMS : "§e§l%player% §6§llost all gems";
+PLAYER_WINNING : "§6§lThe player §e§l%player% §6§lhas enough gems, kill him or the match will end";
+PLAYER_WINNING_SECONDS : "§e§l%player% §6§lwins in %seconds% seconds";
