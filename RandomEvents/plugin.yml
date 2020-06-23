@@ -1,6 +1,6 @@
 name: RandomEvents
 main: com.adri1711.randomevents.RandomEvents
-version: 0.3
+version: 0.5
 depend: [Lib1711]
 commands:
    revent:

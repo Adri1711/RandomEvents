@@ -35,7 +35,8 @@ public class ComandosExecutor {
 	public void showRandomEvents(RandomEvents plugin, Player player) {
 		player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.MATCHES);
 		for (Match m : plugin.getMatches()) {
-			player.sendMessage("§6§l" + plugin.getMatches().indexOf(m) + " - " + m.getName());
+			player.sendMessage("§6§l" + plugin.getMatches().indexOf(m) + " - " + m.getMinigame().getMessage() + " -> "
+					+ m.getName());
 		}
 
 	}
@@ -43,7 +44,7 @@ public class ComandosExecutor {
 	public void forceRandomEvent(RandomEvents plugin, Player player) {
 		if (plugin.getMatchActive() == null) {
 			plugin.setForzado(Boolean.TRUE);
-			plugin.setMatchActive(UtilsRandomEvents.escogeMatchActiveAleatoria(plugin, plugin.getMatches(),true));
+			plugin.setMatchActive(UtilsRandomEvents.escogeMatchActiveAleatoria(plugin, plugin.getMatches(), true));
 			player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.MATCH_BEGIN_SOON);
 		} else {
 			player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.MATCH_BEGUN);
@@ -55,7 +56,7 @@ public class ComandosExecutor {
 		if (plugin.getMatchActive() == null) {
 			try {
 				plugin.setForzado(Boolean.TRUE);
-				plugin.setMatchActive(new MatchActive(plugin.getMatches().get(Integer.valueOf(number)), plugin,true));
+				plugin.setMatchActive(new MatchActive(plugin.getMatches().get(Integer.valueOf(number)), plugin, true));
 				player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.MATCH_BEGIN_SOON);
 			} catch (Exception e) {
 				player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.INVALID_INPUT);
@@ -92,8 +93,11 @@ public class ComandosExecutor {
 	}
 
 	public void leaveRandomEvent(RandomEvents plugin, Player player) {
-		if (plugin.getMatchActive().getPlayers().contains(player.getName())) {
+		if (plugin.getMatchActive().getPlayersObj().contains(player)) {
 			plugin.getMatchActive().dejarPartida(player, false);
+		} else if (plugin.getMatchActive().getPlayersSpectators().contains(player)) {
+			plugin.getMatchActive().echaDePartida(player, false, true, true);
+
 		} else {
 			player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.NOT_IN_MATCH);
 		}

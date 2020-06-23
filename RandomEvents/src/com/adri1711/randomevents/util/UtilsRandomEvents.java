@@ -134,7 +134,10 @@ public class UtilsRandomEvents {
 
 	}
 
-	public static void guardaInventario(RandomEvents plugin, Player player) {
+	public static Boolean guardaInventario(RandomEvents plugin, Player player) {
+		Boolean exitoso = Boolean.TRUE;
+		File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories",
+				player.getName() + ".json");
 		try {
 			InventoryPers inventario = new InventoryPers();
 
@@ -156,8 +159,6 @@ public class UtilsRandomEvents {
 					dataFolder.mkdir();
 				}
 
-				File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories",
-						player.getName() + ".json");
 				if (!bossFile.exists()) {
 					bossFile.createNewFile();
 
@@ -170,17 +171,26 @@ public class UtilsRandomEvents {
 					pw.flush();
 
 					pw.close();
-				}else{
-					System.out.println("[RandomEvents] Error :: The player "+player.getName()+" already has an inventory");
+				} else {
+					System.out.println(
+							"[RandomEvents] Error :: The player " + player.getName() + " already has an inventory");
 					System.out.println(json);
 				}
 			} else {
+				exitoso = Boolean.FALSE;
+
 				System.out.println("JSON was null.");
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+			exitoso = Boolean.FALSE;
+			if (bossFile.exists()) {
+				bossFile.delete();
+			}
 
 		}
+
+		return exitoso;
 
 	}
 
@@ -447,6 +457,17 @@ public class UtilsRandomEvents {
 		return c;
 	}
 
+	public static List<Player> getPlayersWithin(Player player, List<Player> players, int distance) {
+		List<Player> res = new ArrayList<Player>();
+		int d2 = distance * distance;
+		for (Player p : players) {
+			if (p.getWorld() == player.getWorld() && p.getLocation().distanceSquared(player.getLocation()) <= d2) {
+				res.add(p);
+			}
+		}
+		return res;
+	}
+
 	public static Sound buscaSonido(String s, String s2) {
 		Sound sound = null;
 		for (Sound sou : Sound.values()) {
@@ -603,7 +624,7 @@ public class UtilsRandomEvents {
 
 			Integer validadorX = plugin.getRandom().nextInt(10) < 1 ? 1 : 0;
 			Integer validadorZ = plugin.getRandom().nextInt(10) < 1 ? 1 : 0;
-			entity.setVelocity(new Vector(plugin.getRandom().nextDouble() * multiplicadorX * validadorX, -2,
+			entity.setVelocity(new Vector(plugin.getRandom().nextDouble() * multiplicadorX * validadorX, -4,
 					plugin.getRandom().nextDouble() * multiplicadorZ * validadorZ));
 		}
 

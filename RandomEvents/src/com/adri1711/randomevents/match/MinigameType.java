@@ -15,7 +15,9 @@ public enum MinigameType {
 	
 	ESCAPE_ARROW("EARR","Evita la flecha"),
 
-	GEM_CRAWLER("GEMC","Atrapa la gema");
+	GEM_CRAWLER("GEMC","Atrapa la gema"),
+	
+	BOMB_TAG("BOMB","Patata caliente");
 	
 	private String codigo;
 	private String message;

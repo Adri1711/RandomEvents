@@ -27,7 +27,7 @@ public class Quit implements Listener {
 		Player player = evt.getPlayer();
 		if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayers().contains(player.getName())) {
 			UtilsRandomEvents.borraInventario(player);
-			plugin.getMatchActive().echaDePartida(player,true,false);
+			plugin.getMatchActive().echaDePartida(player,true,false,true);
 		}
 
 	}

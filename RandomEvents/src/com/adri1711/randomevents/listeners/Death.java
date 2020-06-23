@@ -42,7 +42,7 @@ public class Death implements Listener {
 							case KNOCKBACK_DUEL:
 							case BATTLE_ROYALE_CABALLO:
 							case BATTLE_ROYALE_TEAM_2:
-								plugin.getMatchActive().echaDePartida(player,true);
+								plugin.getMatchActive().echaDePartida(player, true, true, false);
 								UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
 
 								break;
@@ -54,8 +54,10 @@ public class Death implements Listener {
 								break;
 							case GEM_CRAWLER:
 								plugin.getMatchActive().reiniciaPlayer(player);
-								UtilsRandomEvents.playSound(player,
-										UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
+								UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
+								break;
+							case BOMB_TAG:
+								ev.setDamage(0);
 								break;
 							default:
 								break;
@@ -84,75 +86,105 @@ public class Death implements Listener {
 										.getEquipo(player).equals(plugin.getMatchActive().getEquipo(damager))) {
 							ev.setCancelled(true);
 						} else {
+							if (plugin.getMatchActive().getPlayers().contains(damager.getName())) {
+								if (((player.getHealth() - ev.getFinalDamage()) <= 0)) {
+									ev.setCancelled(true);
+									switch (plugin.getMatchActive().getMatch().getMinigame()) {
+									case BATTLE_ROYALE:
+									case BATTLE_ROYALE_CABALLO:
+									case BATTLE_ROYALE_TEAM_2:
+										plugin.getMatchActive().echaDePartida(player, true, true, false);
+										player.setHealth(20);
+										UtilsRandomEvents.playSound(player,
+												UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
+										UtilsRandomEvents.playSound(damager,
+												UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
 
-							if (((player.getHealth() - ev.getFinalDamage()) <= 0)) {
-								ev.setCancelled(true);
-								switch (plugin.getMatchActive().getMatch().getMinigame()) {
-								case BATTLE_ROYALE:
-								case BATTLE_ROYALE_CABALLO:
-								case BATTLE_ROYALE_TEAM_2:
-									plugin.getMatchActive().echaDePartida(player,true);
-									player.setHealth(20);
-									UtilsRandomEvents.playSound(player,
-											UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
-									UtilsRandomEvents.playSound(damager, UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
+										break;
+									case KNOCKBACK_DUEL:
+									case ESCAPE_ARROW:
 
-									break;
-								case KNOCKBACK_DUEL:
-								case ESCAPE_ARROW:
+										ev.setDamage(0);
+										break;
+									case TOP_KILLER:
+									case TOP_KILLER_TEAM_2:
+										plugin.getMatchActive().reiniciaPlayer(player);
+										UtilsRandomEvents.playSound(player,
+												UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
 
-									ev.setDamage(0);
-									break;
-								case TOP_KILLER:
-								case TOP_KILLER_TEAM_2:
-									plugin.getMatchActive().reiniciaPlayer(player);
-									UtilsRandomEvents.playSound(player,
-											UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
+										UtilsRandomEvents.playSound(damager,
+												UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
+										if (plugin.getMatchActive().getPuntuacion().containsKey(damager.getName())) {
+											plugin.getMatchActive().getPuntuacion().put(damager.getName(),
+													plugin.getMatchActive().getPuntuacion().get(damager.getName()) + 1);
 
-									UtilsRandomEvents.playSound(damager, UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
-									if (plugin.getMatchActive().getPuntuacion().containsKey(damager.getName())) {
-										plugin.getMatchActive().getPuntuacion().put(damager.getName(),
-												plugin.getMatchActive().getPuntuacion().get(damager.getName()) + 1);
+										} else {
+											plugin.getMatchActive().getPuntuacion().put(damager.getName(), 1);
+										}
 
-									} else {
-										plugin.getMatchActive().getPuntuacion().put(damager.getName(), 1);
+										damager.sendMessage(Constantes.TAG_PLUGIN + " "
+												+ Constantes.NOW_POINTS.replace("%points%", plugin.getMatchActive()
+														.getPuntuacion().get(damager.getName()).toString()));
+
+										break;
+
+									case GEM_CRAWLER:
+										plugin.getMatchActive().reiniciaPlayer(player);
+										UtilsRandomEvents.playSound(player,
+												UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
+
+										UtilsRandomEvents.playSound(damager,
+												UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
+
+										break;
+									case BOMB_TAG:
+										ev.setDamage(0);
+										if (damager.equals(plugin.getMatchActive().getPlayerContador())) {
+											UtilsRandomEvents.borraInventario(damager);
+											UtilsRandomEvents.playSound(damager,
+													UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
+											UtilsRandomEvents.playSound(player,
+													UtilsRandomEvents.buscaSonido("VILLAGER", "HIT"));
+											plugin.getMatchActive().ponInventarioMatch(player);
+											plugin.getMatchActive().setPlayerContador(player);
+										}
+										break;
+									default:
+										break;
 									}
+								} else {
+									switch (plugin.getMatchActive().getMatch().getMinigame()) {
+									case BATTLE_ROYALE:
+									case BATTLE_ROYALE_CABALLO:
+									case BATTLE_ROYALE_TEAM_2:
+									case TOP_KILLER:
+										break;
+									case KNOCKBACK_DUEL:
+									case ESCAPE_ARROW:
+										ev.setDamage(0);
+										break;
+									case BOMB_TAG:
+										ev.setDamage(0);
+										if (damager.equals(plugin.getMatchActive().getPlayerContador())) {
+											UtilsRandomEvents.borraInventario(damager);
+											UtilsRandomEvents.playSound(damager,
+													UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
+											UtilsRandomEvents.playSound(player,
+													UtilsRandomEvents.buscaSonido("VILLAGER", "HIT"));
+											plugin.getMatchActive().ponInventarioMatch(player);
+											plugin.getMatchActive().setPlayerContador(player);
+										}
+										break;
 
-									damager.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.NOW_POINTS.replace(
-											"%points%",
-											plugin.getMatchActive().getPuntuacion().get(damager.getName()).toString()));
-
-									break;
-									
-								case GEM_CRAWLER:
-									plugin.getMatchActive().reiniciaPlayer(player);
-									UtilsRandomEvents.playSound(player,
-											UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
-
-									UtilsRandomEvents.playSound(damager, UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
-									
-
-									break;
-
-								default:
-									break;
+									default:
+										break;
+									}
 								}
 							} else {
-								switch (plugin.getMatchActive().getMatch().getMinigame()) {
-								case BATTLE_ROYALE:
-								case BATTLE_ROYALE_CABALLO:
-								case BATTLE_ROYALE_TEAM_2:
-								case TOP_KILLER:
-									break;
-								case KNOCKBACK_DUEL:
-								case ESCAPE_ARROW:
-									ev.setDamage(0);
-									break;
-								default:
-									break;
+								if (plugin.getMatchActive().getPlayersSpectators().contains(damager)) {
+									ev.setCancelled(true);
 								}
 							}
-
 						}
 
 					} else {
@@ -163,19 +195,20 @@ public class Death implements Listener {
 							case BATTLE_ROYALE_CABALLO:
 							case BATTLE_ROYALE_TEAM_2:
 							case ESCAPE_ARROW:
-								plugin.getMatchActive().echaDePartida(player,true);
+								plugin.getMatchActive().echaDePartida(player, true, false, false);
 								player.setHealth(20);
 								UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
 
 								break;
 							case KNOCKBACK_DUEL:
+							case BOMB_TAG:
 								ev.setDamage(0);
 								break;
 							case TOP_KILLER:
 							case GEM_CRAWLER:
 								plugin.getMatchActive().reiniciaPlayer(player);
 								UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
-							
+
 								break;
 							default:
 								break;
@@ -189,6 +222,7 @@ public class Death implements Listener {
 							case ESCAPE_ARROW:
 								break;
 							case KNOCKBACK_DUEL:
+							case BOMB_TAG:
 								ev.setDamage(0);
 								break;
 							default:
@@ -198,6 +232,9 @@ public class Death implements Listener {
 						}
 					}
 				}
+			} else if (plugin.getMatchActive() != null
+					&& plugin.getMatchActive().getPlayersSpectators().contains(player)) {
+				ev.setCancelled(true);
 			}
 		} else if (ev.getEntity() instanceof Horse && ev.getDamager() instanceof Player) {
 			Player player = (Player) ev.getDamager();

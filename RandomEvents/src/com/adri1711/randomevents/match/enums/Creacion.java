@@ -13,41 +13,45 @@ public enum Creacion {
 	ARENA_SPAWNS(4, "§6§lGo to the arena you created and write 'Done' to set each spawn location for the players"),
 
 	ANOTHER_ARENA_SPAWNS(5, "§6§lPut another player spawn, say 'Done' "),
+	
+	SPECTATOR_SPAWNS(6, "§6§lSay 'Done' to put a spectator spawn and 'Next' to go to the next step"),
 
-	INVENTORY(6, "§6§lTake the inventory for the players and say 'Done' "),
+	INVENTORY(7, "§6§lTake the inventory for the players and say 'Done' "),
 
-	REWARDS(7,
+	REWARDS(8,
 			"§6§lWrite a command to reward the winners. Use %player% and it will be replaced for the player's name. Put reprob <probability from 1 to 100> before the command to set a prob to execute the reward"),
 
-	ANOTHER_REWARDS(8, "§6§lPut another reward for the winners or just say 'Done' to begin the next step"),
+	ANOTHER_REWARDS(9, "§6§lPut another reward for the winners or just say 'Done' to begin the next step"),
 
-	MINIGAME_TYPE(9, "§6§lChoose Minigame type"),
+	MINIGAME_TYPE(10, "§6§lChoose Minigame type"),
 
-	TIMER_MOB_SPAWN(10, "§6§lWrite the number of seconds (it can have decimals) to respawn each mob"),
+	TIMER_MOB_SPAWN(11, "§6§lWrite the number of seconds (it can have decimals) to respawn each mob"),
 
-	MOB_NAME(11, "§6§lChoose Mob"),
+	MOB_NAME(12, "§6§lChoose Mob"),
 
-	MOB_SPAWN(12,
+	MOB_SPAWN(13,
 			"§6§lGo to the arena you created and write 'Done' to set the spawn location of the mob, 'New' to choose another mob or 'End' to end the creation of the RandomEvent"),
 
-	PLAY_TIME(13, "§6§lChoose the play time in seconds"),
+	PLAY_TIME(14, "§6§lChoose the play time in seconds"),
 	
-	ARROW_LOCATION1(14,
+	ARROW_LOCATION1(15,
 			"§6§lSet the first location of the cuboid of spawn of arrows, say 'Done'"),
 	
-	ARROW_LOCATION2(15,
+	ARROW_LOCATION2(16,
 			"§6§lSet the second location of the cuboid of spawn of arrows, say 'Done'"),
 	
-	TIMER_ARROW_SPAWN(16, "§6§lWrite the number of seconds (it can have decimals) to respawn each arrow"),
+	TIMER_ARROW_SPAWN(17, "§6§lWrite the number of seconds (it can have decimals) to respawn each arrow"),
 	
 	
-	GEM_LOCATION1(17,
+	GEM_LOCATION1(18,
 			"§6§lSet the first location of the cuboid of spawn of gems, say 'Done'"),
 	
-	GEM_LOCATION2(18,
+	GEM_LOCATION2(19,
 			"§6§lSet the second location of the cuboid of spawn of gems, say 'Done'"),
 	
-	TIMER_GEM_SPAWN(19, "§6§lWrite the number of seconds (it can have decimals) to respawn each gem"),
+	TIMER_GEM_SPAWN(20, "§6§lWrite the number of seconds (it can have decimals) to respawn each gem"),
+	
+	TIMER_BOMB(21, "§6§lWrite the number of seconds to fire the bomb"),
 
 
 	

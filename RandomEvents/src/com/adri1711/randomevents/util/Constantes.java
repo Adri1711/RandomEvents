@@ -5,6 +5,8 @@ public class Constantes {
 	public static final String INVALID_INPUT = "§c§lInvalid input, try another one";
 
 	public static final String DONE = "Done";
+	
+	public static final String NEXT = "Next";
 
 	public static final String SAME = "Same";
 
@@ -131,5 +133,14 @@ public class Constantes {
 
 	public static final String PLAYER_WINNING = "§6§lThe player §e§l%player% §6§lhas enough gems, kill him or the match will end";
 	public static final String PLAYER_WINNING_SECONDS = "§e§l%player% §6§lwins in %seconds% seconds";
+	
+	public static final String BOMB_SECONDS = "§6§lBomb explodes in %seconds% seconds";
+
+	public static final String PLAYER_HAS_BOMB = "§6§lThe player §e§l%player% §6§lhas the bomb";
+	public static final String BOMB_EXPLODE = "§6§lThe player §e§l%player% §6§lblew up";
+
+	public static final String LEAVE_COMMAND = "§6§lYou are now a spectator. Use §e§l/revent leave §6§lto leave spectator mode";
+
+	public static final String ERROR_SAVING_INVENTORY = "§c§lYour inventory failed on save, please save your items and try again";
 
 }

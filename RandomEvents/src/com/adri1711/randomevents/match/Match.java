@@ -26,6 +26,8 @@ public class Match {
 	
 	private List<Location> spawns;
 	
+	private List<Location> spectatorSpawns;
+	
 	private Double secondsMobSpawn;
 	
 
@@ -48,6 +50,7 @@ public class Match {
 		//TODO this.equipment=new ItemStack[0];
 		this.rewards = new ArrayList<String>();
 		this.spawns=new ArrayList<Location>();
+		this.spectatorSpawns=new ArrayList<Location>();
 	}
 
 
@@ -204,6 +207,18 @@ public class Match {
 
 	public void setMob(EntityType mob) {
 		this.mob = mob;
+	}
+	
+	
+
+
+	public List<Location> getSpectatorSpawns() {
+		return spectatorSpawns;
+	}
+
+
+	public void setSpectatorSpawns(List<Location> spectatorSpawns) {
+		this.spectatorSpawns = spectatorSpawns;
 	}
 
 
