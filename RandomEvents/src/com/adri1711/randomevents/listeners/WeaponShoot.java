@@ -1,102 +1,40 @@
 package com.adri1711.randomevents.listeners;
 
-import org.bukkit.Sound;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.vehicle.VehicleDestroyEvent;
 
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.match.MinigameType;
 import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
+import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 
-public class Death implements Listener {
+public class WeaponShoot implements Listener {
 
 	private RandomEvents plugin;
 
-	public Death(RandomEvents plugin) {
+	public WeaponShoot(RandomEvents plugin) {
 		this.plugin = plugin;
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
-	public void damage(EntityDamageEvent ev) // Listens to EntityDamageEvent
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void weaponDamage(WeaponDamageEntityEvent ev) // Listens to
+															// EntityDamageEvent
 	{
-		
-		if (ev.getCause() != DamageCause.ENTITY_ATTACK ) {
+		if (ev.getVictim() instanceof Player) {
 
-			if (ev.getEntity() instanceof Player) {
-
-				Player player = (Player) ev.getEntity();
-				if (plugin.getMatchActive() != null
-						&& plugin.getMatchActive().getPlayers().contains(player.getName())) {
-					if (!plugin.getMatchActive().getPlaying()) {
-						ev.setCancelled(true);
-					} else {
-
-						if (((player.getHealth() - ev.getFinalDamage()) <= 0)) {
-
-							ev.setCancelled(true);
-							switch (plugin.getMatchActive().getMatch().getMinigame()) {
-							case BATTLE_ROYALE:
-							case KNOCKBACK_DUEL:
-							case BATTLE_ROYALE_CABALLO:
-							case BATTLE_ROYALE_TEAM_2:
-//							case TNT_RUN:
-								plugin.getMatchActive().echaDePartida(player, true, true, false);
-								UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
-
-								break;
-							case TOP_KILLER:
-							case TOP_KILLER_TEAM_2:
-								plugin.getMatchActive().reiniciaPlayer(player);
-								UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
-
-								break;
-							case GEM_CRAWLER:
-								plugin.getMatchActive().reiniciaPlayer(player);
-								UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
-								break;
-							case BOMB_TAG:
-								ev.setDamage(0);
-								break;
-							case BOAT_RUN:
-								ev.setCancelled(true);
-								break;
-							default:
-								break;
-							}
-						}
-					}
-				}
-			} else if (ev.getEntity() instanceof Boat) {
-				if (plugin.getMatchActive() != null && plugin.getMatchActive().getMobs().contains(ev.getEntity())) {
-					ev.setCancelled(true);
-				}
-			}
-		}
-	}
-
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void damage(EntityDamageByEntityEvent ev) // Listens to
-														// EntityDamageEvent
-	{
-		if (ev.getEntity() instanceof Player) {
-
-			Player player = (Player) ev.getEntity();
+			Player player = (Player) ev.getVictim();
 			if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayers().contains(player.getName())) {
 				if (!plugin.getMatchActive().getPlaying()) {
 					ev.setCancelled(true);
 				} else {
-					if (ev.getDamager() instanceof Player) {
-						Player damager = (Player) ev.getDamager();
+					if (ev.getPlayer() instanceof Player) {
+						Player damager = (Player) ev.getPlayer();
 						if (plugin.getMatchActive().getEquipo(player) != null
 								&& plugin.getMatchActive().getEquipo(damager) != null && plugin.getMatchActive()
 										.getEquipo(player).equals(plugin.getMatchActive().getEquipo(damager))) {
@@ -104,8 +42,7 @@ public class Death implements Listener {
 						} else {
 							if (plugin.getMatchActive().getPlayers().contains(damager.getName())) {
 
-								if (((player.getHealth() - ev.getFinalDamage()) <= 0)) {
-
+								if (((player.getHealth() - ev.getDamage()) <= 0)) {
 									ev.setCancelled(true);
 									switch (plugin.getMatchActive().getMatch().getMinigame()) {
 									case BATTLE_ROYALE:
@@ -123,26 +60,30 @@ public class Death implements Listener {
 									case ESCAPE_ARROW:
 
 										ev.setDamage(0);
-										break;										
+										break;
 									case TOP_KILLER:
 									case TOP_KILLER_TEAM_2:
 										plugin.getMatchActive().reiniciaPlayer(player);
 										UtilsRandomEvents.playSound(player,
 												UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
+										if (!player.getName().equals(damager.getName())) {
+											UtilsRandomEvents.playSound(damager,
+													UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
+											if (plugin.getMatchActive().getPuntuacion()
+													.containsKey(damager.getName())) {
+												plugin.getMatchActive().getPuntuacion().put(damager.getName(),
+														plugin.getMatchActive().getPuntuacion().get(damager.getName())
+																+ 1);
 
-										UtilsRandomEvents.playSound(damager,
-												UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
-										if (plugin.getMatchActive().getPuntuacion().containsKey(damager.getName())) {
-											plugin.getMatchActive().getPuntuacion().put(damager.getName(),
-													plugin.getMatchActive().getPuntuacion().get(damager.getName()) + 1);
+											} else {
+												plugin.getMatchActive().getPuntuacion().put(damager.getName(), 1);
+											}
 
-										} else {
-											plugin.getMatchActive().getPuntuacion().put(damager.getName(), 1);
+											damager.sendMessage(Constantes.TAG_PLUGIN + " "
+													+ plugin.getLanguage().getNowPoints().replace("%points%",
+															plugin.getMatchActive().getPuntuacion()
+																	.get(damager.getName()).toString()));
 										}
-
-										damager.sendMessage(Constantes.TAG_PLUGIN + " "
-												+ plugin.getLanguage().getNowPoints().replace("%points%", plugin.getMatchActive()
-														.getPuntuacion().get(damager.getName()).toString()));
 
 										break;
 
@@ -168,7 +109,7 @@ public class Death implements Listener {
 										}
 										break;
 									case BOAT_RUN:
-//									case TNT_RUN:
+										// case TNT_RUN:
 										ev.setCancelled(true);
 										break;
 									default:
@@ -198,7 +139,7 @@ public class Death implements Listener {
 										}
 										break;
 									case BOAT_RUN:
-//									case TNT_RUN:
+										// case TNT_RUN:
 										ev.setCancelled(true);
 										break;
 									default:
@@ -214,7 +155,7 @@ public class Death implements Listener {
 
 					} else {
 
-						if (((player.getHealth() - ev.getFinalDamage()) <= 0)) {
+						if (((player.getHealth() - ev.getDamage()) <= 0)) {
 
 							ev.setCancelled(true);
 							switch (plugin.getMatchActive().getMatch().getMinigame()) {
@@ -238,7 +179,7 @@ public class Death implements Listener {
 
 								break;
 							case BOAT_RUN:
-//							case TNT_RUN:
+								// case TNT_RUN:
 								ev.setCancelled(true);
 								break;
 							default:
@@ -257,7 +198,7 @@ public class Death implements Listener {
 								ev.setDamage(0);
 								break;
 							case BOAT_RUN:
-//							case TNT_RUN:
+								// case TNT_RUN:
 								ev.setCancelled(true);
 								break;
 							default:
@@ -271,16 +212,16 @@ public class Death implements Listener {
 					&& plugin.getMatchActive().getPlayersSpectators().contains(player)) {
 				ev.setCancelled(true);
 			}
-		} else if (ev.getEntity() instanceof Horse && ev.getDamager() instanceof Player) {
-			Player player = (Player) ev.getDamager();
+		} else if (ev.getVictim() instanceof Horse && ev.getPlayer() instanceof Player) {
+			Player player = (Player) ev.getPlayer();
 			if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayers().contains(player.getName())) {
 				if (plugin.getMatchActive().getMatch().getMinigame().getCodigo()
 						.equals(MinigameType.BATTLE_ROYALE_CABALLO.getCodigo())) {
 					ev.setDamage(0);
 				}
 			}
-		} else if (ev.getEntity() instanceof Boat) {
-			if (plugin.getMatchActive() != null && plugin.getMatchActive().getMobs().contains(ev.getEntity())) {
+		} else if (ev.getVictim() instanceof Boat) {
+			if (plugin.getMatchActive() != null && plugin.getMatchActive().getMobs().contains(ev.getVictim())) {
 				ev.setCancelled(true);
 			}
 		}

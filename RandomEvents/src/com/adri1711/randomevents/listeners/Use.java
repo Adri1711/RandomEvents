@@ -42,7 +42,7 @@ public class Use implements Listener {
 							player.updateInventory();
 						}
 						player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 60, 5));
-						player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.NOW_PROTECTED);
+						player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getNowProtected());
 					}
 				}
 			}

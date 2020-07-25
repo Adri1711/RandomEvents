@@ -1,7 +1,8 @@
 name: RandomEvents
 main: com.adri1711.randomevents.RandomEvents
-version: 0.5
+version: 1.1.2
 depend: [Lib1711]
+softdepend: [CrackShot]
 commands:
    revent:
       description: Shows the command menu too

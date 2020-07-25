@@ -19,6 +19,7 @@ import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
@@ -29,11 +30,13 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
 import com.adri1711.randomevents.RandomEvents;
+import com.adri1711.randomevents.language.LanguageMessages;
 import com.adri1711.randomevents.match.InventoryPers;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
 import com.adri1711.randomevents.match.MinigameType;
 import com.adri1711.randomevents.match.enums.Creacion;
+import com.adri1711.randomevents.util.Constantes.Messages;
 import com.google.common.io.Files;
 
 public class UtilsRandomEvents {
@@ -121,14 +124,14 @@ public class UtilsRandomEvents {
 				plugin.getPlayersCreation().remove(player.getName());
 				plugin.getPlayerMatches().remove(player.getName());
 				plugin.getMatches().add(match);
-				player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.END_OF_ARENA_CREATION);
+				player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getEndOfArenaCreation());
 			} else {
 				System.out.println("JSON was null.");
-				player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.ERROR);
+				player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getError());
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-			player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.ERROR);
+			player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getError());
 
 		}
 
@@ -196,10 +199,16 @@ public class UtilsRandomEvents {
 
 	public static void sacaInventario(RandomEvents plugin, Player player) {
 		File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories");
+		File dataFolderOld = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventoriesold");
 		if (!dataFolder.exists()) {
 			dataFolder.mkdir();
 		}
+		if (!dataFolderOld.exists()) {
+			dataFolderOld.mkdir();
+		}
 		File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories",
+				player.getName() + ".json");
+		File bossFileOld = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventoriesold",
 				player.getName() + ".json");
 		InventoryPers inventario = null;
 		if (bossFile.exists()) {
@@ -219,6 +228,7 @@ public class UtilsRandomEvents {
 				}
 
 			} catch (FileNotFoundException e) {
+				System.out.println("[RandomEvents] Error in sacaInventario catch 1");
 				System.out.println(e.getMessage());
 			} finally {
 				try {
@@ -233,7 +243,6 @@ public class UtilsRandomEvents {
 
 			try {
 				if (inventario != null) {
-					bossFile.delete();
 					UtilsRandomEvents.borraInventario(player);
 
 					player.getInventory().setContents(inventario.getContents());
@@ -244,6 +253,14 @@ public class UtilsRandomEvents {
 
 					player.updateInventory();
 
+					if (bossFileOld.exists()) {
+						bossFileOld.delete();
+					}
+					Files.move(bossFile, bossFileOld);
+					if (bossFile.exists()) {
+						bossFile.delete();
+					}
+
 					if (player.getActivePotionEffects() != null) {
 						for (PotionEffect effect : player.getActivePotionEffects()) {
 							player.removePotionEffect(effect.getType());
@@ -252,6 +269,7 @@ public class UtilsRandomEvents {
 					}
 				}
 			} catch (Exception exc) {
+				System.out.println("[RandomEvents] Error in sacaInventario catch 2");
 				System.out.println(exc.getMessage());
 			}
 		}
@@ -545,6 +563,14 @@ public class UtilsRandomEvents {
 		player.getInventory().setBoots(null);
 		player.getInventory().setChestplate(null);
 		player.getEquipment().setArmorContents(null);
+		if(player.getOpenInventory()!=null){
+			if(player.getOpenInventory().getTopInventory()!=null){
+				player.getOpenInventory().getTopInventory().clear();
+			}
+			if(player.getOpenInventory().getBottomInventory()!=null){
+				player.getOpenInventory().getBottomInventory().clear();
+			}
+		}
 		player.updateInventory();
 	}
 
@@ -629,5 +655,11 @@ public class UtilsRandomEvents {
 		}
 
 	}
+	
+	
+
+	
+	
+	
 
 }

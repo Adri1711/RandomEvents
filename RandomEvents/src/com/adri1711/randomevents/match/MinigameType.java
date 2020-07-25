@@ -1,24 +1,28 @@
 package com.adri1711.randomevents.match;
 
 public enum MinigameType {
-	BATTLE_ROYALE("BR","Ultimo en pie"),
+	BATTLE_ROYALE("BR","Battle Royale"),
 
-	BATTLE_ROYALE_TEAM_2("BRT2","Ultimo equipo en pie"),
+	BATTLE_ROYALE_TEAM_2("BRT2","Team Battle Royale"),
 	
-	BATTLE_ROYALE_CABALLO("LJ","Lucha de jinetes"),
+	BATTLE_ROYALE_CABALLO("LJ","Knights Battle"),
 	
-	TOP_KILLER("TKLL","Caza Estelar"),
+	TOP_KILLER("TKLL","Top Killer"),
 	
-	TOP_KILLER_TEAM_2("TKLLT2","Caza Estelar Equipos de 2"),
+	TOP_KILLER_TEAM_2("TKLLT2","Team Top Killer"),
 	
-	KNOCKBACK_DUEL("KBD","Duelo de knockback"),
+	KNOCKBACK_DUEL("KBD","Knockback Duel"),
 	
-	ESCAPE_ARROW("EARR","Evita la flecha"),
+	ESCAPE_ARROW("EARR","Arrow Rain"),
 
-	GEM_CRAWLER("GEMC","Atrapa la gema"),
+	GEM_CRAWLER("GEMC","Gem Carrier"),
 	
-	BOMB_TAG("BOMB","Patata caliente");
+	BOMB_TAG("BOMB","TNT Tag"),
 	
+	BOAT_RUN("BOAT_RUN","Boat Race");
+
+//	TNT_RUN("TNT_RUN","TNT Run");
+
 	private String codigo;
 	private String message;
 

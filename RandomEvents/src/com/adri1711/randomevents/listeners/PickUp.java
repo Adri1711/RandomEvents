@@ -40,7 +40,7 @@ public class PickUp implements Listener {
 				if (plugin.getMatchActive().getPlayerContador() == null) {
 					UtilsRandomEvents
 							.mandaMensaje(plugin.getMatchActive().getPlayersObj(),
-									Constantes.NOW_GEMS.replace("%player%", player.getName()).replace("%points%",
+									plugin.getLanguage().getNowGems().replace("%player%", player.getName()).replace("%points%",
 											plugin.getMatchActive().getPuntuacion().get(player.getName()).toString()),
 									true);
 					plugin.getMatchActive().compruebaPartida();

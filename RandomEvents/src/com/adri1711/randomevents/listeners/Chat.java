@@ -3,7 +3,6 @@ package com.adri1711.randomevents.listeners;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -53,7 +52,7 @@ public class Chat implements Listener {
 				match.setAmountPlayers(Integer.valueOf(message.trim()));
 				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position + 1);
 			} catch (Exception e) {
-				player.sendMessage(Constantes.INVALID_INPUT);
+				player.sendMessage(plugin.getLanguage().getInvalidInput());
 				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position);
 			}
 			break;
@@ -62,7 +61,7 @@ public class Chat implements Listener {
 				match.setAmountPlayersMin(Integer.valueOf(message.trim()));
 				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position + 1);
 			} catch (Exception e) {
-				player.sendMessage(Constantes.INVALID_INPUT);
+				player.sendMessage(plugin.getLanguage().getInvalidInput());
 				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position);
 			}
 			break;
@@ -110,7 +109,11 @@ public class Chat implements Listener {
 
 				ItemStack[] contenido = player.getInventory().getContents();
 				List<ItemStack> contenidoList = Arrays.asList(contenido);
-				contenidoList.removeAll(Arrays.asList(player.getInventory().getArmorContents()));
+				try {
+					contenidoList.removeAll(Arrays.asList(player.getInventory().getArmorContents()));
+				} catch (Exception e) {
+
+				}
 
 				match.getInventory().setContents((ItemStack[]) contenidoList.toArray());
 				match.getInventory().setHelmet(player.getInventory().getHelmet());
@@ -143,6 +146,7 @@ public class Chat implements Listener {
 					case BATTLE_ROYALE_CABALLO:
 					case BATTLE_ROYALE_TEAM_2:
 					case KNOCKBACK_DUEL:
+						// case TNT_RUN:
 						actualiza = UtilsRandomEvents.pasaACreation(plugin, player, Creacion.END.getPosition());
 						break;
 					case TOP_KILLER:
@@ -161,13 +165,17 @@ public class Chat implements Listener {
 					case BOMB_TAG:
 						actualiza = UtilsRandomEvents.pasaACreation(plugin, player, Creacion.TIMER_BOMB.getPosition());
 						break;
+					case BOAT_RUN:
+						actualiza = UtilsRandomEvents.pasaACreation(plugin, player,
+								Creacion.GOAL_LOCATION1.getPosition());
+						break;
 					}
 				} else {
-					player.sendMessage(Constantes.INVALID_INPUT);
+					player.sendMessage(plugin.getLanguage().getInvalidInput());
 					actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position);
 				}
 			} catch (Exception e) {
-				player.sendMessage(Constantes.INVALID_INPUT);
+				player.sendMessage(plugin.getLanguage().getInvalidInput());
 				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position);
 			}
 			break;
@@ -185,7 +193,7 @@ public class Chat implements Listener {
 				match.setTiempoPartida(Integer.valueOf(message.trim()));
 				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, Creacion.END.getPosition());
 			} catch (Exception e) {
-				player.sendMessage(Constantes.INVALID_INPUT);
+				player.sendMessage(plugin.getLanguage().getInvalidInput());
 				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position);
 			}
 			break;
@@ -197,6 +205,7 @@ public class Chat implements Listener {
 			}
 			break;
 		case GEM_LOCATION1:
+		case GOAL_LOCATION1:
 			if (message.equals(Constantes.DONE)) {
 				match.setLocation1(player.getLocation());
 				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position + 1);
@@ -209,13 +218,19 @@ public class Chat implements Listener {
 				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position + 1);
 			}
 			break;
+		case GOAL_LOCATION2:
+			if (message.equals(Constantes.DONE)) {
+				match.setLocation2(player.getLocation());
+				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, Creacion.END.getPosition());
+			}
+			break;
 		case TIMER_ARROW_SPAWN:
 		case TIMER_GEM_SPAWN:
 			try {
 				match.setSecondsMobSpawn(Double.valueOf(message.trim()));
 				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, Creacion.END.getPosition());
 			} catch (Exception e) {
-				player.sendMessage(Constantes.INVALID_INPUT);
+				player.sendMessage(plugin.getLanguage().getInvalidInput());
 				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position);
 			}
 			break;
@@ -225,7 +240,7 @@ public class Chat implements Listener {
 				match.setSecondsMobSpawn(Double.valueOf(message.trim()));
 				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, Creacion.END.getPosition());
 			} catch (Exception e) {
-				player.sendMessage(Constantes.INVALID_INPUT);
+				player.sendMessage(plugin.getLanguage().getInvalidInput());
 				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position);
 			}
 			break;

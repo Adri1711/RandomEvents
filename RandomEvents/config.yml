@@ -3,17 +3,25 @@
 #						Configuration							#
 #################################################################
 
+#Seconds to check if the probability match for a random event
 secondsTimer: 60
 
+# Percentage of probability to spawn a random event each time the timer is fired
 probabilityRandomEvent: 5
 
+#Probability to spawn a power up of resistance in arrow rain games
 probabilityPowerUp: 1
 
+#Minimum amount of players to begin checking for random events
 minPlayers: 40
 
+
+#Commands that will be done each time a user join a random event, use it in case you need to get the god mode off, to set the gamemode to survival, etc
 commandsOnUserJoin:
 - 'psa %player%'
 
+
+#Spawn where the player will be teleported after minigame ends
 spawn:
   ==: org.bukkit.Location
   world: world

@@ -20,7 +20,7 @@ public class Comandos {
 		menu += "   §6/revent:\n          §9-> §6Shows this menu";
 
 		for (ComandosEnum cmd : ComandosEnum.values()) {
-			
+
 			if (cmd.getShowOnMenu() && player.hasPermission(cmd.getPermission())) {
 				menu += Constantes.SALTO_LINEA;
 				menu += cmd.getDescription();
@@ -34,22 +34,22 @@ public class Comandos {
 
 			ComandosEnum comando = ComandosEnum.getByAliaseAndSize(args[0], 1);
 			if (comando != null) {
-				if(player.hasPermission(comando.getPermission())){
-					
-				Method method = plugin.getComandosExecutor().getClass().getMethod(comando.getMetodo(), RandomEvents.class,
-						Player.class);
-				method.invoke(plugin.getComandosExecutor(), plugin, player);
-				}else{
-					player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.NO_PERMISSION);
+				if (player.hasPermission(comando.getPermission())) {
+
+					Method method = plugin.getComandosExecutor().getClass().getMethod(comando.getMetodo(),
+							RandomEvents.class, Player.class);
+					method.invoke(plugin.getComandosExecutor(), plugin, player);
+				} else {
+					player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getNoPermission());
 
 				}
 			} else {
-				player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.INVALID_CMD);
+				player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getInvalidCmd());
 			}
 
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
-			player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.ERROR);
+			player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getError());
 			System.out.println(e.getMessage());
 		}
 
@@ -60,22 +60,22 @@ public class Comandos {
 
 			ComandosEnum comando = ComandosEnum.getByAliaseAndSize(args[0], 2);
 			if (comando != null) {
-				if(player.hasPermission(comando.getPermission())){
-					
-				Method method = plugin.getComandosExecutor().getClass().getMethod(comando.getMetodo(), RandomEvents.class,
-						Player.class,String.class);
-				method.invoke(plugin.getComandosExecutor(), plugin, player,args[1]);
-				}else{
-					player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.NO_PERMISSION);
+				if (player.hasPermission(comando.getPermission())) {
+
+					Method method = plugin.getComandosExecutor().getClass().getMethod(comando.getMetodo(),
+							RandomEvents.class, Player.class, String.class);
+					method.invoke(plugin.getComandosExecutor(), plugin, player, args[1]);
+				} else {
+					player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getNoPermission());
 
 				}
 			} else {
-				player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.INVALID_CMD);
+				player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getInvalidCmd());
 			}
 
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
-			player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.ERROR);
+			player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getError());
 			System.out.println(e.getMessage());
 		}
 	}

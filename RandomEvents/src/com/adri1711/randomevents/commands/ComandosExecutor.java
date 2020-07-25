@@ -20,11 +20,11 @@ public class ComandosExecutor {
 				if (plugin.getMatchActive().getPassword().equals(password)) {
 					plugin.getMatchActive().uneAPlayer(player);
 				} else {
-					player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.INVALID_PASSWORD);
+					player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getInvalidPassword());
 				}
 
 			} else {
-				player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.MATCH_BEGUN);
+				player.sendMessage(Constantes.TAG_PLUGIN + " " +plugin.getLanguage().getMatchBegun());
 			}
 
 		}
@@ -33,7 +33,7 @@ public class ComandosExecutor {
 	}
 
 	public void showRandomEvents(RandomEvents plugin, Player player) {
-		player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.MATCHES);
+		player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getMatches());
 		for (Match m : plugin.getMatches()) {
 			player.sendMessage("§6§l" + plugin.getMatches().indexOf(m) + " - " + m.getMinigame().getMessage() + " -> "
 					+ m.getName());
@@ -45,9 +45,9 @@ public class ComandosExecutor {
 		if (plugin.getMatchActive() == null) {
 			plugin.setForzado(Boolean.TRUE);
 			plugin.setMatchActive(UtilsRandomEvents.escogeMatchActiveAleatoria(plugin, plugin.getMatches(), true));
-			player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.MATCH_BEGIN_SOON);
+			player.sendMessage(Constantes.TAG_PLUGIN + " " +plugin.getLanguage().getMatchBeginSoon());
 		} else {
-			player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.MATCH_BEGUN);
+			player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getMatchBegun());
 		}
 
 	}
@@ -57,12 +57,12 @@ public class ComandosExecutor {
 			try {
 				plugin.setForzado(Boolean.TRUE);
 				plugin.setMatchActive(new MatchActive(plugin.getMatches().get(Integer.valueOf(number)), plugin, true));
-				player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.MATCH_BEGIN_SOON);
+				player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getMatchBeginSoon());
 			} catch (Exception e) {
-				player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.INVALID_INPUT);
+				player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getInvalidInput());
 			}
 		} else {
-			player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.MATCH_BEGUN);
+			player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getMatchBegun());
 		}
 
 	}
@@ -70,7 +70,7 @@ public class ComandosExecutor {
 	public void cancelCreationRandomEvent(RandomEvents plugin, Player player) {
 		plugin.getPlayerMatches().remove(player.getName());
 		plugin.getPlayersCreation().remove(player.getName());
-		player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.CANCEL_OF_ARENA_CREATION);
+		player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getCancelOfArenaCreation());
 
 	}
 
@@ -82,14 +82,14 @@ public class ComandosExecutor {
 
 	public void reloadPlugin(RandomEvents plugin, Player player) {
 		plugin.doingReload();
-		player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.PLUGIN_RELOAD);
+		player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getPluginReload());
 	}
 
 	public void spawnSet(RandomEvents plugin, Player player) {
 		plugin.setSpawn(player.getLocation());
 		plugin.getConfig().set("spawn", player.getLocation());
 		plugin.saveConfig();
-		player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.SPAWN_SET);
+		player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getSpawnSet());
 	}
 
 	public void leaveRandomEvent(RandomEvents plugin, Player player) {
@@ -99,7 +99,7 @@ public class ComandosExecutor {
 			plugin.getMatchActive().echaDePartida(player, false, true, true);
 
 		} else {
-			player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.NOT_IN_MATCH);
+			player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getNotInMatch());
 		}
 	}
 

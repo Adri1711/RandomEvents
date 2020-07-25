@@ -23,12 +23,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.adri1711.api.API1711;
 import com.adri1711.randomevents.commands.Comandos;
 import com.adri1711.randomevents.commands.ComandosExecutor;
+import com.adri1711.randomevents.language.LanguageMessages;
 import com.adri1711.randomevents.listeners.Chat;
 import com.adri1711.randomevents.listeners.Death;
 import com.adri1711.randomevents.listeners.Join;
+import com.adri1711.randomevents.listeners.Move;
 import com.adri1711.randomevents.listeners.PickUp;
 import com.adri1711.randomevents.listeners.Quit;
 import com.adri1711.randomevents.listeners.Use;
+import com.adri1711.randomevents.listeners.WeaponShoot;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
 import com.adri1711.randomevents.util.Constantes;
@@ -68,6 +71,8 @@ public class RandomEvents extends JavaPlugin {
 
 	private ItemStack powerUpItem;
 
+	private LanguageMessages language;
+
 	public void onEnable() {
 		loadConfig();
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
@@ -86,6 +91,11 @@ public class RandomEvents extends JavaPlugin {
 		getServer().getPluginManager().registerEvents((Listener) new Join(this), (Plugin) this);
 		getServer().getPluginManager().registerEvents((Listener) new Use(this), (Plugin) this);
 		getServer().getPluginManager().registerEvents((Listener) new PickUp(this), (Plugin) this);
+		getServer().getPluginManager().registerEvents((Listener) new Move(this), (Plugin) this);
+		
+		if(getServer().getPluginManager().getPlugin("CrackShot")!=null){
+			getServer().getPluginManager().registerEvents((Listener) new WeaponShoot(this), (Plugin) this);
+		}
 
 		getLogger().info(" Author adri1711- activado");
 		comienzaTemporizador();
@@ -117,6 +127,8 @@ public class RandomEvents extends JavaPlugin {
 		this.playersCreation = new HashMap<String, Integer>();
 		this.playersEntity = new HashMap<String, EntityType>();
 
+		this.language = new LanguageMessages(this);
+
 	}
 
 	public void comienzaTemporizador() {
@@ -127,7 +139,7 @@ public class RandomEvents extends JavaPlugin {
 					if (matches != null && !matches.isEmpty() && Bukkit.getOnlinePlayers().size() >= minPlayers) {
 						if (!forzado) {
 							if (probabilityRandomEvent > random.nextInt(100)) {
-								matchActive = UtilsRandomEvents.escogeMatchActiveAleatoria(getPlugin(), matches,false);
+								matchActive = UtilsRandomEvents.escogeMatchActiveAleatoria(getPlugin(), matches, false);
 							} else {
 								comienzaTemporizador();
 							}
@@ -166,7 +178,7 @@ public class RandomEvents extends JavaPlugin {
 					Comandos.ejecutaComandoDosArgumentos(this, player, args);
 					break;
 				default:
-					player.sendMessage(Constantes.TAG_PLUGIN + " " + Constantes.INVALID_CMD);
+					player.sendMessage(Constantes.TAG_PLUGIN + " " + language.getInvalidCmd());
 					break;
 				}
 			}
@@ -339,6 +351,14 @@ public class RandomEvents extends JavaPlugin {
 
 	public void setPowerUpItem(ItemStack powerUpItem) {
 		this.powerUpItem = powerUpItem;
+	}
+
+	public LanguageMessages getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(LanguageMessages language) {
+		this.language = language;
 	}
 
 }

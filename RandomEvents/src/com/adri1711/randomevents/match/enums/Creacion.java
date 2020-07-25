@@ -53,7 +53,11 @@ public enum Creacion {
 	
 	TIMER_BOMB(21, "§6§lWrite the number of seconds to fire the bomb"),
 
-
+	GOAL_LOCATION1(22,
+			"§6§lSet the first location of the cuboid of the goal, say 'Done'"),
+	
+	GOAL_LOCATION2(23,
+			"§6§lSet the second location of the cuboid of the goal, say 'Done'"),
 	
 	END(999, "§6§lYou finished the creation of the random event!");
 
