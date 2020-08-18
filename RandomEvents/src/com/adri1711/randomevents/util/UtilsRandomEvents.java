@@ -563,6 +563,7 @@ public class UtilsRandomEvents {
 		player.getInventory().setBoots(null);
 		player.getInventory().setChestplate(null);
 		player.getEquipment().setArmorContents(null);
+		player.setItemOnCursor(null);
 		if(player.getOpenInventory()!=null){
 			if(player.getOpenInventory().getTopInventory()!=null){
 				player.getOpenInventory().getTopInventory().clear();
