@@ -25,6 +25,7 @@ import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.commands.ComandosEnum;
 import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
+import com.adri1711.util.enums.AMaterials;
 
 public class MatchActive {
 
@@ -108,7 +109,7 @@ public class MatchActive {
 		this.playing = Boolean.FALSE;
 		this.password = "" + random.nextInt(10000);
 		this.firstAnnounce = Boolean.TRUE;
-		this.gema = new ItemStack(Material.EMERALD);
+		this.gema = new ItemStack(plugin.getApi().getMaterial(AMaterials.EMERALD));
 		this.setForzada(forzada);
 
 		this.locations = UtilsRandomEvents.getAllPossibleLocations(match.getLocation1(), match.getLocation2());
@@ -656,7 +657,7 @@ public class MatchActive {
 				Horse horse = (Horse) p.getWorld().spawnEntity(p.getLocation(), EntityType.HORSE); // Spawns
 																									// the
 				// horse
-				horse.getInventory().setSaddle(new ItemStack(Material.SADDLE, 1)); // Gives
+				horse.getInventory().setSaddle(new ItemStack(plugin.getApi().getMaterial(AMaterials.SADDLE), 1)); // Gives
 																					// horse
 																					// saddle
 				horse.setTamed(true); // Sets horse to tamed
@@ -891,7 +892,7 @@ public class MatchActive {
 			}
 
 			if (amount > 0) {
-				ItemStack puntos = new ItemStack(Material.EMERALD);
+				ItemStack puntos = new ItemStack(plugin.getApi().getMaterial(AMaterials.EMERALD));
 				puntos.setAmount(amount);
 				location.getWorld().dropItem(location, puntos);
 				getPuntuacion().put(p.getName(), 0);

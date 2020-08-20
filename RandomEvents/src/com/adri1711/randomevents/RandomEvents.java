@@ -36,6 +36,7 @@ import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
 import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
+import com.adri1711.util.enums.AMaterials;
 
 public class RandomEvents extends JavaPlugin {
 
@@ -74,11 +75,11 @@ public class RandomEvents extends JavaPlugin {
 	private LanguageMessages language;
 
 	public void onEnable() {
-		loadConfig();
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
+		loadConfig();
 		this.comandosExecutor = new ComandosExecutor();
 
-		this.powerUpItem = new ItemStack(Material.EMERALD);
+		this.powerUpItem = new ItemStack(getApi().getMaterial(AMaterials.EMERALD));
 		ItemMeta itemMeta = this.powerUpItem.getItemMeta();
 		itemMeta.setDisplayName("§2§lPowerUP");
 		this.powerUpItem.setItemMeta(itemMeta);
