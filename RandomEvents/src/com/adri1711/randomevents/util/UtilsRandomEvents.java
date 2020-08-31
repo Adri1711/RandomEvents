@@ -19,7 +19,6 @@ import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Sound;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
@@ -30,13 +29,11 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
 import com.adri1711.randomevents.RandomEvents;
-import com.adri1711.randomevents.language.LanguageMessages;
 import com.adri1711.randomevents.match.InventoryPers;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
 import com.adri1711.randomevents.match.MinigameType;
 import com.adri1711.randomevents.match.enums.Creacion;
-import com.adri1711.randomevents.util.Constantes.Messages;
 import com.google.common.io.Files;
 
 public class UtilsRandomEvents {
@@ -143,10 +140,16 @@ public class UtilsRandomEvents {
 				player.getName() + ".json");
 		try {
 			InventoryPers inventario = new InventoryPers();
-
 			ItemStack[] contenido = player.getInventory().getContents();
-			List<ItemStack> contenidoList = Arrays.asList(contenido);
-			contenidoList.removeAll(Arrays.asList(player.getInventory().getArmorContents()));
+			List<ItemStack> contenidoList=null;
+			if(contenido!=null)
+				 contenidoList = Arrays.asList(contenido);
+			
+			if(player.getInventory()!=null && player.getInventory().getArmorContents()!=null && contenidoList!=null){
+				for(ItemStack it:Arrays.asList(player.getInventory().getArmorContents())){
+					contenidoList.set(contenidoList.lastIndexOf(it), null);
+				}
+			}
 
 			inventario.setContents((ItemStack[]) contenidoList.toArray());
 
@@ -156,6 +159,7 @@ public class UtilsRandomEvents {
 			inventario.setChestplate(player.getInventory().getChestplate());
 
 			String json = UtilidadesJson.fromInventoryToJSON(plugin, inventario);
+
 			if (json != null) {
 				File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories");
 				if (!dataFolder.exists()) {
@@ -184,7 +188,7 @@ public class UtilsRandomEvents {
 
 				System.out.println("JSON was null.");
 			}
-		} catch (Exception e) {
+		} catch (IOException e) {
 			System.out.println(e.getMessage());
 			exitoso = Boolean.FALSE;
 			if (bossFile.exists()) {
