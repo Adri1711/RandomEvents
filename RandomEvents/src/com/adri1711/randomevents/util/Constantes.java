@@ -85,13 +85,28 @@ public class Constantes {
 		FIRST_ANNOUNCE("firstAnnounce", "announce.firstAnnounce", "&6&lA Random Event has just begun, "),
 
 		NEXT_ANNOUNCE("nextAnnounce", "announce.nextAnnounce", "&6&lA Random Event is still waiting for players, "),
+		
+		FIRST_ANNOUNCE_TOURNAMENT("firstAnnounceTournament", "announce.firstAnnounceTournament", "&6&lA Tournament Random Event has just begun, "),
+
+		NEXT_ANNOUNCE_TOURNAMENT("nextAnnounceTournament", "announce.nextAnnounceTournament", "&6&lA Tournament Random Event is still waiting for players, "),
 
 		CLICK_HERE("clickHere", "announce.clickHere", "&9&l[Click here to join]"),
 
 		LAST_PART("lastPart", "announce.lastPart", "&6&l ( %players% / %neededPlayers% )"),
+		
+		LAST_PART_TOURNAMENT("lastPartTournament", "announce.lastPartTournament", "&6&l ( %players% / %neededPlayers% )"),
+		
+		RACE_TOURNAMENT("raceTournament", "announce.raceTournament", "&6&lThe player %player% has reached the goal ( %players% / %neededPlayers% )"),
+		
+		YOU_BEAST("youBeast", "announce.youBeast", "&6&lYou are the beast, wait until you get teleported to the arena"),
+		
+		TOURNAMENT_ALIVE("tournamentAlive", "match.tournamentAlive",
+				"&e&lThese players still survive on the tournament :"),
 
 		WINNERS("winners", "match.winners",
 				"&e&l%players% &6&lwon the Random Event &e&l'%event%'&6&l ! Congratulations!"),
+		WINNERS_TOURNAMENT("winnersTournament", "match.winnersTournament",
+				"&e&l%players% &6&lwon the Tournament Random Event ! Congratulations!"),
 
 		WINNERS_POINTS("winnersPoints", "match.winnersPoints",
 				"&e&l%players% &6&lwon the Random Event '%event%' with %points% points ! Congratulations!"),

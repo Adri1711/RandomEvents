@@ -1,27 +1,31 @@
 package com.adri1711.randomevents.match;
 
 public enum MinigameType {
-	BATTLE_ROYALE("BR","Battle Royale"),
+	BATTLE_ROYALE("BR", "Battle Royale"),
 
-	BATTLE_ROYALE_TEAM_2("BRT2","Team Battle Royale"),
-	
-	BATTLE_ROYALE_CABALLO("LJ","Knights Battle"),
-	
-	TOP_KILLER("TKLL","Top Killer"),
-	
-	TOP_KILLER_TEAM_2("TKLLT2","Team Top Killer"),
-	
-	KNOCKBACK_DUEL("KBD","Knockback Duel"),
-	
-	ESCAPE_ARROW("EARR","Arrow Rain"),
+	BATTLE_ROYALE_TEAM_2("BRT2", "Team Battle Royale"),
 
-	GEM_CRAWLER("GEMC","Gem Carrier"),
-	
-	BOMB_TAG("BOMB","TNT Tag"),
-	
-	BOAT_RUN("BOAT_RUN","Boat Race");
+	BATTLE_ROYALE_CABALLO("LJ", "Knights Battle"),
 
-//	TNT_RUN("TNT_RUN","TNT Run");
+	TOP_KILLER("TKLL", "Top Killer"),
+
+	TOP_KILLER_TEAM_2("TKLLT2", "Team Top Killer"),
+
+	KNOCKBACK_DUEL("KBD", "Knockback Duel"),
+
+	ESCAPE_ARROW("EARR", "Arrow Rain"),
+
+	GEM_CRAWLER("GEMC", "Gem Carrier"),
+
+	BOMB_TAG("BOMB", "TNT Tag"),
+
+	BOAT_RUN("BOAT_RUN", "Boat Race"),
+
+	ESCAPE_FROM_BEAST("ESCAPE_FROM_BEAST", "Escape from the beast"),
+
+	RACE("RACE", "Race");
+
+	// TNT_RUN("TNT_RUN","TNT Run");
 
 	private String codigo;
 	private String message;
@@ -40,8 +44,6 @@ public enum MinigameType {
 		}
 		return creation;
 	}
-
-	
 
 	public String getCodigo() {
 		return codigo;

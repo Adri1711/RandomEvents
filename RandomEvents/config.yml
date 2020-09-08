@@ -9,6 +9,23 @@ secondsTimer: 60
 # Percentage of probability to spawn a random event each time the timer is fired
 probabilityRandomEvent: 5
 
+#Probability that the spawned random event is a tournament
+probabilityRandomEventTournament: 5
+
+tournament:
+  spawn:
+    world: world
+    x: 0.0
+    y: 60.0
+    z: 0.0
+    pitch: 0.0
+    yaw: 0.0
+  maxPlayers: 64
+  minPlayers: 20
+  numberOfRounds: 5
+  rewards:
+      - 'dubilets give %player% 1'
+
 #Probability to spawn a power up of resistance in arrow rain games
 probabilityPowerUp: 1
 
@@ -23,7 +40,6 @@ commandsOnUserJoin:
 
 #Spawn where the player will be teleported after minigame ends
 spawn:
-  ==: org.bukkit.Location
   world: world
   x: 0.0
   y: 60.0

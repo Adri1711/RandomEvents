@@ -29,8 +29,8 @@ public class Death implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void damage(EntityDamageEvent ev) // Listens to EntityDamageEvent
 	{
-		
-		if (ev.getCause() != DamageCause.ENTITY_ATTACK ) {
+
+		if (ev.getCause() != DamageCause.ENTITY_ATTACK) {
 
 			if (ev.getEntity() instanceof Player) {
 
@@ -49,8 +49,15 @@ public class Death implements Listener {
 							case KNOCKBACK_DUEL:
 							case BATTLE_ROYALE_CABALLO:
 							case BATTLE_ROYALE_TEAM_2:
-//							case TNT_RUN:
+								// case TNT_RUN:
 								plugin.getMatchActive().echaDePartida(player, true, true, false);
+								UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
+
+								break;
+							case ESCAPE_FROM_BEAST:
+
+								plugin.getMatchActive().echaDePartida(player, true, true, false);
+								player.setHealth(20);
 								UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
 
 								break;
@@ -68,6 +75,7 @@ public class Death implements Listener {
 								ev.setDamage(0);
 								break;
 							case BOAT_RUN:
+							case RACE:
 								ev.setCancelled(true);
 								break;
 							default:
@@ -123,7 +131,7 @@ public class Death implements Listener {
 									case ESCAPE_ARROW:
 
 										ev.setDamage(0);
-										break;										
+										break;
 									case TOP_KILLER:
 									case TOP_KILLER_TEAM_2:
 										plugin.getMatchActive().reiniciaPlayer(player);
@@ -141,8 +149,9 @@ public class Death implements Listener {
 										}
 
 										damager.sendMessage(Constantes.TAG_PLUGIN + " "
-												+ plugin.getLanguage().getNowPoints().replace("%points%", plugin.getMatchActive()
-														.getPuntuacion().get(damager.getName()).toString()));
+												+ plugin.getLanguage().getNowPoints().replace("%points%",
+														plugin.getMatchActive().getPuntuacion().get(damager.getName())
+																.toString()));
 
 										break;
 
@@ -168,8 +177,30 @@ public class Death implements Listener {
 										}
 										break;
 									case BOAT_RUN:
-//									case TNT_RUN:
+									case RACE:
+										// case TNT_RUN:
 										ev.setCancelled(true);
+										break;
+									case ESCAPE_FROM_BEAST:
+										if (damager == null
+												|| damager.getName()
+														.equals(plugin.getMatchActive().getBeast().getName())
+												|| player.getName()
+														.equals(plugin.getMatchActive().getBeast().getName())) {
+											if (player.getName().equals(plugin.getMatchActive().getBeast().getName())) {
+												plugin.getMatchActive().setPlayerContador(damager);
+											}
+											plugin.getMatchActive().echaDePartida(player, true, true, false);
+											player.setHealth(20);
+											UtilsRandomEvents.playSound(player,
+													UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
+											UtilsRandomEvents.playSound(damager,
+													UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
+
+										} else {
+											ev.setCancelled(true);
+										}
+
 										break;
 									default:
 										break;
@@ -180,6 +211,18 @@ public class Death implements Listener {
 									case BATTLE_ROYALE_CABALLO:
 									case BATTLE_ROYALE_TEAM_2:
 									case TOP_KILLER:
+										break;
+									case ESCAPE_FROM_BEAST:
+										if (damager == null
+												|| damager.getName()
+														.equals(plugin.getMatchActive().getBeast().getName())
+												|| player.getName()
+														.equals(plugin.getMatchActive().getBeast().getName())) {
+
+										} else {
+											ev.setCancelled(true);
+										}
+
 										break;
 									case KNOCKBACK_DUEL:
 									case ESCAPE_ARROW:
@@ -198,7 +241,8 @@ public class Death implements Listener {
 										}
 										break;
 									case BOAT_RUN:
-//									case TNT_RUN:
+									case RACE:
+										// case TNT_RUN:
 										ev.setCancelled(true);
 										break;
 									default:
@@ -227,6 +271,13 @@ public class Death implements Listener {
 								UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
 
 								break;
+							case ESCAPE_FROM_BEAST:
+
+								plugin.getMatchActive().echaDePartida(player, true, true, false);
+								player.setHealth(20);
+								UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
+
+								break;
 							case KNOCKBACK_DUEL:
 							case BOMB_TAG:
 								ev.setDamage(0);
@@ -238,7 +289,8 @@ public class Death implements Listener {
 
 								break;
 							case BOAT_RUN:
-//							case TNT_RUN:
+							case RACE:
+								// case TNT_RUN:
 								ev.setCancelled(true);
 								break;
 							default:
@@ -251,13 +303,16 @@ public class Death implements Listener {
 							case BATTLE_ROYALE_TEAM_2:
 							case TOP_KILLER:
 							case ESCAPE_ARROW:
+							case ESCAPE_FROM_BEAST:
 								break;
+
 							case KNOCKBACK_DUEL:
 							case BOMB_TAG:
 								ev.setDamage(0);
 								break;
 							case BOAT_RUN:
-//							case TNT_RUN:
+							case RACE:
+								// case TNT_RUN:
 								ev.setCancelled(true);
 								break;
 							default:

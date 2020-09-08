@@ -4,12 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum ComandosEnum {
+	
+	
 
 	CMD_JOIN("join", 2, "randomevent.join",
-			"   §6/revent join:\n          §9-> §6Shows the GUI to join the Random Event", "joinRandomEvent",false),
+			"   §6/revent join:\n          §9-> §6Join the Random Event", "joinRandomEvent",false),
+	
+	CMD_JOIN_TOURNAMENT("tjoin", 2, "randomevent.tjoin",
+			"   §6/revent tjoin:\n          §9-> §6Join the Tournament Random Event", "joinTournamentRandomEvent",false),
 	
 	CMD_LEAVE("leave", 1, "randomevent.leave",
 			"   §6/revent leave:\n          §9-> §6Leave the Random Event", "leaveRandomEvent",true),
+	CMD_LEAVE_TOURNAMENT("tleave", 1, "randomevent.tleave",
+			"   §6/revent tleave:\n          §9-> §6Leave the Tournament Random Event", "leaveTournamentRandomEvent",true),
 	
 //	CMD_STATS("stats", 1, "randomevent.stats",
 //			"   §6/revent stats:\n          §9-> §6Show the stats", "statsRandomEvent",true),
@@ -17,11 +24,17 @@ public enum ComandosEnum {
 	CMD_SPAWNSET("spawnset", 1, "randomevent.admin.spawnset",
 			"   §6/revent spawnset:\n          §9-> §6Set the spawn, where players will be teleported after finishing a Random Event", "spawnSet",true),
 	
+	CMD_SPAWNSET_TOURNAMENT("tspawnset", 1, "randomevent.admin.tspawnset",
+			"   §6/revent tspawnset:\n          §9-> §6Set the spawn where players will be teleported after joining a Tournament Random Event", "tournamentSpawnSet",true),
+	
 	CMD_MATCHES("matches", 1, "randomevent.admin.matches",
 			"   §6/revent matches:\n          §9-> §6Show all Random Events available", "showRandomEvents",true),
 	
 	CMD_BEGIN("begin", 1, "randomevent.admin.force",
 			"   §6/revent begin:\n          §9-> §6Begins a Random Event", "forceRandomEvent",true),
+	
+	CMD_BEGIN_TOURNAMENT("tbegin", 1, "randomevent.admin.tforce",
+			"   §6/revent tbegin:\n          §9-> §6Begins a Tournament Random Event", "forceTournamentRandomEvent",true),
 	
 	CMD_BEGIN_SPECIFIC("begin", 2, "randomevent.admin.force",
 			"   §6/revent begin <number>:\n          §9-> §6Begins a specific random event", "forceRandomEvent",true),

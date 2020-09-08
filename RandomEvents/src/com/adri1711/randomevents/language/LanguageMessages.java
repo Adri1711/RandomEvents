@@ -36,6 +36,10 @@ public class LanguageMessages {
 	private String nextAnnounce;
 	private String clickHere;
 	private String lastPart;
+	private String lastPartTournament;
+	private String firstAnnounceTournament;
+	private String nextAnnounceTournament;
+	private String winnersTournament;
 	private String winners;
 	private String winnersPoints;
 	private String disposeLeatherItems;
@@ -54,6 +58,10 @@ public class LanguageMessages {
 	private String bombExplode;
 	private String leaveCommand;
 	private String errorSavingInventory;
+	private String tournamentAlive;
+	private String youBeast;
+
+	private String raceTournament;
 
 	public LanguageMessages(RandomEvents plugin) {
 		this.file = new File(plugin.getDataFolder(), "messages.yml");
@@ -501,6 +509,62 @@ public class LanguageMessages {
 
 	public void setFileConfig(FileConfiguration fileConfig) {
 		this.fileConfig = fileConfig;
+	}
+
+	public String getLastPartTournament() {
+		return lastPartTournament.replaceAll("&", "§");
+	}
+
+	public void setLastPartTournament(String lastPartTournament) {
+		this.lastPartTournament = lastPartTournament;
+	}
+
+	public String getFirstAnnounceTournament() {
+		return firstAnnounceTournament.replaceAll("&", "§");
+	}
+
+	public void setFirstAnnounceTournament(String firstAnnounceTournament) {
+		this.firstAnnounceTournament = firstAnnounceTournament;
+	}
+
+	public String getNextAnnounceTournament() {
+		return nextAnnounceTournament.replaceAll("&", "§");
+	}
+
+	public void setNextAnnounceTournament(String nextAnnounceTournament) {
+		this.nextAnnounceTournament = nextAnnounceTournament;
+	}
+
+	public String getRaceTournament() {
+		return raceTournament.replaceAll("&", "§");
+	}
+
+	public void setRaceTournament(String raceTournament) {
+		this.raceTournament = raceTournament;
+	}
+
+	public String getWinnersTournament() {
+		return winnersTournament.replaceAll("&", "§");
+	}
+
+	public void setWinnersTournament(String winnersTournament) {
+		this.winnersTournament = winnersTournament;
+	}
+
+	public String getTournamentAlive() {
+		return tournamentAlive.replaceAll("&", "§");
+	}
+
+	public void setTournamentAlive(String tournamentAlive) {
+		this.tournamentAlive = tournamentAlive;
+	}
+
+	public String getYouBeast() {
+		return youBeast.replaceAll("&", "§");
+	}
+
+	public void setYouBeast(String youBeast) {
+		this.youBeast = youBeast;
 	}
 
 }

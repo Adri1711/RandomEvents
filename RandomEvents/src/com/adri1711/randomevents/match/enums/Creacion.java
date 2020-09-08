@@ -1,5 +1,7 @@
 package com.adri1711.randomevents.match.enums;
 
+import com.adri1711.randomevents.match.Match;
+
 public enum Creacion {
 
 	BATTLE_NAME(0, "§6§lYou began the creation of the RandomEvent. Write the match's name"),
@@ -8,12 +10,13 @@ public enum Creacion {
 
 	AMOUNT_PLAYERS_MIN(2, "§6§lWrite the minimum number of players to begin the RandomEvent"),
 
-	SPAWN_PLAYER(3, "§6§lGo to the arena you created and write 'Done' to set the lobby spawn for the players"),
+	SPAWN_PLAYER(3,
+			"§6§lGo to the arena you created and write 'Done' to set the lobby spawn for the players "),
 
-	ARENA_SPAWNS(4, "§6§lGo to the arena you created and write 'Done' to set each spawn location for the players"),
+	ARENA_SPAWNS(4, "§6§lGo to the arena you created and write 'Done' to set each spawn location for the players (%players%/%maxPlayers%)"),
 
-	ANOTHER_ARENA_SPAWNS(5, "§6§lPut another player spawn, say 'Done' "),
-	
+	ANOTHER_ARENA_SPAWNS(5, "§6§lPut another player spawn, say 'Done' (%players%/%maxPlayers%) "),
+
 	SPECTATOR_SPAWNS(6, "§6§lSay 'Done' to put a spectator spawn and 'Next' to go to the next step"),
 
 	INVENTORY(7, "§6§lTake the inventory for the players and say 'Done' "),
@@ -33,32 +36,37 @@ public enum Creacion {
 			"§6§lGo to the arena you created and write 'Done' to set the spawn location of the mob, 'New' to choose another mob or 'End' to end the creation of the RandomEvent"),
 
 	PLAY_TIME(14, "§6§lChoose the play time in seconds"),
-	
-	ARROW_LOCATION1(15,
-			"§6§lSet the first location of the cuboid of spawn of arrows, say 'Done'"),
-	
-	ARROW_LOCATION2(16,
-			"§6§lSet the second location of the cuboid of spawn of arrows, say 'Done'"),
-	
-	TIMER_ARROW_SPAWN(17, "§6§lWrite the number of seconds (it can have decimals) to respawn each arrow"),
-	
-	
-	GEM_LOCATION1(18,
-			"§6§lSet the first location of the cuboid of spawn of gems, say 'Done'"),
-	
-	GEM_LOCATION2(19,
-			"§6§lSet the second location of the cuboid of spawn of gems, say 'Done'"),
-	
-	TIMER_GEM_SPAWN(20, "§6§lWrite the number of seconds (it can have decimals) to respawn each gem"),
-	
-	TIMER_BOMB(21, "§6§lWrite the number of seconds to fire the bomb"),
 
-	GOAL_LOCATION1(22,
-			"§6§lSet the first location of the cuboid of the goal, say 'Done'"),
+	ARROW_LOCATION1(15, "§6§lSet the first location of the cuboid of spawn of arrows, say 'Done'"),
+
+	ARROW_LOCATION2(16, "§6§lSet the second location of the cuboid of spawn of arrows, say 'Done'"),
+
+	TIMER_ARROW_SPAWN(17, "§6§lWrite the number of seconds (it can have decimals) to respawn each arrow"),
+
+	GEM_LOCATION1(18, "§6§lSet the first location of the cuboid of spawn of gems, say 'Done'"),
+
+	GEM_LOCATION2(19, "§6§lSet the second location of the cuboid of spawn of gems, say 'Done'"),
+
+	TIMER_GEM_SPAWN(20, "§6§lWrite the number of seconds (it can have decimals) to respawn each gem"),
+
+	TIMER_BOMB(21, "§6§lWrite the number of seconds to fire the bomb"),
 	
-	GOAL_LOCATION2(23,
-			"§6§lSet the second location of the cuboid of the goal, say 'Done'"),
+	SECONDS_TO_SPAWN_BEAST(22,"§6§lWrite the number of seconds to spawn the beast"),
+
+	INVENTORY_BEAST(23,"§6§lTake the inventory for the beast and say 'Done' "),
+
+	INVENTORY_RUNNERS(24,"§6§lTake the inventory for the players when they reach the goal and say 'Done' "),
+
+	ENTITY_SPAWNS(25,
+			"§6§lGo to the arena you created and write 'Done' to set each spawn location for the entities. (%entities%/%maxPlayers%)"),
 	
+	ANOTHER_ENTITY_SPAWNS(26, "§6§lPut another entity spawn, say 'Done' . (%entities%/%maxPlayers%)"),
+
+
+	GOAL_LOCATION1(27, "§6§lSet the first location of the cuboid of the goal, say 'Done'"),
+
+	GOAL_LOCATION2(28, "§6§lSet the second location of the cuboid of the goal, say 'Done'"),
+
 	END(999, "§6§lYou finished the creation of the random event!");
 
 	private Integer position;
@@ -90,6 +98,16 @@ public enum Creacion {
 
 	public String getMessage() {
 		return message;
+	}
+
+	public String getMessage(Match m) {
+		if (m == null || m.getAmountPlayers() == null) {
+			return message;
+		} else {
+			return message.replaceAll("%entities%", "" + m.getEntitySpawns().size())
+					.replaceAll("%players%", "" + m.getSpawns().size())
+					.replaceAll("%maxPlayers%", "" + m.getAmountPlayers());
+		}
 	}
 
 	public void setMessage(String message) {

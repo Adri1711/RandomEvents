@@ -13,224 +13,215 @@ public class Match {
 	private String name;
 
 	private InventoryPers inventory;
-	
-	//TODO private ItemStack[] equipment;
-	
+
 	private Integer amountPlayers;
-	
+
 	private Integer amountPlayersMin;
-	
+
 	private Location playerSpawn;
-	
+
 	private MinigameType minigame;
-	
+
 	private List<Location> spawns;
-	
+
+	private List<Location> entitySpawns;
+
 	private List<Location> spectatorSpawns;
-	
+
 	private Double secondsMobSpawn;
-	
 
 	private Location location1;
-	
+
 	private Location location2;
-	
+
 	private EntityType mob;
-	
+
 	private Location eventSpawn;
-	
+
 	private List<String> rewards;
-	
+
 	private Integer tiempoPartida;
+	
+	private InventoryPers inventoryBeast;
+	
+	private InventoryPers inventoryRunners;
+
 
 
 	public Match() {
 		super();
-		this.inventory=new InventoryPers();
-		//TODO this.equipment=new ItemStack[0];
+		this.inventory = new InventoryPers();
+		this.inventoryBeast = new InventoryPers();
+		this.inventoryRunners = new InventoryPers();
+		// TODO this.equipment=new ItemStack[0];
 		this.rewards = new ArrayList<String>();
-		this.spawns=new ArrayList<Location>();
-		this.spectatorSpawns=new ArrayList<Location>();
+		this.entitySpawns = new ArrayList<Location>();
+		this.spawns = new ArrayList<Location>();
+		this.spectatorSpawns = new ArrayList<Location>();
 	}
-
 
 	public String getName() {
 		return name;
 	}
 
-
 	public void setName(String name) {
 		this.name = name;
 	}
-
 
 	public InventoryPers getInventory() {
 		return inventory;
 	}
 
-
 	public void setInventory(InventoryPers inventory) {
 		this.inventory = inventory;
 	}
 
-
-//	public ItemStack[] getEquipment() {
-//		return equipment;
-//	}
-//
-//
-//	public void setEquipment(ItemStack[] equipment) {
-//		this.equipment = equipment;
-//	}
-
+	// public ItemStack[] getEquipment() {
+	// return equipment;
+	// }
+	//
+	//
+	// public void setEquipment(ItemStack[] equipment) {
+	// this.equipment = equipment;
+	// }
 
 	public Integer getAmountPlayers() {
 		return amountPlayers;
 	}
 
-
 	public void setAmountPlayers(Integer amountPlayers) {
 		this.amountPlayers = amountPlayers;
 	}
-
 
 	public Integer getAmountPlayersMin() {
 		return amountPlayersMin;
 	}
 
-
 	public void setAmountPlayersMin(Integer amountPlayersMin) {
 		this.amountPlayersMin = amountPlayersMin;
 	}
-
 
 	public Location getPlayerSpawn() {
 		return playerSpawn;
 	}
 
-
 	public void setPlayerSpawn(Location playerSpawn) {
 		this.playerSpawn = playerSpawn;
 	}
-
 
 	public MinigameType getMinigame() {
 		return minigame;
 	}
 
-
 	public void setMinigame(MinigameType minigame) {
 		this.minigame = minigame;
 	}
-
 
 	public List<Location> getSpawns() {
 		return spawns;
 	}
 
-
 	public void setSpawns(List<Location> spawns) {
 		this.spawns = spawns;
 	}
-
 
 	public Double getSecondsMobSpawn() {
 		return secondsMobSpawn;
 	}
 
-
 	public void setSecondsMobSpawn(Double secondsMobSpawn) {
 		this.secondsMobSpawn = secondsMobSpawn;
 	}
-
-
-	
-
 
 	public Location getEventSpawn() {
 		return eventSpawn;
 	}
 
-
 	public void setEventSpawn(Location eventSpawn) {
 		this.eventSpawn = eventSpawn;
 	}
-
 
 	public List<String> getRewards() {
 		return rewards;
 	}
 
-
 	public void setRewards(List<String> rewards) {
 		this.rewards = rewards;
 	}
-
-
-	
-
 
 	public Integer getTiempoPartida() {
 		return tiempoPartida;
 	}
 
-
 	public void setTiempoPartida(Integer tiempoPartida) {
 		this.tiempoPartida = tiempoPartida;
 	}
-
 
 	public Location getLocation1() {
 		return location1;
 	}
 
-
 	public void setLocation1(Location location1) {
 		this.location1 = location1;
 	}
-
 
 	public Location getLocation2() {
 		return location2;
 	}
 
-
 	public void setLocation2(Location location2) {
 		this.location2 = location2;
 	}
-
 
 	public EntityType getMob() {
 		return mob;
 	}
 
-
 	public void setMob(EntityType mob) {
 		this.mob = mob;
 	}
-	
-	
-
 
 	public List<Location> getSpectatorSpawns() {
 		return spectatorSpawns;
 	}
 
-
 	public void setSpectatorSpawns(List<Location> spectatorSpawns) {
 		this.spectatorSpawns = spectatorSpawns;
 	}
 
+	public List<Location> getEntitySpawns() {
+		return entitySpawns;
+	}
+
+	public void setEntitySpawns(List<Location> entitySpawns) {
+		this.entitySpawns = entitySpawns;
+	}
+
+	public InventoryPers getInventoryBeast() {
+		return inventoryBeast;
+	}
+
+	public void setInventoryBeast(InventoryPers inventoryBeast) {
+		this.inventoryBeast = inventoryBeast;
+	}
+
+	public InventoryPers getInventoryRunners() {
+		return inventoryRunners;
+	}
+
+	public void setInventoryRunners(InventoryPers inventoryRunners) {
+		this.inventoryRunners = inventoryRunners;
+	}
 
 	@Override
 	public String toString() {
 		return "Match [name=" + name + ", inventory=" + inventory + ", amountPlayers=" + amountPlayers
 				+ ", amountPlayersMin=" + amountPlayersMin + ", playerSpawn=" + playerSpawn + ", minigame=" + minigame
-				+ ", spawns=" + spawns + ", secondsMobSpawn=" + secondsMobSpawn + ", location1=" + location1
-				+ ", location2=" + location2 + ", mob=" + mob + ", eventSpawn=" + eventSpawn + ", rewards=" + rewards
-				+ ", tiempoPartida=" + tiempoPartida + "]";
+				+ ", spawns=" + spawns + ", entitySpawns=" + entitySpawns + ", spectatorSpawns=" + spectatorSpawns
+				+ ", secondsMobSpawn=" + secondsMobSpawn + ", location1=" + location1 + ", location2=" + location2
+				+ ", mob=" + mob + ", eventSpawn=" + eventSpawn + ", rewards=" + rewards + ", tiempoPartida="
+				+ tiempoPartida + ", inventoryBeast=" + inventoryBeast + ", inventoryRunners=" + inventoryRunners + "]";
 	}
-
 
 	@Override
 	public int hashCode() {
@@ -238,8 +229,11 @@ public class Match {
 		int result = 1;
 		result = prime * result + ((amountPlayers == null) ? 0 : amountPlayers.hashCode());
 		result = prime * result + ((amountPlayersMin == null) ? 0 : amountPlayersMin.hashCode());
+		result = prime * result + ((entitySpawns == null) ? 0 : entitySpawns.hashCode());
 		result = prime * result + ((eventSpawn == null) ? 0 : eventSpawn.hashCode());
 		result = prime * result + ((inventory == null) ? 0 : inventory.hashCode());
+		result = prime * result + ((inventoryBeast == null) ? 0 : inventoryBeast.hashCode());
+		result = prime * result + ((inventoryRunners == null) ? 0 : inventoryRunners.hashCode());
 		result = prime * result + ((location1 == null) ? 0 : location1.hashCode());
 		result = prime * result + ((location2 == null) ? 0 : location2.hashCode());
 		result = prime * result + ((minigame == null) ? 0 : minigame.hashCode());
@@ -249,10 +243,10 @@ public class Match {
 		result = prime * result + ((rewards == null) ? 0 : rewards.hashCode());
 		result = prime * result + ((secondsMobSpawn == null) ? 0 : secondsMobSpawn.hashCode());
 		result = prime * result + ((spawns == null) ? 0 : spawns.hashCode());
+		result = prime * result + ((spectatorSpawns == null) ? 0 : spectatorSpawns.hashCode());
 		result = prime * result + ((tiempoPartida == null) ? 0 : tiempoPartida.hashCode());
 		return result;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -273,6 +267,11 @@ public class Match {
 				return false;
 		} else if (!amountPlayersMin.equals(other.amountPlayersMin))
 			return false;
+		if (entitySpawns == null) {
+			if (other.entitySpawns != null)
+				return false;
+		} else if (!entitySpawns.equals(other.entitySpawns))
+			return false;
 		if (eventSpawn == null) {
 			if (other.eventSpawn != null)
 				return false;
@@ -282,6 +281,16 @@ public class Match {
 			if (other.inventory != null)
 				return false;
 		} else if (!inventory.equals(other.inventory))
+			return false;
+		if (inventoryBeast == null) {
+			if (other.inventoryBeast != null)
+				return false;
+		} else if (!inventoryBeast.equals(other.inventoryBeast))
+			return false;
+		if (inventoryRunners == null) {
+			if (other.inventoryRunners != null)
+				return false;
+		} else if (!inventoryRunners.equals(other.inventoryRunners))
 			return false;
 		if (location1 == null) {
 			if (other.location1 != null)
@@ -322,6 +331,11 @@ public class Match {
 				return false;
 		} else if (!spawns.equals(other.spawns))
 			return false;
+		if (spectatorSpawns == null) {
+			if (other.spectatorSpawns != null)
+				return false;
+		} else if (!spectatorSpawns.equals(other.spectatorSpawns))
+			return false;
 		if (tiempoPartida == null) {
 			if (other.tiempoPartida != null)
 				return false;
@@ -331,8 +345,4 @@ public class Match {
 	}
 
 
-	
-	
-	
 }
-

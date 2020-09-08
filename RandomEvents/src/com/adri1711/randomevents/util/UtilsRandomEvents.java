@@ -10,7 +10,11 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 
@@ -38,9 +42,9 @@ import com.google.common.io.Files;
 
 public class UtilsRandomEvents {
 
-	public static Boolean pasaACreation(RandomEvents plugin, Player player, Integer position) {
+	public static Boolean pasaACreation(RandomEvents plugin, Player player, Integer position, Match match) {
 		Boolean ponerPlayerCreation = Boolean.TRUE;
-		player.sendMessage(Constantes.TAG_PLUGIN + " " + Creacion.getByPosition(position).getMessage());
+		player.sendMessage(Constantes.TAG_PLUGIN + " " + Creacion.getByPosition(position).getMessage(match));
 		switch (Creacion.getByPosition(position)) {
 		case MINIGAME_TYPE:
 			for (MinigameType m : MinigameType.values()) {
@@ -139,16 +143,23 @@ public class UtilsRandomEvents {
 		File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories",
 				player.getName() + ".json");
 		try {
+
 			InventoryPers inventario = new InventoryPers();
 			ItemStack[] contenido = player.getInventory().getContents();
-			List<ItemStack> contenidoList=null;
-			if(contenido!=null)
-				 contenidoList = Arrays.asList(contenido);
-			
-			if(player.getInventory()!=null && player.getInventory().getArmorContents()!=null && contenidoList!=null){
-				for(ItemStack it:Arrays.asList(player.getInventory().getArmorContents())){
-					contenidoList.set(contenidoList.lastIndexOf(it), null);
+			List<ItemStack> contenidoList = null;
+
+			if (contenido != null)
+				contenidoList = Arrays.asList(contenido);
+
+			if (player.getInventory() != null && player.getInventory().getArmorContents() != null
+					&& contenidoList != null) {
+				if (contenido.length != 36) {
+					for (ItemStack it : Arrays.asList(player.getInventory().getArmorContents())) {
+						if (contenidoList.lastIndexOf(it) != -1)
+							contenidoList.set(contenidoList.lastIndexOf(it), null);
+					}
 				}
+
 			}
 
 			inventario.setContents((ItemStack[]) contenidoList.toArray());
@@ -510,7 +521,7 @@ public class UtilsRandomEvents {
 	}
 
 	public static void playSound(Player player, Sound sonido) {
-		if (sonido != null) {
+		if (sonido != null && player!=null) {
 			player.playSound(player.getLocation(), sonido, 10.0F, 1.0F);
 		}
 	}
@@ -568,11 +579,11 @@ public class UtilsRandomEvents {
 		player.getInventory().setChestplate(null);
 		player.getEquipment().setArmorContents(null);
 		player.setItemOnCursor(null);
-		if(player.getOpenInventory()!=null){
-			if(player.getOpenInventory().getTopInventory()!=null){
+		if (player.getOpenInventory() != null) {
+			if (player.getOpenInventory().getTopInventory() != null) {
 				player.getOpenInventory().getTopInventory().clear();
 			}
-			if(player.getOpenInventory().getBottomInventory()!=null){
+			if (player.getOpenInventory().getBottomInventory() != null) {
 				player.getOpenInventory().getBottomInventory().clear();
 			}
 		}
@@ -660,11 +671,17 @@ public class UtilsRandomEvents {
 		}
 
 	}
-	
-	
 
-	
-	
-	
+	public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
+		List<Entry<K, V>> list = new ArrayList<>(map.entrySet());
+		list.sort(Collections.reverseOrder(Entry.comparingByValue()));
+
+		Map<K, V> result = new LinkedHashMap<>();
+		for (Entry<K, V> entry : list) {
+			result.put(entry.getKey(), entry.getValue());
+		}
+
+		return result;
+	}
 
 }

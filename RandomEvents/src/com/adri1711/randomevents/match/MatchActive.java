@@ -41,6 +41,8 @@ public class MatchActive {
 
 	private List<Player> playersObj;
 
+	private List<Player> playersGanadores;
+
 	private List<Player> playersSpectators;
 
 	private List<Entity> mobs;
@@ -50,6 +52,10 @@ public class MatchActive {
 	private Map<String, Entity> mascotas;
 
 	private Map<String, Integer> puntuacion;
+
+	private List<Player> goalPlayers;
+
+	private Player beast;
 
 	private String objetivo;
 
@@ -74,6 +80,12 @@ public class MatchActive {
 
 	private Cuboid cuboid;
 
+	private Boolean tournament;
+
+	private TournamentActive tournamentObj;
+
+	private Integer limitPlayers;
+
 	public MatchActive(Match match, RandomEvents plugin, Boolean forzada) {
 		super();
 		this.match = match;
@@ -81,13 +93,64 @@ public class MatchActive {
 		this.setTiempoPartida(match.getTiempoPartida());
 		this.plugin = plugin;
 		this.random = new Random();
-
+		this.tournament = false;
 		this.players = new ArrayList<String>();
 
 		this.playersObj = new ArrayList<Player>();
-
+		this.playersGanadores = new ArrayList<Player>();
 		this.playersSpectators = new ArrayList<Player>();
 
+		this.mobs = new ArrayList<Entity>();
+
+		this.equipos = new HashMap<Integer, List<Player>>();
+
+		this.mascotas = new HashMap<String, Entity>();
+		this.goalPlayers = new ArrayList<Player>();
+		this.puntuacion = new HashMap<String, Integer>();
+		switch (match.getMinigame()) {
+		case BOMB_TAG:
+			this.numeroSegRestantes = match.getSecondsMobSpawn().intValue();
+			break;
+		case BOAT_RUN:
+		case RACE:
+		case ESCAPE_FROM_BEAST:
+			this.cuboid = new Cuboid(match.getLocation1(), match.getLocation2());
+			break;
+		default:
+			this.numeroSegRestantes = 10;
+			break;
+		}
+		this.limitPlayers = 1;
+		this.playing = Boolean.FALSE;
+		this.password = "" + random.nextInt(10000);
+		this.firstAnnounce = Boolean.TRUE;
+		this.gema = new ItemStack(plugin.getApi().getMaterial(AMaterials.EMERALD));
+		this.setForzada(forzada);
+
+		this.locations = UtilsRandomEvents.getAllPossibleLocations(match.getLocation1(), match.getLocation2());
+
+		matchWaitingPlayers();
+	}
+
+	public MatchActive(Match match, RandomEvents plugin, Boolean forzada, Boolean tournament,
+			TournamentActive tournamentObj, List<String> players, List<Player> playersGanadores,
+			List<Player> playersSpectators) {
+		super();
+		this.goalPlayers = new ArrayList<Player>();
+
+		this.match = match;
+		this.maximo = 0;
+		this.setTiempoPartida(match.getTiempoPartida());
+		this.plugin = plugin;
+		this.random = new Random();
+		this.players = players;
+
+		this.playersObj = playersGanadores;
+		this.playersGanadores = new ArrayList<Player>();
+		this.playersSpectators = playersSpectators;
+		this.tournament = tournament;
+		this.tournamentObj = tournamentObj;
+		this.limitPlayers = tournamentObj.getRange().getTo() - 1;
 		this.mobs = new ArrayList<Entity>();
 
 		this.equipos = new HashMap<Integer, List<Player>>();
@@ -100,6 +163,8 @@ public class MatchActive {
 			this.numeroSegRestantes = match.getSecondsMobSpawn().intValue();
 			break;
 		case BOAT_RUN:
+		case RACE:
+		case ESCAPE_FROM_BEAST:
 			this.cuboid = new Cuboid(match.getLocation1(), match.getLocation2());
 			break;
 		default:
@@ -114,7 +179,6 @@ public class MatchActive {
 
 		this.locations = UtilsRandomEvents.getAllPossibleLocations(match.getLocation1(), match.getLocation2());
 
-		matchWaitingPlayers();
 	}
 
 	public void uneAPlayer(Player player) {
@@ -131,7 +195,8 @@ public class MatchActive {
 
 						player.teleport(match.getPlayerSpawn());
 					} else {
-						player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getErrorSavingInventory());
+						player.sendMessage(
+								Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getErrorSavingInventory());
 
 					}
 				} else {
@@ -200,7 +265,7 @@ public class MatchActive {
 					if (l != null) {
 						player.teleport(l);
 					}
-					player.sendMessage(Constantes.TAG_PLUGIN + " " +plugin.getLanguage().getLeaveCommand());
+					player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getLeaveCommand());
 
 				}
 				player.setHealth(20);
@@ -257,7 +322,7 @@ public class MatchActive {
 				player.teleport(plugin.getSpawn());
 			} else {
 				player.teleport(match.getSpectatorSpawns().get(getRandom().nextInt(match.getSpectatorSpawns().size())));
-				player.sendMessage(Constantes.TAG_PLUGIN + " " +plugin.getLanguage().getLeaveCommand());
+				player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getLeaveCommand());
 
 			}
 			player.setHealth(20);
@@ -298,13 +363,57 @@ public class MatchActive {
 				for (Entity entity : getMobs()) {
 					entity.remove();
 				}
+				tournamentObj.finalizaPartida(getCopiaP(getPlayersObj()), getCopiaP(getPlayersSpectators()),
+						Boolean.FALSE);
 				finalizaPartida(getPlayersObj(), Boolean.FALSE);
+
 			}
 			if (getPlayersObj().size() == 1) {
-				daRecompensas(false);
-			} else {
-				if (getEquipos().keySet().size() == 1) {
+				if (getTournament()) {
+					tournamentObj.nextGame(getCopia(getPlayers()), getCopiaP(getPlayersObj()),
+							getCopiaP(getPlayersSpectators()));
+
+				} else {
 					daRecompensas(false);
+				}
+			} else if (getTournament()
+					&& (getPlayersObj().size() <= limitPlayers || getPlayersGanadores().size() >= limitPlayers)) {
+				if (limitPlayers == 1) {
+					tournamentObj.nextGame(getCopia(getPlayers()), getCopiaP(getPlayersObj()),
+							getCopiaP(getPlayersSpectators()));
+				} else {
+					if (!getPlayersGanadores().isEmpty()) {
+						List<String> jugadores = new ArrayList<String>();
+						for (Player p : getPlayersGanadores()) {
+							jugadores.add(p.getName());
+						}
+						tournamentObj.nextGame(getCopia(jugadores), getCopiaP(getPlayersGanadores()),
+								getCopiaP(getPlayersSpectators()));
+					} else {
+						tournamentObj.nextGame(getCopia(getPlayers()), getCopiaP(getPlayersObj()),
+								getCopiaP(getPlayersSpectators()));
+
+					}
+					reiniciaValoresPartida();
+
+				}
+			} else if (!getTournament() && getPlayersGanadores().size() >= limitPlayers) {
+				daRecompensas(false);
+
+			} else {
+				if (getMatch().getMinigame().equals(MinigameType.ESCAPE_FROM_BEAST)
+						&& !getPlayersObj().contains(beast)) {
+					daRecompensas(false);
+				}
+
+				if (getEquipos().keySet().size() == 1) {
+					if (getTournament()) {
+						tournamentObj.nextGame(getCopia(getPlayers()), getCopiaP(getPlayersObj()),
+								getCopiaP(getPlayersSpectators()));
+
+					} else {
+						daRecompensas(false);
+					}
 				}
 			}
 
@@ -316,6 +425,18 @@ public class MatchActive {
 				break;
 			}
 		}
+	}
+
+	private List<String> getCopia(List<String> players2) {
+		List<String> lista = new ArrayList<String>();
+		lista.addAll(players2);
+		return lista;
+	}
+
+	private List<Player> getCopiaP(List<Player> players2) {
+		List<Player> lista = new ArrayList<Player>();
+		lista.addAll(players2);
+		return lista;
 	}
 
 	private void checkPuntuacionesGemas() {
@@ -345,7 +466,14 @@ public class MatchActive {
 		if (getPlaying() && getPlayerContador() != null && getTimerPassword() != null
 				&& getTimerPassword().equals(timerPass)) {
 			if (numeroSegRestantes == 0) {
-				daRecompensas(false);
+				if (getTournament()) {
+					getPlayersGanadores().add(getPlayerContador());
+					tournamentObj.nextGame(getCopia(getPlayers()), getCopiaP(getPlayersGanadores()),
+							getCopiaP(getPlayersSpectators()));
+
+				} else {
+					daRecompensas(false);
+				}
 			} else {
 				Bukkit.getServer().getScheduler().runTaskLaterAsynchronously((Plugin) getPlugin(), new Runnable() {
 					public void run() {
@@ -401,7 +529,7 @@ public class MatchActive {
 		case BATTLE_ROYALE_TEAM_2:
 		case ESCAPE_ARROW:
 		case BOMB_TAG:
-//		case TNT_RUN:
+			// case TNT_RUN:
 			ganadores.addAll(getPlayersObj());
 			break;
 		case TOP_KILLER:
@@ -412,6 +540,8 @@ public class MatchActive {
 			ganadores.add(getPlayerContador());
 			break;
 		case BOAT_RUN:
+		case RACE:
+		case ESCAPE_FROM_BEAST:
 			if (getPlayerContador() != null)
 				ganadores.add(getPlayerContador());
 			break;
@@ -435,13 +565,13 @@ public class MatchActive {
 		}
 		for (Player play : Bukkit.getOnlinePlayers()) {
 			if (tiempo) {
-				play.sendMessage(
-						Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getWinnersPoints().replace("%points%", maximo.toString())
+				play.sendMessage(Constantes.TAG_PLUGIN + " "
+						+ plugin.getLanguage().getWinnersPoints().replace("%points%", maximo.toString())
 								.replace("%players%", cadenaGanadores).replace("%event%", match.getName()));
 
 			} else {
-				play.sendMessage(Constantes.TAG_PLUGIN + " "
-						+ plugin.getLanguage().getWinners().replace("%players%", cadenaGanadores).replace("%event%", match.getName()));
+				play.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getWinners()
+						.replace("%players%", cadenaGanadores).replace("%event%", match.getName()));
 			}
 		}
 		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
@@ -460,9 +590,25 @@ public class MatchActive {
 					maximo = puntos;
 				}
 			}
-			for (Player p : playersObj) {
-				if (puntuacion.containsKey(p.getName()) && puntuacion.get(p.getName()).equals(maximo)) {
-					winners.add(p);
+			if (getTournament()) {
+				puntuacion = UtilsRandomEvents.sortByValue(puntuacion);
+				List<String> gana = new ArrayList<String>();
+				for (String s : puntuacion.keySet()) {
+					if (gana.size() < limitPlayers) {
+						gana.add(s);
+					}
+				}
+				for (Player p : playersObj) {
+					if (gana.contains(p.getName())) {
+						winners.add(p);
+					}
+				}
+
+			} else {
+				for (Player p : playersObj) {
+					if (puntuacion.containsKey(p.getName()) && puntuacion.get(p.getName()).equals(maximo)) {
+						winners.add(p);
+					}
 				}
 			}
 		} else {
@@ -482,15 +628,26 @@ public class MatchActive {
 
 			maximo = 0;
 
-			for (Integer puntos : puntuacionesEquipo.values()) {
-				if (maximo < puntos) {
-					maximo = puntos;
+			if (getTournament()) {
+				puntuacionesEquipo = UtilsRandomEvents.sortByValue(puntuacionesEquipo);
+				for (Integer s : puntuacionesEquipo.keySet()) {
+					if (winners.size() < limitPlayers) {
+						winners.addAll(equipos.get(s));
+					}
 				}
-			}
 
-			for (Integer equipo : puntuacionesEquipo.keySet()) {
-				if (puntuacionesEquipo.get(equipo) == maximo) {
-					winners.addAll(equipos.get(equipo));
+			} else {
+
+				for (Integer puntos : puntuacionesEquipo.values()) {
+					if (maximo < puntos) {
+						maximo = puntos;
+					}
+				}
+
+				for (Integer equipo : puntuacionesEquipo.keySet()) {
+					if (puntuacionesEquipo.get(equipo) == maximo) {
+						winners.addAll(equipos.get(equipo));
+					}
 				}
 			}
 		}
@@ -499,56 +656,63 @@ public class MatchActive {
 	}
 
 	public void finalizaPartida(List<Player> ganadores, Boolean abrupto) {
-		for (Entity ent : getMobs()) {
-			ent.remove();
-		}
-		for (Player p : getPlayersSpectators()) {
+		if (tournamentObj == null) {
 
-			// UtilsRandomEvents.borraInventario(p);
-			//
-			// p.teleport(plugin.getSpawn());
-			//
-			// UtilsRandomEvents.sacaInventario(plugin, p);
-			echaDePartida(p, false, true, true, false);
-		}
-		for (Player player : ganadores) {
-			// UtilsStats.aumentaStats(player.getName(), getMatch().getName(),
-			// StatsEnum.PARTIDAS_SUPERADAS, plugin);
-			for (String comando : match.getRewards()) {
-				Boolean ejecutaComando = Boolean.TRUE;
-				String[] trozosComandos = comando.split(" ");
+			for (Player p : getPlayersSpectators()) {
 
-				if (trozosComandos[0].trim().equals(Constantes.PROBABILITY_CMD)) {
-					Integer probabilidad = Integer.valueOf(trozosComandos[1]);
-					Integer aleatorio = random.nextInt(100);
+				// UtilsRandomEvents.borraInventario(p);
+				//
+				// p.teleport(plugin.getSpawn());
+				//
+				// UtilsRandomEvents.sacaInventario(plugin, p);
+				echaDePartida(p, false, true, true, false);
+			}
+			for (Player player : ganadores) {
+				// UtilsStats.aumentaStats(player.getName(),
+				// getMatch().getName(),
+				// StatsEnum.PARTIDAS_SUPERADAS, plugin);
+				for (String comando : match.getRewards()) {
+					Boolean ejecutaComando = Boolean.TRUE;
+					String[] trozosComandos = comando.split(" ");
 
-					if (aleatorio > probabilidad) {
-						ejecutaComando = Boolean.FALSE;
-					}
-					String nuevoCmd = "";
-					if (trozosComandos.length > 2) {
-						for (int i = 2; i < trozosComandos.length; i++) {
-							nuevoCmd += trozosComandos[i] + " ";
+					if (trozosComandos[0].trim().equals(Constantes.PROBABILITY_CMD)) {
+						Integer probabilidad = Integer.valueOf(trozosComandos[1]);
+						Integer aleatorio = random.nextInt(100);
+
+						if (aleatorio > probabilidad) {
+							ejecutaComando = Boolean.FALSE;
 						}
-						comando = nuevoCmd.substring(0, nuevoCmd.length() - 1);
+						String nuevoCmd = "";
+						if (trozosComandos.length > 2) {
+							for (int i = 2; i < trozosComandos.length; i++) {
+								nuevoCmd += trozosComandos[i] + " ";
+							}
+							comando = nuevoCmd.substring(0, nuevoCmd.length() - 1);
+						}
 					}
-				}
-				if (ejecutaComando) {
-					Bukkit.dispatchCommand((CommandSender) Bukkit.getConsoleSender(),
-							comando.replaceAll("%player%", player.getName()));
+					if (ejecutaComando) {
+						Bukkit.dispatchCommand((CommandSender) Bukkit.getConsoleSender(),
+								comando.replaceAll("%player%", player.getName()));
+					}
 				}
 			}
-		}
 
-		reiniciaValoresPartida();
+			reiniciaValoresPartida();
+		}
 	}
 
 	private void reiniciaValoresPartida() {
+
+		for (Entity ent : getMobs()) {
+			ent.remove();
+		}
 		this.players.clear();
 		this.playersObj.clear();
+		this.playersGanadores.clear();
 		this.playersSpectators.clear();
 		setPlaying(Boolean.FALSE);
-		plugin.reiniciaPartida(forzada);
+		if (tournamentObj == null)
+			plugin.reiniciaPartida(forzada);
 	}
 
 	public void matchBegin() {
@@ -564,8 +728,8 @@ public class MatchActive {
 
 	public void cuentaAtras(Boolean playSound) {
 
-		UtilsRandomEvents.mandaMensaje(
-				getPlayersObj(), Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getEventAnnounce()
+		UtilsRandomEvents.mandaMensaje(getPlayersSpectators(),
+				Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getEventAnnounce()
 						.replace("%event%", match.getName()).replace("%type%", match.getMinigame().getMessage()),
 				Boolean.FALSE);
 
@@ -603,20 +767,54 @@ public class MatchActive {
 		switch (match.getMinigame()) {
 		case BATTLE_ROYALE:
 		case KNOCKBACK_DUEL:
-//		case TNT_RUN:
+			// case TNT_RUN:
+			for (Player p : playersSpectators) {
+				if (!playersObj.contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
 			for (Player p : playersObj) {
 				iniciaPlayer(p);
 
 			}
-			break;
 
+			break;
+		case ESCAPE_FROM_BEAST:
+			for (Player p : playersSpectators) {
+				if (!playersObj.contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
+			setBeast(playersObj.get(playersObj.indexOf(plugin.getRandom().nextInt(playersObj.size()))));
+			setPlayerContador(getBeast());
+			for (Player p : playersObj) {
+				if (p.getName().equals(beast.getName())) {
+					iniciaPlayerBeast(p);
+
+				} else {
+					iniciaPlayer(p);
+				}
+
+			}
+
+			break;
 		case TOP_KILLER:
+			for (Player p : playersSpectators) {
+				if (!playersObj.contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
 			for (Player p : playersObj) {
 				iniciaPlayer(p);
 			}
 			partidaPorTiempo();
 			break;
 		case TOP_KILLER_TEAM_2:
+			for (Player p : playersSpectators) {
+				if (!playersObj.contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
 			for (Player p : playersObj) {
 				Integer indice = playersObj.indexOf(p);
 
@@ -634,7 +832,13 @@ public class MatchActive {
 
 			partidaPorTiempo();
 			break;
+
 		case BATTLE_ROYALE_TEAM_2:
+			for (Player p : playersSpectators) {
+				if (!playersObj.contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
 			for (Player p : playersObj) {
 				Integer indice = playersObj.indexOf(p);
 				iniciaPlayer(p);
@@ -651,6 +855,11 @@ public class MatchActive {
 			mandaMensajesEquipo(equipos);
 			break;
 		case BATTLE_ROYALE_CABALLO:
+			for (Player p : playersSpectators) {
+				if (!playersObj.contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
 			for (Player p : playersObj) {
 				iniciaPlayer(p);
 
@@ -658,8 +867,8 @@ public class MatchActive {
 																									// the
 				// horse
 				horse.getInventory().setSaddle(new ItemStack(plugin.getApi().getMaterial(AMaterials.SADDLE), 1)); // Gives
-																					// horse
-																					// saddle
+				// horse
+				// saddle
 				horse.setTamed(true); // Sets horse to tamed
 				horse.setOwner(p); // Makes the horse the players
 				horse.setPassenger(p);
@@ -672,32 +881,68 @@ public class MatchActive {
 			}
 			break;
 		case BOAT_RUN:
+			for (Player p : playersSpectators) {
+				if (!playersObj.contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
 			for (Player p : playersObj) {
 				iniciaPlayer(p);
 
-				Boat boat = (Boat) p.getWorld().spawnEntity(p.getLocation(), EntityType.BOAT);
-				boat.setPassenger(p);
+				Boat boat = null;
+				if (getMatch().getEntitySpawns() == null || getMatch().getEntitySpawns().isEmpty()) {
+					boat = (Boat) p.getWorld().spawnEntity(p.getLocation(), EntityType.BOAT);
+
+				} else {
+					boat = (Boat) p.getWorld().spawnEntity(match.getEntitySpawns().get(getPlayersObj().indexOf(p)),
+							EntityType.BOAT);
+				}
 
 				getMobs().add(boat);
 				getMascotas().put(p.getName(), boat);
 
-				boat.setPassenger(p);
+			}
+			break;
+		case RACE:
+			for (Player p : playersSpectators) {
+				if (!playersObj.contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
+			for (Player p : playersObj) {
+				iniciaPlayer(p);
 
 			}
 			break;
+
 		case ESCAPE_ARROW:
+			for (Player p : playersSpectators) {
+				if (!playersObj.contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
 			for (Player p : playersObj) {
 				iniciaPlayer(p);
 			}
 			partidaEscapeArrow();
 			break;
 		case GEM_CRAWLER:
+			for (Player p : playersSpectators) {
+				if (!playersObj.contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
 			for (Player p : playersObj) {
 				iniciaPlayer(p);
 			}
 			spawneaGemas();
 			break;
 		case BOMB_TAG:
+			for (Player p : playersSpectators) {
+				if (!playersObj.contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
 			for (Player p : playersObj) {
 				teleportaPlayer(p);
 			}
@@ -739,23 +984,25 @@ public class MatchActive {
 							plugin.getLanguage().getBombExplode().replace("%player%", p.getName()), true);
 				}
 				echaDePartida(muertos, true, true, false, true);
-				if (getPlayersObj().size() > 1) {
+				if (getPlayersObj().size() > limitPlayers) {
 					numeroSegRestantes = match.getSecondsMobSpawn().intValue();
 					bombRandom();
 					partidaBombTag();
+				} else {
+					compruebaPartida();
 				}
 			} else {
 				Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 					public void run() {
 						numeroSegRestantes--;
 						if (numeroSegRestantes > 5 && numeroSegRestantes % 5 == 0) {
-							UtilsRandomEvents.mandaMensaje(getPlayersSpectators(),
-									plugin.getLanguage().getBombSeconds().replace("%seconds%", numeroSegRestantes.toString()), true);
+							UtilsRandomEvents.mandaMensaje(getPlayersSpectators(), plugin.getLanguage().getBombSeconds()
+									.replace("%seconds%", numeroSegRestantes.toString()), true);
 						} else if (numeroSegRestantes > 0 && numeroSegRestantes <= 5) {
 							UtilsRandomEvents.playSound(getPlayersSpectators(),
 									UtilsRandomEvents.buscaSonido("NOTE", "PIANO"));
-							UtilsRandomEvents.mandaMensaje(getPlayersSpectators(),
-									plugin.getLanguage().getBombSeconds().replace("%seconds%", numeroSegRestantes.toString()), true);
+							UtilsRandomEvents.mandaMensaje(getPlayersSpectators(), plugin.getLanguage().getBombSeconds()
+									.replace("%seconds%", numeroSegRestantes.toString()), true);
 						}
 
 						partidaBombTag();
@@ -830,8 +1077,8 @@ public class MatchActive {
 
 				public void run() {
 					setTiempoPartida(getTiempoPartida() - 60);
-					UtilsRandomEvents.mandaMensaje(playersObj, plugin.getLanguage().getTimeRemaining().replace("%minutes%",
-							UtilsRandomEvents.preparaStringTiempo(tiempoPartida)), true);
+					UtilsRandomEvents.mandaMensaje(playersObj, plugin.getLanguage().getTimeRemaining()
+							.replace("%minutes%", UtilsRandomEvents.preparaStringTiempo(tiempoPartida)), true);
 					partidaPorTiempo();
 				}
 
@@ -860,8 +1107,17 @@ public class MatchActive {
 
 		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 			public void run() {
-
-				daRecompensas(true);
+				if (getTournament()) {
+					playersGanadores.addAll(sacaGanadoresPartidaTiempo());
+					List<String> jugadores = new ArrayList<String>();
+					for (Player p : getPlayersGanadores()) {
+						jugadores.add(p.getName());
+					}
+					tournamentObj.nextGame(getCopia(jugadores), getCopiaP(getPlayersGanadores()),
+							getCopiaP(getPlayersSpectators()));
+				} else {
+					daRecompensas(true);
+				}
 				// spawnMobs(bWave.getMobs(), getPlugin());
 			}
 
@@ -871,6 +1127,21 @@ public class MatchActive {
 	public void iniciaPlayer(Player p) {
 		teleportaPlayer(p);
 		ponInventarioMatch(p);
+	}
+
+	public void iniciaPlayerBeast(Player p) {
+		p.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getYouBeast());
+		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
+			public void run() {
+				teleportaPlayer(p);
+				ponInventarioBeast(p);
+			}
+		}, Double.valueOf(20 * plugin.getMatchActive().getMatch().getSecondsMobSpawn()).longValue());
+
+	}
+
+	public void mandaSpectatorPlayer(Player p) {
+		p.teleport(match.getSpectatorSpawns().get(getRandom().nextInt(match.getSpectatorSpawns().size())));
 	}
 
 	private void teleportaPlayer(Player p) {
@@ -940,8 +1211,8 @@ public class MatchActive {
 							}
 						}
 					}
-					player.sendMessage(
-							Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getShowTeam().replace("%players%", cadenaEquipo));
+					player.sendMessage(Constantes.TAG_PLUGIN + " "
+							+ plugin.getLanguage().getShowTeam().replace("%players%", cadenaEquipo));
 
 					// player.sendMessage(players.toString());
 					// player.sendMessage(Constantes.GREEN +
@@ -977,6 +1248,54 @@ public class MatchActive {
 		}
 
 		p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20, 2));
+
+	}
+
+	public void ponInventarioRunner(Player p) {
+		p.getInventory().setContents(match.getInventoryRunners().getContents());
+		p.getInventory().setHelmet(match.getInventoryRunners().getHelmet());
+		p.getInventory().setLeggings(match.getInventoryRunners().getLeggings());
+		p.getInventory().setBoots(match.getInventoryRunners().getBoots());
+		p.getInventory().setChestplate(match.getInventoryRunners().getChestplate());
+
+		p.updateInventory();
+		p.setHealth(20);
+		p.setFoodLevel(20);
+		p.setFireTicks(0);
+
+		if (p.getActivePotionEffects() != null) {
+			for (PotionEffect effect : p.getActivePotionEffects()) {
+				p.removePotionEffect(effect.getType());
+			}
+
+		}
+
+		// p.addPotionEffect(new
+		// PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20, 2));
+
+	}
+
+	public void ponInventarioBeast(Player p) {
+		p.getInventory().setContents(match.getInventoryBeast().getContents());
+		p.getInventory().setHelmet(match.getInventoryBeast().getHelmet());
+		p.getInventory().setLeggings(match.getInventoryBeast().getLeggings());
+		p.getInventory().setBoots(match.getInventoryBeast().getBoots());
+		p.getInventory().setChestplate(match.getInventoryBeast().getChestplate());
+
+		p.updateInventory();
+		p.setHealth(20);
+		p.setFoodLevel(20);
+		p.setFireTicks(0);
+
+		if (p.getActivePotionEffects() != null) {
+			for (PotionEffect effect : p.getActivePotionEffects()) {
+				p.removePotionEffect(effect.getType());
+			}
+
+		}
+
+		// p.addPotionEffect(new
+		// PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20, 2));
 
 	}
 
@@ -1018,8 +1337,8 @@ public class MatchActive {
 								if (playSound) {
 									UtilsRandomEvents.playSound(p, UtilsRandomEvents.buscaSonido("VILLAGER", "HIT"));
 								}
-								plugin.getApi().send(p, firstPart, plugin.getLanguage().getClickHere(), new ArrayList<String>(),
-										"/revent join " + password,
+								plugin.getApi().send(p, firstPart, plugin.getLanguage().getClickHere(),
+										new ArrayList<String>(), "/revent join " + password,
 										lastPart.replaceAll("%players%", "" + getPlayers().size())
 												.replaceAll("%neededPlayers%", match.getAmountPlayersMin().toString()));
 							}
@@ -1030,7 +1349,7 @@ public class MatchActive {
 
 				}
 			}
-		}, 20 * 10L);
+		}, 20 * 15L);
 
 	}
 
@@ -1216,6 +1535,60 @@ public class MatchActive {
 
 	public void setCuboid(Cuboid cuboid) {
 		this.cuboid = cuboid;
+	}
+
+	public Boolean getTournament() {
+		return tournament;
+	}
+
+	public void setTournament(Boolean tournament) {
+		this.tournament = tournament;
+	}
+
+	public List<Player> getPlayersGanadores() {
+		return playersGanadores;
+	}
+
+	public void setPlayersGanadores(List<Player> playersGanadores) {
+		this.playersGanadores = playersGanadores;
+	}
+
+	public TournamentActive getTournamentObj() {
+		return tournamentObj;
+	}
+
+	public void setTournamentObj(TournamentActive tournamentObj) {
+		this.tournamentObj = tournamentObj;
+	}
+
+	public Integer getLimitPlayers() {
+		return limitPlayers;
+	}
+
+	public void setLimitPlayers(Integer limitPlayers) {
+		this.limitPlayers = limitPlayers;
+	}
+
+	@Override
+	public String toString() {
+		return "MatchActive [match=" + match + ", players=" + players + ", playersObj=" + playersObj
+				+ ", playersGanadores=" + playersGanadores + ", playersSpectators=" + playersSpectators + "]";
+	}
+
+	public Player getBeast() {
+		return beast;
+	}
+
+	public void setBeast(Player beast) {
+		this.beast = beast;
+	}
+
+	public List<Player> getGoalPlayers() {
+		return goalPlayers;
+	}
+
+	public void setGoalPlayers(List<Player> goalPlayers) {
+		this.goalPlayers = goalPlayers;
 	}
 
 }
