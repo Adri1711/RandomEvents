@@ -37,6 +37,7 @@ import com.adri1711.randomevents.match.InventoryPers;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
 import com.adri1711.randomevents.match.MinigameType;
+import com.adri1711.randomevents.match.Schedule;
 import com.adri1711.randomevents.match.enums.Creacion;
 import com.google.common.io.Files;
 
@@ -44,7 +45,8 @@ public class UtilsRandomEvents {
 
 	public static Boolean pasaACreation(RandomEvents plugin, Player player, Integer position, Match match) {
 		Boolean ponerPlayerCreation = Boolean.TRUE;
-		player.sendMessage(Constantes.TAG_PLUGIN + " " + Creacion.getByPosition(position).getMessage(match));
+		player.sendMessage(
+				plugin.getLanguage().getTagPlugin() + " " + Creacion.getByPosition(position).getMessage(match));
 		switch (Creacion.getByPosition(position)) {
 		case MINIGAME_TYPE:
 			for (MinigameType m : MinigameType.values()) {
@@ -125,14 +127,53 @@ public class UtilsRandomEvents {
 				plugin.getPlayersCreation().remove(player.getName());
 				plugin.getPlayerMatches().remove(player.getName());
 				plugin.getMatches().add(match);
-				player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getEndOfArenaCreation());
+				player.sendMessage(
+						plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getEndOfArenaCreation());
 			} else {
 				System.out.println("JSON was null.");
-				player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getError());
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-			player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getError());
+			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+
+		}
+
+	}
+
+	public static void terminaCreacionSchedule(RandomEvents plugin, Player player, Schedule schedule) {
+		try {
+			String json = UtilidadesJson.fromScheduleToJSON(plugin, schedule);
+			if (json != null) {
+				File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//schedule");
+				if (!dataFolder.exists()) {
+					dataFolder.mkdir();
+				}
+
+				File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//schedule",
+						"SCH_" + schedule.getDay() + "-" + schedule.getHour() + "-" + schedule.getMinute() + ".json");
+				if (!bossFile.exists()) {
+					bossFile.createNewFile();
+				}
+				FileWriter fw = new FileWriter(bossFile, true);
+
+				PrintWriter pw = new PrintWriter(fw);
+
+				pw.println(json);
+
+				pw.flush();
+
+				pw.close();
+
+				player.sendMessage(
+						plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getEndOfScheduleCreation());
+			} else {
+				System.out.println("JSON was null.");
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
 
 		}
 
@@ -323,6 +364,49 @@ public class UtilsRandomEvents {
 		return listaPartidas;
 	}
 
+	public static Schedule findSchedule(RandomEvents plugin, Integer day, Integer hour, Integer minute) {
+		Schedule sched = null;
+		for (Schedule s : plugin.getSchedules()) {
+			if (s.getDay().equals(day) && s.getHour().equals(hour) && s.getMinute().equals(minute)) {
+				sched = s;
+			}
+		}
+		return sched;
+	}
+
+	public static List<Schedule> cargarSchedules(RandomEvents plugin) {
+		List<Schedule> listaPartidas = new ArrayList<Schedule>();
+		File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//schedule");
+		if (!dataFolder.exists()) {
+			dataFolder.mkdir();
+		}
+		for (File file : dataFolder.listFiles()) {
+			BufferedReader br = null;
+			FileReader fr = null;
+			try {
+				fr = new FileReader(file);
+				br = new BufferedReader(fr);
+				Schedule match = UtilidadesJson.fromJSONToSchedule(plugin, br);
+				if (match != null)
+					listaPartidas.add(match);
+
+			} catch (FileNotFoundException e) {
+				System.out.println(e.getMessage());
+			} finally {
+				try {
+					if (fr != null)
+						fr.close();
+					if (br != null)
+						br.close();
+				} catch (IOException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+
+		}
+		return listaPartidas;
+	}
+
 	public static String readAll(File file) {
 		String content = "";
 		try {
@@ -373,21 +457,21 @@ public class UtilsRandomEvents {
 		return archivo;
 	}
 
-	public static void mandaMensaje(List<Player> players, String message, Boolean tag) {
+	public static void mandaMensaje(RandomEvents plugin, List<Player> players, String message, Boolean tag) {
 		message = message.replaceAll("<color>", "§");
 		if (tag) {
-			message = Constantes.TAG_PLUGIN + " " + message;
+			message = plugin.getLanguage().getTagPlugin() + " " + message;
 		}
 		for (Player p : players) {
 			p.sendMessage(message);
 		}
 	}
 
-	public static void mandaMensaje(List<Player> players, List<String> messages, Boolean tag) {
+	public static void mandaMensaje(RandomEvents plugin, List<Player> players, List<String> messages, Boolean tag) {
 		String message = "";
 		for (String msg : messages) {
 			if (tag) {
-				message += Constantes.TAG_PLUGIN + " " + msg.replaceAll("<color>", "§") + "\n";
+				message += plugin.getLanguage().getTagPlugin() + " " + msg.replaceAll("<color>", "§") + "\n";
 			} else {
 				message += msg.replaceAll("<color>", "§") + "\n";
 			}
@@ -521,7 +605,7 @@ public class UtilsRandomEvents {
 	}
 
 	public static void playSound(Player player, Sound sonido) {
-		if (sonido != null && player!=null) {
+		if (sonido != null && player != null) {
 			player.playSound(player.getLocation(), sonido, 10.0F, 1.0F);
 		}
 	}
@@ -682,6 +766,16 @@ public class UtilsRandomEvents {
 		}
 
 		return result;
+	}
+
+	public static Match findMatch(RandomEvents plugin, String matchName) {
+		Match m = null;
+		for (Match match : plugin.getMatches()) {
+			if (match.getName().equals(matchName)) {
+				m = match;
+			}
+		}
+		return m;
 	}
 
 }

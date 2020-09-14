@@ -79,7 +79,7 @@ public class WeaponShoot implements Listener {
 												plugin.getMatchActive().getPuntuacion().put(damager.getName(), 1);
 											}
 
-											damager.sendMessage(Constantes.TAG_PLUGIN + " "
+											damager.sendMessage(plugin.getLanguage().getTagPlugin() + " "
 													+ plugin.getLanguage().getNowPoints().replace("%points%",
 															plugin.getMatchActive().getPuntuacion()
 																	.get(damager.getName()).toString()));

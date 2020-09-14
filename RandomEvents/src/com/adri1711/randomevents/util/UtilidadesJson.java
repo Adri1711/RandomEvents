@@ -3,9 +3,9 @@ package com.adri1711.randomevents.util;
 import java.io.BufferedReader;
 
 import com.adri1711.randomevents.RandomEvents;
-import com.adri1711.randomevents.json.GsonFactory;
 import com.adri1711.randomevents.match.InventoryPers;
 import com.adri1711.randomevents.match.Match;
+import com.adri1711.randomevents.match.Schedule;
 
 public class UtilidadesJson {
 
@@ -36,6 +36,36 @@ public class UtilidadesJson {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			System.out.println("Error :: Error at loading match: " + br);
+		}
+		return match;
+	}
+
+	public static String fromScheduleToJSON(RandomEvents plugin, Schedule match) {
+		String resultado = null;
+
+		try {
+			resultado = plugin.getApi().toJson(match);
+
+			// JsonSerializerDeserializer<BossMatch> jsonSerializer = new
+			// JsonSerializerDeserializer<BossMatch>();
+			//
+			// resultado = jsonSerializer.serialize(match);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println("Error :: Error at creating schedule");
+		}
+		return resultado;
+
+	}
+
+	public static Schedule fromJSONToSchedule(RandomEvents plugin, BufferedReader br) {
+		Schedule match = null;
+		try {
+			match = (Schedule) plugin.getApi().fromJson(br, Schedule.class);
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println("Error :: Error at loading schedule: " + br);
 		}
 		return match;
 	}

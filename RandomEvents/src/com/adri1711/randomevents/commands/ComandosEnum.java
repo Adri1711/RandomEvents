@@ -30,6 +30,12 @@ public enum ComandosEnum {
 	CMD_MATCHES("matches", 1, "randomevent.admin.matches",
 			"   §6/revent matches:\n          §9-> §6Show all Random Events available", "showRandomEvents",true),
 	
+	CMD_SCHEDULE("schedule", 4, "randomevent.admin.schedule",
+			"   §6/revent schedule <monday:tuesday...> <hour> <minute>:\n          §9-> §6Create a schedule for a Random Event", "scheduleRandomEvent",true),
+	
+	CMD_SCHEDULE_SPECIFIC("schedule", 5, "randomevent.admin.schedule",
+			"   §6/revent schedule <monday:tuesday...> <hour> <minute> <idmatch>:\n          §9-> §6Create a schedule for a Random Event and specific match", "scheduleRandomEvent",true),
+	
 	CMD_BEGIN("begin", 1, "randomevent.admin.force",
 			"   §6/revent begin:\n          §9-> §6Begins a Random Event", "forceRandomEvent",true),
 	

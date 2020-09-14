@@ -71,6 +71,12 @@ public class Chat implements Listener {
 				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position + 1, match);
 			}
 			break;
+		case SPAWN_BEAST:
+			if (message.equals(Constantes.DONE)) {
+				match.setBeastSpawn(player.getLocation());
+				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position + 1, match);
+			}
+			break;
 		case ARENA_SPAWNS:
 			if (message.equals(Constantes.DONE)) {
 				match.getSpawns().add(player.getLocation());
@@ -183,7 +189,8 @@ public class Chat implements Listener {
 				match.getInventoryRunners().setLeggings(player.getInventory().getLeggings());
 				match.getInventoryRunners().setChestplate(player.getInventory().getChestplate());
 
-				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position + 1, match);
+				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, Creacion.GOAL_LOCATION1.getPosition(),
+						match);
 			}
 			break;
 		case REWARDS:
@@ -236,6 +243,10 @@ public class Chat implements Listener {
 					case RACE:
 						actualiza = UtilsRandomEvents.pasaACreation(plugin, player,
 								Creacion.GOAL_LOCATION1.getPosition(), match);
+						break;
+					case ESCAPE_FROM_BEAST:
+						actualiza = UtilsRandomEvents.pasaACreation(plugin, player,
+								Creacion.SECONDS_TO_SPAWN_BEAST.getPosition(), match);
 						break;
 					}
 				} else {
@@ -305,7 +316,7 @@ public class Chat implements Listener {
 		case SECONDS_TO_SPAWN_BEAST:
 			try {
 				match.setSecondsMobSpawn(Double.valueOf(message.trim()));
-				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, Creacion.INVENTORY_BEAST.getPosition(), match);
+				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position + 1, match);
 			} catch (Exception e) {
 				player.sendMessage(plugin.getLanguage().getInvalidInput());
 				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position, match);

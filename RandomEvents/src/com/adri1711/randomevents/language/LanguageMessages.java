@@ -60,8 +60,9 @@ public class LanguageMessages {
 	private String errorSavingInventory;
 	private String tournamentAlive;
 	private String youBeast;
-
+	private String endOfScheduleCreation;
 	private String raceTournament;
+	private String tagPlugin;
 
 	public LanguageMessages(RandomEvents plugin) {
 		this.file = new File(plugin.getDataFolder(), "messages.yml");
@@ -565,6 +566,22 @@ public class LanguageMessages {
 
 	public void setYouBeast(String youBeast) {
 		this.youBeast = youBeast;
+	}
+
+	public String getEndOfScheduleCreation() {
+		return endOfScheduleCreation.replaceAll("&", "§");
+	}
+
+	public void setEndOfScheduleCreation(String endOfScheduleCreation) {
+		this.endOfScheduleCreation = endOfScheduleCreation;
+	}
+
+	public String getTagPlugin() {
+		return tagPlugin.replaceAll("&", "§");
+	}
+
+	public void setTagPlugin(String tagPlugin) {
+		this.tagPlugin = tagPlugin;
 	}
 
 }

@@ -40,16 +40,16 @@ public class Comandos {
 							RandomEvents.class, Player.class);
 					method.invoke(plugin.getComandosExecutor(), plugin, player);
 				} else {
-					player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getNoPermission());
+					player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
 
 				}
 			} else {
-				player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getInvalidCmd());
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidCmd());
 			}
 
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
-			player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getError());
+			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
 			System.out.println(e.getMessage());
 		}
 
@@ -66,16 +66,66 @@ public class Comandos {
 							RandomEvents.class, Player.class, String.class);
 					method.invoke(plugin.getComandosExecutor(), plugin, player, args[1]);
 				} else {
-					player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getNoPermission());
+					player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
 
 				}
 			} else {
-				player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getInvalidCmd());
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidCmd());
 			}
 
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
-			player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getError());
+			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public static void ejecutaComandoCuatroArgumentos(RandomEvents plugin, Player player, String[] args) {
+		try {
+
+			ComandosEnum comando = ComandosEnum.getByAliaseAndSize(args[0], 4);
+			if (comando != null) {
+				if (player.hasPermission(comando.getPermission())) {
+
+					Method method = plugin.getComandosExecutor().getClass().getMethod(comando.getMetodo(),
+							RandomEvents.class, Player.class, String.class, String.class, String.class);
+					method.invoke(plugin.getComandosExecutor(), plugin, player, args[1], args[2], args[3]);
+				} else {
+					player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
+
+				}
+			} else {
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidCmd());
+			}
+
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public static void ejecutaComandoCincoArgumentos(RandomEvents plugin, Player player, String[] args) {
+		try {
+
+			ComandosEnum comando = ComandosEnum.getByAliaseAndSize(args[0], 5);
+			if (comando != null) {
+				if (player.hasPermission(comando.getPermission())) {
+
+					Method method = plugin.getComandosExecutor().getClass().getMethod(comando.getMetodo(),
+							RandomEvents.class, Player.class, String.class, String.class, String.class, String.class);
+					method.invoke(plugin.getComandosExecutor(), plugin, player, args[1], args[2], args[3], args[4]);
+				} else {
+					player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
+
+				}
+			} else {
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidCmd());
+			}
+
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
 			System.out.println(e.getMessage());
 		}
 	}

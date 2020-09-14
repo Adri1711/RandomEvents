@@ -45,6 +45,8 @@ public class Match {
 	private InventoryPers inventoryBeast;
 	
 	private InventoryPers inventoryRunners;
+	
+	private Location beastSpawn;
 
 
 
@@ -213,6 +215,14 @@ public class Match {
 		this.inventoryRunners = inventoryRunners;
 	}
 
+	public Location getBeastSpawn() {
+		return beastSpawn;
+	}
+
+	public void setBeastSpawn(Location beastSpawn) {
+		this.beastSpawn = beastSpawn;
+	}
+
 	@Override
 	public String toString() {
 		return "Match [name=" + name + ", inventory=" + inventory + ", amountPlayers=" + amountPlayers
@@ -220,7 +230,8 @@ public class Match {
 				+ ", spawns=" + spawns + ", entitySpawns=" + entitySpawns + ", spectatorSpawns=" + spectatorSpawns
 				+ ", secondsMobSpawn=" + secondsMobSpawn + ", location1=" + location1 + ", location2=" + location2
 				+ ", mob=" + mob + ", eventSpawn=" + eventSpawn + ", rewards=" + rewards + ", tiempoPartida="
-				+ tiempoPartida + ", inventoryBeast=" + inventoryBeast + ", inventoryRunners=" + inventoryRunners + "]";
+				+ tiempoPartida + ", inventoryBeast=" + inventoryBeast + ", inventoryRunners=" + inventoryRunners
+				+ ", beastSpawn=" + beastSpawn + "]";
 	}
 
 	@Override
@@ -229,6 +240,7 @@ public class Match {
 		int result = 1;
 		result = prime * result + ((amountPlayers == null) ? 0 : amountPlayers.hashCode());
 		result = prime * result + ((amountPlayersMin == null) ? 0 : amountPlayersMin.hashCode());
+		result = prime * result + ((beastSpawn == null) ? 0 : beastSpawn.hashCode());
 		result = prime * result + ((entitySpawns == null) ? 0 : entitySpawns.hashCode());
 		result = prime * result + ((eventSpawn == null) ? 0 : eventSpawn.hashCode());
 		result = prime * result + ((inventory == null) ? 0 : inventory.hashCode());
@@ -266,6 +278,11 @@ public class Match {
 			if (other.amountPlayersMin != null)
 				return false;
 		} else if (!amountPlayersMin.equals(other.amountPlayersMin))
+			return false;
+		if (beastSpawn == null) {
+			if (other.beastSpawn != null)
+				return false;
+		} else if (!beastSpawn.equals(other.beastSpawn))
 			return false;
 		if (entitySpawns == null) {
 			if (other.entitySpawns != null)
@@ -343,6 +360,8 @@ public class Match {
 			return false;
 		return true;
 	}
+
+	
 
 
 }

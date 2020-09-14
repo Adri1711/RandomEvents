@@ -27,22 +27,21 @@ public class PickUp implements Listener {
 			switch (plugin.getMatchActive().getMatch().getMinigame()) {
 			case GEM_CRAWLER:
 				Item item = evt.getItem();
-				
 
 				if (plugin.getMatchActive().getPuntuacion().containsKey(player.getName())) {
 					plugin.getMatchActive().getPuntuacion().put(player.getName(),
-							plugin.getMatchActive().getPuntuacion().get(player.getName()) + item.getItemStack().getAmount());
+							plugin.getMatchActive().getPuntuacion().get(player.getName())
+									+ item.getItemStack().getAmount());
 
 				} else {
 					plugin.getMatchActive().getPuntuacion().put(player.getName(), item.getItemStack().getAmount());
 				}
 				item.remove();
 				if (plugin.getMatchActive().getPlayerContador() == null) {
-					UtilsRandomEvents
-							.mandaMensaje(plugin.getMatchActive().getPlayersObj(),
-									plugin.getLanguage().getNowGems().replace("%player%", player.getName()).replace("%points%",
-											plugin.getMatchActive().getPuntuacion().get(player.getName()).toString()),
-									true);
+					UtilsRandomEvents.mandaMensaje(plugin, plugin.getMatchActive().getPlayersObj(),
+							plugin.getLanguage().getNowGems().replace("%player%", player.getName()).replace("%points%",
+									plugin.getMatchActive().getPuntuacion().get(player.getName()).toString()),
+							true);
 					plugin.getMatchActive().compruebaPartida();
 				}
 				evt.setCancelled(true);

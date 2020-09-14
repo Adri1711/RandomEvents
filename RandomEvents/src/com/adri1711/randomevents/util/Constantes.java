@@ -8,7 +8,6 @@ public class Constantes {
 	public static String NEXT = "Next";
 	public static String SAME = "Same";
 	public static String NEW = "New";
-	public static String TAG_PLUGIN = "§9§l[RandomEvents]";
 	public static String CADENA_PLAYER = "%player%";
 	public static String SALTO_LINEA = "\n";
 	public static String INVENTORY_NAME = "§9RandomEvents";
@@ -39,6 +38,8 @@ public class Constantes {
 
 	public enum Messages {
 
+		TAG_PLUGIN("tagPlugin", "tagPlugin", "&9&l[RandomEvents]"),
+		
 		INVALID_INPUT("invalidInput", "creation.invalidInput", "&c&lInvalid input, try another one"),
 
 		ERROR("error", "comun.error", "&c&lSome error ocurred, check the server log."),
@@ -50,6 +51,9 @@ public class Constantes {
 
 		END_OF_ARENA_CREATION("endOfArenaCreation", "creation.endOfArenaCreation",
 				"&6&lYou successfully created a RandomEvents!"),
+		
+		END_OF_SCHEDULE_CREATION("endOfScheduleCreation", "creation.endOfScheduleCreation",
+				"&6&lYou successfully created a Schedule!"),
 
 		CANCEL_OF_ARENA_CREATION("cancelOfArenaCreation", "creation.cancelOfArenaCreation",
 				"&6&lYou canceled the creation of a RandomEvents!"),

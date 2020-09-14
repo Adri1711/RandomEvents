@@ -196,16 +196,16 @@ public class MatchActive {
 						player.teleport(match.getPlayerSpawn());
 					} else {
 						player.sendMessage(
-								Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getErrorSavingInventory());
+								plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getErrorSavingInventory());
 
 					}
 				} else {
-					player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getDisposeLeatherItems());
+					player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getDisposeLeatherItems());
 
 				}
 
 			} else {
-				player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getMatchFull());
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getMatchFull());
 			}
 
 		}
@@ -265,7 +265,7 @@ public class MatchActive {
 					if (l != null) {
 						player.teleport(l);
 					}
-					player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getLeaveCommand());
+					player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getLeaveCommand());
 
 				}
 				player.setHealth(20);
@@ -322,7 +322,7 @@ public class MatchActive {
 				player.teleport(plugin.getSpawn());
 			} else {
 				player.teleport(match.getSpectatorSpawns().get(getRandom().nextInt(match.getSpectatorSpawns().size())));
-				player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getLeaveCommand());
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getLeaveCommand());
 
 			}
 			player.setHealth(20);
@@ -453,7 +453,7 @@ public class MatchActive {
 				if (getPlayerContador() == null && getPuntuacion().containsKey(p.getName())
 						&& getPuntuacion().get(p.getName()) == maximo) {
 					setPlayerContador(p);
-					UtilsRandomEvents.mandaMensaje(getPlayersSpectators(),
+					UtilsRandomEvents.mandaMensaje(plugin,getPlayersSpectators(),
 							plugin.getLanguage().getPlayerWinning().replace("%player%", p.getName()), true);
 					setTimerPassword(getRandom().nextInt(100000));
 				}
@@ -480,7 +480,7 @@ public class MatchActive {
 						numeroSegRestantes--;
 						if (numeroSegRestantes > 0 && getTimerPassword() != null && getTimerPassword().equals(timerPass)
 								&& getPlayerContador() != null)
-							UtilsRandomEvents.mandaMensaje(getPlayersSpectators(),
+							UtilsRandomEvents.mandaMensaje(plugin,getPlayersSpectators(),
 									plugin.getLanguage().getPlayerWinningSeconds()
 											.replace("%seconds%", numeroSegRestantes.toString())
 											.replace("%player%", getPlayerContador().getName()),
@@ -514,7 +514,7 @@ public class MatchActive {
 				UtilsRandomEvents.sacaInventario(plugin, player);
 			}
 		} else {
-			player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getAlreadyPlayingMatch());
+			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getAlreadyPlayingMatch());
 		}
 	}
 
@@ -565,12 +565,12 @@ public class MatchActive {
 		}
 		for (Player play : Bukkit.getOnlinePlayers()) {
 			if (tiempo) {
-				play.sendMessage(Constantes.TAG_PLUGIN + " "
+				play.sendMessage(plugin.getLanguage().getTagPlugin() + " "
 						+ plugin.getLanguage().getWinnersPoints().replace("%points%", maximo.toString())
 								.replace("%players%", cadenaGanadores).replace("%event%", match.getName()));
 
 			} else {
-				play.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getWinners()
+				play.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getWinners()
 						.replace("%players%", cadenaGanadores).replace("%event%", match.getName()));
 			}
 		}
@@ -728,24 +728,24 @@ public class MatchActive {
 
 	public void cuentaAtras(Boolean playSound) {
 
-		UtilsRandomEvents.mandaMensaje(getPlayersSpectators(),
-				Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getEventAnnounce()
+		UtilsRandomEvents.mandaMensaje(plugin,getPlayersSpectators(),
+				plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getEventAnnounce()
 						.replace("%event%", match.getName()).replace("%type%", match.getMinigame().getMessage()),
 				Boolean.FALSE);
 
 		UtilsRandomEvents.playSound(getPlayersSpectators(), UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
-		UtilsRandomEvents.mandaMensaje(getPlayersSpectators(), Constantes.SECONDS_3_REMAINING, Boolean.FALSE);
+		UtilsRandomEvents.mandaMensaje(plugin,getPlayersSpectators(), Constantes.SECONDS_3_REMAINING, Boolean.FALSE);
 		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 			public void run() {
 				UtilsRandomEvents.playSound(getPlayersSpectators(), UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
-				UtilsRandomEvents.mandaMensaje(getPlayersSpectators(), Constantes.SECONDS_2_REMAINING, Boolean.FALSE);
+				UtilsRandomEvents.mandaMensaje(plugin,getPlayersSpectators(), Constantes.SECONDS_2_REMAINING, Boolean.FALSE);
 			}
 		}, 20 * 1L);
 
 		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 			public void run() {
 				UtilsRandomEvents.playSound(getPlayersSpectators(), UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
-				UtilsRandomEvents.mandaMensaje(getPlayersSpectators(), Constantes.SECONDS_1_REMAINING, Boolean.FALSE);
+				UtilsRandomEvents.mandaMensaje(plugin,getPlayersSpectators(), Constantes.SECONDS_1_REMAINING, Boolean.FALSE);
 			}
 		}, 20 * 2L);
 
@@ -785,7 +785,7 @@ public class MatchActive {
 					mandaSpectatorPlayer(p);
 				}
 			}
-			setBeast(playersObj.get(playersObj.indexOf(plugin.getRandom().nextInt(playersObj.size()))));
+			setBeast(playersObj.get(plugin.getRandom().nextInt(playersObj.size())));
 			setPlayerContador(getBeast());
 			for (Player p : playersObj) {
 				if (p.getName().equals(beast.getName())) {
@@ -957,7 +957,7 @@ public class MatchActive {
 	public void bombRandom() {
 		setPlayerContador(getPlayersObj().get(getRandom().nextInt(getPlayersObj().size())));
 		ponInventarioMatch(getPlayerContador());
-		UtilsRandomEvents.mandaMensaje(getPlayersSpectators(),
+		UtilsRandomEvents.mandaMensaje(plugin,getPlayersSpectators(),
 				plugin.getLanguage().getPlayerHasBomb().replace("%player%", getPlayerContador().getName()), true);
 		UtilsRandomEvents.playSound(getPlayerContador(), UtilsRandomEvents.buscaSonido("VILLAGER", "HIT"));
 
@@ -980,7 +980,7 @@ public class MatchActive {
 
 				List<Player> muertos = UtilsRandomEvents.getPlayersWithin(getPlayerContador(), getPlayersObj(), 4);
 				for (Player p : muertos) {
-					UtilsRandomEvents.mandaMensaje(getPlayersSpectators(),
+					UtilsRandomEvents.mandaMensaje(plugin,getPlayersSpectators(),
 							plugin.getLanguage().getBombExplode().replace("%player%", p.getName()), true);
 				}
 				echaDePartida(muertos, true, true, false, true);
@@ -996,12 +996,12 @@ public class MatchActive {
 					public void run() {
 						numeroSegRestantes--;
 						if (numeroSegRestantes > 5 && numeroSegRestantes % 5 == 0) {
-							UtilsRandomEvents.mandaMensaje(getPlayersSpectators(), plugin.getLanguage().getBombSeconds()
+							UtilsRandomEvents.mandaMensaje(plugin,getPlayersSpectators(), plugin.getLanguage().getBombSeconds()
 									.replace("%seconds%", numeroSegRestantes.toString()), true);
 						} else if (numeroSegRestantes > 0 && numeroSegRestantes <= 5) {
 							UtilsRandomEvents.playSound(getPlayersSpectators(),
 									UtilsRandomEvents.buscaSonido("NOTE", "PIANO"));
-							UtilsRandomEvents.mandaMensaje(getPlayersSpectators(), plugin.getLanguage().getBombSeconds()
+							UtilsRandomEvents.mandaMensaje(plugin,getPlayersSpectators(), plugin.getLanguage().getBombSeconds()
 									.replace("%seconds%", numeroSegRestantes.toString()), true);
 						}
 
@@ -1077,7 +1077,7 @@ public class MatchActive {
 
 				public void run() {
 					setTiempoPartida(getTiempoPartida() - 60);
-					UtilsRandomEvents.mandaMensaje(playersObj, plugin.getLanguage().getTimeRemaining()
+					UtilsRandomEvents.mandaMensaje(plugin,playersObj, plugin.getLanguage().getTimeRemaining()
 							.replace("%minutes%", UtilsRandomEvents.preparaStringTiempo(tiempoPartida)), true);
 					partidaPorTiempo();
 				}
@@ -1090,18 +1090,18 @@ public class MatchActive {
 	public void acabaPartidaEnTiempo() {
 
 		UtilsRandomEvents.playSound(getPlayersSpectators(), UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
-		UtilsRandomEvents.mandaMensaje(getPlayersSpectators(), Constantes.SECONDS_3_REMAINING, Boolean.TRUE);
+		UtilsRandomEvents.mandaMensaje(plugin,getPlayersSpectators(), Constantes.SECONDS_3_REMAINING, Boolean.TRUE);
 		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 			public void run() {
 				UtilsRandomEvents.playSound(getPlayersSpectators(), UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
-				UtilsRandomEvents.mandaMensaje(getPlayersSpectators(), Constantes.SECONDS_2_REMAINING, Boolean.TRUE);
+				UtilsRandomEvents.mandaMensaje(plugin,getPlayersSpectators(), Constantes.SECONDS_2_REMAINING, Boolean.TRUE);
 			}
 		}, 20 * 1L);
 
 		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 			public void run() {
 				UtilsRandomEvents.playSound(getPlayersSpectators(), UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
-				UtilsRandomEvents.mandaMensaje(getPlayersSpectators(), Constantes.SECONDS_1_REMAINING, Boolean.TRUE);
+				UtilsRandomEvents.mandaMensaje(plugin,getPlayersSpectators(), Constantes.SECONDS_1_REMAINING, Boolean.TRUE);
 			}
 		}, 20 * 2L);
 
@@ -1130,7 +1130,8 @@ public class MatchActive {
 	}
 
 	public void iniciaPlayerBeast(Player p) {
-		p.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getYouBeast());
+		p.teleport(getMatch().getBeastSpawn());
+		p.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getYouBeast());
 		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 			public void run() {
 				teleportaPlayer(p);
@@ -1167,7 +1168,7 @@ public class MatchActive {
 				puntos.setAmount(amount);
 				location.getWorld().dropItem(location, puntos);
 				getPuntuacion().put(p.getName(), 0);
-				UtilsRandomEvents.mandaMensaje(getPlayersSpectators(),
+				UtilsRandomEvents.mandaMensaje(plugin,getPlayersSpectators(),
 						plugin.getLanguage().getLostGems().replace("%player%", p.getName()), true);
 				if (getPlayerContador() != null && getPlayerContador().equals(p)) {
 					setPlayerContador(null);
@@ -1191,9 +1192,9 @@ public class MatchActive {
 				restoEquipo.remove(player);
 
 				if (restoEquipo.size() == 0) {
-					player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getShowAlone());
+					player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getShowAlone());
 				} else if (restoEquipo.size() == 1) {
-					player.sendMessage(Constantes.TAG_PLUGIN + " "
+					player.sendMessage(plugin.getLanguage().getTagPlugin() + " "
 							+ plugin.getLanguage().getShowTeam().replace("%players%", restoEquipo.get(0).getName()));
 					// plugin.getApi().cambiaNombre(player, Constantes.GREEN +
 					// player.getName(), players);
@@ -1211,7 +1212,7 @@ public class MatchActive {
 							}
 						}
 					}
-					player.sendMessage(Constantes.TAG_PLUGIN + " "
+					player.sendMessage(plugin.getLanguage().getTagPlugin() + " "
 							+ plugin.getLanguage().getShowTeam().replace("%players%", cadenaEquipo));
 
 					// player.sendMessage(players.toString());
@@ -1314,14 +1315,14 @@ public class MatchActive {
 						// if (!getPlayers().isEmpty()) {
 						// String waiting = Constantes.WAITING_FOR_PLAYERS;
 						// UtilsRandomEvents
-						// .mandaMensaje(getPlayersSpectators(),
+						// .mandaMensaje(plugin,getPlayersSpectators(),
 						// waiting.replaceAll("%players%", "" +
 						// getPlayers().size())
 						// .replaceAll("%neededPlayers%",
 						// match.getAmountPlayersMin().toString()),
 						// Boolean.TRUE);
 						// }
-						String firstPart = Constantes.TAG_PLUGIN + " ";
+						String firstPart = plugin.getLanguage().getTagPlugin() + " ";
 
 						if (firstAnnounce) {
 							playSound = Boolean.TRUE;

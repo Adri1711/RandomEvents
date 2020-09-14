@@ -56,9 +56,7 @@ public class Death implements Listener {
 								break;
 							case ESCAPE_FROM_BEAST:
 
-								plugin.getMatchActive().echaDePartida(player, true, true, false);
-								player.setHealth(20);
-								UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
+								ev.setCancelled(true);
 
 								break;
 							case TOP_KILLER:
@@ -77,6 +75,17 @@ public class Death implements Listener {
 							case BOAT_RUN:
 							case RACE:
 								ev.setCancelled(true);
+								break;
+							default:
+								break;
+							}
+						} else {
+							switch (plugin.getMatchActive().getMatch().getMinigame()) {
+
+							case ESCAPE_FROM_BEAST:
+
+								ev.setCancelled(true);
+
 								break;
 							default:
 								break;
@@ -148,7 +157,7 @@ public class Death implements Listener {
 											plugin.getMatchActive().getPuntuacion().put(damager.getName(), 1);
 										}
 
-										damager.sendMessage(Constantes.TAG_PLUGIN + " "
+										damager.sendMessage(plugin.getLanguage().getTagPlugin() + " "
 												+ plugin.getLanguage().getNowPoints().replace("%points%",
 														plugin.getMatchActive().getPuntuacion().get(damager.getName())
 																.toString()));
@@ -182,23 +191,29 @@ public class Death implements Listener {
 										ev.setCancelled(true);
 										break;
 									case ESCAPE_FROM_BEAST:
-										if (damager == null
-												|| damager.getName()
-														.equals(plugin.getMatchActive().getBeast().getName())
-												|| player.getName()
-														.equals(plugin.getMatchActive().getBeast().getName())) {
-											if (player.getName().equals(plugin.getMatchActive().getBeast().getName())) {
-												plugin.getMatchActive().setPlayerContador(damager);
-											}
-											plugin.getMatchActive().echaDePartida(player, true, true, false);
-											player.setHealth(20);
-											UtilsRandomEvents.playSound(player,
-													UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
-											UtilsRandomEvents.playSound(damager,
-													UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
+										if (plugin.getMatchActive().getBeast() == null) {
+											ev.setCancelled(true);
 
 										} else {
-											ev.setCancelled(true);
+											if (damager == null
+													|| damager.getName()
+															.equals(plugin.getMatchActive().getBeast().getName())
+													|| player.getName()
+															.equals(plugin.getMatchActive().getBeast().getName())) {
+												if (player.getName()
+														.equals(plugin.getMatchActive().getBeast().getName())) {
+													plugin.getMatchActive().setPlayerContador(damager);
+												}
+												plugin.getMatchActive().echaDePartida(player, true, true, false);
+												player.setHealth(20);
+												UtilsRandomEvents.playSound(player,
+														UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
+												UtilsRandomEvents.playSound(damager,
+														UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
+
+											} else {
+												ev.setCancelled(true);
+											}
 										}
 
 										break;
@@ -213,14 +228,20 @@ public class Death implements Listener {
 									case TOP_KILLER:
 										break;
 									case ESCAPE_FROM_BEAST:
-										if (damager == null
-												|| damager.getName()
-														.equals(plugin.getMatchActive().getBeast().getName())
-												|| player.getName()
-														.equals(plugin.getMatchActive().getBeast().getName())) {
+										if (plugin.getMatchActive().getBeast() == null) {
+											ev.setCancelled(true);
 
 										} else {
-											ev.setCancelled(true);
+
+											if (damager == null
+													|| damager.getName()
+															.equals(plugin.getMatchActive().getBeast().getName())
+													|| player.getName()
+															.equals(plugin.getMatchActive().getBeast().getName())) {
+
+											} else {
+												ev.setCancelled(true);
+											}
 										}
 
 										break;

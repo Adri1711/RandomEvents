@@ -40,7 +40,7 @@ public class Move implements Listener {
 						if (!plugin.getMatchActive().getPlayersGanadores().contains(player)) {
 							plugin.getMatchActive().getPlayersGanadores().add(player);
 							for (Player p : plugin.getMatchActive().getPlayersSpectators()) {
-								p.sendMessage(Constantes.TAG_PLUGIN + " "
+								p.sendMessage(plugin.getLanguage().getTagPlugin() + " "
 										+ plugin.getLanguage().getRaceTournament()
 												.replaceAll("%player%", player.getName())
 												.replaceAll("%players%",
@@ -54,14 +54,16 @@ public class Move implements Listener {
 				}
 				break;
 			case ESCAPE_FROM_BEAST:
-				if (!plugin.getMatchActive().getBeast().getName().equals(player.getName()) && plugin.getMatchActive().getCuboid().contains(player.getLocation())) {
-					if(!plugin.getMatchActive().getGoalPlayers().contains(player)){
+				if (plugin.getMatchActive().getBeast() != null
+						&& !plugin.getMatchActive().getBeast().getName().equals(player.getName())
+						&& plugin.getMatchActive().getCuboid().contains(player.getLocation())) {
+					if (!plugin.getMatchActive().getGoalPlayers().contains(player)) {
 						plugin.getMatchActive().getGoalPlayers().add(player);
 						plugin.getMatchActive().ponInventarioRunner(player);
 						UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
 					}
 				}
-				
+				break;
 			default:
 				break;
 			}

@@ -97,7 +97,7 @@ public class TournamentActive {
 				mapa.put(rAux, searchCompatibleMatch(rAux.getFrom(), rAux.getTo()));
 			}
 		}
-		
+
 		return mapa;
 	}
 
@@ -117,7 +117,8 @@ public class TournamentActive {
 
 				} else {
 
-					if (!m.getMinigame().equals(MinigameType.GEM_CRAWLER)) {
+					if (!m.getMinigame().equals(MinigameType.GEM_CRAWLER)
+							&& !m.getMinigame().equals(MinigameType.ESCAPE_FROM_BEAST)) {
 						matches.add(m);
 					}
 				}
@@ -155,7 +156,7 @@ public class TournamentActive {
 				UtilsRandomEvents.sacaInventario(plugin, player);
 			}
 		} else {
-			player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getAlreadyPlayingMatch());
+			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getAlreadyPlayingMatch());
 		}
 	}
 
@@ -184,7 +185,7 @@ public class TournamentActive {
 
 						}
 					} else {
-						String firstPart = Constantes.TAG_PLUGIN + " ";
+						String firstPart = plugin.getLanguage().getTagPlugin() + " ";
 
 						if (firstAnnounce) {
 							playSound = Boolean.TRUE;
@@ -222,7 +223,7 @@ public class TournamentActive {
 			if (playersGanadores.size() == 1) {
 				daRecompensas(playersGanadores, playersSpectators);
 			} else {
-				String info = Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getTournamentAlive()
+				String info = plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getTournamentAlive()
 						+ Constantes.SALTO_LINEA;
 				for (Player p : playersGanadores) {
 					info += "§6§l" + p.getName() + ", ";
@@ -241,12 +242,10 @@ public class TournamentActive {
 							for (Player p : playersSpectators) {
 								p.teleport(tournament.getPlayerSpawn());
 							}
-							
 
 						}
 					}
 				}
-
 
 				setPartida(new MatchActive(matchPerRound.get(getRange()), plugin, forzada, true, getInstance(), players,
 						playersGanadores, playersSpectators));
@@ -255,11 +254,11 @@ public class TournamentActive {
 
 				Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 					public void run() {
-						
+
 						getPartida().setPlayers(players);
 						getPartida().setPlayersObj(playersGanadores);
 						getPartida().setPlayersSpectators(playersSpectators);
-						
+
 						plugin.setMatchActive(getPartida());
 
 						getPartida().matchBegin();
@@ -295,7 +294,7 @@ public class TournamentActive {
 			}
 			for (Player play : Bukkit.getOnlinePlayers()) {
 
-				play.sendMessage(Constantes.TAG_PLUGIN + " "
+				play.sendMessage(plugin.getLanguage().getTagPlugin() + " "
 						+ plugin.getLanguage().getWinnersTournament().replace("%players%", cadenaGanadores));
 
 			}
@@ -382,7 +381,7 @@ public class TournamentActive {
 			if (sacaInv) {
 				UtilsRandomEvents.sacaInventario(plugin, player);
 			}
-		} 
+		}
 
 	}
 
@@ -409,16 +408,16 @@ public class TournamentActive {
 						player.teleport(tournament.getPlayerSpawn());
 					} else {
 						player.sendMessage(
-								Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getErrorSavingInventory());
+								plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getErrorSavingInventory());
 
 					}
 				} else {
-					player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getDisposeLeatherItems());
+					player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getDisposeLeatherItems());
 
 				}
 
 			} else {
-				player.sendMessage(Constantes.TAG_PLUGIN + " " + plugin.getLanguage().getMatchFull());
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getMatchFull());
 			}
 
 		}

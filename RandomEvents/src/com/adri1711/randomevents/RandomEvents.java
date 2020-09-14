@@ -1,6 +1,8 @@
 package com.adri1711.randomevents;
 
 import java.io.File;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +35,7 @@ import com.adri1711.randomevents.listeners.Use;
 import com.adri1711.randomevents.listeners.WeaponShoot;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
+import com.adri1711.randomevents.match.Schedule;
 import com.adri1711.randomevents.match.Tournament;
 import com.adri1711.randomevents.match.TournamentActive;
 import com.adri1711.randomevents.util.Constantes;
@@ -81,6 +84,8 @@ public class RandomEvents extends JavaPlugin {
 
 	private LanguageMessages language;
 
+	private List<Schedule> schedules;
+
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
 		loadConfig();
@@ -128,11 +133,13 @@ public class RandomEvents extends JavaPlugin {
 		tournament.setRewards(getConfig().getStringList("tournament.rewards"));
 		this.spawn = new Location(Bukkit.getWorld(getConfig().getString("spawn.world")),
 				getConfig().getDouble("spawn.x"), getConfig().getDouble("spawn.y"), getConfig().getDouble("spawn.z"),
-				Double.valueOf(getConfig().getDouble("spawn.yaw")).floatValue(), Double.valueOf(getConfig().getDouble("spawn.pitch")).floatValue());
+				Double.valueOf(getConfig().getDouble("spawn.yaw")).floatValue(),
+				Double.valueOf(getConfig().getDouble("spawn.pitch")).floatValue());
 
 		tournament.setPlayerSpawn(new Location(Bukkit.getWorld(getConfig().getString("tournament.spawn.world")),
 				getConfig().getDouble("tournament.spawn.x"), getConfig().getDouble("tournament.spawn.y"),
-				getConfig().getDouble("tournament.spawn.z"), Double.valueOf(getConfig().getDouble("tournament.spawn.yaw")).floatValue(),
+				getConfig().getDouble("tournament.spawn.z"),
+				Double.valueOf(getConfig().getDouble("tournament.spawn.yaw")).floatValue(),
 				Double.valueOf(getConfig().getDouble("tournament.spawn.pitch")).floatValue()));
 
 		this.minPlayers = Integer.valueOf(getConfig().getInt("minPlayers"));
@@ -144,6 +151,7 @@ public class RandomEvents extends JavaPlugin {
 		this.setProbabilityPowerUp(Integer.valueOf(getConfig().getInt("probabilityPowerUp")));
 
 		this.matches = UtilsRandomEvents.cargarPartidas(this);
+		this.schedules = UtilsRandomEvents.cargarSchedules(this);
 
 		this.playerMatches = new HashMap<String, Match>();
 		this.playersCreation = new HashMap<String, Integer>();
@@ -161,6 +169,7 @@ public class RandomEvents extends JavaPlugin {
 				public void run() {
 					if (matches != null && !matches.isEmpty() && Bukkit.getOnlinePlayers().size() >= minPlayers) {
 						if (!forzado) {
+
 							if (probabilityRandomEvent > random.nextInt(100)) {
 								if (probabilityRandomEventTournament > random.nextInt(100)) {
 									tournamentActive = new TournamentActive(tournament, getPlugin(), false);
@@ -169,7 +178,34 @@ public class RandomEvents extends JavaPlugin {
 											false);
 								}
 							} else {
-								comienzaTemporizador();
+								if (getSchedules() != null && !getSchedules().isEmpty()) {
+									Calendar c = Calendar.getInstance();
+									c.setTime(new Date());
+									Schedule sched = UtilsRandomEvents.findSchedule(getPlugin(),
+											c.get(Calendar.DAY_OF_WEEK), c.get(Calendar.HOUR_OF_DAY),
+											c.get(Calendar.MINUTE));
+									if (sched != null) {
+										if (sched.getMatchName() != null && !sched.getMatchName().isEmpty()) {
+											Match match = UtilsRandomEvents.findMatch(getPlugin(),
+													sched.getMatchName());
+											if (match != null) {
+												matchActive = new MatchActive(match, getPlugin(), false);
+											} else {
+												matchActive = UtilsRandomEvents.escogeMatchActiveAleatoria(getPlugin(),
+														matches, false);
+											}
+										} else {
+											matchActive = UtilsRandomEvents.escogeMatchActiveAleatoria(getPlugin(),
+													matches, false);
+										}
+									} else {
+										comienzaTemporizador();
+
+									}
+								} else {
+
+									comienzaTemporizador();
+								}
 							}
 						}
 					} else {
@@ -205,9 +241,16 @@ public class RandomEvents extends JavaPlugin {
 				case 2:
 					Comandos.ejecutaComandoDosArgumentos(this, player, args);
 					break;
-				default:
-					player.sendMessage(Constantes.TAG_PLUGIN + " " + language.getInvalidCmd());
+				case 4:
+					Comandos.ejecutaComandoCuatroArgumentos(this, player, args);
 					break;
+				case 5:
+					Comandos.ejecutaComandoCincoArgumentos(this, player, args);
+					break;
+				default:
+					player.sendMessage(getLanguage().getTagPlugin() + " " + language.getInvalidCmd());
+					break;
+
 				}
 			}
 		}
@@ -412,6 +455,14 @@ public class RandomEvents extends JavaPlugin {
 
 	public void setTournament(Tournament tournament) {
 		this.tournament = tournament;
+	}
+
+	public List<Schedule> getSchedules() {
+		return schedules;
+	}
+
+	public void setSchedules(List<Schedule> schedules) {
+		this.schedules = schedules;
 	}
 
 }

@@ -52,20 +52,22 @@ public enum Creacion {
 	TIMER_BOMB(21, "§6§lWrite the number of seconds to fire the bomb"),
 	
 	SECONDS_TO_SPAWN_BEAST(22,"§6§lWrite the number of seconds to spawn the beast"),
+	
+	SPAWN_BEAST(23,"§6§lGo to the arena you created and write 'Done' to set the beast spawn."),
 
-	INVENTORY_BEAST(23,"§6§lTake the inventory for the beast and say 'Done' "),
+	INVENTORY_BEAST(24,"§6§lTake the inventory for the beast and say 'Done' "),
 
-	INVENTORY_RUNNERS(24,"§6§lTake the inventory for the players when they reach the goal and say 'Done' "),
+	INVENTORY_RUNNERS(25,"§6§lTake the inventory for the players when they reach the goal and say 'Done' "),
 
-	ENTITY_SPAWNS(25,
+	ENTITY_SPAWNS(26,
 			"§6§lGo to the arena you created and write 'Done' to set each spawn location for the entities. (%entities%/%maxPlayers%)"),
 	
-	ANOTHER_ENTITY_SPAWNS(26, "§6§lPut another entity spawn, say 'Done' . (%entities%/%maxPlayers%)"),
+	ANOTHER_ENTITY_SPAWNS(27, "§6§lPut another entity spawn, say 'Done' . (%entities%/%maxPlayers%)"),
 
 
-	GOAL_LOCATION1(27, "§6§lSet the first location of the cuboid of the goal, say 'Done'"),
+	GOAL_LOCATION1(28, "§6§lSet the first location of the cuboid of the goal, say 'Done'"),
 
-	GOAL_LOCATION2(28, "§6§lSet the second location of the cuboid of the goal, say 'Done'"),
+	GOAL_LOCATION2(29, "§6§lSet the second location of the cuboid of the goal, say 'Done'"),
 
 	END(999, "§6§lYou finished the creation of the random event!");
 
