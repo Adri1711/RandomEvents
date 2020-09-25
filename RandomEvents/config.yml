@@ -12,6 +12,12 @@ probabilityRandomEvent: 5
 #Probability that the spawned random event is a tournament
 probabilityRandomEventTournament: 5
 
+#Teleport to the last location instead of spawn of the plugin
+useLastLocation: false
+
+#Number of annoucements the random event will do before being cancelled for lack of players
+numberOfTriesBeforeCancelling: 10
+
 tournament:
   spawn:
     world: world
@@ -24,7 +30,7 @@ tournament:
   minPlayers: 20
   numberOfRounds: 5
   rewards:
-      - 'dubilets give %player% 1'
+      - 'eco give %player% 10000'
 
 #Probability to spawn a power up of resistance in arrow rain games
 probabilityPowerUp: 1

@@ -46,6 +46,8 @@ public class TournamentActive {
 
 	private boolean siguiente;
 
+	private Integer tries;
+
 	public TournamentActive(Tournament tournament, RandomEvents plugin, Boolean forzada) {
 		super();
 		this.tournament = tournament;
@@ -58,6 +60,7 @@ public class TournamentActive {
 		this.playersSpectators = new ArrayList<Player>();
 		this.firstAnnounce = true;
 		this.matchPerRound = calculateMatchPerRound();
+		tries = 0;
 		matchWaitingPlayers();
 	}
 
@@ -69,6 +72,15 @@ public class TournamentActive {
 		Integer playerPerRound = Double.valueOf(max * percen).intValue();
 		Integer nPlayer = Integer.valueOf(max);
 		Integer fromIni = Integer.valueOf(max);
+		Integer maxMatch = 0;
+		for (Match m : plugin.getMatches()) {
+			if (m.getAmountPlayers() > maxMatch) {
+				maxMatch = m.getAmountPlayers();
+			}
+		}
+		if (fromIni > maxMatch) {
+			fromIni = Integer.valueOf(maxMatch);
+		}
 
 		while (nPlayer > playerPerRound + 4) {
 			RangePlayers rangePlayer = new RangePlayers(fromIni, nPlayer - playerPerRound + 1);
@@ -156,7 +168,8 @@ public class TournamentActive {
 				UtilsRandomEvents.sacaInventario(plugin, player);
 			}
 		} else {
-			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getAlreadyPlayingMatch());
+			player.sendMessage(
+					plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getAlreadyPlayingMatch());
 		}
 	}
 
@@ -166,6 +179,7 @@ public class TournamentActive {
 			public void run() {
 				if (plugin.getTournamentActive() != null
 						&& plugin.getTournamentActive().getPassword().equals(getPassword())) {
+					tries++;
 
 					Boolean playSound = Boolean.FALSE;
 
@@ -180,7 +194,9 @@ public class TournamentActive {
 											getPlayers(), getPlayersObj(), getPlayersSpectators());
 									plugin.setMatchActive(partida);
 								}
+								System.out.println(entrada);
 							}
+
 							getPartida().matchBegin();
 
 						}
@@ -207,8 +223,12 @@ public class TournamentActive {
 												.replaceAll("%neededPlayers%", tournament.getMinPlayers().toString()));
 							}
 						}
+						if (tries <= plugin.getNumberOfTriesBeforeCancelling()) {
+							matchWaitingPlayers();
+						} else {
+							finalizaPartida(new ArrayList<Player>(), playersSpectators, Boolean.FALSE, Boolean.TRUE);
 
-						matchWaitingPlayers();
+						}
 					}
 
 				}
@@ -300,13 +320,14 @@ public class TournamentActive {
 			}
 			Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 				public void run() {
-					finalizaPartida(ganadores, playersSpectators, Boolean.FALSE);
+					finalizaPartida(ganadores, playersSpectators, Boolean.FALSE, Boolean.FALSE);
 				}
 			}, 20 * 5L);
 		}
 	}
 
-	public void finalizaPartida(List<Player> ganadores, List<Player> playersSpectators, Boolean abrupto) {
+	public void finalizaPartida(List<Player> ganadores, List<Player> playersSpectators, Boolean abrupto,
+			Boolean cancelled) {
 		List<Player> spectatorAux = new ArrayList<Player>();
 		spectatorAux.addAll(playersSpectators);
 		for (Player p : spectatorAux) {
@@ -345,6 +366,13 @@ public class TournamentActive {
 							comando.replaceAll("%player%", player.getName()));
 				}
 			}
+		}
+
+		if (cancelled) {
+			List<Player> playersOnline = new ArrayList<Player>();
+			playersOnline.addAll(Bukkit.getOnlinePlayers());
+			UtilsRandomEvents.mandaMensaje(plugin, playersOnline, plugin.getLanguage().getTournamentCancelled(), true);
+
 		}
 
 		reiniciaValoresPartida();
@@ -407,12 +435,13 @@ public class TournamentActive {
 
 						player.teleport(tournament.getPlayerSpawn());
 					} else {
-						player.sendMessage(
-								plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getErrorSavingInventory());
+						player.sendMessage(plugin.getLanguage().getTagPlugin() + " "
+								+ plugin.getLanguage().getErrorSavingInventory());
 
 					}
 				} else {
-					player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getDisposeLeatherItems());
+					player.sendMessage(
+							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getDisposeLeatherItems());
 
 				}
 

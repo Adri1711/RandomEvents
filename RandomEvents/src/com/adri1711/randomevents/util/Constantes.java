@@ -83,6 +83,12 @@ public class Constantes {
 
 		EVENT_ANNOUNCE("eventAnnounce", "announce.eventAnnounce",
 				"&6&lThe event &e&l'%event%'&6&l of type  &e&l'%type%'&6&l, begins in: "),
+		
+		EVENT_CANCELLED("eventCancelled", "announce.eventCancelled",
+				"&6&lThe event &e&l'%event%'&6&l of type  &e&l'%type%'&6&l, was cancelled for lack of players."),
+		
+		TOURNAMENT_CANCELLED("tournamentCancelled", "announce.tournamentCancelled",
+				"&6&lThe tournament was cancelled for lacking players."),
 
 		INVALID_PASSWORD("invalidPassword", "comun.invalidPassword", "&c&lInvalid password for the event"),
 

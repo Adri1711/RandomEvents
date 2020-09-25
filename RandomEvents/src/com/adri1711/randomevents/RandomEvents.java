@@ -38,6 +38,7 @@ import com.adri1711.randomevents.match.MatchActive;
 import com.adri1711.randomevents.match.Schedule;
 import com.adri1711.randomevents.match.Tournament;
 import com.adri1711.randomevents.match.TournamentActive;
+import com.adri1711.randomevents.metrics.Metrics;
 import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.util.enums.AMaterials;
@@ -86,6 +87,10 @@ public class RandomEvents extends JavaPlugin {
 
 	private List<Schedule> schedules;
 
+	private Boolean useLastLocation;
+
+	private Integer numberOfTriesBeforeCancelling;
+
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
 		loadConfig();
@@ -127,10 +132,12 @@ public class RandomEvents extends JavaPlugin {
 
 		this.tournament = new Tournament();
 
+		this.numberOfTriesBeforeCancelling = getConfig().getInt("numberOfTriesBeforeCancelling");
 		tournament.setMaxPlayers(getConfig().getInt("tournament.maxPlayers"));
 		tournament.setMinPlayers(getConfig().getInt("tournament.minPlayers"));
 		tournament.setNumberOfRounds(getConfig().getInt("tournament.numberOfRounds"));
 		tournament.setRewards(getConfig().getStringList("tournament.rewards"));
+
 		this.spawn = new Location(Bukkit.getWorld(getConfig().getString("spawn.world")),
 				getConfig().getDouble("spawn.x"), getConfig().getDouble("spawn.y"), getConfig().getDouble("spawn.z"),
 				Double.valueOf(getConfig().getDouble("spawn.yaw")).floatValue(),
@@ -148,6 +155,8 @@ public class RandomEvents extends JavaPlugin {
 		this.probabilityRandomEventTournament = Integer.valueOf(getConfig().getInt("probabilityRandomEventTournament"));
 		this.probabilityRandomEvent = Integer.valueOf(getConfig().getInt("probabilityRandomEvent"));
 
+		this.useLastLocation = getConfig().getBoolean("useLastLocation");
+
 		this.setProbabilityPowerUp(Integer.valueOf(getConfig().getInt("probabilityPowerUp")));
 
 		this.matches = UtilsRandomEvents.cargarPartidas(this);
@@ -158,6 +167,8 @@ public class RandomEvents extends JavaPlugin {
 		this.playersEntity = new HashMap<String, EntityType>();
 
 		this.language = new LanguageMessages(this);
+		int pluginId = 8944;
+		Metrics metrics = new Metrics(this, pluginId);
 
 	}
 
@@ -463,6 +474,22 @@ public class RandomEvents extends JavaPlugin {
 
 	public void setSchedules(List<Schedule> schedules) {
 		this.schedules = schedules;
+	}
+
+	public Boolean getUseLastLocation() {
+		return useLastLocation;
+	}
+
+	public void setUseLastLocation(Boolean useLastLocation) {
+		this.useLastLocation = useLastLocation;
+	}
+
+	public Integer getNumberOfTriesBeforeCancelling() {
+		return numberOfTriesBeforeCancelling;
+	}
+
+	public void setNumberOfTriesBeforeCancelling(Integer numberOfTriesBeforeCancelling) {
+		this.numberOfTriesBeforeCancelling = numberOfTriesBeforeCancelling;
 	}
 
 }

@@ -63,6 +63,9 @@ public class LanguageMessages {
 	private String endOfScheduleCreation;
 	private String raceTournament;
 	private String tagPlugin;
+	private String eventCancelled;
+
+	private String tournamentCancelled;
 
 	public LanguageMessages(RandomEvents plugin) {
 		this.file = new File(plugin.getDataFolder(), "messages.yml");
@@ -582,6 +585,22 @@ public class LanguageMessages {
 
 	public void setTagPlugin(String tagPlugin) {
 		this.tagPlugin = tagPlugin;
+	}
+
+	public String getEventCancelled() {
+		return eventCancelled.replaceAll("&", "§");
+	}
+
+	public void setEventCancelled(String eventCancelled) {
+		this.eventCancelled = eventCancelled;
+	}
+
+	public String getTournamentCancelled() {
+		return tournamentCancelled.replaceAll("&", "§");
+	}
+
+	public void setTournamentCancelled(String tournamentCancelled) {
+		this.tournamentCancelled = tournamentCancelled;
 	}
 
 }

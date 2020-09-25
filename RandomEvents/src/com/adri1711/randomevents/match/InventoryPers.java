@@ -2,6 +2,7 @@ package com.adri1711.randomevents.match;
 
 import java.util.Arrays;
 
+import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
 public class InventoryPers {
@@ -12,6 +13,8 @@ public class InventoryPers {
 	private ItemStack chestplate;
 	private ItemStack leggings;
 	private ItemStack boots;
+	
+	private Location lastLocation;
 
 	public InventoryPers() {
 		super();
@@ -58,10 +61,18 @@ public class InventoryPers {
 		this.boots = boots;
 	}
 
+	public Location getLastLocation() {
+		return lastLocation;
+	}
+
+	public void setLastLocation(Location lastLocation) {
+		this.lastLocation = lastLocation;
+	}
+
 	@Override
 	public String toString() {
 		return "InventoryPers [contents=" + Arrays.toString(contents) + ", helmet=" + helmet + ", chestplate="
-				+ chestplate + ", leggings=" + leggings + ", boots=" + boots + "]";
+				+ chestplate + ", leggings=" + leggings + ", boots=" + boots + ", lastLocation=" + lastLocation + "]";
 	}
 
 	@Override
@@ -72,6 +83,7 @@ public class InventoryPers {
 		result = prime * result + ((chestplate == null) ? 0 : chestplate.hashCode());
 		result = prime * result + Arrays.hashCode(contents);
 		result = prime * result + ((helmet == null) ? 0 : helmet.hashCode());
+		result = prime * result + ((lastLocation == null) ? 0 : lastLocation.hashCode());
 		result = prime * result + ((leggings == null) ? 0 : leggings.hashCode());
 		return result;
 	}
@@ -102,6 +114,11 @@ public class InventoryPers {
 				return false;
 		} else if (!helmet.equals(other.helmet))
 			return false;
+		if (lastLocation == null) {
+			if (other.lastLocation != null)
+				return false;
+		} else if (!lastLocation.equals(other.lastLocation))
+			return false;
 		if (leggings == null) {
 			if (other.leggings != null)
 				return false;
@@ -109,6 +126,8 @@ public class InventoryPers {
 			return false;
 		return true;
 	}
+
+	
 	
 	
 

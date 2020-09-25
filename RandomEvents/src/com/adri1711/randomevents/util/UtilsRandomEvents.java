@@ -33,6 +33,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
 import com.adri1711.randomevents.RandomEvents;
+import com.adri1711.randomevents.match.Cuboid;
 import com.adri1711.randomevents.match.InventoryPers;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
@@ -210,6 +211,10 @@ public class UtilsRandomEvents {
 			inventario.setLeggings(player.getInventory().getLeggings());
 			inventario.setChestplate(player.getInventory().getChestplate());
 
+			if (plugin.getUseLastLocation()) {
+				inventario.setLastLocation(player.getLocation());
+			}
+
 			String json = UtilidadesJson.fromInventoryToJSON(plugin, inventario);
 
 			if (json != null) {
@@ -300,6 +305,12 @@ public class UtilsRandomEvents {
 			try {
 				if (inventario != null) {
 					UtilsRandomEvents.borraInventario(player);
+
+					if (plugin.getUseLastLocation()) {
+						if (inventario.getLastLocation() != null) {
+							player.teleport(inventario.getLastLocation());
+						}
+					}
 
 					player.getInventory().setContents(inventario.getContents());
 					player.getInventory().setHelmet(inventario.getHelmet());
@@ -776,6 +787,20 @@ public class UtilsRandomEvents {
 			}
 		}
 		return m;
+	}
+
+	public static Location getRandomLocation(RandomEvents plugin, Cuboid cuboid) {
+		Integer difX = cuboid.getMaxX() - cuboid.getMinX();
+		Integer difY = cuboid.getMaxY() - cuboid.getMinY();
+		Integer difZ = cuboid.getMaxZ() - cuboid.getMinZ();
+		Integer sumX = plugin.getRandom().nextInt(difX);
+		Integer sumY = plugin.getRandom().nextInt(difY);
+		Integer sumZ = plugin.getRandom().nextInt(difZ);
+
+		Location loc = new Location(cuboid.getWorld(), cuboid.getMinX() + sumX, cuboid.getMinY() + sumY,
+				cuboid.getMinZ() + sumZ);
+
+		return loc;
 	}
 
 }
