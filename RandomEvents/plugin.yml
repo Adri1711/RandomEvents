@@ -1,6 +1,6 @@
 name: RandomEvents
 main: com.adri1711.randomevents.RandomEvents
-version: 1.6.2
+version: 1.6.6
 depend: [Lib1711]
 softdepend: [CrackShot]
 commands:

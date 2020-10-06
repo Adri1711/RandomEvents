@@ -35,11 +35,12 @@ public class Constantes {
 	public static String CONTENTS = "contents";
 	public static String EQUIPMENT = "equipment";
 	public static String GREEN = "§2§l";
+	public static String SPLEGG_EGG = "Splegg Egg Code 001";
 
 	public enum Messages {
 
 		TAG_PLUGIN("tagPlugin", "tagPlugin", "&9&l[RandomEvents]"),
-		
+
 		INVALID_INPUT("invalidInput", "creation.invalidInput", "&c&lInvalid input, try another one"),
 
 		ERROR("error", "comun.error", "&c&lSome error ocurred, check the server log."),
@@ -51,7 +52,7 @@ public class Constantes {
 
 		END_OF_ARENA_CREATION("endOfArenaCreation", "creation.endOfArenaCreation",
 				"&6&lYou successfully created a RandomEvents!"),
-		
+
 		END_OF_SCHEDULE_CREATION("endOfScheduleCreation", "creation.endOfScheduleCreation",
 				"&6&lYou successfully created a Schedule!"),
 
@@ -83,10 +84,10 @@ public class Constantes {
 
 		EVENT_ANNOUNCE("eventAnnounce", "announce.eventAnnounce",
 				"&6&lThe event &e&l'%event%'&6&l of type  &e&l'%type%'&6&l, begins in: "),
-		
+
 		EVENT_CANCELLED("eventCancelled", "announce.eventCancelled",
 				"&6&lThe event &e&l'%event%'&6&l of type  &e&l'%type%'&6&l, was cancelled for lack of players."),
-		
+
 		TOURNAMENT_CANCELLED("tournamentCancelled", "announce.tournamentCancelled",
 				"&6&lThe tournament was cancelled for lacking players."),
 
@@ -95,28 +96,32 @@ public class Constantes {
 		FIRST_ANNOUNCE("firstAnnounce", "announce.firstAnnounce", "&6&lA Random Event has just begun, "),
 
 		NEXT_ANNOUNCE("nextAnnounce", "announce.nextAnnounce", "&6&lA Random Event is still waiting for players, "),
-		
-		FIRST_ANNOUNCE_TOURNAMENT("firstAnnounceTournament", "announce.firstAnnounceTournament", "&6&lA Tournament Random Event has just begun, "),
 
-		NEXT_ANNOUNCE_TOURNAMENT("nextAnnounceTournament", "announce.nextAnnounceTournament", "&6&lA Tournament Random Event is still waiting for players, "),
+		FIRST_ANNOUNCE_TOURNAMENT("firstAnnounceTournament", "announce.firstAnnounceTournament",
+				"&6&lA Tournament Random Event has just begun, "),
+
+		NEXT_ANNOUNCE_TOURNAMENT("nextAnnounceTournament", "announce.nextAnnounceTournament",
+				"&6&lA Tournament Random Event is still waiting for players, "),
 
 		CLICK_HERE("clickHere", "announce.clickHere", "&9&l[Click here to join]"),
 
 		LAST_PART("lastPart", "announce.lastPart", "&6&l ( %players% / %neededPlayers% )"),
-		
-		LAST_PART_TOURNAMENT("lastPartTournament", "announce.lastPartTournament", "&6&l ( %players% / %neededPlayers% )"),
-		
-		RACE_TOURNAMENT("raceTournament", "announce.raceTournament", "&6&lThe player %player% has reached the goal ( %players% / %neededPlayers% )"),
-		
+
+		LAST_PART_TOURNAMENT("lastPartTournament", "announce.lastPartTournament",
+				"&6&l ( %players% / %neededPlayers% )"),
+
+		RACE_TOURNAMENT("raceTournament", "announce.raceTournament",
+				"&6&lThe player %player% has reached the goal ( %players% / %neededPlayers% )"),
+
 		YOU_BEAST("youBeast", "announce.youBeast", "&6&lYou are the beast, wait until you get teleported to the arena"),
-		
+
 		TOURNAMENT_ALIVE("tournamentAlive", "match.tournamentAlive",
 				"&e&lThese players still survive on the tournament :"),
 
 		WINNERS("winners", "match.winners",
-				"&e&l%players% &6&lwon the Random Event &e&l'%event%'&6&l ! Congratulations!"),
-		WINNERS_TOURNAMENT("winnersTournament", "match.winnersTournament",
-				"&e&l%players% &6&lwon the Tournament Random Event ! Congratulations!"),
+				"&e&l%players% &6&lwon the Random Event &e&l'%event%'&6&l ! Congratulations!"), WINNERS_TOURNAMENT(
+						"winnersTournament", "match.winnersTournament",
+						"&e&l%players% &6&lwon the Tournament Random Event ! Congratulations!"),
 
 		WINNERS_POINTS("winnersPoints", "match.winnersPoints",
 				"&e&l%players% &6&lwon the Random Event '%event%' with %points% points ! Congratulations!"),

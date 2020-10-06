@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,7 @@ import com.adri1711.randomevents.match.MatchActive;
 import com.adri1711.randomevents.match.MinigameType;
 import com.adri1711.randomevents.match.Schedule;
 import com.adri1711.randomevents.match.enums.Creacion;
+import com.adri1711.util.enums.AMaterials;
 import com.google.common.io.Files;
 
 public class UtilsRandomEvents {
@@ -203,8 +205,9 @@ public class UtilsRandomEvents {
 				}
 
 			}
-
-			inventario.setContents((ItemStack[]) contenidoList.toArray());
+			ItemStack[] arrayContenido=new ItemStack[contenidoList.size()];
+			arrayContenido=contenidoList.toArray(arrayContenido);
+			inventario.setContents(arrayContenido);
 
 			inventario.setHelmet(player.getInventory().getHelmet());
 			inventario.setBoots(player.getInventory().getBoots());
@@ -801,6 +804,75 @@ public class UtilsRandomEvents {
 				cuboid.getMinZ() + sumZ);
 
 		return loc;
+	}
+
+	public static void queueTNT(RandomEvents plugin, MatchActive matchActive, Location l, double distance,
+			Boolean comprueba) {
+		Location l3 = l.clone();
+		l3.setY(l3.getY() - 1);
+
+		if (l3.getBlock() != null && !matchActive.getBlockDisappear().containsKey(l3.getBlock().getLocation())
+				&& l3.getBlock().getType() == plugin.getApi().getMaterial(AMaterials.TNT)) {
+			Date d = new Date();
+			Long time = d.getTime();
+			time += (long) (300);
+			matchActive.getBlockDisappear().put(l3.getBlock().getLocation(), time);
+		}
+		if (comprueba && distance < 0.1) {
+			Location l2 = l.clone();
+			if (l2.getX() % 1 <= 0.3) {
+				l2.setX(l2.getX() - 1);
+				queueTNT(plugin, matchActive, l2, distance, false);
+
+			} else if (l2.getX() % 1 >= 0.7) {
+				l2.setX(l2.getX() + 1);
+				queueTNT(plugin, matchActive, l2, distance, false);
+			}
+
+			if (l2.getZ() % 1 <= 0.3) {
+				l2.setZ(l2.getZ() - 1);
+				queueTNT(plugin, matchActive, l2, distance, false);
+
+			} else if (l2.getZ() % 1 >= 0.7) {
+				l2.setZ(l2.getZ() + 1);
+				queueTNT(plugin, matchActive, l2, distance, false);
+			}
+			if (l.getZ() % 1 <= 0.3) {
+				l.setZ(l.getZ() - 1);
+				queueTNT(plugin, matchActive, l, distance, false);
+
+			} else if (l.getZ() % 1 >= 0.7) {
+				l.setZ(l.getZ() + 1);
+				queueTNT(plugin, matchActive, l, distance, false);
+			}
+		}
+
+	}
+
+	public static void checkBlocksDisappear(RandomEvents plugin, MatchActive matchActive, Date date) {
+		List<Location> blocksToDisappear = new ArrayList<Location>();
+		Long time = date.getTime();
+		for (Entry<Location, Long> entry : matchActive.getBlockDisappear().entrySet()) {
+			if (entry.getValue() <= time) {
+
+				blocksToDisappear.add(entry.getKey());
+			}
+		}
+		for (Location l : blocksToDisappear) {
+			l.getBlock().setType(plugin.getApi().getMaterial(AMaterials.AIR));
+			matchActive.getBlockDisappear().remove(l);
+			matchActive.getBlockDisappeared().add(l);
+		}
+
+	}
+
+	public static void applyPotionEffects(PotionEffect potEffect, List<Player> players) {
+		for (Player p : players) {
+			if (p.hasPotionEffect(potEffect.getType())) {
+				p.removePotionEffect(potEffect.getType());
+			}
+			p.addPotionEffect(potEffect);
+		}
 	}
 
 }

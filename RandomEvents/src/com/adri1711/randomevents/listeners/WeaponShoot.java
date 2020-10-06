@@ -110,7 +110,9 @@ public class WeaponShoot implements Listener {
 										break;
 									case BOAT_RUN:
 									case RACE:
-										// case TNT_RUN:
+									case TNT_RUN:
+									case SPLEEF:
+									case SPLEGG:
 										ev.setCancelled(true);
 										break;
 									case ESCAPE_FROM_BEAST:
@@ -171,7 +173,9 @@ public class WeaponShoot implements Listener {
 										break;
 									case BOAT_RUN:
 									case RACE:
-										// case TNT_RUN:
+									case TNT_RUN:
+									case SPLEEF:
+									case SPLEGG:
 										ev.setCancelled(true);
 										break;
 									default:
@@ -219,7 +223,9 @@ public class WeaponShoot implements Listener {
 								break;
 							case BOAT_RUN:
 							case RACE:
-								// case TNT_RUN:
+							case TNT_RUN:
+							case SPLEEF:
+							case SPLEGG:
 								ev.setCancelled(true);
 								break;
 							default:
@@ -240,7 +246,9 @@ public class WeaponShoot implements Listener {
 								break;
 							case BOAT_RUN:
 							case RACE:
-								// case TNT_RUN:
+							case TNT_RUN:
+							case SPLEEF:
+							case SPLEGG:
 								ev.setCancelled(true);
 								break;
 							default:

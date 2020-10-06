@@ -1,9 +1,7 @@
 package com.adri1711.randomevents.match;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
@@ -41,14 +39,14 @@ public class Match {
 	private List<String> rewards;
 
 	private Integer tiempoPartida;
-	
+
 	private InventoryPers inventoryBeast;
-	
+
 	private InventoryPers inventoryRunners;
-	
+
 	private Location beastSpawn;
 
-
+	private String material;
 
 	public Match() {
 		super();
@@ -223,6 +221,14 @@ public class Match {
 		this.beastSpawn = beastSpawn;
 	}
 
+	public String getMaterial() {
+		return material;
+	}
+
+	public void setMaterial(String material) {
+		this.material = material;
+	}
+
 	@Override
 	public String toString() {
 		return "Match [name=" + name + ", inventory=" + inventory + ", amountPlayers=" + amountPlayers
@@ -231,7 +237,7 @@ public class Match {
 				+ ", secondsMobSpawn=" + secondsMobSpawn + ", location1=" + location1 + ", location2=" + location2
 				+ ", mob=" + mob + ", eventSpawn=" + eventSpawn + ", rewards=" + rewards + ", tiempoPartida="
 				+ tiempoPartida + ", inventoryBeast=" + inventoryBeast + ", inventoryRunners=" + inventoryRunners
-				+ ", beastSpawn=" + beastSpawn + "]";
+				+ ", beastSpawn=" + beastSpawn + ", material=" + material + "]";
 	}
 
 	@Override
@@ -248,6 +254,7 @@ public class Match {
 		result = prime * result + ((inventoryRunners == null) ? 0 : inventoryRunners.hashCode());
 		result = prime * result + ((location1 == null) ? 0 : location1.hashCode());
 		result = prime * result + ((location2 == null) ? 0 : location2.hashCode());
+		result = prime * result + ((material == null) ? 0 : material.hashCode());
 		result = prime * result + ((minigame == null) ? 0 : minigame.hashCode());
 		result = prime * result + ((mob == null) ? 0 : mob.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
@@ -319,6 +326,8 @@ public class Match {
 				return false;
 		} else if (!location2.equals(other.location2))
 			return false;
+		if (material != other.material)
+			return false;
 		if (minigame != other.minigame)
 			return false;
 		if (mob != other.mob)
@@ -360,8 +369,5 @@ public class Match {
 			return false;
 		return true;
 	}
-
-	
-
 
 }

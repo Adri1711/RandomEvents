@@ -2,6 +2,7 @@ package com.adri1711.randomevents.match;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.commands.ComandosEnum;
@@ -86,6 +88,12 @@ public class MatchActive {
 
 	private Integer tries;
 
+	private BukkitRunnable task;
+
+	private Map<Location, Long> blockDisappear;
+
+	private List<Location> blockDisappeared;
+
 	public MatchActive(Match match, RandomEvents plugin, Boolean forzada) {
 		super();
 		this.match = match;
@@ -128,7 +136,8 @@ public class MatchActive {
 		this.firstAnnounce = Boolean.TRUE;
 		this.gema = new ItemStack(plugin.getApi().getMaterial(AMaterials.EMERALD));
 		this.setForzada(forzada);
-
+		this.blockDisappear = new HashMap<Location, Long>();
+		this.blockDisappeared = new ArrayList<Location>();
 		tries = 0;
 		matchWaitingPlayers();
 	}
@@ -177,6 +186,9 @@ public class MatchActive {
 		this.firstAnnounce = Boolean.TRUE;
 		this.gema = new ItemStack(plugin.getApi().getMaterial(AMaterials.EMERALD));
 		this.setForzada(forzada);
+		this.blockDisappear = new HashMap<Location, Long>();
+		this.blockDisappeared = new ArrayList<Location>();
+
 		tries = 0;
 
 	}
@@ -365,8 +377,9 @@ public class MatchActive {
 				for (Entity entity : getMobs()) {
 					entity.remove();
 				}
-				tournamentObj.finalizaPartida(getCopiaP(getPlayersObj()), getCopiaP(getPlayersSpectators()),
-						Boolean.FALSE, Boolean.FALSE);
+				if (tournamentObj != null)
+					tournamentObj.finalizaPartida(getCopiaP(getPlayersObj()), getCopiaP(getPlayersSpectators()),
+							Boolean.FALSE, Boolean.FALSE);
 				finalizaPartida(getPlayersObj(), Boolean.FALSE, Boolean.FALSE);
 
 			}
@@ -532,7 +545,8 @@ public class MatchActive {
 		case BATTLE_ROYALE_TEAM_2:
 		case ESCAPE_ARROW:
 		case BOMB_TAG:
-			// case TNT_RUN:
+		case TNT_RUN:
+		case SPLEEF:
 			ganadores.addAll(getPlayersObj());
 			break;
 		case TOP_KILLER:
@@ -721,6 +735,22 @@ public class MatchActive {
 		this.playersObj.clear();
 		this.playersGanadores.clear();
 		this.playersSpectators.clear();
+		if (task != null)
+			task.cancel();
+		Material mat = null;
+		if (match.getMinigame().equals(MinigameType.TNT_RUN)) {
+			mat = plugin.getApi().getMaterial(AMaterials.TNT);
+		} else {
+			if (match.getMaterial() != null) {
+				mat = Material.getMaterial(match.getMaterial());
+			}
+		}
+		if (mat != null) {
+			getBlockDisappeared().addAll(getBlockDisappear().keySet());
+			for (Location l : getBlockDisappeared()) {
+				l.getBlock().setType(mat);
+			}
+		}
 		setPlaying(Boolean.FALSE);
 		if (tournamentObj == null)
 			plugin.reiniciaPartida(forzada);
@@ -780,7 +810,6 @@ public class MatchActive {
 		switch (match.getMinigame()) {
 		case BATTLE_ROYALE:
 		case KNOCKBACK_DUEL:
-			// case TNT_RUN:
 			for (Player p : playersSpectators) {
 				if (!playersObj.contains(p)) {
 					mandaSpectatorPlayer(p);
@@ -788,6 +817,60 @@ public class MatchActive {
 			}
 			for (Player p : playersObj) {
 				iniciaPlayer(p);
+
+			}
+
+			break;
+		case TNT_RUN:
+			for (Player p : playersSpectators) {
+				if (!playersObj.contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
+			for (Player p : playersObj) {
+				iniciaPlayer(p);
+
+			}
+			task = new BukkitRunnable() {
+				public void run() {
+
+					UtilsRandomEvents.checkBlocksDisappear(plugin, getMatchActive(), new Date());
+				}
+			};
+			task.runTaskTimer(plugin, 0, 1L);
+			break;
+		case SPLEEF:
+			for (Player p : playersSpectators) {
+				if (!playersObj.contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
+			for (Player p : playersObj) {
+				iniciaPlayer(p);
+
+			}
+			PotionEffect pot = new PotionEffect(PotionEffectType.FAST_DIGGING, 240, 99);
+			UtilsRandomEvents.applyPotionEffects(pot, getPlayersObj());
+
+			task = new BukkitRunnable() {
+				public void run() {
+
+					UtilsRandomEvents.applyPotionEffects(pot, getPlayersObj());
+				}
+			};
+			task.runTaskTimer(plugin, 0, 120L);
+			break;
+		case SPLEGG:
+			for (Player p : playersSpectators) {
+				if (!playersObj.contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
+			ItemStack item = new ItemStack(plugin.getApi().getMaterial(AMaterials.STONE_HOE));
+			for (Player p : playersObj) {
+				iniciaPlayer(p);
+				p.getInventory().setItem(0, item);
+				p.updateInventory();
 
 			}
 
@@ -1609,6 +1692,42 @@ public class MatchActive {
 
 	public void setGoalPlayers(List<Player> goalPlayers) {
 		this.goalPlayers = goalPlayers;
+	}
+
+	public MatchActive getMatchActive() {
+		return this;
+	}
+
+	public Integer getTries() {
+		return tries;
+	}
+
+	public void setTries(Integer tries) {
+		this.tries = tries;
+	}
+
+	public BukkitRunnable getTask() {
+		return task;
+	}
+
+	public void setTask(BukkitRunnable task) {
+		this.task = task;
+	}
+
+	public Map<Location, Long> getBlockDisappear() {
+		return blockDisappear;
+	}
+
+	public void setBlockDisappear(Map<Location, Long> blockDisappear) {
+		this.blockDisappear = blockDisappear;
+	}
+
+	public List<Location> getBlockDisappeared() {
+		return blockDisappeared;
+	}
+
+	public void setBlockDisappeared(List<Location> blockDisappeared) {
+		this.blockDisappeared = blockDisappeared;
 	}
 
 }

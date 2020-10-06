@@ -4,29 +4,29 @@ import com.adri1711.randomevents.match.Match;
 
 public enum Creacion {
 
-	BATTLE_NAME(0, "§6§lYou began the creation of the RandomEvent. Write the match's name"),
+	MINIGAME_TYPE(0, "§6§lChoose Minigame type"),
 
-	AMOUNT_PLAYERS(1, "§6§lWrite the number of players allowed to enter the RandomEvent"),
+	BATTLE_NAME(1, "§6§lYou began the creation of the RandomEvent. Write the match's name"),
 
-	AMOUNT_PLAYERS_MIN(2, "§6§lWrite the minimum number of players to begin the RandomEvent"),
+	AMOUNT_PLAYERS(2, "§6§lWrite the number of players allowed to enter the RandomEvent"),
 
-	SPAWN_PLAYER(3,
-			"§6§lGo to the arena you created and write 'Done' to set the lobby spawn for the players "),
+	AMOUNT_PLAYERS_MIN(3, "§6§lWrite the minimum number of players to begin the RandomEvent"),
 
-	ARENA_SPAWNS(4, "§6§lGo to the arena you created and write 'Done' to set each spawn location for the players (%players%/%maxPlayers%)"),
+	SPAWN_PLAYER(4, "§6§lGo to the arena you created and write 'Done' to set the lobby spawn for the players "),
 
-	ANOTHER_ARENA_SPAWNS(5, "§6§lPut another player spawn, say 'Done' (%players%/%maxPlayers%) "),
+	ARENA_SPAWNS(5,
+			"§6§lGo to the arena you created and write 'Done' to set each spawn location for the players (%players%/%maxPlayers%)"),
 
-	SPECTATOR_SPAWNS(6, "§6§lSay 'Done' to put a spectator spawn and 'Next' to go to the next step"),
+	ANOTHER_ARENA_SPAWNS(6, "§6§lPut another player spawn, say 'Done' (%players%/%maxPlayers%) "),
 
-	INVENTORY(7, "§6§lTake the inventory for the players and say 'Done' "),
+	SPECTATOR_SPAWNS(7, "§6§lSay 'Done' to put a spectator spawn and 'Next' to go to the next step"),
 
 	REWARDS(8,
 			"§6§lWrite a command to reward the winners. Use %player% and it will be replaced for the player's name. Put reprob <probability from 1 to 100> before the command to set a prob to execute the reward"),
 
 	ANOTHER_REWARDS(9, "§6§lPut another reward for the winners or just say 'Done' to begin the next step"),
 
-	MINIGAME_TYPE(10, "§6§lChoose Minigame type"),
+	INVENTORY(10, "§6§lTake the inventory for the players and say 'Done' "),
 
 	TIMER_MOB_SPAWN(11, "§6§lWrite the number of seconds (it can have decimals) to respawn each mob"),
 
@@ -50,24 +50,25 @@ public enum Creacion {
 	TIMER_GEM_SPAWN(20, "§6§lWrite the number of seconds (it can have decimals) to respawn each gem"),
 
 	TIMER_BOMB(21, "§6§lWrite the number of seconds to fire the bomb"),
-	
-	SECONDS_TO_SPAWN_BEAST(22,"§6§lWrite the number of seconds to spawn the beast"),
-	
-	SPAWN_BEAST(23,"§6§lGo to the arena you created and write 'Done' to set the beast spawn."),
 
-	INVENTORY_BEAST(24,"§6§lTake the inventory for the beast and say 'Done' "),
+	SECONDS_TO_SPAWN_BEAST(22, "§6§lWrite the number of seconds to spawn the beast"),
 
-	INVENTORY_RUNNERS(25,"§6§lTake the inventory for the players when they reach the goal and say 'Done' "),
+	SPAWN_BEAST(23, "§6§lGo to the arena you created and write 'Done' to set the beast spawn."),
+
+	INVENTORY_BEAST(24, "§6§lTake the inventory for the beast and say 'Done' "),
+
+	INVENTORY_RUNNERS(25, "§6§lTake the inventory for the players when they reach the goal and say 'Done' "),
 
 	ENTITY_SPAWNS(26,
 			"§6§lGo to the arena you created and write 'Done' to set each spawn location for the entities. (%entities%/%maxPlayers%)"),
-	
-	ANOTHER_ENTITY_SPAWNS(27, "§6§lPut another entity spawn, say 'Done' . (%entities%/%maxPlayers%)"),
 
+	ANOTHER_ENTITY_SPAWNS(27, "§6§lPut another entity spawn, say 'Done' . (%entities%/%maxPlayers%)"),
 
 	GOAL_LOCATION1(28, "§6§lSet the first location of the cuboid of the goal, say 'Done'"),
 
 	GOAL_LOCATION2(29, "§6§lSet the second location of the cuboid of the goal, say 'Done'"),
+
+	MATERIAL_SPLEEF(30, "§6§lGet the block you want to set mineable for spleef on your hand and say 'Done'"),
 
 	END(999, "§6§lYou finished the creation of the random event!");
 

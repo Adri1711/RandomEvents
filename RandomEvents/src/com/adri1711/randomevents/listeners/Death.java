@@ -49,7 +49,9 @@ public class Death implements Listener {
 							case KNOCKBACK_DUEL:
 							case BATTLE_ROYALE_CABALLO:
 							case BATTLE_ROYALE_TEAM_2:
-								// case TNT_RUN:
+							case TNT_RUN:
+							case SPLEEF:
+							case SPLEGG:
 								plugin.getMatchActive().echaDePartida(player, true, true, false);
 								UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
 
@@ -141,6 +143,11 @@ public class Death implements Listener {
 
 										ev.setDamage(0);
 										break;
+									case TNT_RUN:
+									case SPLEEF:
+									case SPLEGG:
+										ev.setCancelled(true);
+										break;
 									case TOP_KILLER:
 									case TOP_KILLER_TEAM_2:
 										plugin.getMatchActive().reiniciaPlayer(player);
@@ -187,7 +194,6 @@ public class Death implements Listener {
 										break;
 									case BOAT_RUN:
 									case RACE:
-										// case TNT_RUN:
 										ev.setCancelled(true);
 										break;
 									case ESCAPE_FROM_BEAST:
@@ -249,6 +255,11 @@ public class Death implements Listener {
 									case ESCAPE_ARROW:
 										ev.setDamage(0);
 										break;
+									case TNT_RUN:
+									case SPLEEF:
+									case SPLEGG:
+										ev.setCancelled(true);
+										break;
 									case BOMB_TAG:
 										ev.setDamage(0);
 										if (damager.equals(plugin.getMatchActive().getPlayerContador())) {
@@ -263,7 +274,6 @@ public class Death implements Listener {
 										break;
 									case BOAT_RUN:
 									case RACE:
-										// case TNT_RUN:
 										ev.setCancelled(true);
 										break;
 									default:
@@ -303,6 +313,11 @@ public class Death implements Listener {
 							case BOMB_TAG:
 								ev.setDamage(0);
 								break;
+							case TNT_RUN:
+							case SPLEEF:
+							case SPLEGG:
+								ev.setCancelled(true);
+								break;
 							case TOP_KILLER:
 							case GEM_CRAWLER:
 								plugin.getMatchActive().reiniciaPlayer(player);
@@ -311,7 +326,6 @@ public class Death implements Listener {
 								break;
 							case BOAT_RUN:
 							case RACE:
-								// case TNT_RUN:
 								ev.setCancelled(true);
 								break;
 							default:
@@ -331,9 +345,11 @@ public class Death implements Listener {
 							case BOMB_TAG:
 								ev.setDamage(0);
 								break;
+							case TNT_RUN:
+							case SPLEEF:
+							case SPLEGG:
 							case BOAT_RUN:
 							case RACE:
-								// case TNT_RUN:
 								ev.setCancelled(true);
 								break;
 							default:

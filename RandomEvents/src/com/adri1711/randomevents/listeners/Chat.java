@@ -16,6 +16,7 @@ import com.adri1711.randomevents.match.MinigameType;
 import com.adri1711.randomevents.match.enums.Creacion;
 import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
+import com.adri1711.util.enums.AMaterials;
 
 public class Chat implements Listener {
 
@@ -142,14 +143,75 @@ public class Chat implements Listener {
 				} catch (Exception e) {
 
 				}
-
-				match.getInventory().setContents((ItemStack[]) contenidoList.toArray());
+				ItemStack[] arrayContenido=new ItemStack[contenidoList.size()];
+				arrayContenido=contenidoList.toArray(arrayContenido);
+				match.getInventory().setContents(arrayContenido);
 				match.getInventory().setHelmet(player.getInventory().getHelmet());
 				match.getInventory().setBoots(player.getInventory().getBoots());
 				match.getInventory().setLeggings(player.getInventory().getLeggings());
 				match.getInventory().setChestplate(player.getInventory().getChestplate());
 
-				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position + 1, match);
+				// actualiza = UtilsRandomEvents.pasaACreation(plugin, player,
+				// position + 1, match);
+
+				try {
+					MinigameType minigame = match.getMinigame();
+					if (minigame != null) {
+						switch (minigame) {
+						case BATTLE_ROYALE:
+						case BATTLE_ROYALE_CABALLO:
+						case BATTLE_ROYALE_TEAM_2:
+						case KNOCKBACK_DUEL:
+						case TNT_RUN:
+							actualiza = UtilsRandomEvents.pasaACreation(plugin, player, Creacion.END.getPosition(),
+									match);
+							break;
+						case TOP_KILLER:
+						case TOP_KILLER_TEAM_2:
+							actualiza = UtilsRandomEvents.pasaACreation(plugin, player,
+									Creacion.PLAY_TIME.getPosition(), match);
+							break;
+						case ESCAPE_ARROW:
+							actualiza = UtilsRandomEvents.pasaACreation(plugin, player,
+									Creacion.ARROW_LOCATION1.getPosition(), match);
+							break;
+						case GEM_CRAWLER:
+							actualiza = UtilsRandomEvents.pasaACreation(plugin, player,
+									Creacion.GEM_LOCATION1.getPosition(), match);
+							break;
+
+						case BOMB_TAG:
+							actualiza = UtilsRandomEvents.pasaACreation(plugin, player,
+									Creacion.TIMER_BOMB.getPosition(), match);
+							break;
+						case BOAT_RUN:
+							actualiza = UtilsRandomEvents.pasaACreation(plugin, player,
+									Creacion.ENTITY_SPAWNS.getPosition(), match);
+							break;
+						case RACE:
+							actualiza = UtilsRandomEvents.pasaACreation(plugin, player,
+									Creacion.GOAL_LOCATION1.getPosition(), match);
+							break;
+						case ESCAPE_FROM_BEAST:
+							actualiza = UtilsRandomEvents.pasaACreation(plugin, player,
+									Creacion.SECONDS_TO_SPAWN_BEAST.getPosition(), match);
+							break;
+						case SPLEEF:
+						case SPLEGG:
+							actualiza = UtilsRandomEvents.pasaACreation(plugin, player,
+									Creacion.MATERIAL_SPLEEF.getPosition(), match);
+							break;
+						}
+					} else {
+						player.sendMessage(plugin.getLanguage().getInvalidInput());
+						actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position, match);
+					}
+				} catch (Exception e) {
+					player.sendMessage(plugin.getLanguage().getInvalidInput());
+					actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position, match);
+				}
+				break;
+
 			}
 			break;
 		case INVENTORY_BEAST:
@@ -162,8 +224,9 @@ public class Chat implements Listener {
 				} catch (Exception e) {
 
 				}
-
-				match.getInventoryBeast().setContents((ItemStack[]) contenidoList.toArray());
+				ItemStack[] arrayContenido=new ItemStack[contenidoList.size()];
+				arrayContenido=contenidoList.toArray(arrayContenido);
+				match.getInventoryBeast().setContents(arrayContenido);
 				match.getInventoryBeast().setHelmet(player.getInventory().getHelmet());
 				match.getInventoryBeast().setBoots(player.getInventory().getBoots());
 				match.getInventoryBeast().setLeggings(player.getInventory().getLeggings());
@@ -182,8 +245,9 @@ public class Chat implements Listener {
 				} catch (Exception e) {
 
 				}
-
-				match.getInventoryRunners().setContents((ItemStack[]) contenidoList.toArray());
+				ItemStack[] arrayContenido=new ItemStack[contenidoList.size()];
+				arrayContenido=contenidoList.toArray(arrayContenido);
+				match.getInventoryRunners().setContents(arrayContenido);
 				match.getInventoryRunners().setHelmet(player.getInventory().getHelmet());
 				match.getInventoryRunners().setBoots(player.getInventory().getBoots());
 				match.getInventoryRunners().setLeggings(player.getInventory().getLeggings());
@@ -210,45 +274,8 @@ public class Chat implements Listener {
 				MinigameType minigame = MinigameType.values()[Integer.valueOf(message)];
 				if (minigame != null) {
 					match.setMinigame(minigame);
-					switch (minigame) {
-					case BATTLE_ROYALE:
-					case BATTLE_ROYALE_CABALLO:
-					case BATTLE_ROYALE_TEAM_2:
-					case KNOCKBACK_DUEL:
-						// case TNT_RUN:
-						actualiza = UtilsRandomEvents.pasaACreation(plugin, player, Creacion.END.getPosition(), match);
-						break;
-					case TOP_KILLER:
-					case TOP_KILLER_TEAM_2:
-						actualiza = UtilsRandomEvents.pasaACreation(plugin, player, Creacion.PLAY_TIME.getPosition(),
-								match);
-						break;
-					case ESCAPE_ARROW:
-						actualiza = UtilsRandomEvents.pasaACreation(plugin, player,
-								Creacion.ARROW_LOCATION1.getPosition(), match);
-						break;
-					case GEM_CRAWLER:
-						actualiza = UtilsRandomEvents.pasaACreation(plugin, player,
-								Creacion.GEM_LOCATION1.getPosition(), match);
-						break;
+					actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position + 1, match);
 
-					case BOMB_TAG:
-						actualiza = UtilsRandomEvents.pasaACreation(plugin, player, Creacion.TIMER_BOMB.getPosition(),
-								match);
-						break;
-					case BOAT_RUN:
-						actualiza = UtilsRandomEvents.pasaACreation(plugin, player,
-								Creacion.ENTITY_SPAWNS.getPosition(), match);
-						break;
-					case RACE:
-						actualiza = UtilsRandomEvents.pasaACreation(plugin, player,
-								Creacion.GOAL_LOCATION1.getPosition(), match);
-						break;
-					case ESCAPE_FROM_BEAST:
-						actualiza = UtilsRandomEvents.pasaACreation(plugin, player,
-								Creacion.SECONDS_TO_SPAWN_BEAST.getPosition(), match);
-						break;
-					}
 				} else {
 					player.sendMessage(plugin.getLanguage().getInvalidInput());
 					actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position, match);
@@ -301,6 +328,17 @@ public class Chat implements Listener {
 			if (message.equals(Constantes.DONE)) {
 				match.setLocation2(player.getLocation());
 				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, Creacion.END.getPosition(), match);
+			}
+			break;
+
+		case MATERIAL_SPLEEF:
+			if (player.getItemInHand() != null
+					&& player.getItemInHand().getType() != (plugin.getApi().getMaterial(AMaterials.AIR))) {
+				match.setMaterial(player.getItemInHand().getType().toString());
+				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, Creacion.END.getPosition(), match);
+			} else {
+				player.sendMessage(plugin.getLanguage().getInvalidInput());
+				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position, match);
 			}
 			break;
 		case TIMER_ARROW_SPAWN:

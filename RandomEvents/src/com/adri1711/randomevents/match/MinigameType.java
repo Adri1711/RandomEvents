@@ -23,9 +23,14 @@ public enum MinigameType {
 
 	ESCAPE_FROM_BEAST("ESCAPE_FROM_BEAST", "Escape from the beast"),
 
-	RACE("RACE", "Race");
+	RACE("RACE", "Race"),
+	
+	TNT_RUN("TNTRUN", "TNT Run"),
+	
+	SPLEEF("SPLEEF", "Spleef"),
+	
+	SPLEGG("SPLEGG", "Splegg");
 
-	// TNT_RUN("TNT_RUN","TNT Run");
 
 	private String codigo;
 	private String message;
