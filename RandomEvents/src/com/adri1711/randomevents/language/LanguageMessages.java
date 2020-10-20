@@ -3,6 +3,8 @@ package com.adri1711.randomevents.language;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.List;
+
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -67,6 +69,29 @@ public class LanguageMessages {
 
 	private String tournamentCancelled;
 
+	private String statsWins;
+	private String statsTries;
+	private String statsDisabled;
+	private String statsWinsRatio;
+
+	private String cmdNotAllowed;
+
+	private List<String> minigameDescriptionBR;
+	private List<String> minigameDescriptionBRT2;
+	private List<String> minigameDescriptionLJ;
+	private List<String> minigameDescriptionTKLL;
+	private List<String> minigameDescriptionTKLLT2;
+	private List<String> minigameDescriptionKBD;
+	private List<String> minigameDescriptionEARR;
+	private List<String> minigameDescriptionGEMC;
+	private List<String> minigameDescriptionBOMB;
+	private List<String> minigameDescriptionBOAT_RUN;
+	private List<String> minigameDescriptionESCAPE_FROM_BEAST;
+	private List<String> minigameDescriptionRACE;
+	private List<String> minigameDescriptionTNTRUN;
+	private List<String> minigameDescriptionSPLEEF;
+	private List<String> minigameDescriptionSPLEGG;
+
 	public LanguageMessages(RandomEvents plugin) {
 		this.file = new File(plugin.getDataFolder(), "messages.yml");
 		this.fileConfig = (FileConfiguration) YamlConfiguration.loadConfiguration(this.file);
@@ -84,6 +109,7 @@ public class LanguageMessages {
 				e.printStackTrace();
 			}
 		} else {
+
 			fileConfig = compruebaFichero(fileConfig);
 		}
 		for (int i = 0; i < 20; i++) {
@@ -98,8 +124,13 @@ public class LanguageMessages {
 	private void recargaVariables(FileConfiguration fileConfig) {
 		for (Constantes.Messages m : Constantes.Messages.values()) {
 			try {
-				Method method = this.getClass().getMethod(getComandoSet(m.getJavaField()), String.class);
-				method.invoke(this, fileConfig.getString(m.getYmlField()));
+				if (!m.getMessageDefault().contains(";")) {
+					Method method = this.getClass().getMethod(getComandoSet(m.getJavaField()), String.class);
+					method.invoke(this, fileConfig.getString(m.getYmlField()));
+				} else {
+					Method method = this.getClass().getMethod(getComandoSet(m.getJavaField()), List.class);
+					method.invoke(this, fileConfig.getStringList(m.getYmlField()));
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -140,8 +171,18 @@ public class LanguageMessages {
 	private FileConfiguration compruebaFichero(FileConfiguration fileConfig) {
 
 		for (Constantes.Messages m : Constantes.Messages.values()) {
-			if (fileConfig.getString(m.getYmlField()) == null) {
-				fileConfig.set(m.getYmlField(), m.getMessageDefault());
+
+			if (!m.getMessageDefault().contains(";")) {
+				if (fileConfig.getString(m.getYmlField()) == null) {
+					fileConfig.set(m.getYmlField(), m.getMessageDefault());
+				}
+			} else {
+				if (!fileConfig.contains(m.getYmlField())) {
+
+					String[] listaString = m.getMessageDefault().split(";");
+
+					fileConfig.set(m.getYmlField(), listaString);
+				}
 			}
 		}
 
@@ -601,6 +642,166 @@ public class LanguageMessages {
 
 	public void setTournamentCancelled(String tournamentCancelled) {
 		this.tournamentCancelled = tournamentCancelled;
+	}
+
+	public String getCmdNotAllowed() {
+		return cmdNotAllowed.replaceAll("&", "§");
+	}
+
+	public void setCmdNotAllowed(String cmdNotAllowed) {
+		this.cmdNotAllowed = cmdNotAllowed;
+	}
+
+	public String getStatsWins() {
+		return statsWins.replaceAll("&", "§");
+	}
+
+	public void setStatsWins(String statsWins) {
+		this.statsWins = statsWins;
+	}
+
+	public String getStatsTries() {
+		return statsTries.replaceAll("&", "§");
+	}
+
+	public void setStatsTries(String statsTries) {
+		this.statsTries = statsTries;
+	}
+
+	public String getStatsDisabled() {
+		return statsDisabled.replaceAll("&", "§");
+	}
+
+	public void setStatsDisabled(String statsDisabled) {
+		this.statsDisabled = statsDisabled;
+	}
+
+	public String getStatsWinsRatio() {
+		return statsWinsRatio.replaceAll("&", "§");
+	}
+
+	public void setStatsWinsRatio(String statsWinsRatio) {
+		this.statsWinsRatio = statsWinsRatio;
+	}
+
+	public List<String> getMinigameDescriptionBR() {
+		return minigameDescriptionBR;
+	}
+
+	public void setMinigameDescriptionBR(List<String> minigameDescriptionBR) {
+		this.minigameDescriptionBR = minigameDescriptionBR;
+	}
+
+	public List<String> getMinigameDescriptionBRT2() {
+		return minigameDescriptionBRT2;
+	}
+
+	public void setMinigameDescriptionBRT2(List<String> minigameDescriptionBRT2) {
+		this.minigameDescriptionBRT2 = minigameDescriptionBRT2;
+	}
+
+	public List<String> getMinigameDescriptionLJ() {
+		return minigameDescriptionLJ;
+	}
+
+	public void setMinigameDescriptionLJ(List<String> minigameDescriptionLJ) {
+		this.minigameDescriptionLJ = minigameDescriptionLJ;
+	}
+
+	public List<String> getMinigameDescriptionTKLL() {
+		return minigameDescriptionTKLL;
+	}
+
+	public void setMinigameDescriptionTKLL(List<String> minigameDescriptionTKLL) {
+		this.minigameDescriptionTKLL = minigameDescriptionTKLL;
+	}
+
+	public List<String> getMinigameDescriptionTKLLT2() {
+		return minigameDescriptionTKLLT2;
+	}
+
+	public void setMinigameDescriptionTKLLT2(List<String> minigameDescriptionTKLLT2) {
+		this.minigameDescriptionTKLLT2 = minigameDescriptionTKLLT2;
+	}
+
+	public List<String> getMinigameDescriptionKBD() {
+		return minigameDescriptionKBD;
+	}
+
+	public void setMinigameDescriptionKBD(List<String> minigameDescriptionKBD) {
+		this.minigameDescriptionKBD = minigameDescriptionKBD;
+	}
+
+	public List<String> getMinigameDescriptionEARR() {
+		return minigameDescriptionEARR;
+	}
+
+	public void setMinigameDescriptionEARR(List<String> minigameDescriptionEARR) {
+		this.minigameDescriptionEARR = minigameDescriptionEARR;
+	}
+
+	public List<String> getMinigameDescriptionGEMC() {
+		return minigameDescriptionGEMC;
+	}
+
+	public void setMinigameDescriptionGEMC(List<String> minigameDescriptionGEMC) {
+		this.minigameDescriptionGEMC = minigameDescriptionGEMC;
+	}
+
+	public List<String> getMinigameDescriptionBOMB() {
+		return minigameDescriptionBOMB;
+	}
+
+	public void setMinigameDescriptionBOMB(List<String> minigameDescriptionBOMB) {
+		this.minigameDescriptionBOMB = minigameDescriptionBOMB;
+	}
+
+	public List<String> getMinigameDescriptionBOAT_RUN() {
+		return minigameDescriptionBOAT_RUN;
+	}
+
+	public void setMinigameDescriptionBOAT_RUN(List<String> minigameDescriptionBOAT_RUN) {
+		this.minigameDescriptionBOAT_RUN = minigameDescriptionBOAT_RUN;
+	}
+
+	public List<String> getMinigameDescriptionESCAPE_FROM_BEAST() {
+		return minigameDescriptionESCAPE_FROM_BEAST;
+	}
+
+	public void setMinigameDescriptionESCAPE_FROM_BEAST(List<String> minigameDescriptionESCAPE_FROM_BEAST) {
+		this.minigameDescriptionESCAPE_FROM_BEAST = minigameDescriptionESCAPE_FROM_BEAST;
+	}
+
+	public List<String> getMinigameDescriptionRACE() {
+		return minigameDescriptionRACE;
+	}
+
+	public void setMinigameDescriptionRACE(List<String> minigameDescriptionRACE) {
+		this.minigameDescriptionRACE = minigameDescriptionRACE;
+	}
+
+	public List<String> getMinigameDescriptionTNTRUN() {
+		return minigameDescriptionTNTRUN;
+	}
+
+	public void setMinigameDescriptionTNTRUN(List<String> minigameDescriptionTNTRUN) {
+		this.minigameDescriptionTNTRUN = minigameDescriptionTNTRUN;
+	}
+
+	public List<String> getMinigameDescriptionSPLEEF() {
+		return minigameDescriptionSPLEEF;
+	}
+
+	public void setMinigameDescriptionSPLEEF(List<String> minigameDescriptionSPLEEF) {
+		this.minigameDescriptionSPLEEF = minigameDescriptionSPLEEF;
+	}
+
+	public List<String> getMinigameDescriptionSPLEGG() {
+		return minigameDescriptionSPLEGG;
+	}
+
+	public void setMinigameDescriptionSPLEGG(List<String> minigameDescriptionSPLEGG) {
+		this.minigameDescriptionSPLEGG = minigameDescriptionSPLEGG;
 	}
 
 }

@@ -8,50 +8,50 @@ public enum ComandosEnum {
 	
 
 	CMD_JOIN("join", 2, "randomevent.join",
-			"   §6/revent join:\n          §9-> §6Join the Random Event", "joinRandomEvent",false),
+			"   §6/revent join:\n          §e-> Join the Random Event", "joinRandomEvent",false),
 	
 	CMD_JOIN_TOURNAMENT("tjoin", 2, "randomevent.tjoin",
-			"   §6/revent tjoin:\n          §9-> §6Join the Tournament Random Event", "joinTournamentRandomEvent",false),
+			"   §6/revent tjoin:\n          §e-> Join the Tournament Random Event", "joinTournamentRandomEvent",false),
 	
 	CMD_LEAVE("leave", 1, "randomevent.leave",
-			"   §6/revent leave:\n          §9-> §6Leave the Random Event", "leaveRandomEvent",true),
+			"   §6/revent leave:\n          §e-> Leave the Random Event", "leaveRandomEvent",true),
 	CMD_LEAVE_TOURNAMENT("tleave", 1, "randomevent.tleave",
-			"   §6/revent tleave:\n          §9-> §6Leave the Tournament Random Event", "leaveTournamentRandomEvent",true),
+			"   §6/revent tleave:\n          §e-> Leave the Tournament Random Event", "leaveTournamentRandomEvent",true),
 	
-//	CMD_STATS("stats", 1, "randomevent.stats",
-//			"   §6/revent stats:\n          §9-> §6Show the stats", "statsRandomEvent",true),
+	CMD_STATS("stats", 1, "randomevent.stats",
+			"   §6/revent stats:\n          §e-> Show the stats", "statsRandomEvent",true),
 
 	CMD_SPAWNSET("spawnset", 1, "randomevent.admin.spawnset",
-			"   §6/revent spawnset:\n          §9-> §6Set the spawn, where players will be teleported after finishing a Random Event", "spawnSet",true),
+			"   §6/revent spawnset:\n          §e-> Set the spawn, where players will be teleported after finishing a Random Event", "spawnSet",true),
 	
 	CMD_SPAWNSET_TOURNAMENT("tspawnset", 1, "randomevent.admin.tspawnset",
-			"   §6/revent tspawnset:\n          §9-> §6Set the spawn where players will be teleported after joining a Tournament Random Event", "tournamentSpawnSet",true),
+			"   §6/revent tspawnset:\n          §e-> Set the spawn where players will be teleported after joining a Tournament Random Event", "tournamentSpawnSet",true),
 	
 	CMD_MATCHES("matches", 1, "randomevent.admin.matches",
-			"   §6/revent matches:\n          §9-> §6Show all Random Events available", "showRandomEvents",true),
+			"   §6/revent matches:\n          §e-> Show all Random Events available", "showRandomEvents",true),
 	
 	CMD_SCHEDULE("schedule", 4, "randomevent.admin.schedule",
-			"   §6/revent schedule <monday:tuesday...> <hour> <minute>:\n          §9-> §6Create a schedule for a Random Event", "scheduleRandomEvent",true),
+			"   §6/revent schedule <monday:tuesday...> <hour> <minute>:\n          §e-> Create a schedule for a Random Event", "scheduleRandomEvent",true),
 	
 	CMD_SCHEDULE_SPECIFIC("schedule", 5, "randomevent.admin.schedule",
-			"   §6/revent schedule <monday:tuesday...> <hour> <minute> <idmatch>:\n          §9-> §6Create a schedule for a Random Event and specific match", "scheduleRandomEvent",true),
+			"   §6/revent schedule <monday:tuesday...> <hour> <minute> <idmatch>:\n          §e-> Create a schedule for a Random Event and specific match", "scheduleRandomEvent",true),
 	
 	CMD_BEGIN("begin", 1, "randomevent.admin.force",
-			"   §6/revent begin:\n          §9-> §6Begins a Random Event", "forceRandomEvent",true),
+			"   §6/revent begin:\n          §e-> Begins a Random Event", "forceRandomEvent",true),
 	
 	CMD_BEGIN_TOURNAMENT("tbegin", 1, "randomevent.admin.tforce",
-			"   §6/revent tbegin:\n          §9-> §6Begins a Tournament Random Event", "forceTournamentRandomEvent",true),
+			"   §6/revent tbegin:\n          §e-> Begins a Tournament Random Event", "forceTournamentRandomEvent",true),
 	
 	CMD_BEGIN_SPECIFIC("begin", 2, "randomevent.admin.force",
-			"   §6/revent begin <number>:\n          §9-> §6Begins a specific random event", "forceRandomEvent",true),
+			"   §6/revent begin <number>:\n          §e-> Begins a specific random event", "forceRandomEvent",true),
 	
 	CMD_CREATE("create", 1, "randomevent.admin.create",
-			"   §6/revent create:\n          §9-> §6Begin the creation of a Random Event", "createRandomEvent",true),
+			"   §6/revent create:\n          §e-> Begin the creation of a Random Event", "createRandomEvent",true),
 
 	CMD_CANCEL("cancel", 1, "randomevent.admin.cancel",
-			"   §6/revent cancel:\n          §9-> §6Cancels the creation of a Random Event", "cancelCreationRandomEvent",true),
+			"   §6/revent cancel:\n          §e-> Cancels the creation of a Random Event", "cancelCreationRandomEvent",true),
 	
-	CMD_RELOAD("reload", 1, "randomevent.admin.reload", "   §6/revent reload:\n          §9-> §6Reload the plugin",
+	CMD_RELOAD("reload", 1, "randomevent.admin.reload", "   §6/revent reload:\n          §e-> Reload the plugin",
 			"reloadPlugin",true);
 
 	private String aliase;

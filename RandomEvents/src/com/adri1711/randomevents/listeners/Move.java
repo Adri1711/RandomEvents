@@ -1,15 +1,12 @@
 package com.adri1711.randomevents.listeners;
 
-import org.bukkit.entity.Item;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 
 import com.adri1711.randomevents.RandomEvents;
-import com.adri1711.randomevents.util.Constantes;
-import com.adri1711.randomevents.util.UtilidadesJson;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 
 public class Move implements Listener {
@@ -65,8 +62,12 @@ public class Move implements Listener {
 				}
 				break;
 			case TNT_RUN:
-				
-				UtilsRandomEvents.queueTNT(plugin,plugin.getMatchActive(),player.getLocation(),evt.getFrom().distance(evt.getTo()),true);
+
+				Location from = evt.getFrom();
+				from.setY(evt.getTo().getY());
+
+				UtilsRandomEvents.queueTNT(plugin, plugin.getMatchActive(), player.getLocation(),
+						from.distance(evt.getTo()), true);
 				break;
 			default:
 				break;

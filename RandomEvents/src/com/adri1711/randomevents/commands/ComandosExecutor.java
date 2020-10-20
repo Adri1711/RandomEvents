@@ -1,9 +1,5 @@
 package com.adri1711.randomevents.commands;
 
-import java.util.Calendar;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.adri1711.randomevents.RandomEvents;
@@ -12,8 +8,9 @@ import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
 import com.adri1711.randomevents.match.Schedule;
 import com.adri1711.randomevents.match.TournamentActive;
-import com.adri1711.randomevents.util.Constantes;
+import com.adri1711.randomevents.stats.Stats;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
+import com.adri1711.randomevents.util.UtilsSQL;
 
 public class ComandosExecutor {
 
@@ -27,7 +24,8 @@ public class ComandosExecutor {
 				if (plugin.getMatchActive().getPassword().equals(password)) {
 					plugin.getMatchActive().uneAPlayer(player);
 				} else {
-					player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidPassword());
+					player.sendMessage(
+							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidPassword());
 				}
 
 			} else {
@@ -46,7 +44,8 @@ public class ComandosExecutor {
 				if (plugin.getTournamentActive().getPassword().equals(password)) {
 					plugin.getTournamentActive().uneAPlayer(player);
 				} else {
-					player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidPassword());
+					player.sendMessage(
+							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidPassword());
 				}
 
 			} else {
@@ -94,7 +93,8 @@ public class ComandosExecutor {
 			try {
 				plugin.setForzado(Boolean.TRUE);
 				plugin.setMatchActive(new MatchActive(plugin.getMatches().get(Integer.valueOf(number)), plugin, true));
-				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getMatchBeginSoon());
+				player.sendMessage(
+						plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getMatchBeginSoon());
 			} catch (Exception e) {
 				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidInput());
 			}
@@ -172,6 +172,15 @@ public class ComandosExecutor {
 			} else {
 				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNotInMatch());
 			}
+		}
+	}
+
+	public void statsRandomEvent(RandomEvents plugin, Player player) {
+		if (plugin.isMysqlEnabled()) {
+			UtilsSQL.getStats(player, plugin);
+
+		} else {
+			player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getStatsDisabled());
 		}
 	}
 

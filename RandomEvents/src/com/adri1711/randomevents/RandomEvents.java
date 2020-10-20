@@ -22,11 +22,13 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.adri1711.api.API1711;
+import com.adri1711.randomevents.bbdd.HikariCP;
 import com.adri1711.randomevents.commands.Comandos;
 import com.adri1711.randomevents.commands.ComandosExecutor;
 import com.adri1711.randomevents.language.LanguageMessages;
 import com.adri1711.randomevents.listeners.Chat;
 import com.adri1711.randomevents.listeners.Death;
+import com.adri1711.randomevents.listeners.GUI;
 import com.adri1711.randomevents.listeners.Join;
 import com.adri1711.randomevents.listeners.Move;
 import com.adri1711.randomevents.listeners.PickUp;
@@ -39,8 +41,9 @@ import com.adri1711.randomevents.match.Schedule;
 import com.adri1711.randomevents.match.Tournament;
 import com.adri1711.randomevents.match.TournamentActive;
 import com.adri1711.randomevents.metrics.Metrics;
-import com.adri1711.randomevents.util.Constantes;
+import com.adri1711.randomevents.placeholders.ReventPlaceholder;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
+import com.adri1711.randomevents.util.UtilsSQL;
 import com.adri1711.util.enums.AMaterials;
 
 public class RandomEvents extends JavaPlugin {
@@ -91,6 +94,28 @@ public class RandomEvents extends JavaPlugin {
 
 	private Integer numberOfTriesBeforeCancelling;
 
+	private boolean mysqlEnabled;
+
+	private String mysqlHost;
+
+	private String mysqlDatabase;
+
+	private String mysqlUsername;
+
+	private String mysqlPassword;
+
+	private Integer mysqlPort;
+
+	private HikariCP hikari;
+
+	private boolean mysqlUUIDMode;
+
+	private boolean debugMode;
+
+	private Integer secondsCheckPlayers;
+
+	private List<String> allowedCmds;
+
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
 		loadConfig();
@@ -104,8 +129,14 @@ public class RandomEvents extends JavaPlugin {
 
 		inicializaVariables();
 
+		if (mysqlEnabled) {
+			hikari = new HikariCP(mysqlHost, mysqlPort.toString(), mysqlDatabase, mysqlUsername, mysqlPassword);
+			UtilsSQL.checkTables(this);
+		}
+
 		getServer().getPluginManager().registerEvents((Listener) new Quit(this), (Plugin) this);
 		getServer().getPluginManager().registerEvents((Listener) new Chat(this), (Plugin) this);
+		getServer().getPluginManager().registerEvents((Listener) new GUI(this), (Plugin) this);
 		getServer().getPluginManager().registerEvents((Listener) new Death(this), (Plugin) this);
 		getServer().getPluginManager().registerEvents((Listener) new Join(this), (Plugin) this);
 		getServer().getPluginManager().registerEvents((Listener) new Use(this), (Plugin) this);
@@ -114,6 +145,18 @@ public class RandomEvents extends JavaPlugin {
 
 		if (getServer().getPluginManager().getPlugin("CrackShot") != null) {
 			getServer().getPluginManager().registerEvents((Listener) new WeaponShoot(this), (Plugin) this);
+			System.out.println("[RandomEvents] CrackShot hooked succesfully!");
+
+		}
+
+		if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+			try {
+				new ReventPlaceholder(this).register();
+				System.out.println("[RandomEvents] PlaceholderAPI hooked succesfully!");
+
+			} catch (Exception e) {
+				System.out.println("[RandomEvents] PlaceholderAPI hook failed!");
+			}
 		}
 
 		getLogger().info(" Author adri1711- activado");
@@ -122,6 +165,9 @@ public class RandomEvents extends JavaPlugin {
 	}
 
 	public void onDisable() {
+		if (mysqlEnabled && hikari != null) {
+			hikari.close();
+		}
 
 		getServer().getScheduler().cancelTasks((Plugin) this);
 		getLogger().info(" Author adri1711 - desactivado");
@@ -151,9 +197,18 @@ public class RandomEvents extends JavaPlugin {
 
 		this.minPlayers = Integer.valueOf(getConfig().getInt("minPlayers"));
 		this.commandsOnUserJoin = (List<String>) getConfig().getStringList("commandsOnUserJoin");
+		this.allowedCmds = (List<String>) getConfig().getStringList("allowedCmds");
+		
 		this.secondsTimer = Integer.valueOf(getConfig().getInt("secondsTimer"));
+		this.secondsCheckPlayers = Integer.valueOf(getConfig().getInt("secondsCheckPlayers"));
+		if(secondsCheckPlayers==null){
+			secondsCheckPlayers=15;
+		}
+		
 		this.probabilityRandomEventTournament = Integer.valueOf(getConfig().getInt("probabilityRandomEventTournament"));
 		this.probabilityRandomEvent = Integer.valueOf(getConfig().getInt("probabilityRandomEvent"));
+		
+		this.debugMode= getConfig().getBoolean("debugMode");
 
 		this.useLastLocation = getConfig().getBoolean("useLastLocation");
 
@@ -165,6 +220,14 @@ public class RandomEvents extends JavaPlugin {
 		this.playerMatches = new HashMap<String, Match>();
 		this.playersCreation = new HashMap<String, Integer>();
 		this.playersEntity = new HashMap<String, EntityType>();
+
+		this.mysqlEnabled = getConfig().getBoolean("mysql.enabled");
+		this.mysqlUUIDMode = getConfig().getBoolean("mysql.UUIDMode");
+		this.mysqlHost = getConfig().getString("mysql.host");
+		this.mysqlDatabase = getConfig().getString("mysql.database");
+		this.mysqlUsername = getConfig().getString("mysql.username");
+		this.mysqlPassword = getConfig().getString("mysql.password");
+		this.mysqlPort = getConfig().getInt("mysql.port");
 
 		this.language = new LanguageMessages(this);
 		int pluginId = 8944;
@@ -491,5 +554,97 @@ public class RandomEvents extends JavaPlugin {
 	public void setNumberOfTriesBeforeCancelling(Integer numberOfTriesBeforeCancelling) {
 		this.numberOfTriesBeforeCancelling = numberOfTriesBeforeCancelling;
 	}
+
+	public boolean isMysqlEnabled() {
+		return mysqlEnabled;
+	}
+
+	public void setMysqlEnabled(boolean mysqlEnabled) {
+		this.mysqlEnabled = mysqlEnabled;
+	}
+
+	public String getMysqlHost() {
+		return mysqlHost;
+	}
+
+	public void setMysqlHost(String mysqlHost) {
+		this.mysqlHost = mysqlHost;
+	}
+
+	public String getMysqlDatabase() {
+		return mysqlDatabase;
+	}
+
+	public void setMysqlDatabase(String mysqlDatabase) {
+		this.mysqlDatabase = mysqlDatabase;
+	}
+
+	public String getMysqlUsername() {
+		return mysqlUsername;
+	}
+
+	public void setMysqlUsername(String mysqlUsername) {
+		this.mysqlUsername = mysqlUsername;
+	}
+
+	public String getMysqlPassword() {
+		return mysqlPassword;
+	}
+
+	public void setMysqlPassword(String mysqlPassword) {
+		this.mysqlPassword = mysqlPassword;
+	}
+
+	public Integer getMysqlPort() {
+		return mysqlPort;
+	}
+
+	public void setMysqlPort(Integer mysqlPort) {
+		this.mysqlPort = mysqlPort;
+	}
+
+	public HikariCP getHikari() {
+		return hikari;
+	}
+
+	public void setHikari(HikariCP hikari) {
+		this.hikari = hikari;
+	}
+
+	public boolean isMysqlUUIDMode() {
+		return mysqlUUIDMode;
+	}
+
+	public void setMysqlUUIDMode(boolean mysqlUUIDMode) {
+		this.mysqlUUIDMode = mysqlUUIDMode;
+	}
+
+	public boolean isDebugMode() {
+		return debugMode;
+	}
+
+	public void setDebugMode(boolean debugMode) {
+		this.debugMode = debugMode;
+	}
+
+	public Integer getSecondsCheckPlayers() {
+		
+		return secondsCheckPlayers;
+	}
+
+	public void setSecondsCheckPlayers(Integer secondsCheckPlayers) {
+		this.secondsCheckPlayers = secondsCheckPlayers;
+	}
+
+	public List<String> getAllowedCmds() {
+		return allowedCmds;
+	}
+
+	public void setAllowedCmds(List<String> allowedCmds) {
+		this.allowedCmds = allowedCmds;
+	}
+	
+	
+	
 
 }

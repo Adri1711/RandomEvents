@@ -1,49 +1,54 @@
 package com.adri1711.randomevents.match;
 
+import org.bukkit.Material;
+
+import com.adri1711.util.enums.XMaterial;
+
 public enum MinigameType {
-	BATTLE_ROYALE("BR", "Battle Royale"),
+	BATTLE_ROYALE("BR", XMaterial.STONE_SWORD.parseMaterial(), "Battle Royale"),
 
-	BATTLE_ROYALE_TEAM_2("BRT2", "Team Battle Royale"),
+	BATTLE_ROYALE_TEAM_2("BRT2", XMaterial.STONE_SWORD.parseMaterial(), "Team Battle Royale"),
 
-	BATTLE_ROYALE_CABALLO("LJ", "Knights Battle"),
+	BATTLE_ROYALE_CABALLO("LJ", XMaterial.IRON_HORSE_ARMOR.parseMaterial(), "Knights Battle"),
 
-	TOP_KILLER("TKLL", "Top Killer"),
+	TOP_KILLER("TKLL", XMaterial.IRON_SWORD.parseMaterial(), "Top Killer"),
 
-	TOP_KILLER_TEAM_2("TKLLT2", "Team Top Killer"),
+	TOP_KILLER_TEAM_2("TKLLT2", XMaterial.IRON_SWORD.parseMaterial(), "Team Top Killer"),
 
-	KNOCKBACK_DUEL("KBD", "Knockback Duel"),
+	KNOCKBACK_DUEL("KBD", XMaterial.WOODEN_SWORD.parseMaterial(), "Knockback Duel"),
 
-	ESCAPE_ARROW("EARR", "Arrow Rain"),
+	ESCAPE_ARROW("EARR", XMaterial.ARROW.parseMaterial(), "Arrow Rain"),
 
-	GEM_CRAWLER("GEMC", "Gem Carrier"),
+	GEM_CRAWLER("GEMC", XMaterial.EMERALD.parseMaterial(), "Gem Carrier"),
 
-	BOMB_TAG("BOMB", "TNT Tag"),
+	BOMB_TAG("BOMB", XMaterial.TNT.parseMaterial(), "TNT Tag"),
 
-	BOAT_RUN("BOAT_RUN", "Boat Race"),
+	BOAT_RUN("BOAT_RUN", XMaterial.OAK_BOAT.parseMaterial(), "Boat Race"),
 
-	ESCAPE_FROM_BEAST("ESCAPE_FROM_BEAST", "Escape from the beast"),
+	ESCAPE_FROM_BEAST("ESCAPE_FROM_BEAST", XMaterial.SKELETON_SKULL.parseMaterial(), "Escape from the beast"),
 
-	RACE("RACE", "Race"),
-	
-	TNT_RUN("TNTRUN", "TNT Run"),
-	
-	SPLEEF("SPLEEF", "Spleef"),
-	
-	SPLEGG("SPLEGG", "Splegg");
+	RACE("RACE", XMaterial.IRON_BOOTS.parseMaterial(), "Race"),
 
+	TNT_RUN("TNTRUN", XMaterial.TNT.parseMaterial(), "TNT Run"),
+
+	SPLEEF("SPLEEF", XMaterial.IRON_SHOVEL.parseMaterial(), "Spleef"),
+
+	SPLEGG("SPLEGG", XMaterial.EGG.parseMaterial(), "Splegg");
 
 	private String codigo;
+	private Material material;
 	private String message;
 
-	private MinigameType(String codigo, String message) {
+	private MinigameType(String codigo, Material material, String message) {
 		this.codigo = codigo;
+		this.material = material;
 		this.message = message;
 	}
 
 	public static MinigameType getByCodigo(String codigo) {
 		MinigameType creation = null;
 		for (MinigameType w : MinigameType.values()) {
-			if (w.getCodigo().equals(codigo)) {
+			if (w.getCodigo().equalsIgnoreCase(codigo)) {
 				creation = w;
 			}
 		}
@@ -64,6 +69,14 @@ public enum MinigameType {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public Material getMaterial() {
+		return material;
+	}
+
+	public void setMaterial(Material material) {
+		this.material = material;
 	}
 
 }

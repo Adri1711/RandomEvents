@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.adri1711.randomevents.RandomEvents;
@@ -24,6 +25,20 @@ public class Chat implements Listener {
 
 	public Chat(RandomEvents plugin) {
 		this.plugin = plugin;
+	}
+
+	@EventHandler
+	public void onPlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event) {
+
+		Player p = event.getPlayer();
+		if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayersSpectators().contains(p)) {
+			String aliase = event.getMessage().split(" ")[0];
+			aliase = aliase.replaceAll("/", "");
+			if (!plugin.getAllowedCmds().contains(aliase.toLowerCase()) && !p.hasPermission("randomevent.bypass")) {
+				event.setCancelled(true);
+				p.sendMessage(plugin.getLanguage().getCmdNotAllowed());
+			}
+		}
 	}
 
 	@EventHandler
@@ -143,8 +158,8 @@ public class Chat implements Listener {
 				} catch (Exception e) {
 
 				}
-				ItemStack[] arrayContenido=new ItemStack[contenidoList.size()];
-				arrayContenido=contenidoList.toArray(arrayContenido);
+				ItemStack[] arrayContenido = new ItemStack[contenidoList.size()];
+				arrayContenido = contenidoList.toArray(arrayContenido);
 				match.getInventory().setContents(arrayContenido);
 				match.getInventory().setHelmet(player.getInventory().getHelmet());
 				match.getInventory().setBoots(player.getInventory().getBoots());
@@ -224,8 +239,8 @@ public class Chat implements Listener {
 				} catch (Exception e) {
 
 				}
-				ItemStack[] arrayContenido=new ItemStack[contenidoList.size()];
-				arrayContenido=contenidoList.toArray(arrayContenido);
+				ItemStack[] arrayContenido = new ItemStack[contenidoList.size()];
+				arrayContenido = contenidoList.toArray(arrayContenido);
 				match.getInventoryBeast().setContents(arrayContenido);
 				match.getInventoryBeast().setHelmet(player.getInventory().getHelmet());
 				match.getInventoryBeast().setBoots(player.getInventory().getBoots());
@@ -245,8 +260,8 @@ public class Chat implements Listener {
 				} catch (Exception e) {
 
 				}
-				ItemStack[] arrayContenido=new ItemStack[contenidoList.size()];
-				arrayContenido=contenidoList.toArray(arrayContenido);
+				ItemStack[] arrayContenido = new ItemStack[contenidoList.size()];
+				arrayContenido = contenidoList.toArray(arrayContenido);
 				match.getInventoryRunners().setContents(arrayContenido);
 				match.getInventoryRunners().setHelmet(player.getInventory().getHelmet());
 				match.getInventoryRunners().setBoots(player.getInventory().getBoots());

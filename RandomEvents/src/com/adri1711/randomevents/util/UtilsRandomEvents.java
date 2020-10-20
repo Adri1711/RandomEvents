@@ -7,6 +7,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,6 +21,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -28,8 +31,10 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
@@ -41,6 +46,7 @@ import com.adri1711.randomevents.match.MatchActive;
 import com.adri1711.randomevents.match.MinigameType;
 import com.adri1711.randomevents.match.Schedule;
 import com.adri1711.randomevents.match.enums.Creacion;
+import com.adri1711.randomevents.stats.Stats;
 import com.adri1711.util.enums.AMaterials;
 import com.google.common.io.Files;
 
@@ -205,8 +211,8 @@ public class UtilsRandomEvents {
 				}
 
 			}
-			ItemStack[] arrayContenido=new ItemStack[contenidoList.size()];
-			arrayContenido=contenidoList.toArray(arrayContenido);
+			ItemStack[] arrayContenido = new ItemStack[contenidoList.size()];
+			arrayContenido = contenidoList.toArray(arrayContenido);
 			inventario.setContents(arrayContenido);
 
 			inventario.setHelmet(player.getInventory().getHelmet());
@@ -796,9 +802,9 @@ public class UtilsRandomEvents {
 		Integer difX = cuboid.getMaxX() - cuboid.getMinX();
 		Integer difY = cuboid.getMaxY() - cuboid.getMinY();
 		Integer difZ = cuboid.getMaxZ() - cuboid.getMinZ();
-		Integer sumX = plugin.getRandom().nextInt(difX);
-		Integer sumY = plugin.getRandom().nextInt(difY);
-		Integer sumZ = plugin.getRandom().nextInt(difZ);
+		Integer sumX = difX > 0 ? plugin.getRandom().nextInt(difX) : -1 * plugin.getRandom().nextInt(Math.abs(difX));
+		Integer sumY = difY > 0 ? plugin.getRandom().nextInt(difY) : -1 * plugin.getRandom().nextInt(Math.abs(difY));
+		Integer sumZ = difZ > 0 ? plugin.getRandom().nextInt(difZ) : -1 * plugin.getRandom().nextInt(Math.abs(difZ));
 
 		Location loc = new Location(cuboid.getWorld(), cuboid.getMinX() + sumX, cuboid.getMinY() + sumY,
 				cuboid.getMinZ() + sumZ);
@@ -820,29 +826,29 @@ public class UtilsRandomEvents {
 		}
 		if (comprueba && distance < 0.1) {
 			Location l2 = l.clone();
-			if (l2.getX() % 1 <= 0.3) {
-				l2.setX(l2.getX() - 1);
+			if (Math.abs(l2.getX() % 1) <= 0.3) {
+				l2.setX(l2.getX() + 1 * (l2.getX() > 0 ? -1 : 1));
 				queueTNT(plugin, matchActive, l2, distance, false);
 
-			} else if (l2.getX() % 1 >= 0.7) {
-				l2.setX(l2.getX() + 1);
+			} else if (Math.abs(l2.getX() % 1) >= 0.7) {
+				l2.setX(l2.getX() - 1 * (l2.getX() > 0 ? -1 : 1));
 				queueTNT(plugin, matchActive, l2, distance, false);
 			}
 
-			if (l2.getZ() % 1 <= 0.3) {
-				l2.setZ(l2.getZ() - 1);
+			if (Math.abs(l2.getZ() % 1) <= 0.3) {
+				l2.setZ(l2.getZ() + 1 * (l2.getZ() > 0 ? -1 : 1));
 				queueTNT(plugin, matchActive, l2, distance, false);
 
-			} else if (l2.getZ() % 1 >= 0.7) {
-				l2.setZ(l2.getZ() + 1);
+			} else if (Math.abs(l2.getZ() % 1) >= 0.7) {
+				l2.setZ(l2.getZ() - 1 * (l2.getZ() > 0 ? -1 : 1));
 				queueTNT(plugin, matchActive, l2, distance, false);
 			}
-			if (l.getZ() % 1 <= 0.3) {
-				l.setZ(l.getZ() - 1);
+			if (Math.abs(l.getZ() % 1) <= 0.3) {
+				l.setZ(l.getZ() + 1 * (l.getZ() > 0 ? -1 : 1));
 				queueTNT(plugin, matchActive, l, distance, false);
 
-			} else if (l.getZ() % 1 >= 0.7) {
-				l.setZ(l.getZ() + 1);
+			} else if (Math.abs(l.getZ() % 1) >= 0.7) {
+				l.setZ(l.getZ() - 1 * (l.getZ() > 0 ? -1 : 1));
 				queueTNT(plugin, matchActive, l, distance, false);
 			}
 		}
@@ -873,6 +879,43 @@ public class UtilsRandomEvents {
 			}
 			p.addPotionEffect(potEffect);
 		}
+	}
+
+	public static Inventory createGUI(Stats estadisticas, RandomEvents plugin) {
+		Inventory inv = Bukkit.createInventory(null, sacaTamanyoGUI(plugin), Constantes.GUI_NAME);
+		int i = 0;
+		for (MinigameType minigame : MinigameType.values()) {
+			ItemStack item = new ItemStack(minigame.getMaterial());
+			ItemMeta itemMeta = item.getItemMeta();
+			itemMeta.setDisplayName("§6§l" + minigame.getMessage());
+			List<String> lore = new ArrayList<String>();
+			Integer wins = estadisticas.getWins(minigame.getCodigo());
+			Integer tries = estadisticas.getTries(minigame.getCodigo());
+			Double rat = (tries > 0) ? (wins * 1.0 / tries) : 0.;
+			BigDecimal ratio = new BigDecimal(rat).setScale(2, RoundingMode.HALF_UP);
+
+			lore.add(plugin.getLanguage().getStatsWins() + wins);
+			lore.add(plugin.getLanguage().getStatsTries() + tries);
+			lore.add(plugin.getLanguage().getStatsWinsRatio() + ratio.toPlainString());
+			itemMeta.setLore(lore);
+			item.setItemMeta(itemMeta);
+			inv.setItem(i, item);
+			i++;
+		}
+		return inv;
+	}
+
+	public static Integer sacaTamanyoGUI(RandomEvents plugin) {
+		Integer i = MinigameType.values().length;
+		Integer tamanyo = 9;
+
+		if ((i % 9) != 0) {
+			tamanyo = i + 9 - (i % 9);
+		} else if (tamanyo < i) {
+			tamanyo = i;
+
+		}
+		return tamanyo;
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.adri1711.randomevents.match;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -27,6 +28,7 @@ import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.commands.ComandosEnum;
 import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
+import com.adri1711.randomevents.util.UtilsSQL;
 import com.adri1711.util.enums.AMaterials;
 
 public class MatchActive {
@@ -288,6 +290,9 @@ public class MatchActive {
 			} catch (Exception e) {
 				if (player != null) {
 					System.out.println("[RandomEvents] The player " + player.getName() + " failed on teleport");
+					if (plugin.isDebugMode()) {
+						System.out.println("RandomEvents::DebugMode:: " + e);
+					}
 				}
 			}
 			if (sacaInv
@@ -591,6 +596,10 @@ public class MatchActive {
 						.replace("%players%", cadenaGanadores).replace("%event%", match.getName()));
 			}
 		}
+		for (Player g : ganadores) {
+			UtilsSQL.updateWins(g, match.getMinigame(), plugin);
+
+		}
 		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 			public void run() {
 				finalizaPartida(ganadores, Boolean.FALSE, Boolean.FALSE);
@@ -762,9 +771,41 @@ public class MatchActive {
 		// UtilsStats.aumentaStats(player.getName(), getMatch().getName(),
 		// StatsEnum.PARTIDAS_JUGADAS, plugin);
 		// }
-
+		mandaDescripcion();
 		cuentaAtras(Boolean.TRUE);
 
+	}
+
+	private void mandaDescripcion() {
+		List<String> desc = getField("minigameDescription" + match.getMinigame().getCodigo());
+		for (Player p : getPlayersSpectators()) {
+			for (String d : desc) {
+				p.sendMessage(d.replaceAll("&", "§"));
+			}
+		}
+
+	}
+
+	public List<String> getField(String javaField) {
+
+		Method method;
+		List<String> res = new ArrayList<String>();
+		try {
+			method = plugin.getLanguage().getClass().getMethod(getComandoGet(javaField));
+			res = (List<String>) method.invoke(plugin.getLanguage());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return res;
+	}
+
+	public String getComandoGet(String javaField) {
+		String campo = javaField;
+		String primeraLetra = campo.substring(0, 1);
+		String campoFinal = primeraLetra.toUpperCase() + javaField.substring(1);
+
+		return "get" + campoFinal;
 	}
 
 	public void cuentaAtras(Boolean playSound) {
@@ -1225,11 +1266,14 @@ public class MatchActive {
 	public void iniciaPlayer(Player p) {
 		teleportaPlayer(p);
 		ponInventarioMatch(p);
+		UtilsSQL.updateTries(p, match.getMinigame(), plugin);
 	}
 
 	public void iniciaPlayerBeast(Player p) {
 		p.teleport(getMatch().getBeastSpawn());
 		p.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getYouBeast());
+		UtilsSQL.updateTries(p, match.getMinigame(), plugin);
+
 		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 			public void run() {
 				teleportaPlayer(p);
@@ -1460,7 +1504,7 @@ public class MatchActive {
 
 				}
 			}
-		}, 20 * 15L);
+		}, 20 * plugin.getSecondsCheckPlayers());
 
 	}
 

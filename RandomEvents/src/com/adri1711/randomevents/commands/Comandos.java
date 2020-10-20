@@ -17,7 +17,7 @@ public class Comandos {
 	public static void muestraMenu(Player player) {
 		String menu = "§6----------------- §9§lRandomEvents §6---------------------";
 		menu += Constantes.SALTO_LINEA;
-		menu += "   §6/revent:\n          §9-> §6Shows this menu";
+		menu += "   §6/revent:\n          §e-> Shows this menu";
 
 		for (ComandosEnum cmd : ComandosEnum.values()) {
 

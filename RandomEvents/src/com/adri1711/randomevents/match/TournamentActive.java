@@ -404,6 +404,9 @@ public class TournamentActive {
 			} catch (Exception e) {
 				if (player != null) {
 					System.out.println("[RandomEvents] The player " + player.getName() + " failed on teleport");
+					if(plugin.isDebugMode()){
+						System.out.println("RandomEvents::DebugMode:: "+e);
+					}
 				}
 			}
 			if (sacaInv) {

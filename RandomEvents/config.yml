@@ -3,8 +3,13 @@
 #						Configuration							#
 #################################################################
 
+debugMode: false
+
 #Seconds to check if the probability match for a random event
 secondsTimer: 60
+
+#Seconds to check if the minimum players is fulfilled to begin the match
+secondsCheckPlayers: 15
 
 # Percentage of probability to spawn a random event each time the timer is fired
 probabilityRandomEvent: 5
@@ -43,6 +48,13 @@ minPlayers: 40
 commandsOnUserJoin:
 - 'psa %player%'
 
+#Allowed cmds in matchs. (DONT USE CAPS HERE)
+allowedCmds:
+- msg
+- ac
+- revent
+- randomevent
+
 
 #Spawn where the player will be teleported after minigame ends
 spawn:
@@ -52,5 +64,16 @@ spawn:
   z: 0.0
   pitch: 0.0
   yaw: 0.0
+  
+
+#Enable MySQL to have statistics of the games!
+mysql:
+  enabled: false
+  UUIDMode: false
+  host: localhost
+  port: 3306
+  database: database
+  username: user
+  password: password
 
 

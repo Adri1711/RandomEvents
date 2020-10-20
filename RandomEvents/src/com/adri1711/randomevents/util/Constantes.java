@@ -1,9 +1,11 @@
 package com.adri1711.randomevents.util;
 
 import com.adri1711.randomevents.match.enums.Creacion;
+import com.adri1711.util.enums.XMaterial;
 
 public class Constantes {
 
+	public static String GUI_NAME = "RandomEvents_Stats";
 	public static String DONE = "Done";
 	public static String NEXT = "Next";
 	public static String SAME = "Same";
@@ -44,6 +46,8 @@ public class Constantes {
 		INVALID_INPUT("invalidInput", "creation.invalidInput", "&c&lInvalid input, try another one"),
 
 		ERROR("error", "comun.error", "&c&lSome error ocurred, check the server log."),
+		
+		CMD_NOT_ALLOWED("cmdNotAllowed", "comun.cmdNotAllowed", "&c&lYou cant use this command here"),
 
 		INVALID_CMD("invalidCmd", "comun.invalidCmd",
 				"&c&lInvalid command, do /randomevent or /revent to see the valid commands"),
@@ -119,9 +123,10 @@ public class Constantes {
 				"&e&lThese players still survive on the tournament :"),
 
 		WINNERS("winners", "match.winners",
-				"&e&l%players% &6&lwon the Random Event &e&l'%event%'&6&l ! Congratulations!"), WINNERS_TOURNAMENT(
-						"winnersTournament", "match.winnersTournament",
-						"&e&l%players% &6&lwon the Tournament Random Event ! Congratulations!"),
+				"&e&l%players% &6&lwon the Random Event &e&l'%event%'&6&l ! Congratulations!"),
+
+		WINNERS_TOURNAMENT("winnersTournament", "match.winnersTournament",
+				"&e&l%players% &6&lwon the Tournament Random Event ! Congratulations!"),
 
 		WINNERS_POINTS("winnersPoints", "match.winnersPoints",
 				"&e&l%players% &6&lwon the Random Event '%event%' with %points% points ! Congratulations!"),
@@ -161,7 +166,61 @@ public class Constantes {
 				"&6&lYou are now a spectator. Use &e&l/revent leave &6&lto leave spectator mode"),
 
 		ERROR_SAVING_INVENTORY("errorSavingInventory", "comun.errorSavingInventory",
-				"&c&lYour inventory failed on save, please save your items and try again");
+				"&c&lYour inventory failed on save, please save your items and try again"),
+
+		STATS_DISABLED("statsDisabled", "stats.statsDisabled", "&c&lThe stats are disabled"),
+
+		STATS_TRIES("statsTries", "stats.statsTries", "&cTries: "),
+
+		STATS_WINS("statsWins", "stats.statsWins", "&2Wins: "),
+
+		STATS_WIN_RATIO("statsWinsRatio", "stats.statsWinsRatio", "&eWin Ratio: "),
+
+		MINIGAME_DESC_BR("minigameDescriptionBR", "minigame.description.BR",
+				"&eA fierce battle where just 1 player;&e or team can remain alive."),
+
+		MINIGAME_DESC_BRT2("minigameDescriptionBRT2", "minigame.description.BRT2",
+				"&eA fierce battle where just 1 player;&e or team can remain alive."),
+
+		MINIGAME_DESC_LJ("minigameDescriptionLJ", "minigame.description.LJ",
+				"&eA fierce battle where just 1 player;&e with his horse can remain alive."),
+
+		MINIGAME_DESC_TKLL("minigameDescriptionTKLL", "minigame.description.TKLL",
+				"&eOnly the most powerful assasin can win this event, kill players to get points,;&e the player with more points will get the rewards"),
+
+		MINIGAME_DESC_TKLLT2("minigameDescriptionTKLLT2", "minigame.description.TKLLT2",
+				"&eOnly the most powerful assasin can win this event, kill players to get points,;&e the team with more points will get the rewards"),
+
+		MINIGAME_DESC_KBD("minigameDescriptionKBD", "minigame.description.KBD",
+				"&eA battle where your attack power does not matter, you will have to make an strategy;&e to get the enemies thrown away from the arena to get them killed!;&e Be the last one who stands!"),
+
+		MINIGAME_DESC_EARR("minigameDescriptionEARR", "minigame.description.EARR",
+				"&eAvoid the arrows coming from the sky if you;&e dont want to lose your head!"),
+
+		MINIGAME_DESC_GEMC("minigameDescriptionGEMC", "minigame.description.GEMC",
+				"&eRandom gems will spawn in the arena. Try to get all of them until you reach 10 gems;&e or steal it from the enemies that has them. Stand 10 seconds;&e more carrying your 10 gems and you will get your hands on the reward!"),
+
+		MINIGAME_DESC_BOMB("minigameDescriptionBOMB", "minigame.description.BOMB",
+				"&eRun with the bomb and hit enemies to give it to them and avoid your own death.; &e From time to time the bomb will explode and will get the player that had it;&e and everyone near him dead."),
+
+		MINIGAME_DESC_BOAT_RUN("minigameDescriptionBOAT_RUN", "minigame.description.BOAT_RUN",
+				"&eBe the fastest sailor and reach the finish line before;&e your pursuers!"),
+
+		MINIGAME_DESC_ESCAPE_FROM_BEAST("minigameDescriptionESCAPE_FROM_BEAST",
+				"minigame.description.ESCAPE_FROM_BEAST",
+				"&eThe classic Run from the beast minigame!;&e Beat the beast by completing all the scenario and get enough equipment;&e to make damage to the beast!"),
+
+		MINIGAME_DESC_RACE("minigameDescriptionRACE", "minigame.description.RACE",
+				"&eRun and be the first to reach the goal;&e to get your reward!"),
+
+		MINIGAME_DESC_TNTRUN("minigameDescriptionTNTRUN", "minigame.description.TNTRUN",
+				"&eRun for your life, the tnt behind you will disappear,;&e try to stay over them to win the match!"),
+
+		MINIGAME_DESC_SPLEEF("minigameDescriptionSPLEEF", "minigame.description.SPLEEF",
+				"&eMake the other players fall by breaking the blocks on their feets,;&e be the one to stay safe to win the reward!"),
+
+		MINIGAME_DESC_SPLEGG("minigameDescriptionSPLEGG", "minigame.description.SPLEGG",
+				"&eAnother type of Spleef but this time use your pistol to throw eggs;&e that will break the floor!");
 
 		private String javaField;
 		private String ymlField;
