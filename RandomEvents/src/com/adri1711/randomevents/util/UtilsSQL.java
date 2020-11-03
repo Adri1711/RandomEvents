@@ -54,7 +54,36 @@ public class UtilsSQL {
 						}
 						Bukkit.getServer().getScheduler().runTask((Plugin) plugin, new Runnable() {
 							public void run() {
-								p.openInventory(UtilsRandomEvents.createGUI(estadistica, plugin));
+								p.openInventory(UtilsRandomEvents.createGUI(p.getName(), estadistica, plugin));
+							}
+						});
+					} catch (SQLException e) {
+						System.out.println(e);
+					}
+				} else {
+				}
+			}
+		}).runTaskAsynchronously(plugin);
+	}
+
+	public static void getStats(Player p, String name, RandomEvents plugin) {
+		Stats estadistica = new Stats();
+		String query = "";
+
+		query = Queries.SELECT_ALL_NAME_MODE.replaceAll(Queries.NAME, name);
+
+		new QueryBukkitRunnable(plugin.getHikari().getHikari(), query, new Callback<ResultSet, SQLException>() {
+			@Override
+			public void call(ResultSet resultSet, SQLException thrown) {
+				if (thrown == null) {
+					try {
+						while (resultSet.next()) {
+							estadistica.addTries(resultSet.getString("game"), resultSet.getInt("tries"));
+							estadistica.addWins(resultSet.getString("game"), resultSet.getInt("wins"));
+						}
+						Bukkit.getServer().getScheduler().runTask((Plugin) plugin, new Runnable() {
+							public void run() {
+								p.openInventory(UtilsRandomEvents.createGUI(name, estadistica, plugin));
 							}
 						});
 					} catch (SQLException e) {

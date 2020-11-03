@@ -113,6 +113,10 @@ public class Chat implements Listener {
 					actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position + 1, match);
 
 				}
+			} else if (message.equals(Constantes.NEXT)) {
+
+				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position + 2, match);
+
 			}
 			break;
 		case ANOTHER_ENTITY_SPAWNS:

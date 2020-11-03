@@ -317,7 +317,7 @@ public class UtilsRandomEvents {
 
 					if (plugin.getUseLastLocation()) {
 						if (inventario.getLastLocation() != null) {
-							player.teleport(inventario.getLastLocation());
+							teleportaPlayer(player, inventario.getLastLocation());
 						}
 					}
 
@@ -347,6 +347,17 @@ public class UtilsRandomEvents {
 			} catch (Exception exc) {
 				System.out.println("[RandomEvents] Error in sacaInventario catch 2");
 				System.out.println(exc.getMessage());
+			}
+		}
+	}
+
+	public static void teleportaPlayer(Player p, Location loc) {
+		if (loc != null) {
+			try {
+				p.teleport(loc);
+			} catch (Exception e) {
+				loc.setWorld(Bukkit.getWorld(loc.getWorld().getName()));
+				p.teleport(loc);
 			}
 		}
 	}
@@ -709,6 +720,17 @@ public class UtilsRandomEvents {
 		}
 		return !leather;
 	}
+	public static boolean checkInventoryVacio(Player p) {
+		boolean res = true;
+		int limit = p.getInventory().getSize();
+		for (int i = 0; i < limit; i++) {
+			if (p.getInventory().getItem(i) != null) {
+				res = false;
+				break;
+			}
+		}
+		return res;
+	}
 
 	private static Boolean compruebaItem(ItemStack item) {
 		Boolean leather = false;
@@ -802,9 +824,9 @@ public class UtilsRandomEvents {
 		Integer difX = cuboid.getMaxX() - cuboid.getMinX();
 		Integer difY = cuboid.getMaxY() - cuboid.getMinY();
 		Integer difZ = cuboid.getMaxZ() - cuboid.getMinZ();
-		Integer sumX = difX > 0 ? plugin.getRandom().nextInt(difX) : -1 * plugin.getRandom().nextInt(Math.abs(difX));
-		Integer sumY = difY > 0 ? plugin.getRandom().nextInt(difY) : -1 * plugin.getRandom().nextInt(Math.abs(difY));
-		Integer sumZ = difZ > 0 ? plugin.getRandom().nextInt(difZ) : -1 * plugin.getRandom().nextInt(Math.abs(difZ));
+		Integer sumX = difX >= 0 ? plugin.getRandom().nextInt(difX) : (-1 * plugin.getRandom().nextInt(Math.abs(difX)));
+		Integer sumY = difY >= 0 ? plugin.getRandom().nextInt(difY) : (-1 * plugin.getRandom().nextInt(Math.abs(difY)));
+		Integer sumZ = difZ >= 0 ? plugin.getRandom().nextInt(difZ) : (-1 * plugin.getRandom().nextInt(Math.abs(difZ)));
 
 		Location loc = new Location(cuboid.getWorld(), cuboid.getMinX() + sumX, cuboid.getMinY() + sumY,
 				cuboid.getMinZ() + sumZ);
@@ -881,8 +903,8 @@ public class UtilsRandomEvents {
 		}
 	}
 
-	public static Inventory createGUI(Stats estadisticas, RandomEvents plugin) {
-		Inventory inv = Bukkit.createInventory(null, sacaTamanyoGUI(plugin), Constantes.GUI_NAME);
+	public static Inventory createGUI(String name, Stats estadisticas, RandomEvents plugin) {
+		Inventory inv = Bukkit.createInventory(null, sacaTamanyoGUI(plugin), Constantes.GUI_NAME + " " + name);
 		int i = 0;
 		for (MinigameType minigame : MinigameType.values()) {
 			ItemStack item = new ItemStack(minigame.getMaterial());

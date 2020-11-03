@@ -24,9 +24,6 @@ public class Constantes {
 	public static String TOP_1 = "§6§lTop 1";
 	public static String TOP_2 = "§6§lTop 2";
 	public static String TOP_3 = "§6§lTop 3";
-	public static String SECONDS_3_REMAINING = "§6§l3";
-	public static String SECONDS_2_REMAINING = "§6§l2";
-	public static String SECONDS_1_REMAINING = "§6§l1";
 	public static String COOLDOWN_OUT = "§6You can play again:";
 	public static String PERMISO_TOP = "bossbattle.see.top";
 	public static String CHOOSE_MOB = "§6§lChoose Mob";
@@ -45,8 +42,14 @@ public class Constantes {
 
 		INVALID_INPUT("invalidInput", "creation.invalidInput", "&c&lInvalid input, try another one"),
 
+		SECONDS_3_REMAINING("secondsRemaining3", "comun.secondsRemaining3", "&6&l3"),
+
+		SECONDS_2_REMAINING("secondsRemaining2", "comun.secondsRemaining2", "&6&l2"),
+
+		SECONDS_1_REMAINING("secondsRemaining1", "comun.secondsRemaining1", "&6&l1"),
+
 		ERROR("error", "comun.error", "&c&lSome error ocurred, check the server log."),
-		
+
 		CMD_NOT_ALLOWED("cmdNotAllowed", "comun.cmdNotAllowed", "&c&lYou cant use this command here"),
 
 		INVALID_CMD("invalidCmd", "comun.invalidCmd",
@@ -88,6 +91,9 @@ public class Constantes {
 
 		EVENT_ANNOUNCE("eventAnnounce", "announce.eventAnnounce",
 				"&6&lThe event &e&l'%event%'&6&l of type  &e&l'%type%'&6&l, begins in: "),
+		
+		EVENT_STOPPED("eventStopped", "announce.eventStopped",
+				"&6&lThe event &e&l'%event%'&6&l of type  &e&l'%type%'&6&l, was forced to stop."),
 
 		EVENT_CANCELLED("eventCancelled", "announce.eventCancelled",
 				"&6&lThe event &e&l'%event%'&6&l of type  &e&l'%type%'&6&l, was cancelled for lack of players."),
@@ -133,6 +139,9 @@ public class Constantes {
 
 		DISPOSE_LEATHER_ITEMS("disposeLeatherItems", "comun.disposeLeatherItems",
 				"&c&lFor security reasons please leave your leather items before entering the event"),
+		
+		CLEAR_INVENTORY("clearInventory", "comun.clearInventory",
+				"&c&lClear the inventory before joining the RandomEvent"),
 
 		SHOW_ALONE("showAlone", "match.showAlone", "&6&lYou are playing alone, good luck!"),
 

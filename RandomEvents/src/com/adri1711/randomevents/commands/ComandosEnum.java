@@ -21,14 +21,25 @@ public enum ComandosEnum {
 	CMD_STATS("stats", 1, "randomevent.stats",
 			"   §6/revent stats:\n          §e-> Show the stats", "statsRandomEvent",true),
 
+	CMD_STATS_OTHER("stats", 2, "randomevent.stats.other",
+			"   §6/revent stats <player>:\n          §e-> Show the stats of a player", "statsRandomEvent",true),
+	
+	CMD_FORCESTOP("forcestop", 1, "randomevent.admin.forcestop",
+			"   §6/revent forcestop:\n          §e-> Force the stop of the Random Event", "forceStop",true),
+
 	CMD_SPAWNSET("spawnset", 1, "randomevent.admin.spawnset",
 			"   §6/revent spawnset:\n          §e-> Set the spawn, where players will be teleported after finishing a Random Event", "spawnSet",true),
+	
+	
 	
 	CMD_SPAWNSET_TOURNAMENT("tspawnset", 1, "randomevent.admin.tspawnset",
 			"   §6/revent tspawnset:\n          §e-> Set the spawn where players will be teleported after joining a Tournament Random Event", "tournamentSpawnSet",true),
 	
 	CMD_MATCHES("matches", 1, "randomevent.admin.matches",
 			"   §6/revent matches:\n          §e-> Show all Random Events available", "showRandomEvents",true),
+	
+	CMD_CURRENT_DATE("date", 1, "randomevent.admin.schedule",
+			"   §6/revent date:\n          §e-> Shows the current date for the schedule", "currentDate",true),
 	
 	CMD_SCHEDULE("schedule", 4, "randomevent.admin.schedule",
 			"   §6/revent schedule <monday:tuesday...> <hour> <minute>:\n          §e-> Create a schedule for a Random Event", "scheduleRandomEvent",true),

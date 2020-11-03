@@ -162,7 +162,7 @@ public class TournamentActive {
 
 			UtilsRandomEvents.borraInventario(player);
 
-			player.teleport(plugin.getSpawn());
+			UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn());
 
 			if (!muerto) {
 				UtilsRandomEvents.sacaInventario(plugin, player);
@@ -260,7 +260,7 @@ public class TournamentActive {
 							range = entrada.getKey();
 							buscando = Boolean.FALSE;
 							for (Player p : playersSpectators) {
-								p.teleport(tournament.getPlayerSpawn());
+								UtilsRandomEvents.teleportaPlayer(p, tournament.getPlayerSpawn());
 							}
 
 						}
@@ -396,7 +396,7 @@ public class TournamentActive {
 				playersSpectators.remove(player);
 				getPlayers().remove(player.getName());
 				getPlayersObj().remove(player);
-				player.teleport(plugin.getSpawn());
+				UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn());
 
 				player.setHealth(20);
 				player.setFoodLevel(20);
@@ -404,8 +404,8 @@ public class TournamentActive {
 			} catch (Exception e) {
 				if (player != null) {
 					System.out.println("[RandomEvents] The player " + player.getName() + " failed on teleport");
-					if(plugin.isDebugMode()){
-						System.out.println("RandomEvents::DebugMode:: "+e);
+					if (plugin.isDebugMode()) {
+						System.out.println("RandomEvents::DebugMode:: " + e);
 					}
 				}
 			}
@@ -421,31 +421,24 @@ public class TournamentActive {
 		if (!getPlayers().contains(player.getName())) {
 
 			if (getPlayers().size() < tournament.getMaxPlayers()) {
+				if (!plugin.isForceEmptyInventoryToJoin()) {
 
-				if (UtilsRandomEvents.checkLeatherItems(player)) {
+					if (UtilsRandomEvents.checkLeatherItems(player)) {
+						procesoUnirPlayer(player);
 
-					if (UtilsRandomEvents.guardaInventario(plugin, player)) {
-
-						UtilsRandomEvents.borraInventario(player);
-
-						hazComandosDeUnion(player);
-
-						getPlayers().add(player.getName());
-						getPlayersObj().add(player);
-						getPlayersSpectators().add(player);
-
-						UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("BAT", "HURT"));
-
-						player.teleport(tournament.getPlayerSpawn());
 					} else {
 						player.sendMessage(plugin.getLanguage().getTagPlugin() + " "
-								+ plugin.getLanguage().getErrorSavingInventory());
+								+ plugin.getLanguage().getDisposeLeatherItems());
 
 					}
 				} else {
-					player.sendMessage(
-							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getDisposeLeatherItems());
+					if (UtilsRandomEvents.checkInventoryVacio(player)) {
+						procesoUnirPlayer(player);
+					} else {
+						player.sendMessage(
+								plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getClearInventory());
 
+					}
 				}
 
 			} else {
@@ -455,6 +448,28 @@ public class TournamentActive {
 		}
 	}
 
+	private void procesoUnirPlayer(Player player) {
+		if (UtilsRandomEvents.guardaInventario(plugin, player)) {
+
+			UtilsRandomEvents.borraInventario(player);
+
+			hazComandosDeUnion(player);
+
+			getPlayers().add(player.getName());
+			getPlayersObj().add(player);
+			getPlayersSpectators().add(player);
+
+			UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("BAT", "HURT"));
+
+			UtilsRandomEvents.teleportaPlayer(player, tournament.getPlayerSpawn());
+		} else {
+			player.sendMessage(
+					plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getErrorSavingInventory());
+
+		}
+
+	}
+
 	private void hazComandosDeUnion(Player player) {
 		for (String cmd : plugin.getCommandsOnUserJoin()) {
 
@@ -462,6 +477,7 @@ public class TournamentActive {
 					cmd.replaceAll("%player%", player.getName()));
 
 		}
+
 	}
 
 	public Map<RangePlayers, Match> getMatchPerRound() {

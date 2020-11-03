@@ -23,6 +23,9 @@ useLastLocation: false
 #Number of annoucements the random event will do before being cancelled for lack of players
 numberOfTriesBeforeCancelling: 10
 
+#Force Empty Inventory to Join the RandomEvents
+forceEmptyInventoryToJoin: false
+
 tournament:
   spawn:
     world: world

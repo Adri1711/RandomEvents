@@ -66,7 +66,7 @@ public class LanguageMessages {
 	private String raceTournament;
 	private String tagPlugin;
 	private String eventCancelled;
-
+	private String eventStopped;
 	private String tournamentCancelled;
 
 	private String statsWins;
@@ -75,6 +75,12 @@ public class LanguageMessages {
 	private String statsWinsRatio;
 
 	private String cmdNotAllowed;
+
+	private String clearInventory;
+
+	private String secondsRemaining3;
+	private String secondsRemaining2;
+	private String secondsRemaining1;
 
 	private List<String> minigameDescriptionBR;
 	private List<String> minigameDescriptionBRT2;
@@ -802,6 +808,46 @@ public class LanguageMessages {
 
 	public void setMinigameDescriptionSPLEGG(List<String> minigameDescriptionSPLEGG) {
 		this.minigameDescriptionSPLEGG = minigameDescriptionSPLEGG;
+	}
+
+	public String getEventStopped() {
+		return eventStopped.replaceAll("&", "§");
+	}
+
+	public void setEventStopped(String eventStopped) {
+		this.eventStopped = eventStopped;
+	}
+
+	public String getClearInventory() {
+		return clearInventory.replaceAll("&", "§");
+	}
+
+	public void setClearInventory(String clearInventory) {
+		this.clearInventory = clearInventory;
+	}
+
+	public String getSecondsRemaining3() {
+		return secondsRemaining3.replaceAll("&", "§");
+	}
+
+	public void setSecondsRemaining3(String secondsRemaining3) {
+		this.secondsRemaining3 = secondsRemaining3;
+	}
+
+	public String getSecondsRemaining2() {
+		return secondsRemaining2.replaceAll("&", "§");
+	}
+
+	public void setSecondsRemaining2(String secondsRemaining2) {
+		this.secondsRemaining2 = secondsRemaining2;
+	}
+
+	public String getSecondsRemaining1() {
+		return secondsRemaining1.replaceAll("&", "§");
+	}
+
+	public void setSecondsRemaining1(String secondsRemaining1) {
+		this.secondsRemaining1 = secondsRemaining1;
 	}
 
 }

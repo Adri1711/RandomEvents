@@ -116,6 +116,8 @@ public class RandomEvents extends JavaPlugin {
 
 	private List<String> allowedCmds;
 
+	private boolean forceEmptyInventoryToJoin;
+
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
 		loadConfig();
@@ -198,17 +200,17 @@ public class RandomEvents extends JavaPlugin {
 		this.minPlayers = Integer.valueOf(getConfig().getInt("minPlayers"));
 		this.commandsOnUserJoin = (List<String>) getConfig().getStringList("commandsOnUserJoin");
 		this.allowedCmds = (List<String>) getConfig().getStringList("allowedCmds");
-		
+
 		this.secondsTimer = Integer.valueOf(getConfig().getInt("secondsTimer"));
 		this.secondsCheckPlayers = Integer.valueOf(getConfig().getInt("secondsCheckPlayers"));
-		if(secondsCheckPlayers==null){
-			secondsCheckPlayers=15;
+		if (secondsCheckPlayers == null) {
+			secondsCheckPlayers = 15;
 		}
-		
+
 		this.probabilityRandomEventTournament = Integer.valueOf(getConfig().getInt("probabilityRandomEventTournament"));
 		this.probabilityRandomEvent = Integer.valueOf(getConfig().getInt("probabilityRandomEvent"));
-		
-		this.debugMode= getConfig().getBoolean("debugMode");
+
+		this.debugMode = getConfig().getBoolean("debugMode");
 
 		this.useLastLocation = getConfig().getBoolean("useLastLocation");
 
@@ -220,7 +222,7 @@ public class RandomEvents extends JavaPlugin {
 		this.playerMatches = new HashMap<String, Match>();
 		this.playersCreation = new HashMap<String, Integer>();
 		this.playersEntity = new HashMap<String, EntityType>();
-
+		this.forceEmptyInventoryToJoin = getConfig().getBoolean("forceEmptyInventoryToJoin");
 		this.mysqlEnabled = getConfig().getBoolean("mysql.enabled");
 		this.mysqlUUIDMode = getConfig().getBoolean("mysql.UUIDMode");
 		this.mysqlHost = getConfig().getString("mysql.host");
@@ -628,7 +630,7 @@ public class RandomEvents extends JavaPlugin {
 	}
 
 	public Integer getSecondsCheckPlayers() {
-		
+
 		return secondsCheckPlayers;
 	}
 
@@ -643,8 +645,13 @@ public class RandomEvents extends JavaPlugin {
 	public void setAllowedCmds(List<String> allowedCmds) {
 		this.allowedCmds = allowedCmds;
 	}
-	
-	
-	
+
+	public boolean isForceEmptyInventoryToJoin() {
+		return forceEmptyInventoryToJoin;
+	}
+
+	public void setForceEmptyInventoryToJoin(boolean forceEmptyInventoryToJoin) {
+		this.forceEmptyInventoryToJoin = forceEmptyInventoryToJoin;
+	}
 
 }

@@ -40,17 +40,17 @@ public class Comandos {
 							RandomEvents.class, Player.class);
 					method.invoke(plugin.getComandosExecutor(), plugin, player);
 				} else {
-					player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
+					player.sendMessage(
+							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
 
 				}
 			} else {
 				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidCmd());
 			}
 
-		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException e) {
+		} catch (Throwable e) {
+			System.out.println(e);
 			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
-			System.out.println(e.getMessage());
 		}
 
 	}
@@ -66,17 +66,17 @@ public class Comandos {
 							RandomEvents.class, Player.class, String.class);
 					method.invoke(plugin.getComandosExecutor(), plugin, player, args[1]);
 				} else {
-					player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
+					player.sendMessage(
+							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
 
 				}
 			} else {
 				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidCmd());
 			}
 
-		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException e) {
+		} catch (Throwable e) {
+			System.out.println(e);
 			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
-			System.out.println(e.getMessage());
 		}
 	}
 
@@ -91,17 +91,17 @@ public class Comandos {
 							RandomEvents.class, Player.class, String.class, String.class, String.class);
 					method.invoke(plugin.getComandosExecutor(), plugin, player, args[1], args[2], args[3]);
 				} else {
-					player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
+					player.sendMessage(
+							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
 
 				}
 			} else {
 				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidCmd());
 			}
 
-		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException e) {
+		} catch (Throwable e) {
+			System.out.println(e);
 			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
-			System.out.println(e.getMessage());
 		}
 	}
 
@@ -116,17 +116,17 @@ public class Comandos {
 							RandomEvents.class, Player.class, String.class, String.class, String.class, String.class);
 					method.invoke(plugin.getComandosExecutor(), plugin, player, args[1], args[2], args[3], args[4]);
 				} else {
-					player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
+					player.sendMessage(
+							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
 
 				}
 			} else {
 				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidCmd());
 			}
 
-		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException e) {
+		} catch (Throwable e) {
+			System.out.println(e);
 			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
-			System.out.println(e.getMessage());
 		}
 	}
 

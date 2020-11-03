@@ -1,5 +1,8 @@
 package com.adri1711.randomevents.commands;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 import org.bukkit.entity.Player;
 
 import com.adri1711.randomevents.RandomEvents;
@@ -8,7 +11,6 @@ import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
 import com.adri1711.randomevents.match.Schedule;
 import com.adri1711.randomevents.match.TournamentActive;
-import com.adri1711.randomevents.stats.Stats;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.randomevents.util.UtilsSQL;
 
@@ -63,6 +65,11 @@ public class ComandosExecutor {
 			player.sendMessage("§6§l" + plugin.getMatches().indexOf(m) + " - " + m.getMinigame().getMessage() + " -> "
 					+ m.getName());
 		}
+
+	}
+
+	public void currentDate(RandomEvents plugin, Player player) {
+		player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + new Date());
 
 	}
 
@@ -148,6 +155,12 @@ public class ComandosExecutor {
 		player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getSpawnSet());
 	}
 
+	public void forceStop(RandomEvents plugin, Player player) {
+		if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlaying()) {
+			plugin.getMatchActive().finalizaPartida(new ArrayList<Player>(), true, false);
+		}
+	}
+
 	public void leaveRandomEvent(RandomEvents plugin, Player player) {
 		if (plugin.getMatchActive() != null) {
 			if (plugin.getMatchActive().getPlayersObj().contains(player)) {
@@ -178,6 +191,15 @@ public class ComandosExecutor {
 	public void statsRandomEvent(RandomEvents plugin, Player player) {
 		if (plugin.isMysqlEnabled()) {
 			UtilsSQL.getStats(player, plugin);
+
+		} else {
+			player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getStatsDisabled());
+		}
+	}
+
+	public void statsRandomEvent(RandomEvents plugin, Player player, String name) {
+		if (plugin.isMysqlEnabled()) {
+			UtilsSQL.getStats(player, name, plugin);
 
 		} else {
 			player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getStatsDisabled());

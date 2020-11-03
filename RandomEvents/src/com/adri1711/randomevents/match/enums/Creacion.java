@@ -60,7 +60,7 @@ public enum Creacion {
 	INVENTORY_RUNNERS(25, "§6§lTake the inventory for the players when they reach the goal and say 'Done' "),
 
 	ENTITY_SPAWNS(26,
-			"§6§lGo to the arena you created and write 'Done' to set each spawn location for the entities. (%entities%/%maxPlayers%)"),
+			"§6§lGo to the arena you created and write 'Done' to set each spawn location for the entities or 'Next' to make the entities appear on player location. (%entities%/%maxPlayers%)"),
 
 	ANOTHER_ENTITY_SPAWNS(27, "§6§lPut another entity spawn, say 'Done' . (%entities%/%maxPlayers%)"),
 

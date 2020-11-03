@@ -1,8 +1,8 @@
 name: RandomEvents
 main: com.adri1711.randomevents.RandomEvents
-version: 1.6.9
+version: 1.7.1
 depend: [Lib1711]
-softdepend: [CrackShot, PlaceholderAPI]
+softdepend: [CrackShot, PlaceholderAPI, WorldEdit, WorldGuard, Multiworld, Multiverse-Core]
 commands:
    revent:
       description: Shows the command menu too
