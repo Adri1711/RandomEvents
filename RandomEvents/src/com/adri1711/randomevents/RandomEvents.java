@@ -1,11 +1,13 @@
 package com.adri1711.randomevents;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -35,6 +37,7 @@ import com.adri1711.randomevents.listeners.PickUp;
 import com.adri1711.randomevents.listeners.Quit;
 import com.adri1711.randomevents.listeners.Use;
 import com.adri1711.randomevents.listeners.WeaponShoot;
+import com.adri1711.randomevents.match.BannedPlayers;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
 import com.adri1711.randomevents.match.Schedule;
@@ -118,6 +121,8 @@ public class RandomEvents extends JavaPlugin {
 
 	private boolean forceEmptyInventoryToJoin;
 
+	private BannedPlayers bannedPlayers;
+
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
 		loadConfig();
@@ -167,6 +172,7 @@ public class RandomEvents extends JavaPlugin {
 	}
 
 	public void onDisable() {
+		UtilsRandomEvents.terminaCreacionBannedPlayers(this, bannedPlayers);
 		if (mysqlEnabled && hikari != null) {
 			hikari.close();
 		}
@@ -176,6 +182,7 @@ public class RandomEvents extends JavaPlugin {
 	}
 
 	public void inicializaVariables() {
+		updateConfig();
 		this.random = new Random();
 
 		this.tournament = new Tournament();
@@ -217,7 +224,23 @@ public class RandomEvents extends JavaPlugin {
 		this.setProbabilityPowerUp(Integer.valueOf(getConfig().getInt("probabilityPowerUp")));
 
 		this.matches = UtilsRandomEvents.cargarPartidas(this);
+		this.bannedPlayers = UtilsRandomEvents.cargarBannedPlayers(this);
+		if (bannedPlayers == null || bannedPlayers.getBannedPlayers() == null) {
+			bannedPlayers = new BannedPlayers();
+		}
 		this.schedules = UtilsRandomEvents.cargarSchedules(this);
+
+		Date now = new Date();
+		long nowLong = now.getTime();
+		List<String> pl = new ArrayList<String>();
+		for (Entry<String, Long> entrada : bannedPlayers.getBannedPlayers().entrySet()) {
+			if (entrada.getValue() < nowLong) {
+				pl.add(entrada.getKey());
+			}
+		}
+		for (String p : pl) {
+			bannedPlayers.getBannedPlayers().remove(p);
+		}
 
 		this.playerMatches = new HashMap<String, Match>();
 		this.playersCreation = new HashMap<String, Integer>();
@@ -304,32 +327,41 @@ public class RandomEvents extends JavaPlugin {
 	}
 
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		Player player = null;
 		if (sender instanceof Player) {
-			Player player = (Player) sender;
-			if (label.equals(Comandos.COMANDO_ALIASE1) || label.equals(Comandos.COMANDO_ALIASE2)) {
-				switch (args.length) {
-				case 0:
-					Comandos.muestraMenu(player);
-					break;
-				case 1:
-					Comandos.ejecutaComandoSimple(this, player, args);
-					break;
-				case 2:
-					Comandos.ejecutaComandoDosArgumentos(this, player, args);
-					break;
-				case 4:
-					Comandos.ejecutaComandoCuatroArgumentos(this, player, args);
-					break;
-				case 5:
-					Comandos.ejecutaComandoCincoArgumentos(this, player, args);
-					break;
-				default:
+			player = (Player) sender;
+		}
+		if (label.equals(Comandos.COMANDO_ALIASE1) || label.equals(Comandos.COMANDO_ALIASE2)) {
+			switch (args.length) {
+			case 0:
+				Comandos.muestraMenu(player);
+				break;
+			case 1:
+				Comandos.ejecutaComandoSimple(this, player, args);
+				break;
+			case 2:
+				Comandos.ejecutaComandoDosArgumentos(this, player, args);
+				break;
+			case 3:
+				Comandos.ejecutaComandoTresArgumentos(this, player, args);
+				break;
+			case 4:
+				Comandos.ejecutaComandoCuatroArgumentos(this, player, args);
+				break;
+			case 5:
+				Comandos.ejecutaComandoCincoArgumentos(this, player, args);
+				break;
+			default:
+				if (player != null) {
 					player.sendMessage(getLanguage().getTagPlugin() + " " + language.getInvalidCmd());
-					break;
-
+				} else {
+					System.out.println(getLanguage().getTagPlugin() + " " + language.getInvalidCmd());
 				}
+				break;
+
 			}
 		}
+
 		return true;
 	}
 
@@ -348,6 +380,7 @@ public class RandomEvents extends JavaPlugin {
 		if (!(new File(getDataFolder() + File.separator + "config.yml")).exists()) {
 			saveDefaultConfig();
 		}
+
 		try {
 			(new YamlConfiguration()).load(new File(getDataFolder() + File.separator + "config.yml"));
 		} catch (Exception e) {
@@ -364,6 +397,40 @@ public class RandomEvents extends JavaPlugin {
 
 		loadConfiguration();
 		return true;
+	}
+
+	public void updateConfig() {
+
+		saveResource("defaultConfig.yml", false);
+
+		try {
+			if (new File(this.getDataFolder() + File.separator + "defaultConfig.yml").exists()) {
+
+				YamlConfiguration cfg = new YamlConfiguration();
+				cfg.load(new File(this.getDataFolder() + File.separator + "defaultConfig.yml"));
+
+				if (new File(this.getDataFolder() + File.separator + "config.yml").exists()) {
+					boolean changesMade = false;
+					YamlConfiguration tmp = new YamlConfiguration();
+					tmp.load(this.getDataFolder() + File.separator + "config.yml");
+					for (String str : cfg.getKeys(true)) {
+						if (!tmp.getKeys(true).contains(str)) {
+							tmp.set(str, cfg.get(str));
+							changesMade = true;
+						}
+					}
+					if (changesMade)
+						tmp.save(this.getDataFolder() + File.separator + "config.yml");
+				}
+				File defaultConfig = new File(getDataFolder() + File.separator + "defaultConfig.yml");
+				if (defaultConfig.exists()) {
+					defaultConfig.delete();
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Location getSpawn() {
@@ -652,6 +719,14 @@ public class RandomEvents extends JavaPlugin {
 
 	public void setForceEmptyInventoryToJoin(boolean forceEmptyInventoryToJoin) {
 		this.forceEmptyInventoryToJoin = forceEmptyInventoryToJoin;
+	}
+
+	public BannedPlayers getBannedPlayers() {
+		return bannedPlayers;
+	}
+
+	public void setBannedPlayers(BannedPlayers bannedPlayers) {
+		this.bannedPlayers = bannedPlayers;
 	}
 
 }

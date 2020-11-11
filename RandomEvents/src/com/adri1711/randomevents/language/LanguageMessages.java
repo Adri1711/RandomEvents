@@ -82,6 +82,11 @@ public class LanguageMessages {
 	private String secondsRemaining2;
 	private String secondsRemaining1;
 
+	private String youAreBanned;
+	private String banPlayer;
+	private String unbanPlayer;
+	private String playerNotBanned;
+
 	private List<String> minigameDescriptionBR;
 	private List<String> minigameDescriptionBRT2;
 	private List<String> minigameDescriptionLJ;
@@ -850,4 +855,37 @@ public class LanguageMessages {
 		this.secondsRemaining1 = secondsRemaining1;
 	}
 
+	public String getYouAreBanned() {
+		return youAreBanned.replaceAll("&", "§");
+	}
+
+	public void setYouAreBanned(String youAreBanned) {
+		this.youAreBanned = youAreBanned;
+	}
+
+	public String getBanPlayer() {
+		return banPlayer.replaceAll("&", "§");
+	}
+
+	public void setBanPlayer(String banPlayer) {
+		this.banPlayer = banPlayer;
+	}
+
+	public String getUnbanPlayer() {
+		return unbanPlayer.replaceAll("&", "§");
+	}
+
+	public void setUnbanPlayer(String unbanPlayer) {
+		this.unbanPlayer = unbanPlayer;
+	}
+
+	public String getPlayerNotBanned() {
+		return playerNotBanned.replaceAll("&", "§");
+	}
+
+	public void setPlayerNotBanned(String playerNotBanned) {
+		this.playerNotBanned = playerNotBanned;
+	}
+
+	
 }

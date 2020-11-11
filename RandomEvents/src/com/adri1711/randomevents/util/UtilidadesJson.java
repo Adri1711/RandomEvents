@@ -3,6 +3,7 @@ package com.adri1711.randomevents.util;
 import java.io.BufferedReader;
 
 import com.adri1711.randomevents.RandomEvents;
+import com.adri1711.randomevents.match.BannedPlayers;
 import com.adri1711.randomevents.match.InventoryPers;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.Schedule;
@@ -99,46 +100,31 @@ public class UtilidadesJson {
 		}
 		return inventory;
 	}
+	
+	public static String fromBannedToJSON(RandomEvents plugin, BannedPlayers bp) {
+		String resultado = null;
 
-	// public static String fromBossStatsToJSON(BossBattleStats stats) {
-	// String resultado = null;
-	//
-	// try {
-	// resultado = GsonFactory.getPrettyGson().toJson(stats);
-	//
-	// } catch (Exception e) {
-	// System.out.println(e.getMessage());
-	// System.out.println("Error :: Error at creating stats");
-	// }
-	// return resultado;
-	//
-	// }
+		try {
+			resultado = plugin.getApi().toJson(bp);
 
-	// public static BossBattleStats fromJSONToBossStats(String stats) {
-	// BossBattleStats bossMatch = null;
-	// try {
-	// bossMatch = GsonFactory.getPrettyGson().fromJson(stats,
-	// BossBattleStats.class);
-	//
-	// } catch (Exception e) {
-	// System.out.println(e.getMessage());
-	// System.out.println("Error :: Error at loading match: " + stats);
-	// }
-	// return bossMatch;
-	//
-	// }
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println("Error :: Error at creating banned players");
+		}
+		return resultado;
 
-	// public static BossBattleStats fromJSONToBossStats(BufferedReader br) {
-	// BossBattleStats bossMatch = null;
-	// try {
-	// bossMatch = GsonFactory.getPrettyGson().fromJson(br,
-	// BossBattleStats.class);
-	//
-	// } catch (Exception e) {
-	// System.out.println(e.getMessage());
-	// System.out.println("Error :: Error at loading match: " + br);
-	// }
-	// return bossMatch;
-	// }
+	}
+
+	public static BannedPlayers fromJSONToBanned(RandomEvents plugin, BufferedReader br) {
+		BannedPlayers bp = null;
+		try {
+			bp = (BannedPlayers) plugin.getApi().fromJson(br, BannedPlayers.class);
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println("Error :: Error at loading banned players: " + br);
+		}
+		return bp;
+	}
 
 }

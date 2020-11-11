@@ -1,6 +1,5 @@
 package com.adri1711.randomevents.commands;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.bukkit.entity.Player;
@@ -15,18 +14,30 @@ public class Comandos {
 	public static final String COMANDO_ALIASE2 = "randomevent";
 
 	public static void muestraMenu(Player player) {
+
 		String menu = "§6----------------- §9§lRandomEvents §6---------------------";
 		menu += Constantes.SALTO_LINEA;
 		menu += "   §6/revent:\n          §e-> Shows this menu";
 
 		for (ComandosEnum cmd : ComandosEnum.values()) {
+			if (player != null) {
+				if (cmd.getShowOnMenu() && player.hasPermission(cmd.getPermission())) {
+					menu += Constantes.SALTO_LINEA;
+					menu += cmd.getDescription();
+				}
+			} else {
+				if (cmd.getShowOnMenu() && cmd.getCanConsole()) {
+					menu += Constantes.SALTO_LINEA;
+					menu += cmd.getDescription();
+				}
 
-			if (cmd.getShowOnMenu() && player.hasPermission(cmd.getPermission())) {
-				menu += Constantes.SALTO_LINEA;
-				menu += cmd.getDescription();
 			}
 		}
-		player.sendMessage(menu);
+		if (player != null) {
+			player.sendMessage(menu);
+		} else {
+			System.out.println(menu);
+		}
 	}
 
 	public static void ejecutaComandoSimple(RandomEvents plugin, Player player, String[] args) {
@@ -34,50 +45,94 @@ public class Comandos {
 
 			ComandosEnum comando = ComandosEnum.getByAliaseAndSize(args[0], 1);
 			if (comando != null) {
-				if (player.hasPermission(comando.getPermission())) {
+				if ((player == null && comando.getCanConsole())
+						|| (player != null && player.hasPermission(comando.getPermission()))) {
 
 					Method method = plugin.getComandosExecutor().getClass().getMethod(comando.getMetodo(),
 							RandomEvents.class, Player.class);
 					method.invoke(plugin.getComandosExecutor(), plugin, player);
 				} else {
-					player.sendMessage(
-							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
+					if (player != null)
+						player.sendMessage(
+								plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
 
 				}
 			} else {
-				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidCmd());
+				if (player != null)
+					player.sendMessage(
+							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidCmd());
 			}
 
 		} catch (Throwable e) {
 			System.out.println(e);
-			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
 		}
 
 	}
 
 	public static void ejecutaComandoDosArgumentos(RandomEvents plugin, Player player, String[] args) {
+
 		try {
 
 			ComandosEnum comando = ComandosEnum.getByAliaseAndSize(args[0], 2);
 			if (comando != null) {
-				if (player.hasPermission(comando.getPermission())) {
+				if ((player == null && comando.getCanConsole())
+						|| (player != null && player.hasPermission(comando.getPermission()))) {
 
 					Method method = plugin.getComandosExecutor().getClass().getMethod(comando.getMetodo(),
 							RandomEvents.class, Player.class, String.class);
 					method.invoke(plugin.getComandosExecutor(), plugin, player, args[1]);
 				} else {
-					player.sendMessage(
-							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
+					if (player != null)
+						player.sendMessage(
+								plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
 
 				}
 			} else {
-				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidCmd());
+				if (player != null)
+					player.sendMessage(
+							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidCmd());
 			}
 
 		} catch (Throwable e) {
 			System.out.println(e);
-			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
 		}
+
+	}
+
+	public static void ejecutaComandoTresArgumentos(RandomEvents plugin, Player player, String[] args) {
+
+		try {
+
+			ComandosEnum comando = ComandosEnum.getByAliaseAndSize(args[0], 3);
+			if (comando != null) {
+				if ((player == null && comando.getCanConsole())
+						|| (player != null && player.hasPermission(comando.getPermission()))) {
+
+					Method method = plugin.getComandosExecutor().getClass().getMethod(comando.getMetodo(),
+							RandomEvents.class, Player.class, String.class, String.class);
+					method.invoke(plugin.getComandosExecutor(), plugin, player, args[1], args[2]);
+				} else {
+					if (player != null)
+						player.sendMessage(
+								plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
+
+				}
+			} else {
+				if (player != null)
+					player.sendMessage(
+							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidCmd());
+			}
+
+		} catch (Throwable e) {
+			System.out.println(e);
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+		}
+
 	}
 
 	public static void ejecutaComandoCuatroArgumentos(RandomEvents plugin, Player player, String[] args) {
@@ -85,24 +140,30 @@ public class Comandos {
 
 			ComandosEnum comando = ComandosEnum.getByAliaseAndSize(args[0], 4);
 			if (comando != null) {
-				if (player.hasPermission(comando.getPermission())) {
+				if ((player == null && comando.getCanConsole())
+						|| (player != null && player.hasPermission(comando.getPermission()))) {
 
 					Method method = plugin.getComandosExecutor().getClass().getMethod(comando.getMetodo(),
 							RandomEvents.class, Player.class, String.class, String.class, String.class);
 					method.invoke(plugin.getComandosExecutor(), plugin, player, args[1], args[2], args[3]);
 				} else {
-					player.sendMessage(
-							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
+					if (player != null)
+						player.sendMessage(
+								plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
 
 				}
 			} else {
-				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidCmd());
+				if (player != null)
+					player.sendMessage(
+							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidCmd());
 			}
 
 		} catch (Throwable e) {
 			System.out.println(e);
-			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
 		}
+
 	}
 
 	public static void ejecutaComandoCincoArgumentos(RandomEvents plugin, Player player, String[] args) {
@@ -110,24 +171,30 @@ public class Comandos {
 
 			ComandosEnum comando = ComandosEnum.getByAliaseAndSize(args[0], 5);
 			if (comando != null) {
-				if (player.hasPermission(comando.getPermission())) {
+				if ((player == null && comando.getCanConsole())
+						|| (player != null && player.hasPermission(comando.getPermission()))) {
 
 					Method method = plugin.getComandosExecutor().getClass().getMethod(comando.getMetodo(),
 							RandomEvents.class, Player.class, String.class, String.class, String.class, String.class);
 					method.invoke(plugin.getComandosExecutor(), plugin, player, args[1], args[2], args[3], args[4]);
 				} else {
-					player.sendMessage(
-							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
+					if (player != null)
+						player.sendMessage(
+								plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
 
 				}
 			} else {
-				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidCmd());
+				if (player != null)
+					player.sendMessage(
+							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidCmd());
 			}
 
 		} catch (Throwable e) {
 			System.out.println(e);
-			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
 		}
+
 	}
 
 }

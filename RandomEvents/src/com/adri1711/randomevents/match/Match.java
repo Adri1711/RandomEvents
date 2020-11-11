@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
+import org.bukkit.material.MaterialData;
 
 public class Match {
 
@@ -47,6 +48,8 @@ public class Match {
 	private Location beastSpawn;
 
 	private String material;
+	
+	private List<MaterialData> datas;
 
 	public Match() {
 		super();
@@ -58,6 +61,7 @@ public class Match {
 		this.entitySpawns = new ArrayList<Location>();
 		this.spawns = new ArrayList<Location>();
 		this.spectatorSpawns = new ArrayList<Location>();
+		this.datas= new ArrayList<MaterialData>();
 	}
 
 	public String getName() {
@@ -227,6 +231,15 @@ public class Match {
 
 	public void setMaterial(String material) {
 		this.material = material;
+	}
+	
+
+	public List<MaterialData> getDatas() {
+		return datas;
+	}
+
+	public void setDatas(List<MaterialData> datas) {
+		this.datas = datas;
 	}
 
 	@Override

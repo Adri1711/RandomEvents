@@ -1,21 +1,17 @@
 package com.adri1711.randomevents.listeners;
 
-import org.bukkit.Sound;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.vehicle.VehicleDestroyEvent;
 
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.match.MinigameType;
-import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 
 public class Death implements Listener {

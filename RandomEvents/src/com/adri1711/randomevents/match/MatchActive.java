@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -19,6 +20,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -94,7 +96,7 @@ public class MatchActive {
 
 	private Map<Location, Long> blockDisappear;
 
-	private List<Location> blockDisappeared;
+	private Map<Location,MaterialData> blockDisappeared;
 
 	public MatchActive(Match match, RandomEvents plugin, Boolean forzada) {
 		super();
@@ -139,7 +141,7 @@ public class MatchActive {
 		this.gema = new ItemStack(plugin.getApi().getMaterial(AMaterials.EMERALD));
 		this.setForzada(forzada);
 		this.blockDisappear = new HashMap<Location, Long>();
-		this.blockDisappeared = new ArrayList<Location>();
+		this.blockDisappeared = new HashMap<Location,MaterialData>();
 		tries = 0;
 		matchWaitingPlayers();
 	}
@@ -189,7 +191,7 @@ public class MatchActive {
 		this.gema = new ItemStack(plugin.getApi().getMaterial(AMaterials.EMERALD));
 		this.setForzada(forzada);
 		this.blockDisappear = new HashMap<Location, Long>();
-		this.blockDisappeared = new ArrayList<Location>();
+		this.blockDisappeared = new HashMap<Location,MaterialData>();
 
 		tries = 0;
 
@@ -772,15 +774,19 @@ public class MatchActive {
 		Material mat = null;
 		if (match.getMinigame().equals(MinigameType.TNT_RUN)) {
 			mat = plugin.getApi().getMaterial(AMaterials.TNT);
-		} else {
-			if (match.getMaterial() != null) {
-				mat = Material.getMaterial(match.getMaterial());
-			}
-		}
+		} 
 		if (mat != null) {
-			getBlockDisappeared().addAll(getBlockDisappear().keySet());
-			for (Location l : getBlockDisappeared()) {
+			for(Location l:getBlockDisappear().keySet()){
+			getBlockDisappeared().put(l,null);
+			}
+			for (Location l : getBlockDisappeared().keySet()) {
 				l.getBlock().setType(mat);
+			}
+		}else{
+			for (Entry<Location,MaterialData> entrada : getBlockDisappeared().entrySet()) {
+				entrada.getKey().getBlock().setType(entrada.getValue().getItemType());
+				entrada.getKey().getBlock().setData(entrada.getValue().getData());
+				entrada.getKey().getBlock().getState().setData(entrada.getValue());
 			}
 		}
 		setPlaying(Boolean.FALSE);
@@ -1216,7 +1222,7 @@ public class MatchActive {
 					} else {
 						Bukkit.getServer().getScheduler().runTask((Plugin) getPlugin(), new Runnable() {
 							public void run() {
-								UtilsRandomEvents.spawnEntity(l, match.getMob(), plugin);
+								UtilsRandomEvents.spawnEntity(getMatchActive(), l, match.getMob(), plugin);
 							}
 						});
 					}
@@ -1818,12 +1824,14 @@ public class MatchActive {
 		this.blockDisappear = blockDisappear;
 	}
 
-	public List<Location> getBlockDisappeared() {
+	public Map<Location, MaterialData> getBlockDisappeared() {
 		return blockDisappeared;
 	}
 
-	public void setBlockDisappeared(List<Location> blockDisappeared) {
+	public void setBlockDisappeared(Map<Location, MaterialData> blockDisappeared) {
 		this.blockDisappeared = blockDisappeared;
 	}
+
+	
 
 }

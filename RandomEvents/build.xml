@@ -1,16 +1,32 @@
 <project name="RandomEvents" default="makejar" basedir=".">
-    <target name="makejar" description="Create a jar for the project">
-        <mkdir dir="target"></mkdir>
-        <jar destfile="target/${ant.project.name}.jar">
-            <fileset dir="bin"></fileset>
-            <fileset file="plugin.yml"></fileset>
-            <zipgroupfileset dir="E:/ProgramarPlugins/libs" includes="HikariCP-3.4.5.jar"/>
-        </jar>
-        <jar destfile="E:/ProgramarPlugins/RandomEvents/VActual/${ant.project.name}.jar">
-            <fileset dir="bin"></fileset>
-            <fileset file="plugin.yml"></fileset>
-            <fileset file="config.yml"></fileset>
-            <zipgroupfileset dir="E:/ProgramarPlugins/libs" includes="HikariCP-3.4.5.jar"/>
-        </jar>
-    </target>
+	<target name="makejar" description="Create a jar for the project">
+		<mkdir dir="target">
+		</mkdir>
+		<jar destfile="target/${ant.project.name}.jar">
+			<fileset dir="bin">
+			</fileset>
+			<fileset file="plugin.yml">
+			</fileset>
+			<fileset file="config.yml">
+			</fileset>
+			<fileset file="defaultConfig.yml">
+			</fileset>
+			<zipgroupfileset dir="E:/ProgramarPlugins/libs" includes="HikariCP-3.4.5.jar" />
+			<zipgroupfileset dir="E:/ProgramarPlugins/libs" includes="slf4j-api-1.7.25.jar" />
+
+		</jar>
+		<jar destfile="E:/ProgramarPlugins/RandomEvents/VActual/${ant.project.name}.jar">
+			<fileset dir="bin">
+			</fileset>
+			<fileset file="plugin.yml">
+			</fileset>
+			<fileset file="config.yml">
+			</fileset>
+			<fileset file="defaultConfig.yml">
+			</fileset>
+			<zipgroupfileset dir="E:/ProgramarPlugins/libs" includes="HikariCP-3.4.5.jar" />
+			<zipgroupfileset dir="E:/ProgramarPlugins/libs" includes="slf4j-api-1.7.25.jar" />
+
+		</jar>
+	</target>
 </project>

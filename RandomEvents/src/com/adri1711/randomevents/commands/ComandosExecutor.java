@@ -1,6 +1,7 @@
 package com.adri1711.randomevents.commands;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.bukkit.entity.Player;
@@ -24,7 +25,15 @@ public class ComandosExecutor {
 		if (plugin.getMatchActive() != null) {
 			if (!plugin.getMatchActive().getPlaying()) {
 				if (plugin.getMatchActive().getPassword().equals(password)) {
-					plugin.getMatchActive().uneAPlayer(player);
+					if (UtilsRandomEvents.checkBanned(player, plugin)) {
+						player.sendMessage(plugin.getLanguage().getTagPlugin() + " "
+								+ plugin.getLanguage().getYouAreBanned().replaceAll("%time%",
+										UtilsRandomEvents.calculateTime(
+												(plugin.getBannedPlayers().getBannedPlayers().get(player.getName())
+														- (new Date()).getTime()) / 1000)));
+					} else {
+						plugin.getMatchActive().uneAPlayer(player);
+					}
 				} else {
 					player.sendMessage(
 							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidPassword());
@@ -44,7 +53,17 @@ public class ComandosExecutor {
 			if (!plugin.getTournamentActive().getPlaying()) {
 
 				if (plugin.getTournamentActive().getPassword().equals(password)) {
-					plugin.getTournamentActive().uneAPlayer(player);
+
+					if (UtilsRandomEvents.checkBanned(player, plugin)) {
+						player.sendMessage(plugin.getLanguage().getTagPlugin() + " "
+								+ plugin.getLanguage().getYouAreBanned().replaceAll("%time%",
+										UtilsRandomEvents.calculateTime(
+												(plugin.getBannedPlayers().getBannedPlayers().get(player.getName())
+														- (new Date()).getTime()) / 1000)));
+					} else {
+						plugin.getTournamentActive().uneAPlayer(player);
+					}
+
 				} else {
 					player.sendMessage(
 							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidPassword());
@@ -59,11 +78,67 @@ public class ComandosExecutor {
 		// UtilsGUI.showGUI(player, plugin);
 	}
 
+	public void banPlayer(RandomEvents plugin, Player player, String namePlayer, String time) {
+		try {
+			Calendar c = Calendar.getInstance();
+			c.setTime(new Date());
+			time = time.toLowerCase();
+			if (time.contains("d")) {
+				c.add(Calendar.DAY_OF_YEAR, Integer.valueOf(time.split("d")[0]));
+			} else if (time.contains("h")) {
+				c.add(Calendar.HOUR_OF_DAY, Integer.valueOf(time.split("h")[0]));
+
+			} else if (time.contains("m")) {
+				c.add(Calendar.MINUTE, Integer.valueOf(time.split("m")[0]));
+
+			} else if (time.contains("s")) {
+				c.add(Calendar.SECOND, Integer.valueOf(time.split("s")[0]));
+
+			} else {
+				c.add(Calendar.SECOND, Integer.valueOf(time));
+			}
+			plugin.getBannedPlayers().getBannedPlayers().put(namePlayer, c.getTime().getTime());
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + " "
+						+ plugin.getLanguage().getBanPlayer().replaceAll("%time%", UtilsRandomEvents
+								.calculateTime((c.getTime().getTime() - (new Date()).getTime()) / 1000)));
+		} catch (Exception e) {
+
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidInput());
+		}
+
+	}
+
+	public void unbanPlayer(RandomEvents plugin, Player player, String namePlayer) {
+		try {
+			if (plugin.getBannedPlayers().getBannedPlayers().containsKey(namePlayer)) {
+				plugin.getBannedPlayers().getBannedPlayers().remove(namePlayer);
+				if (player != null)
+					player.sendMessage(
+							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getUnbanPlayer());
+			} else {
+				if (player != null)
+					player.sendMessage(
+							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getPlayerNotBanned());
+			}
+		} catch (Exception e) {
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidInput());
+		}
+
+	}
+
 	public void showRandomEvents(RandomEvents plugin, Player player) {
 		player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getMatches());
 		for (Match m : plugin.getMatches()) {
-			player.sendMessage("§6§l" + plugin.getMatches().indexOf(m) + " - " + m.getMinigame().getMessage() + " -> "
-					+ m.getName());
+			if (player != null) {
+				player.sendMessage("§6§l" + plugin.getMatches().indexOf(m) + " - " + m.getMinigame().getMessage()
+						+ " -> " + m.getName());
+			} else {
+				System.out.println(
+						plugin.getMatches().indexOf(m) + " - " + m.getMinigame().getMessage() + " -> " + m.getName());
+			}
 		}
 
 	}
@@ -77,9 +152,12 @@ public class ComandosExecutor {
 		if (plugin.getMatchActive() == null) {
 			plugin.setForzado(Boolean.TRUE);
 			plugin.setMatchActive(UtilsRandomEvents.escogeMatchActiveAleatoria(plugin, plugin.getMatches(), true));
-			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getMatchBeginSoon());
+			if (player != null)
+				player.sendMessage(
+						plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getMatchBeginSoon());
 		} else {
-			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getMatchBegun());
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getMatchBegun());
 		}
 
 	}
@@ -88,9 +166,12 @@ public class ComandosExecutor {
 		if (plugin.getTournamentActive() == null) {
 			plugin.setForzado(Boolean.TRUE);
 			plugin.setTournamentActive(new TournamentActive(plugin.getTournament(), plugin, true));
-			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getMatchBeginSoon());
+			if (player != null)
+				player.sendMessage(
+						plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getMatchBeginSoon());
 		} else {
-			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getMatchBegun());
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getMatchBegun());
 		}
 
 	}
@@ -100,13 +181,17 @@ public class ComandosExecutor {
 			try {
 				plugin.setForzado(Boolean.TRUE);
 				plugin.setMatchActive(new MatchActive(plugin.getMatches().get(Integer.valueOf(number)), plugin, true));
-				player.sendMessage(
-						plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getMatchBeginSoon());
+				if (player != null)
+					player.sendMessage(
+							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getMatchBeginSoon());
 			} catch (Exception e) {
-				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidInput());
+				if (player != null)
+					player.sendMessage(
+							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidInput());
 			}
 		} else {
-			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getMatchBegun());
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getMatchBegun());
 		}
 
 	}
@@ -126,7 +211,8 @@ public class ComandosExecutor {
 
 	public void reloadPlugin(RandomEvents plugin, Player player) {
 		plugin.doingReload();
-		player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getPluginReload());
+		if (player != null)
+			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getPluginReload());
 	}
 
 	public void spawnSet(RandomEvents plugin, Player player) {

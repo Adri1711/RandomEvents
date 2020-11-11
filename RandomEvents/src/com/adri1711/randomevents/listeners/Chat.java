@@ -351,13 +351,35 @@ public class Chat implements Listener {
 			break;
 
 		case MATERIAL_SPLEEF:
-			if (player.getItemInHand() != null
-					&& player.getItemInHand().getType() != (plugin.getApi().getMaterial(AMaterials.AIR))) {
-				match.setMaterial(player.getItemInHand().getType().toString());
+			if (message.equals(Constantes.DONE)) {
+
+				if (player.getItemInHand() != null
+						&& player.getItemInHand().getType() != (plugin.getApi().getMaterial(AMaterials.AIR))) {
+					match.getDatas().add(player.getItemInHand().getData());
+					actualiza = UtilsRandomEvents.pasaACreation(plugin, player,
+							Creacion.ANOTHER_MATERIAL_SPLEEF.getPosition(), match);
+				} else {
+					player.sendMessage(plugin.getLanguage().getInvalidInput());
+					actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position, match);
+				}
+			}
+			break;
+		case ANOTHER_MATERIAL_SPLEEF:
+			if (message.equals(Constantes.DONE)) {
+
+				if (player.getItemInHand() != null
+						&& player.getItemInHand().getType() != (plugin.getApi().getMaterial(AMaterials.AIR))) {
+					match.getDatas().add(player.getItemInHand().getData());
+
+					actualiza = UtilsRandomEvents.pasaACreation(plugin, player,
+							Creacion.ANOTHER_MATERIAL_SPLEEF.getPosition(), match);
+				} else {
+					player.sendMessage(plugin.getLanguage().getInvalidInput());
+					actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position, match);
+				}
+			} else if (message.equals(Constantes.NEXT)) {
 				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, Creacion.END.getPosition(), match);
-			} else {
-				player.sendMessage(plugin.getLanguage().getInvalidInput());
-				actualiza = UtilsRandomEvents.pasaACreation(plugin, player, position, match);
+
 			}
 			break;
 		case TIMER_ARROW_SPAWN:

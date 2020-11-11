@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -35,10 +36,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
 import com.adri1711.randomevents.RandomEvents;
+import com.adri1711.randomevents.match.BannedPlayers;
 import com.adri1711.randomevents.match.Cuboid;
 import com.adri1711.randomevents.match.InventoryPers;
 import com.adri1711.randomevents.match.Match;
@@ -720,6 +723,7 @@ public class UtilsRandomEvents {
 		}
 		return !leather;
 	}
+
 	public static boolean checkInventoryVacio(Player p) {
 		boolean res = true;
 		int limit = p.getInventory().getSize();
@@ -782,7 +786,7 @@ public class UtilsRandomEvents {
 
 	}
 
-	public static void spawnEntity(Location l, EntityType entityType, RandomEvents plugin) {
+	public static void spawnEntity(MatchActive matchActive, Location l, EntityType entityType, RandomEvents plugin) {
 
 		Entity entity = l.getWorld().spawnEntity(l, entityType);
 
@@ -795,6 +799,7 @@ public class UtilsRandomEvents {
 			entity.setVelocity(new Vector(plugin.getRandom().nextDouble() * multiplicadorX * validadorX, -4,
 					plugin.getRandom().nextDouble() * multiplicadorZ * validadorZ));
 		}
+		matchActive.getMobs().add(entity);
 
 	}
 
@@ -887,9 +892,10 @@ public class UtilsRandomEvents {
 			}
 		}
 		for (Location l : blocksToDisappear) {
-			l.getBlock().setType(plugin.getApi().getMaterial(AMaterials.AIR));
 			matchActive.getBlockDisappear().remove(l);
-			matchActive.getBlockDisappeared().add(l);
+			matchActive.getBlockDisappeared().put(l, l.getBlock().getState().getData());
+			l.getBlock().setType(plugin.getApi().getMaterial(AMaterials.AIR));
+
 		}
 
 	}
@@ -938,6 +944,116 @@ public class UtilsRandomEvents {
 
 		}
 		return tamanyo;
+	}
+
+	public static boolean contieneMaterialData(MaterialData data, Match match) {
+		Boolean res = false;
+		for (MaterialData matDat : match.getDatas()) {
+			if (matDat.getItemType() == data.getItemType() && matDat.getData() == data.getData()) {
+				res = true;
+			}
+		}
+
+		return res;
+	}
+
+	public static BannedPlayers cargarBannedPlayers(RandomEvents plugin) {
+
+		BannedPlayers banned = new BannedPlayers();
+		File file = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//banned-players.json");
+		if (file.exists()) {
+
+			BufferedReader br = null;
+			FileReader fr = null;
+			try {
+				fr = new FileReader(file);
+				br = new BufferedReader(fr);
+				banned = UtilidadesJson.fromJSONToBanned(plugin, br);
+
+			} catch (FileNotFoundException e) {
+				System.out.println(e.getMessage());
+			} finally {
+				try {
+					if (fr != null)
+						fr.close();
+					if (br != null)
+						br.close();
+				} catch (IOException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+
+		}
+		return banned;
+	}
+
+	public static void terminaCreacionBannedPlayers(RandomEvents plugin, BannedPlayers banned) {
+		try {
+			String json = UtilidadesJson.fromBannedToJSON(plugin, banned);
+			if (json != null) {
+
+				File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//banned-players.json");
+				if (bossFile.exists()) {
+					bossFile.delete();
+				}
+				bossFile.createNewFile();
+
+				FileWriter fw = new FileWriter(bossFile, true);
+
+				PrintWriter pw = new PrintWriter(fw);
+
+				pw.println(json);
+
+				pw.flush();
+
+				pw.close();
+
+			} else {
+				System.out.println("JSON was null.");
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+
+		}
+
+	}
+
+	public static String calculateTime(long seconds) {
+		int day = (int) TimeUnit.SECONDS.toDays(seconds);
+		long hours = TimeUnit.SECONDS.toHours(seconds) - TimeUnit.DAYS.toHours(day);
+		long minute = TimeUnit.SECONDS.toMinutes(seconds) - TimeUnit.DAYS.toMinutes(day)
+				- TimeUnit.HOURS.toMinutes(hours);
+		long second = TimeUnit.SECONDS.toSeconds(seconds) - TimeUnit.DAYS.toSeconds(day)
+				- TimeUnit.HOURS.toSeconds(hours) - TimeUnit.MINUTES.toSeconds(minute);
+
+		String s = "";
+		if (day > 0) {
+			s += day + "d ";
+		}
+		if (hours > 0) {
+			s += day + "h ";
+		}
+		if (minute > 0) {
+			s += minute + "m ";
+		}
+		if (second > 0) {
+			s += second + "s";
+		}
+		return s;
+	}
+
+	public static boolean checkBanned(Player player, RandomEvents plugin) {
+		Boolean res = Boolean.FALSE;
+		Long now = (new Date()).getTime();
+		if (plugin.getBannedPlayers().getBannedPlayers().containsKey(player.getName())) {
+			if (plugin.getBannedPlayers().getBannedPlayers().get(player.getName()) > now) {
+				res = Boolean.TRUE;
+			} else {
+				plugin.getBannedPlayers().getBannedPlayers().remove(player.getName());
+			}
+
+		}
+		return res;
 	}
 
 }

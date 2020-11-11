@@ -69,6 +69,8 @@ public enum Creacion {
 	GOAL_LOCATION2(29, "§6§lSet the second location of the cuboid of the goal, say 'Done'"),
 
 	MATERIAL_SPLEEF(30, "§6§lGet the block you want to set mineable for spleef on your hand and say 'Done'"),
+	
+	ANOTHER_MATERIAL_SPLEEF(31, "§6§lGet another block you want to set mineable for spleef on your hand and say 'Done' or say 'Next' to end the spleef materials"),
 
 	END(999, "§6§lYou finished the creation of the random event!");
 

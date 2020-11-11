@@ -25,6 +25,7 @@ import org.bukkit.util.Vector;
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.match.MinigameType;
 import com.adri1711.randomevents.util.Constantes;
+import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.util.enums.AMaterials;
 
 public class Use implements Listener {
@@ -80,7 +81,8 @@ public class Use implements Listener {
 	public void onProjectileHitEvent(ProjectileHitEvent event) {
 		Projectile entity = event.getEntity();
 
-		if (entity instanceof Egg && entity.getCustomName()!=null && entity.getCustomName().equals(Constantes.SPLEGG_EGG)) {
+		if (entity instanceof Egg && entity.getCustomName() != null
+				&& entity.getCustomName().equals(Constantes.SPLEGG_EGG)) {
 			if (plugin.getMatchActive() != null
 					&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEGG)) {
 				Location hitLoc = entity.getLocation();
@@ -104,9 +106,17 @@ public class Use implements Listener {
 					if (nextBlock.getType() != null && plugin.getMatchActive().getMatch().getMaterial() != null
 							&& nextBlock.getType().toString()
 									.equals(plugin.getMatchActive().getMatch().getMaterial())) {
+						plugin.getMatchActive().getBlockDisappeared().put(nextBlock.getLocation(),
+								nextBlock.getState().getData().clone());
 						nextBlock.setType(plugin.getApi().getMaterial(AMaterials.AIR));
-						plugin.getMatchActive().getBlockDisappeared().add(nextBlock.getLocation());
 
+					} else if (plugin.getMatchActive().getMatch().getDatas() != null
+							&& !plugin.getMatchActive().getMatch().getDatas().isEmpty() && nextBlock.getType() != null
+							&& nextBlock.getState().getData() != null && UtilsRandomEvents.contieneMaterialData(
+									nextBlock.getState().getData(), plugin.getMatchActive().getMatch())) {
+						plugin.getMatchActive().getBlockDisappeared().put(nextBlock.getLocation(),
+								nextBlock.getState().getData().clone());
+						nextBlock.setType(plugin.getApi().getMaterial(AMaterials.AIR));
 					}
 				}
 			}
@@ -140,12 +150,27 @@ public class Use implements Listener {
 	public void onMine(BlockBreakEvent evt) {
 		Player player = evt.getPlayer();
 		if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayers().contains(player.getName())
-				&& plugin.getMatchActive().getPlaying() && plugin.getMatchActive().getMatch().getMaterial() != null
-				&& evt.getBlock().getType() != null
-				&& evt.getBlock().getType().toString().equals(plugin.getMatchActive().getMatch().getMaterial())) {
-			evt.setCancelled(false);
-			evt.getBlock().getDrops().clear();
-			plugin.getMatchActive().getBlockDisappeared().add(evt.getBlock().getLocation());
+				&& plugin.getMatchActive().getPlaying()) {
+			if (plugin.getMatchActive().getMatch().getMaterial() != null
+
+					&& evt.getBlock().getType() != null
+					&& evt.getBlock().getType().toString().equals(plugin.getMatchActive().getMatch().getMaterial())) {
+				evt.setCancelled(true);
+				plugin.getMatchActive().getBlockDisappeared().put(evt.getBlock().getLocation(),
+						evt.getBlock().getState().getData().clone());
+				evt.getBlock().setType(plugin.getApi().getMaterial(AMaterials.AIR));
+			} else if (plugin.getMatchActive().getMatch().getDatas() != null
+					&& !plugin.getMatchActive().getMatch().getDatas().isEmpty() && evt.getBlock().getType() != null
+					&& evt.getBlock().getState().getData() != null && UtilsRandomEvents.contieneMaterialData(
+							evt.getBlock().getState().getData(), plugin.getMatchActive().getMatch())) {
+				evt.setCancelled(true);
+				plugin.getMatchActive().getBlockDisappeared().put(evt.getBlock().getLocation(),
+						evt.getBlock().getState().getData().clone());
+				evt.getBlock().setType(plugin.getApi().getMaterial(AMaterials.AIR));
+			} else {
+				evt.setCancelled(true);
+
+			}
 		}
 	}
 

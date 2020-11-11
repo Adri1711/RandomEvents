@@ -1,0 +1,82 @@
+#################################################################
+#						RandomEvents							#
+#						Configuration							#
+#################################################################
+
+debugMode: false
+
+#Seconds to check if the probability match for a random event
+secondsTimer: 60
+
+#Seconds to check if the minimum players is fulfilled to begin the match
+secondsCheckPlayers: 15
+
+# Percentage of probability to spawn a random event each time the timer is fired
+probabilityRandomEvent: 5
+
+#Probability that the spawned random event is a tournament
+probabilityRandomEventTournament: 5
+
+#Teleport to the last location instead of spawn of the plugin
+useLastLocation: false
+
+#Number of annoucements the random event will do before being cancelled for lack of players
+numberOfTriesBeforeCancelling: 10
+
+#Force Empty Inventory to Join the RandomEvents
+forceEmptyInventoryToJoin: false
+
+tournament:
+  spawn:
+    world: world
+    x: 0.0
+    y: 60.0
+    z: 0.0
+    pitch: 0.0
+    yaw: 0.0
+  maxPlayers: 64
+  minPlayers: 20
+  numberOfRounds: 5
+  rewards:
+      - 'eco give %player% 10000'
+
+#Probability to spawn a power up of resistance in arrow rain games
+probabilityPowerUp: 1
+
+#Minimum amount of players to begin checking for random events
+minPlayers: 40
+
+
+#Commands that will be done each time a user join a random event, use it in case you need to get the god mode off, to set the gamemode to survival, etc
+commandsOnUserJoin:
+- 'psa %player%'
+
+#Allowed cmds in matchs. (DONT USE CAPS HERE)
+allowedCmds:
+- msg
+- ac
+- revent
+- randomevent
+
+
+#Spawn where the player will be teleported after minigame ends
+spawn:
+  world: world
+  x: 0.0
+  y: 60.0
+  z: 0.0
+  pitch: 0.0
+  yaw: 0.0
+  
+
+#Enable MySQL to have statistics of the games!
+mysql:
+  enabled: false
+  UUIDMode: false
+  host: localhost
+  port: 3306
+  database: database
+  username: user
+  password: password
+
+
