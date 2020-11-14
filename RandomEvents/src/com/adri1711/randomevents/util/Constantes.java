@@ -42,6 +42,8 @@ public class Constantes {
 
 		INVALID_INPUT("invalidInput", "creation.invalidInput", "&c&lInvalid input, try another one"),
 		
+		IDLE_DAMAGE("idleDamage", "comun.idleDamage", "&c&lTaking damage for afk..."),
+		
 		YOU_ARE_BANNED("youAreBanned", "comun.youAreBanned", "&c&lYou are banned from RandomEvents until %time%"),
 		
 		BAN_PLAYER("banPlayer", "comun.banPlayer", "&c&lPlayer banned until %time%"),

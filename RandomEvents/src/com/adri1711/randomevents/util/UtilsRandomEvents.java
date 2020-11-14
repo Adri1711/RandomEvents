@@ -43,6 +43,7 @@ import org.bukkit.util.Vector;
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.match.BannedPlayers;
 import com.adri1711.randomevents.match.Cuboid;
+import com.adri1711.randomevents.match.DayWeek;
 import com.adri1711.randomevents.match.InventoryPers;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
@@ -320,7 +321,7 @@ public class UtilsRandomEvents {
 
 					if (plugin.getUseLastLocation()) {
 						if (inventario.getLastLocation() != null) {
-							teleportaPlayer(player, inventario.getLastLocation());
+							teleportaPlayer(player, inventario.getLastLocation(), plugin);
 						}
 					}
 
@@ -354,15 +355,47 @@ public class UtilsRandomEvents {
 		}
 	}
 
-	public static void teleportaPlayer(Player p, Location loc) {
+	public static Boolean teleportaPlayer(Player p, Location loc, RandomEvents plugin) {
+		Boolean res = true;
 		if (loc != null) {
 			try {
 				p.teleport(loc);
 			} catch (Exception e) {
-				loc.setWorld(Bukkit.getWorld(loc.getWorld().getName()));
-				p.teleport(loc);
+				try {
+					Location loc2 = loc.clone();
+					if (loc2 != null) {
+						if (plugin.isDebugMode())
+							System.out.println("Initial Loc ->" + loc2.toString());
+					}
+					loc2.setWorld(Bukkit.getWorld(loc2.getWorld().getUID()));
+					if (loc2 != null) {
+						if (plugin.isDebugMode())
+							System.out.println("Updated Loc ->" + loc2.toString());
+					}
+					p.teleport(loc2);
+				} catch (Exception e2) {
+					try {
+						Location loc2 = loc.clone();
+						if (loc2 != null) {
+							if (plugin.isDebugMode())
+								System.out.println("Initial Loc ->" + loc2.toString());
+						}
+						loc2.setWorld(Bukkit.getWorld(loc2.getWorld().getName()));
+						if (loc2 != null) {
+							if (plugin.isDebugMode())
+								System.out.println("Updated Loc ->" + loc2.toString());
+						}
+
+						p.teleport(loc2);
+					} catch (Exception e3) {
+						res = false;
+						System.out.println(e3);
+
+					}
+				}
 			}
 		}
+		return res;
 	}
 
 	public static List<Match> cargarPartidas(RandomEvents plugin) {
@@ -401,7 +434,8 @@ public class UtilsRandomEvents {
 	public static Schedule findSchedule(RandomEvents plugin, Integer day, Integer hour, Integer minute) {
 		Schedule sched = null;
 		for (Schedule s : plugin.getSchedules()) {
-			if (s.getDay().equals(day) && s.getHour().equals(hour) && s.getMinute().equals(minute)) {
+			if ((s.getDay().equals(DayWeek.EVERYDAY) || s.getDay().equals(day)) && s.getHour().equals(hour)
+					&& s.getMinute().equals(minute)) {
 				sched = s;
 			}
 		}
@@ -1054,6 +1088,26 @@ public class UtilsRandomEvents {
 
 		}
 		return res;
+	}
+
+	public static void checkDamageCounter(RandomEvents plugin, MatchActive matchActive) {
+		List<Player> playerMuertos = new ArrayList<Player>();
+		if (matchActive.getDamageCounter() >= plugin.getIdleTimeForDamage()) {
+			for (Player p : matchActive.getPlayersObj()) {
+				p.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getIdleDamage());
+				if (p.getHealth() > 1) {
+					p.damage(1);
+				} else {
+					playerMuertos.add(p);
+				}
+			}
+		} else {
+			matchActive.setDamageCounter(matchActive.getDamageCounter() + 1);
+		}
+		for (Player p : playerMuertos) {
+			matchActive.echaDePartida(p, true, true, false);
+		}
+
 	}
 
 }

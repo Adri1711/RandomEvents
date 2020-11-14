@@ -87,6 +87,8 @@ public class LanguageMessages {
 	private String unbanPlayer;
 	private String playerNotBanned;
 
+	private String idleDamage;
+
 	private List<String> minigameDescriptionBR;
 	private List<String> minigameDescriptionBRT2;
 	private List<String> minigameDescriptionLJ;
@@ -887,5 +889,12 @@ public class LanguageMessages {
 		this.playerNotBanned = playerNotBanned;
 	}
 
-	
+	public String getIdleDamage() {
+		return idleDamage.replaceAll("&", "§");
+	}
+
+	public void setIdleDamage(String idleDamage) {
+		this.idleDamage = idleDamage;
+	}
+
 }

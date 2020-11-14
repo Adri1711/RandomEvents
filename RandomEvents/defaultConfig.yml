@@ -46,6 +46,9 @@ probabilityPowerUp: 1
 #Minimum amount of players to begin checking for random events
 minPlayers: 40
 
+#Seconds for several minigames to damage all players if they are not attacking each other
+idleTimeForDamage: 10
+
 
 #Commands that will be done each time a user join a random event, use it in case you need to get the god mode off, to set the gamemode to survival, etc
 commandsOnUserJoin:

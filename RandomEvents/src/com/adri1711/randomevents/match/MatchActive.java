@@ -96,7 +96,9 @@ public class MatchActive {
 
 	private Map<Location, Long> blockDisappear;
 
-	private Map<Location,MaterialData> blockDisappeared;
+	private Map<Location, MaterialData> blockDisappeared;
+
+	private Integer damageCounter;
 
 	public MatchActive(Match match, RandomEvents plugin, Boolean forzada) {
 		super();
@@ -141,8 +143,9 @@ public class MatchActive {
 		this.gema = new ItemStack(plugin.getApi().getMaterial(AMaterials.EMERALD));
 		this.setForzada(forzada);
 		this.blockDisappear = new HashMap<Location, Long>();
-		this.blockDisappeared = new HashMap<Location,MaterialData>();
+		this.blockDisappeared = new HashMap<Location, MaterialData>();
 		tries = 0;
+		damageCounter = 0;
 		matchWaitingPlayers();
 	}
 
@@ -164,6 +167,7 @@ public class MatchActive {
 		this.playersSpectators = playersSpectators;
 		this.tournament = tournament;
 		this.tournamentObj = tournamentObj;
+		damageCounter = 0;
 		this.limitPlayers = tournamentObj.getRange().getTo() - 1;
 		this.mobs = new ArrayList<Entity>();
 
@@ -191,7 +195,7 @@ public class MatchActive {
 		this.gema = new ItemStack(plugin.getApi().getMaterial(AMaterials.EMERALD));
 		this.setForzada(forzada);
 		this.blockDisappear = new HashMap<Location, Long>();
-		this.blockDisappeared = new HashMap<Location,MaterialData>();
+		this.blockDisappeared = new HashMap<Location, MaterialData>();
 
 		tries = 0;
 
@@ -228,13 +232,17 @@ public class MatchActive {
 	private void procesoUnirPlayer(Player player) {
 		if (UtilsRandomEvents.guardaInventario(plugin, player)) {
 			UtilsRandomEvents.borraInventario(player);
-			hazComandosDeUnion(player);
-			getPlayers().add(player.getName());
-			getPlayersObj().add(player);
-			getPlayersSpectators().add(player);
-			UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("BAT", "HURT"));
+			if (UtilsRandomEvents.teleportaPlayer(player, match.getPlayerSpawn(), plugin)) {
 
-			UtilsRandomEvents.teleportaPlayer(player, match.getPlayerSpawn());
+				hazComandosDeUnion(player);
+				getPlayers().add(player.getName());
+				getPlayersObj().add(player);
+				getPlayersSpectators().add(player);
+				UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("BAT", "HURT"));
+			} else {
+				UtilsRandomEvents.sacaInventario(plugin, player);
+			}
+
 		} else {
 			player.sendMessage(
 					plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getErrorSavingInventory());
@@ -286,7 +294,7 @@ public class MatchActive {
 			}
 			try {
 				if (sacaSpectator || match.getSpectatorSpawns() == null || match.getSpectatorSpawns().isEmpty()) {
-					UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn());
+					UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin);
 				} else {
 					Location l = null;
 					Integer i = 0;
@@ -295,7 +303,7 @@ public class MatchActive {
 						i++;
 					}
 					if (l != null) {
-						UtilsRandomEvents.teleportaPlayer(player, l);
+						UtilsRandomEvents.teleportaPlayer(player, l, plugin);
 					}
 					player.sendMessage(
 							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getLeaveCommand());
@@ -355,10 +363,10 @@ public class MatchActive {
 				}
 			}
 			if (sacaSpectator || match.getSpectatorSpawns() == null || match.getSpectatorSpawns().isEmpty()) {
-				UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn());
+				UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin);
 			} else {
 				UtilsRandomEvents.teleportaPlayer(player,
-						match.getSpectatorSpawns().get(getRandom().nextInt(match.getSpectatorSpawns().size())));
+						match.getSpectatorSpawns().get(getRandom().nextInt(match.getSpectatorSpawns().size())), plugin);
 				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getLeaveCommand());
 
 			}
@@ -546,7 +554,7 @@ public class MatchActive {
 
 			UtilsRandomEvents.borraInventario(player);
 
-			UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn());
+			UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin);
 
 			if (!muerto) {
 				UtilsRandomEvents.sacaInventario(plugin, player);
@@ -774,16 +782,16 @@ public class MatchActive {
 		Material mat = null;
 		if (match.getMinigame().equals(MinigameType.TNT_RUN)) {
 			mat = plugin.getApi().getMaterial(AMaterials.TNT);
-		} 
+		}
 		if (mat != null) {
-			for(Location l:getBlockDisappear().keySet()){
-			getBlockDisappeared().put(l,null);
+			for (Location l : getBlockDisappear().keySet()) {
+				getBlockDisappeared().put(l, null);
 			}
 			for (Location l : getBlockDisappeared().keySet()) {
 				l.getBlock().setType(mat);
 			}
-		}else{
-			for (Entry<Location,MaterialData> entrada : getBlockDisappeared().entrySet()) {
+		} else {
+			for (Entry<Location, MaterialData> entrada : getBlockDisappeared().entrySet()) {
 				entrada.getKey().getBlock().setType(entrada.getValue().getItemType());
 				entrada.getKey().getBlock().setData(entrada.getValue().getData());
 				entrada.getKey().getBlock().getState().setData(entrada.getValue());
@@ -890,6 +898,14 @@ public class MatchActive {
 				iniciaPlayer(p);
 
 			}
+
+			task = new BukkitRunnable() {
+				public void run() {
+
+					UtilsRandomEvents.checkDamageCounter(plugin, getMatchActive());
+				}
+			};
+			task.runTaskTimer(plugin, 0, 20L);
 
 			break;
 		case TNT_RUN:
@@ -1020,6 +1036,13 @@ public class MatchActive {
 
 			}
 			mandaMensajesEquipo(equipos);
+			task = new BukkitRunnable() {
+				public void run() {
+
+					UtilsRandomEvents.checkDamageCounter(plugin, getMatchActive());
+				}
+			};
+			task.runTaskTimer(plugin, 0, 20L);
 			break;
 		case BATTLE_ROYALE_CABALLO:
 			for (Player p : playersSpectators) {
@@ -1302,7 +1325,7 @@ public class MatchActive {
 	}
 
 	public void iniciaPlayerBeast(Player p) {
-		UtilsRandomEvents.teleportaPlayer(p, getMatch().getBeastSpawn());
+		UtilsRandomEvents.teleportaPlayer(p, getMatch().getBeastSpawn(), plugin);
 		p.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getYouBeast());
 		UtilsSQL.updateTries(p, match.getMinigame(), plugin);
 
@@ -1317,27 +1340,14 @@ public class MatchActive {
 
 	public void mandaSpectatorPlayer(Player p) {
 		Location loc = match.getSpectatorSpawns().get(getRandom().nextInt(match.getSpectatorSpawns().size()));
-		if (loc != null) {
-			try {
-				p.teleport(loc);
-			} catch (Exception e) {
-				loc.setWorld(Bukkit.getWorld(loc.getWorld().getName()));
-				p.teleport(loc);
-			}
-		}
+		UtilsRandomEvents.teleportaPlayer(p, loc, plugin);
+
 	}
 
 	private void teleportaPlayer(Player p) {
 
 		Location loc = match.getSpawns().get(getPlayersObj().indexOf(p));
-		if (loc != null) {
-			try {
-				p.teleport(loc);
-			} catch (Exception e) {
-				loc.setWorld(Bukkit.getWorld(loc.getWorld().getName()));
-				p.teleport(loc);
-			}
-		}
+		UtilsRandomEvents.teleportaPlayer(p, loc, plugin);
 
 	}
 
@@ -1345,14 +1355,7 @@ public class MatchActive {
 		Location location = p.getLocation();
 
 		Location loc = match.getSpawns().get(getRandom().nextInt(match.getSpawns().size()));
-		if (loc != null) {
-			try {
-				p.teleport(loc);
-			} catch (Exception e) {
-				loc.setWorld(Bukkit.getWorld(loc.getWorld().getName()));
-				p.teleport(loc);
-			}
-		}
+		UtilsRandomEvents.teleportaPlayer(p, loc, plugin);
 
 		ponInventarioMatch(p);
 
@@ -1533,12 +1536,12 @@ public class MatchActive {
 
 						}
 
-						firstPart.replaceAll("%event%", match.getName()).replaceAll("%type%",
+						firstPart = firstPart.replaceAll("%event%", match.getName()).replaceAll("%type%",
 								match.getMinigame().getMessage());
 
 						String lastPart = plugin.getLanguage().getLastPart();
 
-						lastPart.replaceAll("%event%", match.getName()).replaceAll("%type%",
+						lastPart = lastPart.replaceAll("%event%", match.getName()).replaceAll("%type%",
 								match.getMinigame().getMessage());
 
 						for (Player p : Bukkit.getOnlinePlayers()) {
@@ -1832,6 +1835,12 @@ public class MatchActive {
 		this.blockDisappeared = blockDisappeared;
 	}
 
-	
+	public Integer getDamageCounter() {
+		return damageCounter;
+	}
+
+	public void setDamageCounter(Integer damageCounter) {
+		this.damageCounter = damageCounter;
+	}
 
 }

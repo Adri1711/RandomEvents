@@ -122,6 +122,8 @@ public class RandomEvents extends JavaPlugin {
 	private boolean forceEmptyInventoryToJoin;
 
 	private BannedPlayers bannedPlayers;
+	
+	private Integer idleTimeForDamage;
 
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
@@ -169,6 +171,16 @@ public class RandomEvents extends JavaPlugin {
 		getLogger().info(" Author adri1711- activado");
 		comienzaTemporizador();
 
+		Bukkit.getServer().getScheduler().runTaskLaterAsynchronously((Plugin) this, new Runnable() {
+
+			@Override
+			public void run() {
+				setMatches(UtilsRandomEvents.cargarPartidas(getPlugin()));
+
+			}
+
+		}, 400);
+
 	}
 
 	public void onDisable() {
@@ -205,6 +217,8 @@ public class RandomEvents extends JavaPlugin {
 				Double.valueOf(getConfig().getDouble("tournament.spawn.pitch")).floatValue()));
 
 		this.minPlayers = Integer.valueOf(getConfig().getInt("minPlayers"));
+		this.idleTimeForDamage = Integer.valueOf(getConfig().getInt("idleTimeForDamage"));
+		
 		this.commandsOnUserJoin = (List<String>) getConfig().getStringList("commandsOnUserJoin");
 		this.allowedCmds = (List<String>) getConfig().getStringList("allowedCmds");
 
@@ -728,5 +742,14 @@ public class RandomEvents extends JavaPlugin {
 	public void setBannedPlayers(BannedPlayers bannedPlayers) {
 		this.bannedPlayers = bannedPlayers;
 	}
+
+	public Integer getIdleTimeForDamage() {
+		return idleTimeForDamage;
+	}
+
+	public void setIdleTimeForDamage(Integer idleTimeForDamage) {
+		this.idleTimeForDamage = idleTimeForDamage;
+	}
+	
 
 }

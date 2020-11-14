@@ -13,7 +13,9 @@ public enum DayWeek {
 
 	FRIDAY("FRIDAY", 6),
 
-	SATURDAY("SATURDAY", 7);
+	SATURDAY("SATURDAY", 7),
+	
+	EVERYDAY("EVERYDAY", 8);
 
 	private String day;
 

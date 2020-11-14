@@ -162,7 +162,7 @@ public class TournamentActive {
 
 			UtilsRandomEvents.borraInventario(player);
 
-			UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn());
+			UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin);
 
 			if (!muerto) {
 				UtilsRandomEvents.sacaInventario(plugin, player);
@@ -260,7 +260,7 @@ public class TournamentActive {
 							range = entrada.getKey();
 							buscando = Boolean.FALSE;
 							for (Player p : playersSpectators) {
-								UtilsRandomEvents.teleportaPlayer(p, tournament.getPlayerSpawn());
+								UtilsRandomEvents.teleportaPlayer(p, tournament.getPlayerSpawn(), plugin);
 							}
 
 						}
@@ -396,7 +396,7 @@ public class TournamentActive {
 				playersSpectators.remove(player);
 				getPlayers().remove(player.getName());
 				getPlayersObj().remove(player);
-				UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn());
+				UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin);
 
 				player.setHealth(20);
 				player.setFoodLevel(20);
@@ -453,15 +453,19 @@ public class TournamentActive {
 
 			UtilsRandomEvents.borraInventario(player);
 
-			hazComandosDeUnion(player);
+			if (UtilsRandomEvents.teleportaPlayer(player, tournament.getPlayerSpawn(), plugin)) {
+				hazComandosDeUnion(player);
 
-			getPlayers().add(player.getName());
-			getPlayersObj().add(player);
-			getPlayersSpectators().add(player);
+				getPlayers().add(player.getName());
+				getPlayersObj().add(player);
+				getPlayersSpectators().add(player);
 
-			UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("BAT", "HURT"));
+				UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("BAT", "HURT"));
+			} else {
+				UtilsRandomEvents.sacaInventario(plugin, player);
 
-			UtilsRandomEvents.teleportaPlayer(player, tournament.getPlayerSpawn());
+			}
+
 		} else {
 			player.sendMessage(
 					plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getErrorSavingInventory());

@@ -33,6 +33,7 @@ public class Death implements Listener {
 				Player player = (Player) ev.getEntity();
 				if (plugin.getMatchActive() != null
 						&& plugin.getMatchActive().getPlayers().contains(player.getName())) {
+					plugin.getMatchActive().setDamageCounter(0);
 					if (!plugin.getMatchActive().getPlaying()) {
 						ev.setCancelled(true);
 					} else {
@@ -107,6 +108,7 @@ public class Death implements Listener {
 
 			Player player = (Player) ev.getEntity();
 			if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayers().contains(player.getName())) {
+				plugin.getMatchActive().setDamageCounter(0);
 				if (!plugin.getMatchActive().getPlaying()) {
 					ev.setCancelled(true);
 				} else {
@@ -362,6 +364,7 @@ public class Death implements Listener {
 		} else if (ev.getEntity() instanceof Horse && ev.getDamager() instanceof Player) {
 			Player player = (Player) ev.getDamager();
 			if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayers().contains(player.getName())) {
+				plugin.getMatchActive().setDamageCounter(0);
 				if (plugin.getMatchActive().getMatch().getMinigame().getCodigo()
 						.equals(MinigameType.BATTLE_ROYALE_CABALLO.getCodigo())) {
 					ev.setDamage(0);
