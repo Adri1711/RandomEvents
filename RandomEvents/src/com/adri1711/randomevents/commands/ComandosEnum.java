@@ -38,6 +38,9 @@ public enum ComandosEnum {
 
 	CMD_MATCHES("matches", 1, "randomevent.admin.matches",
 			"   §6/revent matches:\n          §e-> Show all Random Events available", "showRandomEvents", true, true),
+	
+	CMD_NEXT("next", 1, "randomevent.next",
+			"   §6/revent next:\n          §e-> Show next scheduled Random Events", "nextRandomEvents", true, true),
 
 	CMD_CURRENT_DATE("date", 1, "randomevent.admin.schedule",
 			"   §6/revent date:\n          §e-> Shows the current date for the schedule", "currentDate", true, false),

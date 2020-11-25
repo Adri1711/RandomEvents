@@ -7,6 +7,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class InventoryPers {
 	
+	private String gamemode;
+	
 	private ItemStack[] contents;
 	
 	private ItemStack helmet;
@@ -20,6 +22,20 @@ public class InventoryPers {
 		super();
 		this.contents = new ItemStack[0];
 	}
+	
+	
+
+	public String getGamemode() {
+		return gamemode;
+	}
+
+
+
+	public void setGamemode(String gamemode) {
+		this.gamemode = gamemode;
+	}
+
+
 
 	public ItemStack[] getContents() {
 		return contents;

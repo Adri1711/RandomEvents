@@ -231,7 +231,7 @@ public class MatchActive {
 
 	private void procesoUnirPlayer(Player player) {
 		if (UtilsRandomEvents.guardaInventario(plugin, player)) {
-			UtilsRandomEvents.borraInventario(player);
+			UtilsRandomEvents.borraInventario(player, plugin);
 			if (UtilsRandomEvents.teleportaPlayer(player, match.getPlayerSpawn(), plugin)) {
 
 				hazComandosDeUnion(player);
@@ -266,6 +266,7 @@ public class MatchActive {
 
 	public void echaDePartida(Player player, Boolean comprueba, Boolean sacaInv, Boolean sacaSpectator,
 			Boolean compruebaSpectator) {
+		dropItems(player);
 		if (getPlayersSpectators().contains(player)) {
 			if (comprueba) {
 				if (!getPlayersObj().remove(player)) {
@@ -281,7 +282,7 @@ public class MatchActive {
 					UtilsRandomEvents.borraPlayerPorName(getPlayersSpectators(), player);
 				}
 			}
-			UtilsRandomEvents.borraInventario(player);
+			UtilsRandomEvents.borraInventario(player, plugin);
 			if (mascotas.containsKey(player)) {
 				mascotas.get(player).remove();
 				mascotas.remove(player);
@@ -322,7 +323,8 @@ public class MatchActive {
 			}
 			if (sacaInv
 					&& (sacaSpectator || match.getSpectatorSpawns() == null || match.getSpectatorSpawns().isEmpty())) {
-				UtilsRandomEvents.sacaInventario(plugin, player);
+				if (plugin.isInventoryManagement())
+					UtilsRandomEvents.sacaInventario(plugin, player);
 			}
 		}
 		if (comprueba)
@@ -351,7 +353,7 @@ public class MatchActive {
 				}
 			}
 
-			UtilsRandomEvents.borraInventario(player);
+			UtilsRandomEvents.borraInventario(player, plugin);
 			if (mascotas.containsKey(player)) {
 				mascotas.get(player).remove();
 				mascotas.remove(player);
@@ -493,7 +495,7 @@ public class MatchActive {
 				maximo = i;
 			}
 		}
-		if (maximo >= 10) {
+		if (maximo >= plugin.getNumberOfGems()) {
 
 			for (Player p : getPlayersObj()) {
 				if (getPlayerContador() == null && getPuntuacion().containsKey(p.getName())
@@ -552,7 +554,7 @@ public class MatchActive {
 
 			getPlayers().remove(player.getName());
 
-			UtilsRandomEvents.borraInventario(player);
+			UtilsRandomEvents.borraInventario(player, plugin);
 
 			UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin);
 
@@ -578,6 +580,7 @@ public class MatchActive {
 		case BOMB_TAG:
 		case TNT_RUN:
 		case SPLEEF:
+		case SPLEGG:
 			ganadores.addAll(getPlayersObj());
 			break;
 		case TOP_KILLER:
@@ -924,7 +927,7 @@ public class MatchActive {
 					UtilsRandomEvents.checkBlocksDisappear(plugin, getMatchActive(), new Date());
 				}
 			};
-			task.runTaskTimer(plugin, 0, 1L);
+			task.runTaskTimer(plugin, plugin.getWarmupTimeTNTRUN() != -1 ? plugin.getWarmupTimeTNTRUN() : 0, 1L);
 			break;
 		case SPLEEF:
 			for (Player p : playersSpectators) {
@@ -1212,7 +1215,7 @@ public class MatchActive {
 			Bukkit.getServer().getScheduler().runTaskLaterAsynchronously((Plugin) getPlugin(), new Runnable() {
 				public void run() {
 
-					Location l = UtilsRandomEvents.getRandomLocation(plugin, getCuboid());
+					Location l = UtilsRandomEvents.getRandomLocation(plugin, getCuboid(), getMatchActive());
 
 					Bukkit.getServer().getScheduler().runTask((Plugin) getPlugin(), new Runnable() {
 						public void run() {
@@ -1234,7 +1237,7 @@ public class MatchActive {
 			Bukkit.getServer().getScheduler().runTaskLaterAsynchronously((Plugin) getPlugin(), new Runnable() {
 				public void run() {
 
-					Location l = UtilsRandomEvents.getRandomLocation(plugin, getCuboid());
+					Location l = UtilsRandomEvents.getRandomLocation(plugin, getCuboid(), getMatchActive());
 					if (getRandom().nextInt(1000) <= plugin.getProbabilityPowerUp()) {
 
 						Bukkit.getServer().getScheduler().runTask((Plugin) getPlugin(), new Runnable() {
@@ -1354,6 +1357,8 @@ public class MatchActive {
 	public void reiniciaPlayer(Player p) {
 		Location location = p.getLocation();
 
+		dropItems(p);
+
 		Location loc = match.getSpawns().get(getRandom().nextInt(match.getSpawns().size()));
 		UtilsRandomEvents.teleportaPlayer(p, loc, plugin);
 
@@ -1375,13 +1380,26 @@ public class MatchActive {
 						plugin.getLanguage().getLostGems().replace("%player%", p.getName()), true);
 				if (getPlayerContador() != null && getPlayerContador().equals(p)) {
 					setPlayerContador(null);
-					setNumeroSegRestantes(10);
+					setNumeroSegRestantes(plugin.getNumberOfSecondsWithGems());
 				}
 				compruebaPartida();
 			}
 			break;
 		default:
 			break;
+		}
+
+	}
+
+	private void dropItems(Player p) {
+		Location location = p.getLocation();
+
+		if (plugin.isDropItemsAfterDie()) {
+			for (ItemStack s : p.getInventory().getContents()) {
+				if (s != null) {
+					location.getWorld().dropItemNaturally(location, s);
+				}
+			}
 		}
 
 	}
@@ -1433,71 +1451,77 @@ public class MatchActive {
 	}
 
 	public void ponInventarioMatch(Player p) {
-		p.getInventory().setContents(match.getInventory().getContents());
-		p.getInventory().setHelmet(match.getInventory().getHelmet());
-		p.getInventory().setLeggings(match.getInventory().getLeggings());
-		p.getInventory().setBoots(match.getInventory().getBoots());
-		p.getInventory().setChestplate(match.getInventory().getChestplate());
+		if (plugin.isInventoryManagement()) {
+			p.getInventory().setContents(match.getInventory().getContents());
+			p.getInventory().setHelmet(match.getInventory().getHelmet());
+			p.getInventory().setLeggings(match.getInventory().getLeggings());
+			p.getInventory().setBoots(match.getInventory().getBoots());
+			p.getInventory().setChestplate(match.getInventory().getChestplate());
 
-		p.updateInventory();
-		p.setHealth(20);
-		p.setFoodLevel(20);
-		p.setFireTicks(0);
+			p.updateInventory();
+			p.setHealth(20);
+			p.setFoodLevel(20);
+			p.setFireTicks(0);
 
-		if (p.getActivePotionEffects() != null) {
-			for (PotionEffect effect : p.getActivePotionEffects()) {
-				p.removePotionEffect(effect.getType());
+			if (p.getActivePotionEffects() != null) {
+				for (PotionEffect effect : p.getActivePotionEffects()) {
+					p.removePotionEffect(effect.getType());
+				}
+
 			}
 
+			p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20, 2));
 		}
-
-		p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20, 2));
 
 	}
 
 	public void ponInventarioRunner(Player p) {
-		p.getInventory().setContents(match.getInventoryRunners().getContents());
-		p.getInventory().setHelmet(match.getInventoryRunners().getHelmet());
-		p.getInventory().setLeggings(match.getInventoryRunners().getLeggings());
-		p.getInventory().setBoots(match.getInventoryRunners().getBoots());
-		p.getInventory().setChestplate(match.getInventoryRunners().getChestplate());
+		if (plugin.isInventoryManagement()) {
 
-		p.updateInventory();
-		p.setHealth(20);
-		p.setFoodLevel(20);
-		p.setFireTicks(0);
+			p.getInventory().setContents(match.getInventoryRunners().getContents());
+			p.getInventory().setHelmet(match.getInventoryRunners().getHelmet());
+			p.getInventory().setLeggings(match.getInventoryRunners().getLeggings());
+			p.getInventory().setBoots(match.getInventoryRunners().getBoots());
+			p.getInventory().setChestplate(match.getInventoryRunners().getChestplate());
 
-		if (p.getActivePotionEffects() != null) {
-			for (PotionEffect effect : p.getActivePotionEffects()) {
-				p.removePotionEffect(effect.getType());
+			p.updateInventory();
+			p.setHealth(20);
+			p.setFoodLevel(20);
+			p.setFireTicks(0);
+
+			if (p.getActivePotionEffects() != null) {
+				for (PotionEffect effect : p.getActivePotionEffects()) {
+					p.removePotionEffect(effect.getType());
+				}
+
 			}
 
+			// p.addPotionEffect(new
+			// PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20, 2));
 		}
-
-		// p.addPotionEffect(new
-		// PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20, 2));
-
 	}
 
 	public void ponInventarioBeast(Player p) {
-		p.getInventory().setContents(match.getInventoryBeast().getContents());
-		p.getInventory().setHelmet(match.getInventoryBeast().getHelmet());
-		p.getInventory().setLeggings(match.getInventoryBeast().getLeggings());
-		p.getInventory().setBoots(match.getInventoryBeast().getBoots());
-		p.getInventory().setChestplate(match.getInventoryBeast().getChestplate());
+		if (plugin.isInventoryManagement()) {
 
-		p.updateInventory();
-		p.setHealth(20);
-		p.setFoodLevel(20);
-		p.setFireTicks(0);
+			p.getInventory().setContents(match.getInventoryBeast().getContents());
+			p.getInventory().setHelmet(match.getInventoryBeast().getHelmet());
+			p.getInventory().setLeggings(match.getInventoryBeast().getLeggings());
+			p.getInventory().setBoots(match.getInventoryBeast().getBoots());
+			p.getInventory().setChestplate(match.getInventoryBeast().getChestplate());
 
-		if (p.getActivePotionEffects() != null) {
-			for (PotionEffect effect : p.getActivePotionEffects()) {
-				p.removePotionEffect(effect.getType());
+			p.updateInventory();
+			p.setHealth(20);
+			p.setFoodLevel(20);
+			p.setFireTicks(0);
+
+			if (p.getActivePotionEffects() != null) {
+				for (PotionEffect effect : p.getActivePotionEffects()) {
+					p.removePotionEffect(effect.getType());
+				}
+
 			}
-
 		}
-
 		// p.addPotionEffect(new
 		// PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20, 2));
 
@@ -1512,8 +1536,25 @@ public class MatchActive {
 					Boolean playSound = Boolean.FALSE;
 
 					if (match.getAmountPlayersMin() <= (getPlayers().size())) {
-						if (!getPlaying())
-							matchBegin();
+						if (!getPlaying()) {
+							Integer startTime = plugin.getSecondsToStartMatch() + 3;
+							String startingMatch = plugin.getLanguage().getStartingMatch().replaceAll("%time%",
+									startTime.toString());
+							for (Player p : Bukkit.getOnlinePlayers()) {
+								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())) {
+
+									p.sendMessage(plugin.getLanguage().getTagPlugin() + " " + startingMatch);
+								}
+							}
+							Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
+
+								@Override
+								public void run() {
+									matchBegin();
+
+								}
+							}, 20 * plugin.getSecondsToStartMatch());
+						}
 					} else {
 						// if (!getPlayers().isEmpty()) {
 						// String waiting = Constantes.WAITING_FOR_PLAYERS;
@@ -1552,7 +1593,7 @@ public class MatchActive {
 								plugin.getApi().send(p, firstPart, plugin.getLanguage().getClickHere(),
 										new ArrayList<String>(), "/revent join " + password,
 										lastPart.replaceAll("%players%", "" + getPlayers().size())
-												.replaceAll("%neededPlayers%", match.getAmountPlayersMin().toString()));
+										.replaceAll("%neededPlayers%", match.getAmountPlayersMin().toString()).replaceAll("%maxPlayers%", match.getAmountPlayers().toString()));
 							}
 						}
 						if (tries <= plugin.getNumberOfTriesBeforeCancelling()) {

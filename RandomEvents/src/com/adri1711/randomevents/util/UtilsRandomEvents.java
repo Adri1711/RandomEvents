@@ -12,6 +12,7 @@ import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -26,6 +27,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
@@ -194,163 +196,175 @@ public class UtilsRandomEvents {
 
 	public static Boolean guardaInventario(RandomEvents plugin, Player player) {
 		Boolean exitoso = Boolean.TRUE;
-		File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories",
-				player.getName() + ".json");
-		try {
+		if (plugin.isInventoryManagement()) {
 
-			InventoryPers inventario = new InventoryPers();
-			ItemStack[] contenido = player.getInventory().getContents();
-			List<ItemStack> contenidoList = null;
+			File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories",
+					player.getName() + ".json");
+			try {
 
-			if (contenido != null)
-				contenidoList = Arrays.asList(contenido);
+				InventoryPers inventario = new InventoryPers();
+				ItemStack[] contenido = player.getInventory().getContents();
+				List<ItemStack> contenidoList = null;
 
-			if (player.getInventory() != null && player.getInventory().getArmorContents() != null
-					&& contenidoList != null) {
-				if (contenido.length != 36) {
-					for (ItemStack it : Arrays.asList(player.getInventory().getArmorContents())) {
-						if (contenidoList.lastIndexOf(it) != -1)
-							contenidoList.set(contenidoList.lastIndexOf(it), null);
+				if (contenido != null)
+					contenidoList = Arrays.asList(contenido);
+
+				if (player.getInventory() != null && player.getInventory().getArmorContents() != null
+						&& contenidoList != null) {
+					if (contenido.length != 36) {
+						for (ItemStack it : Arrays.asList(player.getInventory().getArmorContents())) {
+							if (contenidoList.lastIndexOf(it) != -1)
+								contenidoList.set(contenidoList.lastIndexOf(it), null);
+						}
 					}
+
+				}
+				ItemStack[] arrayContenido = new ItemStack[contenidoList.size()];
+				arrayContenido = contenidoList.toArray(arrayContenido);
+				inventario.setGamemode(player.getGameMode().toString());
+				inventario.setContents(arrayContenido);
+
+				inventario.setHelmet(player.getInventory().getHelmet());
+				inventario.setBoots(player.getInventory().getBoots());
+				inventario.setLeggings(player.getInventory().getLeggings());
+				inventario.setChestplate(player.getInventory().getChestplate());
+
+				if (plugin.getUseLastLocation()) {
+					inventario.setLastLocation(player.getLocation());
 				}
 
-			}
-			ItemStack[] arrayContenido = new ItemStack[contenidoList.size()];
-			arrayContenido = contenidoList.toArray(arrayContenido);
-			inventario.setContents(arrayContenido);
+				String json = UtilidadesJson.fromInventoryToJSON(plugin, inventario);
 
-			inventario.setHelmet(player.getInventory().getHelmet());
-			inventario.setBoots(player.getInventory().getBoots());
-			inventario.setLeggings(player.getInventory().getLeggings());
-			inventario.setChestplate(player.getInventory().getChestplate());
+				if (json != null) {
+					File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories");
+					if (!dataFolder.exists()) {
+						dataFolder.mkdir();
+					}
 
-			if (plugin.getUseLastLocation()) {
-				inventario.setLastLocation(player.getLocation());
-			}
+					if (!bossFile.exists()) {
+						bossFile.createNewFile();
 
-			String json = UtilidadesJson.fromInventoryToJSON(plugin, inventario);
+						FileWriter fw = new FileWriter(bossFile, true);
 
-			if (json != null) {
-				File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories");
-				if (!dataFolder.exists()) {
-					dataFolder.mkdir();
-				}
+						PrintWriter pw = new PrintWriter(fw);
 
-				if (!bossFile.exists()) {
-					bossFile.createNewFile();
+						pw.println(json);
 
-					FileWriter fw = new FileWriter(bossFile, true);
+						pw.flush();
 
-					PrintWriter pw = new PrintWriter(fw);
-
-					pw.println(json);
-
-					pw.flush();
-
-					pw.close();
+						pw.close();
+					} else {
+						System.out.println(
+								"[RandomEvents] Error :: The player " + player.getName() + " already has an inventory");
+						System.out.println(json);
+					}
 				} else {
-					System.out.println(
-							"[RandomEvents] Error :: The player " + player.getName() + " already has an inventory");
-					System.out.println(json);
+					exitoso = Boolean.FALSE;
+
+					System.out.println("JSON was null.");
 				}
-			} else {
+			} catch (IOException e) {
+				System.out.println(e.getMessage());
 				exitoso = Boolean.FALSE;
+				if (bossFile.exists()) {
+					bossFile.delete();
+				}
 
-				System.out.println("JSON was null.");
 			}
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-			exitoso = Boolean.FALSE;
-			if (bossFile.exists()) {
-				bossFile.delete();
-			}
-
 		}
-
 		return exitoso;
 
 	}
 
 	public static void sacaInventario(RandomEvents plugin, Player player) {
-		File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories");
-		File dataFolderOld = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventoriesold");
-		if (!dataFolder.exists()) {
-			dataFolder.mkdir();
-		}
-		if (!dataFolderOld.exists()) {
-			dataFolderOld.mkdir();
-		}
-		File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories",
-				player.getName() + ".json");
-		File bossFileOld = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventoriesold",
-				player.getName() + ".json");
-		InventoryPers inventario = null;
-		if (bossFile.exists()) {
-			BufferedReader br = null;
-			FileReader fr = null;
-			try {
-				fr = new FileReader(bossFile);
-				br = new BufferedReader(fr);
-				try {
+		if (plugin.isInventoryManagement()) {
 
-					inventario = UtilidadesJson.fromJSONToInventory(plugin, br);
-				} catch (Exception e) {
-					System.out.println("[RandomEvents] Error al cargar el inventario de " + player.getName()
-							+ ", probablemente una leather armor con color");
-					System.out.println("[RandomEvents]" + br);
-
-				}
-
-			} catch (FileNotFoundException e) {
-				System.out.println("[RandomEvents] Error in sacaInventario catch 1");
-				System.out.println(e.getMessage());
-			} finally {
-				try {
-					if (fr != null)
-						fr.close();
-					if (br != null)
-						br.close();
-				} catch (IOException e) {
-					System.out.println(e.getMessage());
-				}
+			File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories");
+			File dataFolderOld = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventoriesold");
+			if (!dataFolder.exists()) {
+				dataFolder.mkdir();
 			}
+			if (!dataFolderOld.exists()) {
+				dataFolderOld.mkdir();
+			}
+			File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories",
+					player.getName() + ".json");
+			File bossFileOld = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventoriesold",
+					player.getName() + ".json");
+			InventoryPers inventario = null;
+			if (bossFile.exists()) {
+				BufferedReader br = null;
+				FileReader fr = null;
+				try {
+					fr = new FileReader(bossFile);
+					br = new BufferedReader(fr);
+					try {
 
-			try {
-				if (inventario != null) {
-					UtilsRandomEvents.borraInventario(player);
+						inventario = UtilidadesJson.fromJSONToInventory(plugin, br);
+					} catch (Exception e) {
+						System.out.println("[RandomEvents] Error al cargar el inventario de " + player.getName()
+								+ ", probablemente una leather armor con color");
+						System.out.println("[RandomEvents]" + br);
 
-					if (plugin.getUseLastLocation()) {
-						if (inventario.getLastLocation() != null) {
-							teleportaPlayer(player, inventario.getLastLocation(), plugin);
-						}
 					}
 
-					player.getInventory().setContents(inventario.getContents());
-					player.getInventory().setHelmet(inventario.getHelmet());
-					player.getInventory().setLeggings(inventario.getLeggings());
-					player.getInventory().setBoots(inventario.getBoots());
-					player.getInventory().setChestplate(inventario.getChestplate());
-
-					player.updateInventory();
-
-					if (bossFileOld.exists()) {
-						bossFileOld.delete();
-					}
-					Files.move(bossFile, bossFileOld);
-					if (bossFile.exists()) {
-						bossFile.delete();
-					}
-
-					if (player.getActivePotionEffects() != null) {
-						for (PotionEffect effect : player.getActivePotionEffects()) {
-							player.removePotionEffect(effect.getType());
-						}
-
+				} catch (FileNotFoundException e) {
+					System.out.println("[RandomEvents] Error in sacaInventario catch 1");
+					System.out.println(e.getMessage());
+				} finally {
+					try {
+						if (fr != null)
+							fr.close();
+						if (br != null)
+							br.close();
+					} catch (IOException e) {
+						System.out.println(e.getMessage());
 					}
 				}
-			} catch (Exception exc) {
-				System.out.println("[RandomEvents] Error in sacaInventario catch 2");
-				System.out.println(exc.getMessage());
+
+				try {
+					if (inventario != null) {
+						UtilsRandomEvents.borraInventario(player, plugin);
+
+						if (plugin.getUseLastLocation()) {
+							if (inventario.getLastLocation() != null) {
+								teleportaPlayer(player, inventario.getLastLocation(), plugin);
+							}
+						}
+						GameMode gm = GameMode.valueOf(inventario.getGamemode());
+						if (gm == null) {
+							gm = GameMode.SURVIVAL;
+						}
+						player.setGameMode(gm);
+						player.updateInventory();
+
+						player.getInventory().setContents(inventario.getContents());
+						player.getInventory().setHelmet(inventario.getHelmet());
+						player.getInventory().setLeggings(inventario.getLeggings());
+						player.getInventory().setBoots(inventario.getBoots());
+						player.getInventory().setChestplate(inventario.getChestplate());
+
+						player.updateInventory();
+
+						if (bossFileOld.exists()) {
+							bossFileOld.delete();
+						}
+						Files.move(bossFile, bossFileOld);
+						if (bossFile.exists()) {
+							bossFile.delete();
+						}
+
+						if (player.getActivePotionEffects() != null) {
+							for (PotionEffect effect : player.getActivePotionEffects()) {
+								player.removePotionEffect(effect.getType());
+							}
+
+						}
+					}
+				} catch (Exception exc) {
+					System.out.println("[RandomEvents] Error in sacaInventario catch 2");
+					System.out.println(exc.getMessage());
+				}
 			}
 		}
 	}
@@ -723,23 +737,25 @@ public class UtilsRandomEvents {
 		return matchActive;
 	}
 
-	public static void borraInventario(Player player) {
-		player.getInventory().clear();
-		player.getInventory().setHelmet(null);
-		player.getInventory().setLeggings(null);
-		player.getInventory().setBoots(null);
-		player.getInventory().setChestplate(null);
-		player.getEquipment().setArmorContents(null);
-		player.setItemOnCursor(null);
-		if (player.getOpenInventory() != null) {
-			if (player.getOpenInventory().getTopInventory() != null) {
-				player.getOpenInventory().getTopInventory().clear();
+	public static void borraInventario(Player player, RandomEvents plugin) {
+		if (plugin.isInventoryManagement()) {
+			player.getInventory().clear();
+			player.getInventory().setHelmet(null);
+			player.getInventory().setLeggings(null);
+			player.getInventory().setBoots(null);
+			player.getInventory().setChestplate(null);
+			player.getEquipment().setArmorContents(null);
+			player.setItemOnCursor(null);
+			if (player.getOpenInventory() != null) {
+				if (player.getOpenInventory().getTopInventory() != null) {
+					player.getOpenInventory().getTopInventory().clear();
+				}
+				if (player.getOpenInventory().getBottomInventory() != null) {
+					player.getOpenInventory().getBottomInventory().clear();
+				}
 			}
-			if (player.getOpenInventory().getBottomInventory() != null) {
-				player.getOpenInventory().getBottomInventory().clear();
-			}
+			player.updateInventory();
 		}
-		player.updateInventory();
 	}
 
 	public static boolean checkLeatherItems(Player player) {
@@ -859,7 +875,7 @@ public class UtilsRandomEvents {
 		return m;
 	}
 
-	public static Location getRandomLocation(RandomEvents plugin, Cuboid cuboid) {
+	public static Location getRandomLocation(RandomEvents plugin, Cuboid cuboid, MatchActive matchActive) {
 		Integer difX = cuboid.getMaxX() - cuboid.getMinX();
 		Integer difY = cuboid.getMaxY() - cuboid.getMinY();
 		Integer difZ = cuboid.getMaxZ() - cuboid.getMinZ();
@@ -867,8 +883,26 @@ public class UtilsRandomEvents {
 		Integer sumY = difY >= 0 ? plugin.getRandom().nextInt(difY) : (-1 * plugin.getRandom().nextInt(Math.abs(difY)));
 		Integer sumZ = difZ >= 0 ? plugin.getRandom().nextInt(difZ) : (-1 * plugin.getRandom().nextInt(Math.abs(difZ)));
 
-		Location loc = new Location(cuboid.getWorld(), cuboid.getMinX() + sumX, cuboid.getMinY() + sumY,
-				cuboid.getMinZ() + sumZ);
+		Location loc = null;
+
+		try {
+			loc = new Location(cuboid.getWorld(), cuboid.getMinX() + sumX, cuboid.getMinY() + sumY,
+					cuboid.getMinZ() + sumZ);
+		} catch (Exception e) {
+			try {
+				loc = new Location(matchActive.getMatch().getSpawns().get(0).getWorld(), cuboid.getMinX() + sumX,
+						cuboid.getMinY() + sumY, cuboid.getMinZ() + sumZ);
+
+			} catch (Exception e2) {
+				try {
+					loc = new Location(Bukkit.getWorld(matchActive.getMatch().getSpawns().get(0).getWorld().getName()),
+							cuboid.getMinX() + sumX, cuboid.getMinY() + sumY, cuboid.getMinZ() + sumZ);
+				} catch (Exception e3) {
+					System.out.println(e3);
+
+				}
+			}
+		}
 
 		return loc;
 	}
@@ -1107,6 +1141,42 @@ public class UtilsRandomEvents {
 		for (Player p : playerMuertos) {
 			matchActive.echaDePartida(p, true, true, false);
 		}
+
+	}
+
+	public static Schedule nextEvent(List<Schedule> schedules, Player player, RandomEvents plugin) {
+		Schedule sch = null;
+		Calendar c = Calendar.getInstance();
+		c.setTime(new Date());
+		Integer day = c.get(Calendar.DAY_OF_WEEK);
+		Integer hour = c.get(Calendar.HOUR_OF_DAY);
+		Integer minute = c.get(Calendar.MINUTE);
+		List<Schedule> sched = new ArrayList<Schedule>();
+		for (int i = 0; i < 7; i++) {
+			if (sch == null) {
+				for (Schedule s : schedules) {
+					if ((s.getDay() == DayWeek.EVERYDAY.getPosition() || s.getDay() == day)
+							&& (s.getHour() > hour || (s.getHour() == hour && s.getMinute() > minute))) {
+						sched.add(s);
+					}
+				}
+				for (Schedule schedule : sched) {
+					if (sch == null || sch.getHour() > schedule.getHour()
+							|| (sch.getHour() == schedule.getHour() && sch.getMinute() > schedule.getMinute())) {
+						sch = schedule;
+					}
+				}
+
+				c.add(Calendar.DAY_OF_WEEK, 1);
+				day = c.get(Calendar.DAY_OF_WEEK);
+				hour = 0;
+				minute = 0;
+
+			}
+
+		}
+
+		return sch;
 
 	}
 

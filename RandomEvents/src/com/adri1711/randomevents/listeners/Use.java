@@ -46,7 +46,11 @@ public class Use implements Listener {
 
 				if (player.getItemInHand() != null
 						&& player.getItemInHand().getType() != plugin.getApi().getMaterial(AMaterials.AIR)) {
-					if (player.getItemInHand().equals(plugin.getPowerUpItem())) {
+					if (player.getItemInHand().getItemMeta() != null
+							&& player.getItemInHand().getItemMeta().getDisplayName() != null
+							&& player.getItemInHand().getItemMeta().getDisplayName()
+									.equals(plugin.getPowerUpItem().getItemMeta().getDisplayName())) {
+
 						if (player.getItemInHand().getAmount() > 1) {
 							player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
 							player.updateInventory();

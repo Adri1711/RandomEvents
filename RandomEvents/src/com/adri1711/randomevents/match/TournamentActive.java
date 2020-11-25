@@ -160,7 +160,7 @@ public class TournamentActive {
 
 			getPlayers().remove(player.getName());
 
-			UtilsRandomEvents.borraInventario(player);
+			UtilsRandomEvents.borraInventario(player,plugin);
 
 			UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin);
 
@@ -389,7 +389,7 @@ public class TournamentActive {
 	public void echaDePartida(Player player, List<Player> playersSpectators, Boolean sacaInv) {
 		if (playersSpectators.contains(player)) {
 
-			UtilsRandomEvents.borraInventario(player);
+			UtilsRandomEvents.borraInventario(player,plugin);
 
 			try {
 				getPlayersSpectators().remove(player);
@@ -451,7 +451,7 @@ public class TournamentActive {
 	private void procesoUnirPlayer(Player player) {
 		if (UtilsRandomEvents.guardaInventario(plugin, player)) {
 
-			UtilsRandomEvents.borraInventario(player);
+			UtilsRandomEvents.borraInventario(player,plugin);
 
 			if (UtilsRandomEvents.teleportaPlayer(player, tournament.getPlayerSpawn(), plugin)) {
 				hazComandosDeUnion(player);

@@ -26,6 +26,26 @@ numberOfTriesBeforeCancelling: 10
 #Force Empty Inventory to Join the RandomEvents
 forceEmptyInventoryToJoin: false
 
+#CAUTION. IT IS HIGHLY RECOMMENDED to let it true. If false, the plugin will not manage the items so players will join with own items and can lose them there.
+#Some minigames might not work if its set to false (Splegg, TNT Tag...) as they need special items to work
+inventoryManagement: true
+
+#Drops items after dying in a minigame
+dropItemsAfterDie: false
+
+#Number of gems to win in gem crawler minigame
+numberOfGems: 10
+
+#Number of seconds you have to save the gems to win in gem crawler minigame
+numberOfSecondsWithGems: 10
+
+#Seconds to begin TNT_RUN so TNT will begin to disappear
+warmupTimeTNTRUN: 5
+
+#Seconds to begin the match when the min players are fulfilled (minimum 3 seconds)
+secondsToStartMatch: 5
+
+
 tournament:
   spawn:
     world: world

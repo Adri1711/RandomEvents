@@ -122,8 +122,20 @@ public class RandomEvents extends JavaPlugin {
 	private boolean forceEmptyInventoryToJoin;
 
 	private BannedPlayers bannedPlayers;
-	
+
 	private Integer idleTimeForDamage;
+
+	private boolean inventoryManagement;
+
+	private boolean dropItemsAfterDie;
+
+	private Integer numberOfSecondsWithGems;
+
+	private Integer numberOfGems;
+
+	private int warmupTimeTNTRUN;
+
+	private Integer secondsToStartMatch;
 
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
@@ -199,6 +211,7 @@ public class RandomEvents extends JavaPlugin {
 
 		this.tournament = new Tournament();
 
+		this.warmupTimeTNTRUN = getConfig().getInt("warmupTimeTNTRUN");
 		this.numberOfTriesBeforeCancelling = getConfig().getInt("numberOfTriesBeforeCancelling");
 		tournament.setMaxPlayers(getConfig().getInt("tournament.maxPlayers"));
 		tournament.setMinPlayers(getConfig().getInt("tournament.minPlayers"));
@@ -218,15 +231,28 @@ public class RandomEvents extends JavaPlugin {
 
 		this.minPlayers = Integer.valueOf(getConfig().getInt("minPlayers"));
 		this.idleTimeForDamage = Integer.valueOf(getConfig().getInt("idleTimeForDamage"));
-		
+		this.inventoryManagement = getConfig().getBoolean("inventoryManagement");
+		this.dropItemsAfterDie = getConfig().getBoolean("dropItemsAfterDie");
 		this.commandsOnUserJoin = (List<String>) getConfig().getStringList("commandsOnUserJoin");
 		this.allowedCmds = (List<String>) getConfig().getStringList("allowedCmds");
 
+		this.secondsToStartMatch = Integer.valueOf(getConfig().getInt("secondsToStartMatch"));
+		if (secondsToStartMatch == null) {
+			secondsToStartMatch = 0;
+		} else {
+			secondsToStartMatch = secondsToStartMatch - 3;
+			if (secondsToStartMatch < 0) {
+				secondsToStartMatch = 0;
+			}
+		}
 		this.secondsTimer = Integer.valueOf(getConfig().getInt("secondsTimer"));
 		this.secondsCheckPlayers = Integer.valueOf(getConfig().getInt("secondsCheckPlayers"));
 		if (secondsCheckPlayers == null) {
 			secondsCheckPlayers = 15;
 		}
+
+		this.numberOfSecondsWithGems = Integer.valueOf(getConfig().getInt("numberOfSecondsWithGems"));
+		this.numberOfGems = Integer.valueOf(getConfig().getInt("numberOfGems"));
 
 		this.probabilityRandomEventTournament = Integer.valueOf(getConfig().getInt("probabilityRandomEventTournament"));
 		this.probabilityRandomEvent = Integer.valueOf(getConfig().getInt("probabilityRandomEvent"));
@@ -749,6 +775,54 @@ public class RandomEvents extends JavaPlugin {
 
 	public void setIdleTimeForDamage(Integer idleTimeForDamage) {
 		this.idleTimeForDamage = idleTimeForDamage;
+	}
+
+	public boolean isInventoryManagement() {
+		return inventoryManagement;
+	}
+
+	public void setInventoryManagement(boolean inventoryManagement) {
+		this.inventoryManagement = inventoryManagement;
+	}
+
+	public boolean isDropItemsAfterDie() {
+		return dropItemsAfterDie;
+	}
+
+	public void setDropItemsAfterDie(boolean dropItemsAfterDie) {
+		this.dropItemsAfterDie = dropItemsAfterDie;
+	}
+
+	public Integer getNumberOfSecondsWithGems() {
+		return numberOfSecondsWithGems;
+	}
+
+	public void setNumberOfSecondsWithGems(Integer numberOfSecondsWithGems) {
+		this.numberOfSecondsWithGems = numberOfSecondsWithGems;
+	}
+
+	public Integer getNumberOfGems() {
+		return numberOfGems;
+	}
+
+	public void setNumberOfGems(Integer numberOfGems) {
+		this.numberOfGems = numberOfGems;
+	}
+
+	public int getWarmupTimeTNTRUN() {
+		return warmupTimeTNTRUN;
+	}
+
+	public void setWarmupTimeTNTRUN(int warmupTimeTNTRUN) {
+		this.warmupTimeTNTRUN = warmupTimeTNTRUN;
+	}
+
+	public Integer getSecondsToStartMatch() {
+		return secondsToStartMatch;
+	}
+
+	public void setSecondsToStartMatch(Integer secondsToStartMatch) {
+		this.secondsToStartMatch = secondsToStartMatch;
 	}
 	
 

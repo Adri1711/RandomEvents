@@ -89,6 +89,14 @@ public class LanguageMessages {
 
 	private String idleDamage;
 
+	private String noScheduledEvents;
+	private String nextEvent;
+
+	private String nextEventIsRandom;
+
+	private String nextEventName;
+	private String startingMatch;
+
 	private List<String> minigameDescriptionBR;
 	private List<String> minigameDescriptionBRT2;
 	private List<String> minigameDescriptionLJ;
@@ -895,6 +903,46 @@ public class LanguageMessages {
 
 	public void setIdleDamage(String idleDamage) {
 		this.idleDamage = idleDamage;
+	}
+
+	public String getNoScheduledEvents() {
+		return noScheduledEvents.replaceAll("&", "§");
+	}
+
+	public void setNoScheduledEvents(String noScheduledEvents) {
+		this.noScheduledEvents = noScheduledEvents;
+	}
+
+	public String getNextEvent() {
+		return nextEvent.replaceAll("&", "§");
+	}
+
+	public void setNextEvent(String nextEvent) {
+		this.nextEvent = nextEvent;
+	}
+
+	public String getNextEventIsRandom() {
+		return nextEventIsRandom.replaceAll("&", "§");
+	}
+
+	public void setNextEventIsRandom(String nextEventIsRandom) {
+		this.nextEventIsRandom = nextEventIsRandom;
+	}
+
+	public String getNextEventName() {
+		return nextEventName.replaceAll("&", "§");
+	}
+
+	public void setNextEventName(String nextEventName) {
+		this.nextEventName = nextEventName;
+	}
+
+	public String getStartingMatch() {
+		return startingMatch.replaceAll("&", "§");
+	}
+
+	public void setStartingMatch(String startingMatch) {
+		this.startingMatch = startingMatch;
 	}
 
 }

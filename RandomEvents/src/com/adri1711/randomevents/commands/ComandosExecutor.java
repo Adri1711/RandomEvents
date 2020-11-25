@@ -143,6 +143,32 @@ public class ComandosExecutor {
 
 	}
 
+	public void nextRandomEvents(RandomEvents plugin, Player player) {
+		if (plugin.getSchedules() != null && !plugin.getSchedules().isEmpty()) {
+			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNextEvent());
+			Schedule s = UtilsRandomEvents.nextEvent(plugin.getSchedules(), player, plugin);
+			if (s != null) {
+				if (s.getMatchName() == null) {
+					player.sendMessage(plugin.getLanguage().getNextEventIsRandom() + " "
+							+ DayWeek.getByValues(s.getDay().toString()) + " "
+							+ (s.getHour() > 10 ? s.getHour() : ("0" + s.getHour())) + ":"
+							+ (s.getMinute() > 10 ? s.getMinute() : ("0" + s.getMinute())));
+
+				} else {
+					player.sendMessage(plugin.getLanguage().getNextEventName() + " " + s.getMatchName() + " "
+							+ DayWeek.getByValues(s.getDay().toString()) + " "
+							+ (s.getHour() > 10 ? s.getHour() : ("0" + s.getHour())) + ":"
+							+ (s.getMinute() > 10 ? s.getMinute() : ("0" + s.getMinute())));
+				}
+			}
+		} else {
+			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoScheduledEvents());
+
+		}
+
+	}
+	//TODO max players
+
 	public void currentDate(RandomEvents plugin, Player player) {
 		player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + new Date());
 

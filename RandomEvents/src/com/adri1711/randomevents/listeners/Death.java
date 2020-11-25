@@ -181,7 +181,7 @@ public class Death implements Listener {
 									case BOMB_TAG:
 										ev.setDamage(0);
 										if (damager.equals(plugin.getMatchActive().getPlayerContador())) {
-											UtilsRandomEvents.borraInventario(damager);
+											UtilsRandomEvents.borraInventario(damager,plugin);
 											UtilsRandomEvents.playSound(damager,
 													UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
 											UtilsRandomEvents.playSound(player,
@@ -261,7 +261,7 @@ public class Death implements Listener {
 									case BOMB_TAG:
 										ev.setDamage(0);
 										if (damager.equals(plugin.getMatchActive().getPlayerContador())) {
-											UtilsRandomEvents.borraInventario(damager);
+											UtilsRandomEvents.borraInventario(damager,plugin);
 											UtilsRandomEvents.playSound(damager,
 													UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
 											UtilsRandomEvents.playSound(player,

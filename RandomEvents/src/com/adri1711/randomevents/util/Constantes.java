@@ -42,6 +42,8 @@ public class Constantes {
 
 		INVALID_INPUT("invalidInput", "creation.invalidInput", "&c&lInvalid input, try another one"),
 		
+		STARTING_MATCH("startingMatch", "comun.startingMatch", "&6&lMatch starting in %time% seconds"),
+		
 		IDLE_DAMAGE("idleDamage", "comun.idleDamage", "&c&lTaking damage for afk..."),
 		
 		YOU_ARE_BANNED("youAreBanned", "comun.youAreBanned", "&c&lYou are banned from RandomEvents until %time%"),
@@ -51,6 +53,14 @@ public class Constantes {
 		UNBAN_PLAYER("unbanPlayer", "comun.unbanPlayer", "&c&lPlayer unbanned from RandomEvents"),
 
 		PLAYER_NOT_BANNED("playerNotBanned", "comun.playerNotBanned", "&c&lPlayer is not banned from RandomEvents"),
+		
+		NO_SCHEDULED_EVENTS("noScheduledEvents", "comun.noScheduledEvents", "&c&lThere are not RandomEvents scheduled"),
+		
+		NEXT_EVENT("nextEvent", "comun.nextEvent", "&c&lNext RandomEvent:"),
+		
+		NEXT_EVENT_RANDOM("nextEventIsRandom", "comun.nextEventIsRandom", "&6&lRandomEvent"),
+		
+		NEXT_EVENT_NAME("nextEventName", "comun.nextEventName", "&6&lEvent: "),
 
 
 		SECONDS_3_REMAINING("secondsRemaining3", "comun.secondsRemaining3", "&6&l3"),
