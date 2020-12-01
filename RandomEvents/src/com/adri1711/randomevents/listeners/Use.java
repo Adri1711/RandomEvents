@@ -65,6 +65,14 @@ public class Use implements Listener {
 					} else if (player.getItemInHand().getType() == plugin.getApi().getMaterial(AMaterials.STONE_HOE)
 							&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEGG)) {
 						player.launchProjectile(Egg.class);
+					} else if ((player.getItemInHand().getType() == plugin.getApi().getMaterial(AMaterials.WOOD_SPADE)
+							|| player.getItemInHand().getType() == plugin.getApi().getMaterial(AMaterials.STONE_SPADE)
+							|| player.getItemInHand().getType() == plugin.getApi().getMaterial(AMaterials.IRON_SPADE)
+							|| player.getItemInHand().getType() == plugin.getApi().getMaterial(AMaterials.GOLD_SPADE)
+							|| player.getItemInHand().getType() == plugin.getApi()
+									.getMaterial(AMaterials.DIAMOND_SPADE))
+							&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEEF)) {
+						player.launchProjectile(Egg.class);
 					}
 				}
 			}
@@ -75,7 +83,8 @@ public class Use implements Listener {
 	public void onPlayerEggThrow(PlayerEggThrowEvent evt) {
 		Player player = evt.getPlayer();
 		if (plugin.getMatchActive() != null
-				&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEGG)
+				&& (plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEGG)
+						|| plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEEF))
 				&& plugin.getMatchActive().getPlayers().contains(player.getName())) {
 			evt.getEgg().setCustomName(Constantes.SPLEGG_EGG);
 		}
@@ -88,7 +97,8 @@ public class Use implements Listener {
 		if (entity instanceof Egg && entity.getCustomName() != null
 				&& entity.getCustomName().equals(Constantes.SPLEGG_EGG)) {
 			if (plugin.getMatchActive() != null
-					&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEGG)) {
+					&& (plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEGG)
+							|| plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEEF))) {
 				Location hitLoc = entity.getLocation();
 
 				Vector arrowVector = entity.getVelocity();

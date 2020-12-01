@@ -448,7 +448,7 @@ public class UtilsRandomEvents {
 	public static Schedule findSchedule(RandomEvents plugin, Integer day, Integer hour, Integer minute) {
 		Schedule sched = null;
 		for (Schedule s : plugin.getSchedules()) {
-			if ((s.getDay().equals(DayWeek.EVERYDAY) || s.getDay().equals(day)) && s.getHour().equals(hour)
+			if ((s.getDay().equals(DayWeek.EVERYDAY.getPosition()) || s.getDay().equals(day)) && s.getHour().equals(hour)
 					&& s.getMinute().equals(minute)) {
 				sched = s;
 			}

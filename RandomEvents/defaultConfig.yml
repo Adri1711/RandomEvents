@@ -45,6 +45,9 @@ warmupTimeTNTRUN: 5
 #Seconds to begin the match when the min players are fulfilled (minimum 3 seconds)
 secondsToStartMatch: 5
 
+#Highest priority level of events. Enable this to bypass damage protection of faction plugins for example.
+highestPriorityDamageEvents: false
+
 
 tournament:
   spawn:

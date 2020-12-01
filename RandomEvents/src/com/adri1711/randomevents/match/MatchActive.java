@@ -130,6 +130,9 @@ public class MatchActive {
 		case ESCAPE_FROM_BEAST:
 			this.cuboid = new Cuboid(match.getLocation1(), match.getLocation2());
 			break;
+		case GEM_CRAWLER:
+			this.numeroSegRestantes = plugin.getNumberOfSecondsWithGems();
+			break;
 		default:
 			this.numeroSegRestantes = 10;
 			break;
@@ -184,6 +187,9 @@ public class MatchActive {
 		case RACE:
 		case ESCAPE_FROM_BEAST:
 			this.cuboid = new Cuboid(match.getLocation1(), match.getLocation2());
+			break;
+		case GEM_CRAWLER:
+			this.numeroSegRestantes = plugin.getNumberOfSecondsWithGems();
 			break;
 		default:
 			this.numeroSegRestantes = 10;
@@ -588,7 +594,12 @@ public class MatchActive {
 			ganadores.addAll(sacaGanadoresPartidaTiempo());
 			break;
 		case GEM_CRAWLER:
-			ganadores.add(getPlayerContador());
+			if (getPlayersObj().size() == 1) {
+				ganadores.addAll(getPlayersObj());
+
+			} else {
+				ganadores.add(getPlayerContador());
+			}
 			break;
 		case BOAT_RUN:
 		case RACE:
@@ -927,7 +938,7 @@ public class MatchActive {
 					UtilsRandomEvents.checkBlocksDisappear(plugin, getMatchActive(), new Date());
 				}
 			};
-			task.runTaskTimer(plugin, plugin.getWarmupTimeTNTRUN() != -1 ? plugin.getWarmupTimeTNTRUN() : 0, 1L);
+			task.runTaskTimer(plugin, plugin.getWarmupTimeTNTRUN() != -1 ? 20 * plugin.getWarmupTimeTNTRUN() : 0, 1L);
 			break;
 		case SPLEEF:
 			for (Player p : playersSpectators) {
@@ -1173,6 +1184,11 @@ public class MatchActive {
 						UtilsRandomEvents.buscaSonido("EXPLODE", "EXPLODE"));
 
 				List<Player> muertos = UtilsRandomEvents.getPlayersWithin(getPlayerContador(), getPlayersObj(), 4);
+				if (muertos.size() == getPlayersObj().size()) {
+					muertos.clear();
+					muertos.add(getPlayerContador());
+				}
+
 				for (Player p : muertos) {
 					UtilsRandomEvents.mandaMensaje(plugin, getPlayersSpectators(),
 							plugin.getLanguage().getBombExplode().replace("%player%", p.getName()), true);
@@ -1593,7 +1609,8 @@ public class MatchActive {
 								plugin.getApi().send(p, firstPart, plugin.getLanguage().getClickHere(),
 										new ArrayList<String>(), "/revent join " + password,
 										lastPart.replaceAll("%players%", "" + getPlayers().size())
-										.replaceAll("%neededPlayers%", match.getAmountPlayersMin().toString()).replaceAll("%maxPlayers%", match.getAmountPlayers().toString()));
+												.replaceAll("%neededPlayers%", match.getAmountPlayersMin().toString())
+												.replaceAll("%maxPlayers%", match.getAmountPlayers().toString()));
 							}
 						}
 						if (tries <= plugin.getNumberOfTriesBeforeCancelling()) {

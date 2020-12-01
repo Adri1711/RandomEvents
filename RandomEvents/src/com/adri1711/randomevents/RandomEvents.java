@@ -137,6 +137,8 @@ public class RandomEvents extends JavaPlugin {
 
 	private Integer secondsToStartMatch;
 
+	private boolean highestPriorityDamageEvents;
+
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
 		loadConfig();
@@ -256,6 +258,8 @@ public class RandomEvents extends JavaPlugin {
 
 		this.probabilityRandomEventTournament = Integer.valueOf(getConfig().getInt("probabilityRandomEventTournament"));
 		this.probabilityRandomEvent = Integer.valueOf(getConfig().getInt("probabilityRandomEvent"));
+
+		this.highestPriorityDamageEvents = getConfig().getBoolean("highestPriorityDamageEvents");
 
 		this.debugMode = getConfig().getBoolean("debugMode");
 
@@ -824,6 +828,13 @@ public class RandomEvents extends JavaPlugin {
 	public void setSecondsToStartMatch(Integer secondsToStartMatch) {
 		this.secondsToStartMatch = secondsToStartMatch;
 	}
-	
+
+	public boolean isHighestPriorityDamageEvents() {
+		return highestPriorityDamageEvents;
+	}
+
+	public void setHighestPriorityDamageEvents(boolean highestPriorityDamageEvents) {
+		this.highestPriorityDamageEvents = highestPriorityDamageEvents;
+	}
 
 }

@@ -87,6 +87,9 @@ public class Death implements Listener {
 
 								break;
 							default:
+								if(plugin.isHighestPriorityDamageEvents()){
+									ev.setCancelled(false);
+								}
 								break;
 							}
 						}
@@ -230,6 +233,9 @@ public class Death implements Listener {
 									case BATTLE_ROYALE_CABALLO:
 									case BATTLE_ROYALE_TEAM_2:
 									case TOP_KILLER:
+										if(plugin.isHighestPriorityDamageEvents()){
+											ev.setCancelled(false);
+										}
 										break;
 									case ESCAPE_FROM_BEAST:
 										if (plugin.getMatchActive().getBeast() == null) {
@@ -242,6 +248,9 @@ public class Death implements Listener {
 															.equals(plugin.getMatchActive().getBeast().getName())
 													|| player.getName()
 															.equals(plugin.getMatchActive().getBeast().getName())) {
+												if(plugin.isHighestPriorityDamageEvents()){
+													ev.setCancelled(false);
+												}
 
 											} else {
 												ev.setCancelled(true);
@@ -252,6 +261,9 @@ public class Death implements Listener {
 									case KNOCKBACK_DUEL:
 									case ESCAPE_ARROW:
 										ev.setDamage(0);
+										if(plugin.isHighestPriorityDamageEvents()){
+											ev.setCancelled(false);
+										}
 										break;
 									case TNT_RUN:
 									case SPLEEF:
@@ -260,6 +272,9 @@ public class Death implements Listener {
 										break;
 									case BOMB_TAG:
 										ev.setDamage(0);
+										if(plugin.isHighestPriorityDamageEvents()){
+											ev.setCancelled(false);
+										}
 										if (damager.equals(plugin.getMatchActive().getPlayerContador())) {
 											UtilsRandomEvents.borraInventario(damager,plugin);
 											UtilsRandomEvents.playSound(damager,
@@ -275,6 +290,9 @@ public class Death implements Listener {
 										ev.setCancelled(true);
 										break;
 									default:
+										if(plugin.isHighestPriorityDamageEvents()){
+											ev.setCancelled(false);
+										}
 										break;
 									}
 								}
@@ -310,6 +328,9 @@ public class Death implements Listener {
 							case KNOCKBACK_DUEL:
 							case BOMB_TAG:
 								ev.setDamage(0);
+								if(plugin.isHighestPriorityDamageEvents()){
+									ev.setCancelled(false);
+								}
 								break;
 							case TNT_RUN:
 							case SPLEEF:
@@ -327,6 +348,9 @@ public class Death implements Listener {
 								ev.setCancelled(true);
 								break;
 							default:
+								if(plugin.isHighestPriorityDamageEvents()){
+									ev.setCancelled(false);
+								}
 								break;
 							}
 						} else {
@@ -337,11 +361,17 @@ public class Death implements Listener {
 							case TOP_KILLER:
 							case ESCAPE_ARROW:
 							case ESCAPE_FROM_BEAST:
+								if(plugin.isHighestPriorityDamageEvents()){
+									ev.setCancelled(false);
+								}
 								break;
 
 							case KNOCKBACK_DUEL:
 							case BOMB_TAG:
 								ev.setDamage(0);
+								if(plugin.isHighestPriorityDamageEvents()){
+									ev.setCancelled(false);
+								}
 								break;
 							case TNT_RUN:
 							case SPLEEF:
@@ -351,6 +381,9 @@ public class Death implements Listener {
 								ev.setCancelled(true);
 								break;
 							default:
+								if(plugin.isHighestPriorityDamageEvents()){
+									ev.setCancelled(false);
+								}
 								break;
 							}
 
@@ -368,6 +401,9 @@ public class Death implements Listener {
 				if (plugin.getMatchActive().getMatch().getMinigame().getCodigo()
 						.equals(MinigameType.BATTLE_ROYALE_CABALLO.getCodigo())) {
 					ev.setDamage(0);
+					if(plugin.isHighestPriorityDamageEvents()){
+						ev.setCancelled(false);
+					}
 				}
 			}
 		} else if (ev.getEntity() instanceof Boat) {
