@@ -103,7 +103,7 @@ public class Death implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void damage(EntityDamageByEntityEvent ev) // Listens to
 														// EntityDamageEvent
 	{

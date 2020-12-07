@@ -47,6 +47,7 @@ public class TournamentActive {
 	private boolean siguiente;
 
 	private Integer tries;
+	
 
 	public TournamentActive(Tournament tournament, RandomEvents plugin, Boolean forzada) {
 		super();

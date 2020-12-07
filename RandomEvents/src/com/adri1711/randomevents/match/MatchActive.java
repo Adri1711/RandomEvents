@@ -27,6 +27,8 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.adri1711.randomevents.RandomEvents;
+import com.adri1711.randomevents.api.events.ReventBeginEvent;
+import com.adri1711.randomevents.api.events.ReventEndEvent;
 import com.adri1711.randomevents.commands.ComandosEnum;
 import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
@@ -53,7 +55,7 @@ public class MatchActive {
 
 	private Map<Integer, List<Player>> equipos;
 
-	private Map<String, Entity> mascotas;
+	private Map<String, Entity> pets;
 
 	private Map<String, Integer> puntuacion;
 
@@ -100,6 +102,8 @@ public class MatchActive {
 
 	private Integer damageCounter;
 
+	private Boolean activated;
+
 	public MatchActive(Match match, RandomEvents plugin, Boolean forzada) {
 		super();
 		this.match = match;
@@ -118,7 +122,7 @@ public class MatchActive {
 
 		this.equipos = new HashMap<Integer, List<Player>>();
 
-		this.mascotas = new HashMap<String, Entity>();
+		this.pets = new HashMap<String, Entity>();
 		this.goalPlayers = new ArrayList<Player>();
 		this.puntuacion = new HashMap<String, Integer>();
 		switch (match.getMinigame()) {
@@ -141,6 +145,7 @@ public class MatchActive {
 			this.cuboid = new Cuboid(match.getLocation1(), match.getLocation2());
 		this.limitPlayers = 1;
 		this.playing = Boolean.FALSE;
+		this.activated = Boolean.FALSE;
 		this.password = "" + random.nextInt(10000);
 		this.firstAnnounce = Boolean.TRUE;
 		this.gema = new ItemStack(plugin.getApi().getMaterial(AMaterials.EMERALD));
@@ -176,7 +181,7 @@ public class MatchActive {
 
 		this.equipos = new HashMap<Integer, List<Player>>();
 
-		this.mascotas = new HashMap<String, Entity>();
+		this.pets = new HashMap<String, Entity>();
 
 		this.puntuacion = new HashMap<String, Integer>();
 		switch (match.getMinigame()) {
@@ -196,6 +201,7 @@ public class MatchActive {
 			break;
 		}
 		this.playing = Boolean.FALSE;
+		this.activated = Boolean.FALSE;
 		this.password = "" + random.nextInt(10000);
 		this.firstAnnounce = Boolean.TRUE;
 		this.gema = new ItemStack(plugin.getApi().getMaterial(AMaterials.EMERALD));
@@ -289,9 +295,9 @@ public class MatchActive {
 				}
 			}
 			UtilsRandomEvents.borraInventario(player, plugin);
-			if (mascotas.containsKey(player)) {
-				mascotas.get(player).remove();
-				mascotas.remove(player);
+			if (pets.containsKey(player)) {
+				pets.get(player).remove();
+				pets.remove(player);
 			}
 			if (comprueba) {
 				Integer equipo = getEquipo(player);
@@ -360,9 +366,9 @@ public class MatchActive {
 			}
 
 			UtilsRandomEvents.borraInventario(player, plugin);
-			if (mascotas.containsKey(player)) {
-				mascotas.get(player).remove();
-				mascotas.remove(player);
+			if (pets.containsKey(player)) {
+				pets.get(player).remove();
+				pets.remove(player);
 			}
 			if (comprueba) {
 				Integer equipo = getEquipo(player);
@@ -783,6 +789,11 @@ public class MatchActive {
 	}
 
 	private void reiniciaValoresPartida() {
+		try {
+			Bukkit.getPluginManager().callEvent(new ReventEndEvent(this));
+		} catch (Exception e) {
+			System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventEndEvent.");
+		}
 
 		for (Entity ent : getMobs()) {
 			ent.remove();
@@ -791,6 +802,7 @@ public class MatchActive {
 		this.playersObj.clear();
 		this.playersGanadores.clear();
 		this.playersSpectators.clear();
+		this.activated=Boolean.FALSE;
 		if (task != null)
 			task.cancel();
 		Material mat = null;
@@ -823,6 +835,11 @@ public class MatchActive {
 		// StatsEnum.PARTIDAS_JUGADAS, plugin);
 		// }
 		mandaDescripcion();
+		try {
+			Bukkit.getPluginManager().callEvent(new ReventBeginEvent(this));
+		} catch (Exception e) {
+			System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventBeginEvent.");
+		}
 		cuentaAtras(Boolean.TRUE);
 
 	}
@@ -934,7 +951,7 @@ public class MatchActive {
 			}
 			task = new BukkitRunnable() {
 				public void run() {
-
+					setActivated(true);
 					UtilsRandomEvents.checkBlocksDisappear(plugin, getMatchActive(), new Date());
 				}
 			};
@@ -1078,7 +1095,7 @@ public class MatchActive {
 				horse.setPassenger(p);
 
 				getMobs().add(horse);
-				getMascotas().put(p.getName(), horse);
+				getPets().put(p.getName(), horse);
 
 				horse.setPassenger(p);
 
@@ -1104,7 +1121,7 @@ public class MatchActive {
 				}
 
 				getMobs().add(boat);
-				getMascotas().put(p.getName(), boat);
+				getPets().put(p.getName(), boat);
 
 			}
 			break;
@@ -1667,12 +1684,12 @@ public class MatchActive {
 		this.equipos = equipos;
 	}
 
-	public Map<String, Entity> getMascotas() {
-		return mascotas;
+	public Map<String, Entity> getPets() {
+		return pets;
 	}
 
-	public void setMascotas(Map<String, Entity> mascotas) {
-		this.mascotas = mascotas;
+	public void setPets(Map<String, Entity> pets) {
+		this.pets = pets;
 	}
 
 	public Map<String, Integer> getPuntuacion() {
@@ -1899,6 +1916,14 @@ public class MatchActive {
 
 	public void setDamageCounter(Integer damageCounter) {
 		this.damageCounter = damageCounter;
+	}
+
+	public Boolean getActivated() {
+		return activated;
+	}
+
+	public void setActivated(Boolean activated) {
+		this.activated = activated;
 	}
 
 }

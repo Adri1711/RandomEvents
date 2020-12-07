@@ -62,12 +62,13 @@ public class Move implements Listener {
 				}
 				break;
 			case TNT_RUN:
+				if (plugin.getMatchActive().getActivated()) {
+					Location from = evt.getFrom();
+					from.setY(evt.getTo().getY());
 
-				Location from = evt.getFrom();
-				from.setY(evt.getTo().getY());
-
-				UtilsRandomEvents.queueTNT(plugin, plugin.getMatchActive(), player.getLocation(),
-						from.distance(evt.getTo()), true);
+					UtilsRandomEvents.queueTNT(plugin, plugin.getMatchActive(), player.getLocation(),
+							from.distance(evt.getTo()), true);
+				}
 				break;
 			default:
 				break;
