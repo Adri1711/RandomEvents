@@ -146,6 +146,8 @@ public class RandomEvents extends JavaPlugin {
 
 	private boolean optionalTitles;
 
+	private Integer maxItemOnChests;
+
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
 		loadConfig();
@@ -248,7 +250,8 @@ public class RandomEvents extends JavaPlugin {
 		this.commandsOnUserJoin = (List<String>) getConfig().getStringList("commandsOnUserJoin");
 		this.commandsOnMatchBegin = (List<String>) getConfig().getStringList("commandsOnMatchBegin");
 		this.allowedCmds = (List<String>) getConfig().getStringList("allowedCmds");
-
+		
+		this.maxItemOnChests = Integer.valueOf(getConfig().getInt("maxItemOnChests"));
 		this.secondsToStartMatch = Integer.valueOf(getConfig().getInt("secondsToStartMatch"));
 		if (secondsToStartMatch == null) {
 			secondsToStartMatch = 0;
@@ -874,6 +877,15 @@ public class RandomEvents extends JavaPlugin {
 	public void setOptionalTitles(boolean optionalTitles) {
 		this.optionalTitles = optionalTitles;
 	}
+
+	public Integer getMaxItemOnChests() {
+		return maxItemOnChests;
+	}
+
+	public void setMaxItemOnChests(Integer maxItemOnChests) {
+		this.maxItemOnChests = maxItemOnChests;
+	}
+	
 	
 
 	

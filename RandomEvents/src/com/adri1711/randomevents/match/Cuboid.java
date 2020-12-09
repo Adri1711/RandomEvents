@@ -76,6 +76,27 @@ public class Cuboid {
 						|| minZ > cuboid.getMaxX() || minY > cuboid.getMaxY() || minZ > cuboid.getMaxZ());
 	}
 
+	public void shrink(Double percen) {
+		Integer difX = (maxX - minX);
+		Integer difZ = (maxZ - minZ);
+		difX = Double.valueOf((difX / 2) * percen).intValue();
+		difZ = Double.valueOf((difZ / 2) * percen).intValue();
+		maxX -= difX;
+		maxZ -= difZ;
+		minX += difX;
+		minZ += difZ;
+	}
+
+	public Location getCenter() {
+		Integer difX = (maxX - minX);
+		Integer difY = (maxY - minY);
+		Integer difZ = (maxZ - minZ);
+		difX = Double.valueOf((difX / 2)).intValue();
+		difY = Double.valueOf((difY / 2)).intValue();
+		difZ = Double.valueOf((difZ / 2)).intValue();
+		return new Location(world, maxX - difX, maxY - difY, maxZ - difZ);
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {

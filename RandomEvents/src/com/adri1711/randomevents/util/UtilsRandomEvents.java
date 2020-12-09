@@ -1265,6 +1265,7 @@ public class UtilsRandomEvents {
 				case TIMER_ARROW_SPAWN:
 				case TIMER_GEM_SPAWN:
 				case TIMER_BOMB:
+				case WARMUP_TIME:
 				case SECONDS_TO_SPAWN_BEAST:
 
 					if (match.getSecondsMobSpawn() != null) {
@@ -1285,6 +1286,7 @@ public class UtilsRandomEvents {
 					}
 					break;
 				case PLAY_TIME:
+				case SHRINK_TIME:
 					if (match.getTiempoPartida() != null) {
 						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getTiempoPartida();
 					}
@@ -1292,6 +1294,7 @@ public class UtilsRandomEvents {
 				case ARROW_LOCATION1:
 				case GEM_LOCATION1:
 				case GOAL_LOCATION1:
+				case MAP_LOCATION1:
 					if (match.getLocation1() != null) {
 						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
 								+ match.getLocation1().getWorld().getName() + " " + match.getLocation1().getX() + ", "
@@ -1301,6 +1304,7 @@ public class UtilsRandomEvents {
 				case ARROW_LOCATION2:
 				case GEM_LOCATION2:
 				case GOAL_LOCATION2:
+				case MAP_LOCATION2:
 					if (match.getLocation2() != null) {
 						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
 								+ match.getLocation2().getWorld().getName() + " " + match.getLocation2().getX() + ", "
@@ -1327,6 +1331,7 @@ public class UtilsRandomEvents {
 					}
 					break;
 
+				case BLOCKS_ALLOWED:
 				case MATERIAL_SPLEEF:
 				case ANOTHER_MATERIAL_SPLEEF:
 					if (match.getDatas() != null && !match.getDatas().isEmpty()) {
@@ -1404,6 +1409,7 @@ public class UtilsRandomEvents {
 			case TIMER_ARROW_SPAWN:
 			case TIMER_GEM_SPAWN:
 			case TIMER_BOMB:
+			case WARMUP_TIME:
 			case SECONDS_TO_SPAWN_BEAST:
 
 				if (match.getSecondsMobSpawn() == null) {
@@ -1420,6 +1426,7 @@ public class UtilsRandomEvents {
 			case ANOTHER_ENTITY_SPAWNS:
 				break;
 			case PLAY_TIME:
+			case SHRINK_TIME:
 				if (match.getTiempoPartida() == null) {
 					res = Boolean.FALSE;
 				}
@@ -1427,6 +1434,7 @@ public class UtilsRandomEvents {
 			case ARROW_LOCATION1:
 			case GEM_LOCATION1:
 			case GOAL_LOCATION1:
+			case MAP_LOCATION1:
 				if (match.getLocation1() == null) {
 					res = Boolean.FALSE;
 
@@ -1435,6 +1443,7 @@ public class UtilsRandomEvents {
 			case ARROW_LOCATION2:
 			case GEM_LOCATION2:
 			case GOAL_LOCATION2:
+			case MAP_LOCATION2:
 				if (match.getLocation2() == null) {
 					res = Boolean.FALSE;
 
@@ -1478,6 +1487,15 @@ public class UtilsRandomEvents {
 		}
 
 		return respuesta;
+	}
+
+	public static void setWorldBorder(RandomEvents plugin, Location center, Integer size, Player p) {
+		if(center!=null){
+			
+		}else{
+			
+		}
+		
 	}
 
 }

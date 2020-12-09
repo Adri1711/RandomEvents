@@ -46,8 +46,12 @@ public class WeaponShoot implements Listener {
 									ev.setCancelled(true);
 									switch (plugin.getMatchActive().getMatch().getMinigame()) {
 									case BATTLE_ROYALE:
+									case SG:
+									case SW:
 									case BATTLE_ROYALE_CABALLO:
 									case BATTLE_ROYALE_TEAM_2:
+									case TSG:
+									case TSW:
 										plugin.getMatchActive().echaDePartida(player, true, true, false);
 										player.setHealth(20);
 										UtilsRandomEvents.playSound(player,
@@ -140,8 +144,12 @@ public class WeaponShoot implements Listener {
 								} else {
 									switch (plugin.getMatchActive().getMatch().getMinigame()) {
 									case BATTLE_ROYALE:
+									case SG:
+									case SW:
 									case BATTLE_ROYALE_CABALLO:
 									case BATTLE_ROYALE_TEAM_2:
+									case TSG:
+									case TSW:
 									case TOP_KILLER:
 										break;
 									case ESCAPE_FROM_BEAST:
@@ -198,8 +206,12 @@ public class WeaponShoot implements Listener {
 							ev.setCancelled(true);
 							switch (plugin.getMatchActive().getMatch().getMinigame()) {
 							case BATTLE_ROYALE:
+							case SG:
+							case SW:
 							case BATTLE_ROYALE_CABALLO:
 							case BATTLE_ROYALE_TEAM_2:
+							case TSG:
+							case TSW:
 							case ESCAPE_ARROW:
 								plugin.getMatchActive().echaDePartida(player, true, true, false);
 								player.setHealth(20);
@@ -237,8 +249,12 @@ public class WeaponShoot implements Listener {
 						} else {
 							switch (plugin.getMatchActive().getMatch().getMinigame()) {
 							case BATTLE_ROYALE:
+							case SG:
+							case SW:
 							case BATTLE_ROYALE_CABALLO:
 							case BATTLE_ROYALE_TEAM_2:
+							case TSG:
+							case TSW:
 							case TOP_KILLER:
 							case ESCAPE_ARROW:
 							case ESCAPE_FROM_BEAST:

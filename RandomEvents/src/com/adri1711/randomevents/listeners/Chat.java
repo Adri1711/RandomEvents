@@ -298,6 +298,57 @@ public class Chat implements Listener {
 							// match);
 						}
 						break;
+					case INVENTORY_CHESTS:
+						if (message.equals(Constantes.DONE)) {
+
+							ItemStack[] contenido = player.getInventory().getContents();
+							List<ItemStack> contenidoList = new ArrayList<ItemStack>();
+							for (ItemStack item : contenido) {
+								if (item != null) {
+									contenidoList.add(item);
+								}
+							}
+							try {
+								contenidoList.removeAll(Arrays.asList(player.getInventory().getArmorContents()));
+							} catch (Exception e) {
+
+							}
+							ItemStack[] arrayContenido = new ItemStack[contenidoList.size()];
+							arrayContenido = contenidoList.toArray(arrayContenido);
+
+							InventoryPers inv = new InventoryPers();
+							inv.setContents(arrayContenido);
+
+							match.setInventoryChests(inv);
+
+							plugin.getPlayersCreation().remove(player.getName());
+
+						} else if (message.equals(Constantes.ADD)) {
+							ItemStack[] contenido = player.getInventory().getContents();
+							List<ItemStack> contenidoList = new ArrayList<ItemStack>();
+							for (ItemStack item : contenido) {
+								if (item != null) {
+									contenidoList.add(item);
+								}
+							}
+							try {
+								contenidoList.removeAll(Arrays.asList(player.getInventory().getArmorContents()));
+							} catch (Exception e) {
+
+							}
+							if (match.getInventoryChests() != null && match.getInventoryChests().getContents() != null)
+								contenidoList.addAll(Arrays.asList(match.getInventoryChests().getContents()));
+							ItemStack[] arrayContenido = new ItemStack[contenidoList.size()];
+							arrayContenido = contenidoList.toArray(arrayContenido);
+
+							InventoryPers inv = new InventoryPers();
+							inv.setContents(arrayContenido);
+
+							match.setInventoryChests(inv);
+
+							plugin.getPlayersCreation().remove(player.getName());
+						}
+						break;
 					case REWARDS:
 						match.getRewards().add(message);
 						plugin.getPlayersCreation().put(player.getName(), Creacion.ANOTHER_REWARDS.getPosition());
@@ -367,6 +418,7 @@ public class Chat implements Listener {
 					case TIMER_MOB_SPAWN:
 						break;
 					case PLAY_TIME:
+					case SHRINK_TIME:
 						match.setTiempoPartida(Integer.valueOf(message.trim()));
 						plugin.getPlayersCreation().remove(player.getName());
 
@@ -384,6 +436,7 @@ public class Chat implements Listener {
 						break;
 					case GEM_LOCATION1:
 					case GOAL_LOCATION1:
+					case MAP_LOCATION1:
 						if (message.equals(Constantes.DONE)) {
 							match.setLocation1(player.getLocation());
 							plugin.getPlayersCreation().remove(player.getName());
@@ -395,6 +448,9 @@ public class Chat implements Listener {
 						break;
 					case ARROW_LOCATION2:
 					case GEM_LOCATION2:
+					case MAP_LOCATION2:
+					case GOAL_LOCATION2:
+
 						if (message.equals(Constantes.DONE)) {
 							match.setLocation2(player.getLocation());
 							plugin.getPlayersCreation().remove(player.getName());
@@ -404,17 +460,16 @@ public class Chat implements Listener {
 							// player, position + 1, match);
 						}
 						break;
-					case GOAL_LOCATION2:
+					case BLOCKS_ALLOWED:
 						if (message.equals(Constantes.DONE)) {
-							match.setLocation2(player.getLocation());
-							plugin.getPlayersCreation().remove(player.getName());
-
-							// actualiza =
-							// UtilsRandomEvents.pasaACreation(plugin,
-							// player, Creacion.END.getPosition(), match);
+							if (player.getItemInHand() != null && player.getItemInHand()
+									.getType() != (plugin.getApi().getMaterial(AMaterials.AIR))) {
+								match.getDatas().add(player.getItemInHand().getData());
+							} else {
+								player.sendMessage(plugin.getLanguage().getInvalidInput());
+							}
 						}
 						break;
-
 					case MATERIAL_SPLEEF:
 						if (message.equals(Constantes.DONE)) {
 
@@ -467,36 +522,9 @@ public class Chat implements Listener {
 						break;
 					case TIMER_ARROW_SPAWN:
 					case TIMER_GEM_SPAWN:
-						try {
-							match.setSecondsMobSpawn(Double.valueOf(message.trim()));
-							plugin.getPlayersCreation().remove(player.getName());
-
-							// actualiza =
-							// UtilsRandomEvents.pasaACreation(plugin,
-							// player, Creacion.END.getPosition(), match);
-						} catch (Exception e) {
-							player.sendMessage(plugin.getLanguage().getInvalidInput());
-							// actualiza =
-							// UtilsRandomEvents.pasaACreation(plugin,
-							// player, position, match);
-						}
-						break;
 					case SECONDS_TO_SPAWN_BEAST:
-						try {
-							match.setSecondsMobSpawn(Double.valueOf(message.trim()));
-							plugin.getPlayersCreation().remove(player.getName());
-
-							// actualiza =
-							// UtilsRandomEvents.pasaACreation(plugin,
-							// player, position + 1, match);
-						} catch (Exception e) {
-							player.sendMessage(plugin.getLanguage().getInvalidInput());
-							// actualiza =
-							// UtilsRandomEvents.pasaACreation(plugin,
-							// player, position, match);
-						}
-						break;
 					case TIMER_BOMB:
+					case WARMUP_TIME:
 						try {
 							match.setSecondsMobSpawn(Double.valueOf(message.trim()));
 							plugin.getPlayersCreation().remove(player.getName());
@@ -666,11 +694,13 @@ public class Chat implements Listener {
 							case ARROW_LOCATION1:
 							case GEM_LOCATION1:
 							case GOAL_LOCATION1:
+							case MAP_LOCATION1:
 								match.setLocation1(null);
 								break;
 							case ARROW_LOCATION2:
 							case GEM_LOCATION2:
 							case GOAL_LOCATION2:
+							case MAP_LOCATION2:
 								match.setLocation2(null);
 								break;
 							case SPAWN_BEAST:
@@ -683,6 +713,7 @@ public class Chat implements Listener {
 								match.setInventoryRunners(null);
 								break;
 
+							case BLOCKS_ALLOWED:
 							case MATERIAL_SPLEEF:
 							case ANOTHER_MATERIAL_SPLEEF:
 								match.setDatas(new ArrayList<MaterialData>());
@@ -764,7 +795,7 @@ public class Chat implements Listener {
 			if (actua) {
 				player.sendMessage(UtilsRandomEvents.enviaInfoCreacion(match, player, plugin));
 			} else {
-				c=Creacion.getByPosition(plugin.getPlayersCreation().get(player.getName()));
+				c = Creacion.getByPosition(plugin.getPlayersCreation().get(player.getName()));
 				if (c != null && !pasado) {
 					player.sendMessage(c.getMessage(match));
 				}

@@ -88,6 +88,20 @@ public enum Creacion {
 			"§6§lGet another block you want to set mineable for spleef on your hand and say 'Done' or say 'Next' to end the spleef materials",
 			"SPLEEF,SPLEGG"),
 
+	MAP_LOCATION1(32, "§6§lSet the first location of the cuboid of the map, say 'Done'",
+			"SG,TSG,SW,TSW"),
+
+	MAP_LOCATION2(33, "§6§lSet the second location of the cuboid of the map, say 'Done'",
+			"SG,TSG,SW,TSW"),
+	
+	INVENTORY_CHESTS(34, "§6§lTake the inventory that will have a probability to appear in chests and say 'Done' to set it or 'Add' to add the items", "SG,TSG,SW,TSW"),
+	
+	WARMUP_TIME(35, "§6§lChoose the warmup time in seconds", "SG,TSG,SW,TSW"),
+
+	SHRINK_TIME(36, "§6§lChoose to shrink the border in seconds", "SG,TSG"),
+
+	BLOCKS_ALLOWED(37, "§6§lPut in your hand a block allowed to break/place in the map and say 'Done'", "SG,TSG,SW,TSW"),
+
 	SAVE(997, "§6§lYou are about to save a Random Event, put 'Y' to confirm or 'N' to continue creating", "ALLMINIGAMES"),
 
 	DELETE(998, "§6§lChoose the field you want to remove", "ALLMINIGAMES"),

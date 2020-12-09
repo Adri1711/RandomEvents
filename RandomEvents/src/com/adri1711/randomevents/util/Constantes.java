@@ -6,6 +6,7 @@ public class Constantes {
 
 	public static String GUI_NAME = "RandomEvents_Stats";
 	public static String DONE = "Done";
+	public static String ADD = "Add";
 	public static String NEXT = "Next";
 	public static String SAME = "Same";
 	public static String NEW = "New";

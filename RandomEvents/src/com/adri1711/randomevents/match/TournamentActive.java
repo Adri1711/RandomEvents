@@ -47,7 +47,6 @@ public class TournamentActive {
 	private boolean siguiente;
 
 	private Integer tries;
-	
 
 	public TournamentActive(Tournament tournament, RandomEvents plugin, Boolean forzada) {
 		super();
@@ -124,7 +123,8 @@ public class TournamentActive {
 				if (to == 1) {
 
 					if (!m.getMinigame().equals(MinigameType.BATTLE_ROYALE_TEAM_2)
-							&& !m.getMinigame().equals(MinigameType.TOP_KILLER_TEAM_2)) {
+							&& !m.getMinigame().equals(MinigameType.TOP_KILLER_TEAM_2)
+							&& !m.getMinigame().equals(MinigameType.TSG) && !m.getMinigame().equals(MinigameType.TSW)) {
 						matches.add(m);
 					}
 
@@ -161,7 +161,7 @@ public class TournamentActive {
 
 			getPlayers().remove(player.getName());
 
-			UtilsRandomEvents.borraInventario(player,plugin);
+			UtilsRandomEvents.borraInventario(player, plugin);
 
 			UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin);
 
@@ -390,7 +390,7 @@ public class TournamentActive {
 	public void echaDePartida(Player player, List<Player> playersSpectators, Boolean sacaInv) {
 		if (playersSpectators.contains(player)) {
 
-			UtilsRandomEvents.borraInventario(player,plugin);
+			UtilsRandomEvents.borraInventario(player, plugin);
 
 			try {
 				getPlayersSpectators().remove(player);
@@ -452,7 +452,7 @@ public class TournamentActive {
 	private void procesoUnirPlayer(Player player) {
 		if (UtilsRandomEvents.guardaInventario(plugin, player)) {
 
-			UtilsRandomEvents.borraInventario(player,plugin);
+			UtilsRandomEvents.borraInventario(player, plugin);
 
 			if (UtilsRandomEvents.teleportaPlayer(player, tournament.getPlayerSpawn(), plugin)) {
 				hazComandosDeUnion(player);

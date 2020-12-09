@@ -41,11 +41,11 @@ public enum MinigameType {
 
 	SG("SG", XMaterial.BEEF.parseMaterial(), "Survival Games"),
 
-	TSG("TSG", XMaterial.BEEF.parseMaterial(), "Team Survival Games"),
+	TSG("TSG", XMaterial.COOKED_BEEF.parseMaterial(), "Team Survival Games"),
 
-	SW("SW", XMaterial.BEEF.parseMaterial(), "Survival Games"),
+	SW("SW", XMaterial.DIRT.parseMaterial(), "Skywars"),
 
-	TSW("TSW", XMaterial.BEEF.parseMaterial(), "Survival Games");
+	TSW("TSW", XMaterial.STONE.parseMaterial(), "Team Skywars");
 
 	private String codigo;
 	private Material material;

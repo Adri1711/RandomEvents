@@ -44,6 +44,8 @@ public class Match {
 	private InventoryPers inventoryBeast;
 
 	private InventoryPers inventoryRunners;
+	
+	private InventoryPers inventoryChests;
 
 	private Location beastSpawn;
 
@@ -237,6 +239,16 @@ public class Match {
 
 	public void setDatas(List<MaterialData> datas) {
 		this.datas = datas;
+	}
+	
+	
+
+	public InventoryPers getInventoryChests() {
+		return inventoryChests;
+	}
+
+	public void setInventoryChests(InventoryPers inventoryChests) {
+		this.inventoryChests = inventoryChests;
 	}
 
 	@Override

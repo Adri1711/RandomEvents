@@ -47,10 +47,14 @@ public class Death implements Listener {
 
 							ev.setCancelled(true);
 							switch (plugin.getMatchActive().getMatch().getMinigame()) {
+							case SW:
+							case SG:
 							case BATTLE_ROYALE:
 							case KNOCKBACK_DUEL:
 							case BATTLE_ROYALE_CABALLO:
 							case BATTLE_ROYALE_TEAM_2:
+							case TSG:
+							case TSW:
 							case TNT_RUN:
 							case SPLEEF:
 							case SPLEGG:
@@ -147,6 +151,10 @@ public class Death implements Listener {
 									ev.setCancelled(true);
 									switch (plugin.getMatchActive().getMatch().getMinigame()) {
 									case BATTLE_ROYALE:
+									case SG:
+									case SW:
+									case TSG:
+									case TSW:
 									case BATTLE_ROYALE_CABALLO:
 									case BATTLE_ROYALE_TEAM_2:
 										plugin.getMatchActive().echaDePartida(player, true, true, false);
@@ -272,6 +280,10 @@ public class Death implements Listener {
 								} else {
 									switch (plugin.getMatchActive().getMatch().getMinigame()) {
 									case BATTLE_ROYALE:
+									case SG:
+									case SW:
+									case TSG:
+									case TSW:
 									case BATTLE_ROYALE_CABALLO:
 									case BATTLE_ROYALE_TEAM_2:
 									case TOP_KILLER:
@@ -355,8 +367,12 @@ public class Death implements Listener {
 							ev.setCancelled(true);
 							switch (plugin.getMatchActive().getMatch().getMinigame()) {
 							case BATTLE_ROYALE:
+							case SG:
+							case SW:
 							case BATTLE_ROYALE_CABALLO:
 							case BATTLE_ROYALE_TEAM_2:
+							case TSG:
+							case TSW:
 							case ESCAPE_ARROW:
 								plugin.getMatchActive().echaDePartida(player, true, true, false);
 								player.setHealth(20);
@@ -489,8 +505,12 @@ public class Death implements Listener {
 
 								break;
 							case BATTLE_ROYALE:
+							case SG:
+							case SW:
 							case BATTLE_ROYALE_CABALLO:
 							case BATTLE_ROYALE_TEAM_2:
+							case TSG:
+							case TSW:
 							case TOP_KILLER:
 							case TOP_KILLER_TEAM_2:
 							case ESCAPE_ARROW:

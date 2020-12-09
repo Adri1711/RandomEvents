@@ -13,6 +13,7 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Chest;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.Entity;
@@ -34,6 +35,7 @@ import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.randomevents.util.UtilsSQL;
 import com.adri1711.util.enums.AMaterials;
+import com.adri1711.util.enums.XMaterial;
 
 public class MatchActive {
 
@@ -63,6 +65,8 @@ public class MatchActive {
 
 	private List<Player> goalPlayers;
 
+	private List<Location> chests;
+
 	private Player beast;
 
 	private String objetivo;
@@ -88,6 +92,8 @@ public class MatchActive {
 
 	private Cuboid cuboid;
 
+	private Cuboid actualCuboid;
+
 	private Boolean tournament;
 
 	private TournamentActive tournamentObj;
@@ -102,12 +108,17 @@ public class MatchActive {
 
 	private Map<Location, MaterialData> blockDisappeared;
 
+	private Map<Location, MaterialData> blockPlaced;
+
 	private Integer damageCounter;
 
 	private Boolean activated;
 
+	private Boolean allowDamage;
+
 	public MatchActive(Match match, RandomEvents plugin, Boolean forzada) {
 		super();
+		this.allowDamage = false;
 		this.match = match;
 		this.maximo = 0;
 		this.setTiempoPartida(match.getTiempoPartida());
@@ -155,7 +166,14 @@ public class MatchActive {
 		this.setForzada(forzada);
 		this.blockDisappear = new HashMap<Location, Long>();
 		this.blockDisappeared = new HashMap<Location, MaterialData>();
+		this.blockPlaced = new HashMap<Location, MaterialData>();
 		this.checkpoints = new HashMap<String, Location>();
+		this.chests = new ArrayList<Location>();
+		if (cuboid != null) {
+			this.actualCuboid = new Cuboid(
+					new Location(cuboid.getWorld(), cuboid.getMaxX(), cuboid.getMaxY(), cuboid.getMaxZ()),
+					new Location(cuboid.getWorld(), cuboid.getMinX(), cuboid.getMinY(), cuboid.getMinZ()));
+		}
 		tries = 0;
 		damageCounter = 0;
 		matchWaitingPlayers();
@@ -165,6 +183,7 @@ public class MatchActive {
 			TournamentActive tournamentObj, List<String> players, List<Player> playersGanadores,
 			List<Player> playersSpectators) {
 		super();
+		this.allowDamage = false;
 		this.goalPlayers = new ArrayList<Player>();
 
 		this.match = match;
@@ -213,8 +232,15 @@ public class MatchActive {
 		this.setForzada(forzada);
 		this.blockDisappear = new HashMap<Location, Long>();
 		this.blockDisappeared = new HashMap<Location, MaterialData>();
-		this.checkpoints = new HashMap<String, Location>();
+		this.blockPlaced = new HashMap<Location, MaterialData>();
 
+		this.checkpoints = new HashMap<String, Location>();
+		this.chests = new ArrayList<Location>();
+		if (cuboid != null) {
+			this.actualCuboid = new Cuboid(
+					new Location(cuboid.getWorld(), cuboid.getMaxX(), cuboid.getMaxY(), cuboid.getMaxZ()),
+					new Location(cuboid.getWorld(), cuboid.getMinX(), cuboid.getMinY(), cuboid.getMinZ()));
+		}
 		tries = 0;
 
 	}
@@ -277,6 +303,7 @@ public class MatchActive {
 
 		}
 	}
+
 	private void hazComandosDeComienzo(Player player) {
 		for (String cmd : plugin.getCommandsOnMatchBegin()) {
 
@@ -599,6 +626,10 @@ public class MatchActive {
 		List<Player> ganadores = new ArrayList<Player>();
 		switch (getMatch().getMinigame()) {
 		case BATTLE_ROYALE:
+		case SG:
+		case SW:
+		case TSW:
+		case TSG:
 		case KNOCKBACK_DUEL:
 		case BATTLE_ROYALE_CABALLO:
 		case BATTLE_ROYALE_TEAM_2:
@@ -813,6 +844,17 @@ public class MatchActive {
 		for (Entity ent : getMobs()) {
 			ent.remove();
 		}
+
+		for (Location chest : chests) {
+			if (chest.getBlock() != null && chest.getBlock().getType() == XMaterial.CHEST.parseMaterial()) {
+				if (chest.getBlock().getState() instanceof Chest) {
+					Chest c = (Chest) chest.getBlock().getState();
+					c.getBlockInventory().clear();
+				}
+			} else {
+				chest.getBlock().setType(XMaterial.CHEST.parseMaterial());
+			}
+		}
 		this.players.clear();
 		this.playersObj.clear();
 		this.playersGanadores.clear();
@@ -821,6 +863,10 @@ public class MatchActive {
 		if (task != null)
 			task.cancel();
 		Material mat = null;
+
+		for (Location l : getBlockPlaced().keySet()) {
+			l.getBlock().setType(XMaterial.AIR.parseMaterial());
+		}
 		if (match.getMinigame().equals(MinigameType.TNT_RUN)) {
 			mat = plugin.getApi().getMaterial(AMaterials.TNT);
 		}
@@ -933,6 +979,56 @@ public class MatchActive {
 
 	public void comienzaPartida() {
 		switch (match.getMinigame()) {
+		case SG:
+			for (Player p : playersSpectators) {
+				if (!playersObj.contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
+			for (Player p : playersObj) {
+				iniciaPlayer(p);
+
+			}
+			Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
+				public void run() {
+
+					setAllowDamage(true);
+				}
+			}, 20 * getMatch().getSecondsMobSpawn().longValue());
+			for (Player p : playersObj) {
+				UtilsRandomEvents.setWorldBorder(getPlugin(),actualCuboid.getCenter(), p);
+			}
+
+			task = new BukkitRunnable() {
+				public void run() {
+
+					getActualCuboid().shrink(0.2);
+					for (Player p : playersObj) {
+						UtilsRandomEvents.setWorldBorder(getPlugin(),getActualCuboid().getCenter(), p);
+					}
+				}
+			};
+			task.runTaskTimerAsynchronously(plugin, 0, 20L * getMatch().getTiempoPartida());
+
+			break;
+		case SW:
+			for (Player p : playersSpectators) {
+				if (!playersObj.contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
+			for (Player p : playersObj) {
+				iniciaPlayer(p);
+
+			}
+			Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
+				public void run() {
+
+					setAllowDamage(true);
+				}
+			}, 20 * getMatch().getSecondsMobSpawn().longValue());
+
+			break;
 		case BATTLE_ROYALE:
 		case KNOCKBACK_DUEL:
 			for (Player p : playersSpectators) {
@@ -944,7 +1040,7 @@ public class MatchActive {
 				iniciaPlayer(p);
 
 			}
-
+			this.allowDamage = true;
 			task = new BukkitRunnable() {
 				public void run() {
 
@@ -960,6 +1056,7 @@ public class MatchActive {
 					mandaSpectatorPlayer(p);
 				}
 			}
+			this.allowDamage = true;
 			for (Player p : playersObj) {
 				iniciaPlayer(p);
 
@@ -978,6 +1075,7 @@ public class MatchActive {
 					mandaSpectatorPlayer(p);
 				}
 			}
+			this.allowDamage = true;
 			for (Player p : playersObj) {
 				iniciaPlayer(p);
 
@@ -999,6 +1097,7 @@ public class MatchActive {
 					mandaSpectatorPlayer(p);
 				}
 			}
+			this.allowDamage = true;
 			ItemStack item = new ItemStack(plugin.getApi().getMaterial(AMaterials.STONE_HOE));
 			for (Player p : playersObj) {
 				iniciaPlayer(p);
@@ -1014,6 +1113,7 @@ public class MatchActive {
 					mandaSpectatorPlayer(p);
 				}
 			}
+			this.allowDamage = true;
 			setBeast(playersObj.get(plugin.getRandom().nextInt(playersObj.size())));
 			setPlayerContador(getBeast());
 			for (Player p : playersObj) {
@@ -1034,6 +1134,7 @@ public class MatchActive {
 					mandaSpectatorPlayer(p);
 				}
 			}
+			this.allowDamage = true;
 			for (Player p : playersObj) {
 				iniciaPlayer(p);
 			}
@@ -1045,6 +1146,7 @@ public class MatchActive {
 					mandaSpectatorPlayer(p);
 				}
 			}
+			this.allowDamage = true;
 			for (Player p : playersObj) {
 				Integer indice = playersObj.indexOf(p);
 
@@ -1062,13 +1164,78 @@ public class MatchActive {
 
 			partidaPorTiempo();
 			break;
+		case TSG:
+			for (Player p : playersSpectators) {
+				if (!playersObj.contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
+			this.allowDamage = true;
+			for (Player p : playersObj) {
+				Integer indice = playersObj.indexOf(p);
+				iniciaPlayer(p);
 
+				if (indice % 2 == 0) {
+					List<Player> players = new ArrayList<Player>();
+					players.add(p);
+					equipos.put(indice / 2, players);
+				} else {
+					equipos.get((indice - 1) / 2).add(p);
+				}
+
+			}
+			mandaMensajesEquipo(equipos);
+			Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
+				public void run() {
+
+					setAllowDamage(true);
+				}
+			}, 20 * getMatch().getSecondsMobSpawn().longValue());
+
+			task = new BukkitRunnable() {
+				public void run() {
+
+					getActualCuboid().shrink(0.2);
+				}
+			};
+			task.runTaskTimerAsynchronously(plugin, 0, 20L * getMatch().getTiempoPartida());
+			break;
+		case TSW:
+			for (Player p : playersSpectators) {
+				if (!playersObj.contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
+			this.allowDamage = true;
+			for (Player p : playersObj) {
+				Integer indice = playersObj.indexOf(p);
+				iniciaPlayer(p);
+
+				if (indice % 2 == 0) {
+					List<Player> players = new ArrayList<Player>();
+					players.add(p);
+					equipos.put(indice / 2, players);
+				} else {
+					equipos.get((indice - 1) / 2).add(p);
+				}
+
+			}
+			mandaMensajesEquipo(equipos);
+			Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
+				public void run() {
+
+					setAllowDamage(true);
+				}
+			}, 20 * getMatch().getSecondsMobSpawn().longValue());
+
+			break;
 		case BATTLE_ROYALE_TEAM_2:
 			for (Player p : playersSpectators) {
 				if (!playersObj.contains(p)) {
 					mandaSpectatorPlayer(p);
 				}
 			}
+			this.allowDamage = true;
 			for (Player p : playersObj) {
 				Integer indice = playersObj.indexOf(p);
 				iniciaPlayer(p);
@@ -1097,6 +1264,7 @@ public class MatchActive {
 					mandaSpectatorPlayer(p);
 				}
 			}
+			this.allowDamage = true;
 			for (Player p : playersObj) {
 				iniciaPlayer(p);
 
@@ -1124,6 +1292,7 @@ public class MatchActive {
 					mandaSpectatorPlayer(p);
 				}
 			}
+			this.allowDamage = true;
 			for (Player p : playersObj) {
 				iniciaPlayer(p);
 
@@ -1171,6 +1340,7 @@ public class MatchActive {
 					mandaSpectatorPlayer(p);
 				}
 			}
+			this.allowDamage = true;
 			for (Player p : playersObj) {
 				iniciaPlayer(p);
 
@@ -1195,6 +1365,8 @@ public class MatchActive {
 					mandaSpectatorPlayer(p);
 				}
 			}
+
+			this.allowDamage = true;
 			for (Player p : playersObj) {
 				iniciaPlayer(p);
 
@@ -1207,6 +1379,7 @@ public class MatchActive {
 					mandaSpectatorPlayer(p);
 				}
 			}
+			this.allowDamage = true;
 			for (Player p : playersObj) {
 				iniciaPlayer(p);
 			}
@@ -1218,6 +1391,7 @@ public class MatchActive {
 					mandaSpectatorPlayer(p);
 				}
 			}
+			this.allowDamage = true;
 			for (Player p : playersObj) {
 				iniciaPlayer(p);
 			}
@@ -1229,6 +1403,7 @@ public class MatchActive {
 					mandaSpectatorPlayer(p);
 				}
 			}
+			this.allowDamage = true;
 			for (Player p : playersObj) {
 				teleportaPlayer(p);
 			}
@@ -1237,11 +1412,18 @@ public class MatchActive {
 
 			break;
 		}
-		
-		for(Player p:playersObj){
+
+		for (Player p : playersObj) {
 			hazComandosDeComienzo(p);
 		}
 
+	}
+
+	private void UtilsRandomEvents.
+
+	setWorldBorder(boolean b) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	public void bombRandom() {
@@ -1355,8 +1537,8 @@ public class MatchActive {
 					}
 					partidaEscapeArrow();
 				}
-			}, timer.longValue());
-		}
+
+	},timer.longValue());}
 
 	}
 
@@ -1370,15 +1552,14 @@ public class MatchActive {
 		} else {
 			Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 
-				public void run() {
+	public void run() {
 					setTiempoPartida(getTiempoPartida() - 60);
 					UtilsRandomEvents.mandaMensaje(plugin, playersObj, plugin.getLanguage().getTimeRemaining()
 							.replace("%minutes%", UtilsRandomEvents.preparaStringTiempo(tiempoPartida)), true);
 					partidaPorTiempo();
 				}
 
-			}, 20 * 60);
-		}
+	},20*60);}
 
 	}
 
@@ -2001,6 +2182,38 @@ public class MatchActive {
 
 	public void setCheckpoints(Map<String, Location> checkpoints) {
 		this.checkpoints = checkpoints;
+	}
+
+	public List<Location> getChests() {
+		return chests;
+	}
+
+	public void setChests(List<Location> chests) {
+		this.chests = chests;
+	}
+
+	public Cuboid getActualCuboid() {
+		return actualCuboid;
+	}
+
+	public void setActualCuboid(Cuboid actualCuboid) {
+		this.actualCuboid = actualCuboid;
+	}
+
+	public Boolean getAllowDamage() {
+		return allowDamage;
+	}
+
+	public void setAllowDamage(Boolean allowDamage) {
+		this.allowDamage = allowDamage;
+	}
+
+	public Map<Location, MaterialData> getBlockPlaced() {
+		return blockPlaced;
+	}
+
+	public void setBlockPlaced(Map<Location, MaterialData> blockPlaced) {
+		this.blockPlaced = blockPlaced;
 	}
 
 }

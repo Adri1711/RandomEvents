@@ -51,6 +51,9 @@ highestPriorityDamageEvents: false
 #Optional titles for some messages such as the seconds remaining to begin a match, turn this to true if you want to see titles instead of messages in chat.
 optionalTitles: false
 
+#Maximum items in chests on Survival Games or Skywars minigames
+maxItemOnChests: 10
+
 
 tournament:
   spawn:
