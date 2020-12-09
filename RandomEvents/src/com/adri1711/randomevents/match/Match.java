@@ -48,20 +48,18 @@ public class Match {
 	private Location beastSpawn;
 
 	private String material;
-	
+
 	private List<MaterialData> datas;
 
 	public Match() {
 		super();
-		this.inventory = new InventoryPers();
-		this.inventoryBeast = new InventoryPers();
-		this.inventoryRunners = new InventoryPers();
+
 		// TODO this.equipment=new ItemStack[0];
 		this.rewards = new ArrayList<String>();
 		this.entitySpawns = new ArrayList<Location>();
 		this.spawns = new ArrayList<Location>();
 		this.spectatorSpawns = new ArrayList<Location>();
-		this.datas= new ArrayList<MaterialData>();
+		this.datas = new ArrayList<MaterialData>();
 	}
 
 	public String getName() {
@@ -232,7 +230,6 @@ public class Match {
 	public void setMaterial(String material) {
 		this.material = material;
 	}
-	
 
 	public List<MaterialData> getDatas() {
 		return datas;

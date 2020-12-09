@@ -1,93 +1,118 @@
 package com.adri1711.randomevents.match.enums;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.adri1711.randomevents.match.Match;
+import com.adri1711.randomevents.util.Constantes;
 
 public enum Creacion {
 
-	MINIGAME_TYPE(0, "§6§lChoose Minigame type"),
+	MINIGAME_TYPE(0, "§6§lChoose Minigame type", "ALLMINIGAMES"),
 
-	BATTLE_NAME(1, "§6§lYou began the creation of the RandomEvent. Write the match's name"),
+	BATTLE_NAME(1, "§6§lYou began the creation of the RandomEvent. Write the match's name", "ALLMINIGAMES"),
 
-	AMOUNT_PLAYERS(2, "§6§lWrite the number of players allowed to enter the RandomEvent"),
+	AMOUNT_PLAYERS(2, "§6§lWrite the number of players allowed to enter the RandomEvent", "ALLMINIGAMES"),
 
-	AMOUNT_PLAYERS_MIN(3, "§6§lWrite the minimum number of players to begin the RandomEvent"),
+	AMOUNT_PLAYERS_MIN(3, "§6§lWrite the minimum number of players to begin the RandomEvent", "ALLMINIGAMES"),
 
-	SPAWN_PLAYER(4, "§6§lGo to the arena you created and write 'Done' to set the lobby spawn for the players "),
+	SPAWN_PLAYER(4, "§6§lGo to the arena you created and write 'Done' to set the lobby spawn for the players ",
+			"ALLMINIGAMES"),
 
 	ARENA_SPAWNS(5,
-			"§6§lGo to the arena you created and write 'Done' to set each spawn location for the players (%players%/%maxPlayers%)"),
+			"§6§lGo to the arena you created and write 'Done' to set each spawn location for the players (%players%/%maxPlayers%)",
+			"ALLMINIGAMES"),
 
-	ANOTHER_ARENA_SPAWNS(6, "§6§lPut another player spawn, say 'Done' (%players%/%maxPlayers%) "),
+	ANOTHER_ARENA_SPAWNS(6, "§6§lPut another player spawn, say 'Done' (%players%/%maxPlayers%) ", ""),
 
-	SPECTATOR_SPAWNS(7, "§6§lSay 'Done' to put a spectator spawn and 'Next' to go to the next step"),
+	SPECTATOR_SPAWNS(7, "§6§lSay 'Done' to put a spectator spawn and 'Next' to go to the next step", "ALLMINIGAMES"),
 
 	REWARDS(8,
-			"§6§lWrite a command to reward the winners. Use %player% and it will be replaced for the player's name. Put reprob <probability from 1 to 100> before the command to set a prob to execute the reward"),
+			"§6§lWrite a command to reward the winners. Use %player% and it will be replaced for the player's name. Put reprob <probability from 1 to 100> before the command to set a prob to execute the reward",
+			"ALLMINIGAMES"),
 
-	ANOTHER_REWARDS(9, "§6§lPut another reward for the winners or just say 'Done' to begin the next step"),
+	ANOTHER_REWARDS(9, "§6§lPut another reward for the winners or just say 'Done' to begin the next step", ""),
 
-	INVENTORY(10, "§6§lTake the inventory for the players and say 'Done' "),
+	INVENTORY(10, "§6§lTake the inventory for the players and say 'Done' ", "ALLMINIGAMES"),
 
-	TIMER_MOB_SPAWN(11, "§6§lWrite the number of seconds (it can have decimals) to respawn each mob"),
+	TIMER_MOB_SPAWN(11, "§6§lWrite the number of seconds (it can have decimals) to respawn each mob", ""),
 
-	MOB_NAME(12, "§6§lChoose Mob"),
+	MOB_NAME(12, "§6§lChoose Mob", ""),
 
 	MOB_SPAWN(13,
-			"§6§lGo to the arena you created and write 'Done' to set the spawn location of the mob, 'New' to choose another mob or 'End' to end the creation of the RandomEvent"),
+			"§6§lGo to the arena you created and write 'Done' to set the spawn location of the mob, 'New' to choose another mob or 'End' to end the creation of the RandomEvent",
+			""),
 
-	PLAY_TIME(14, "§6§lChoose the play time in seconds"),
+	PLAY_TIME(14, "§6§lChoose the play time in seconds", "TKLL,OITC,TKLLT2"),
 
-	ARROW_LOCATION1(15, "§6§lSet the first location of the cuboid of spawn of arrows, say 'Done'"),
+	ARROW_LOCATION1(15, "§6§lSet the first location of the cuboid of spawn of arrows, say 'Done'", "EARR"),
 
-	ARROW_LOCATION2(16, "§6§lSet the second location of the cuboid of spawn of arrows, say 'Done'"),
+	ARROW_LOCATION2(16, "§6§lSet the second location of the cuboid of spawn of arrows, say 'Done'", "EARR"),
 
-	TIMER_ARROW_SPAWN(17, "§6§lWrite the number of seconds (it can have decimals) to respawn each arrow"),
+	TIMER_ARROW_SPAWN(17, "§6§lWrite the number of seconds (it can have decimals) to respawn each arrow", "EARR"),
 
-	GEM_LOCATION1(18, "§6§lSet the first location of the cuboid of spawn of gems, say 'Done'"),
+	GEM_LOCATION1(18, "§6§lSet the first location of the cuboid of spawn of gems, say 'Done'", "GEMC"),
 
-	GEM_LOCATION2(19, "§6§lSet the second location of the cuboid of spawn of gems, say 'Done'"),
+	GEM_LOCATION2(19, "§6§lSet the second location of the cuboid of spawn of gems, say 'Done'", "GEMC"),
 
-	TIMER_GEM_SPAWN(20, "§6§lWrite the number of seconds (it can have decimals) to respawn each gem"),
+	TIMER_GEM_SPAWN(20, "§6§lWrite the number of seconds (it can have decimals) to respawn each gem", "GEMC"),
 
-	TIMER_BOMB(21, "§6§lWrite the number of seconds to fire the bomb"),
+	TIMER_BOMB(21, "§6§lWrite the number of seconds to fire the bomb", "BOMB"),
 
-	SECONDS_TO_SPAWN_BEAST(22, "§6§lWrite the number of seconds to spawn the beast"),
+	SECONDS_TO_SPAWN_BEAST(22, "§6§lWrite the number of seconds to spawn the beast", "ESCAPE_FROM_BEAST"),
 
-	SPAWN_BEAST(23, "§6§lGo to the arena you created and write 'Done' to set the beast spawn."),
+	SPAWN_BEAST(23, "§6§lGo to the arena you created and write 'Done' to set the beast spawn.", "ESCAPE_FROM_BEAST"),
 
-	INVENTORY_BEAST(24, "§6§lTake the inventory for the beast and say 'Done' "),
+	INVENTORY_BEAST(24, "§6§lTake the inventory for the beast and say 'Done' ", "ESCAPE_FROM_BEAST"),
 
-	INVENTORY_RUNNERS(25, "§6§lTake the inventory for the players when they reach the goal and say 'Done' "),
+	INVENTORY_RUNNERS(25, "§6§lTake the inventory for the players when they reach the goal and say 'Done' ",
+			"ESCAPE_FROM_BEAST"),
 
 	ENTITY_SPAWNS(26,
-			"§6§lGo to the arena you created and write 'Done' to set each spawn location for the entities or 'Next' to make the entities appear on player location. (%entities%/%maxPlayers%)"),
+			"§6§lGo to the arena you created and write 'Done' to set each spawn location for the entities or 'Next' to make the entities appear on player location. (%entities%/%maxPlayers%)",
+			"BOAT_RUN,HORSE_RUN"),
 
-	ANOTHER_ENTITY_SPAWNS(27, "§6§lPut another entity spawn, say 'Done' . (%entities%/%maxPlayers%)"),
+	ANOTHER_ENTITY_SPAWNS(27, "§6§lPut another entity spawn, say 'Done' . (%entities%/%maxPlayers%)", ""),
 
-	GOAL_LOCATION1(28, "§6§lSet the first location of the cuboid of the goal, say 'Done'"),
+	GOAL_LOCATION1(28, "§6§lSet the first location of the cuboid of the goal, say 'Done'",
+			"BOAT_RUN,HORSE_RUN,ESCAPE_FROM_BEAST,RACE"),
 
-	GOAL_LOCATION2(29, "§6§lSet the second location of the cuboid of the goal, say 'Done'"),
+	GOAL_LOCATION2(29, "§6§lSet the second location of the cuboid of the goal, say 'Done'",
+			"BOAT_RUN,HORSE_RUN,ESCAPE_FROM_BEAST,RACE"),
 
-	MATERIAL_SPLEEF(30, "§6§lGet the block you want to set mineable for spleef on your hand and say 'Done'"),
-	
-	ANOTHER_MATERIAL_SPLEEF(31, "§6§lGet another block you want to set mineable for spleef on your hand and say 'Done' or say 'Next' to end the spleef materials"),
+	MATERIAL_SPLEEF(30, "§6§lGet the block you want to set mineable for spleef on your hand and say 'Done'",
+			"SPLEEF,SPLEGG"),
 
-	END(999, "§6§lYou finished the creation of the random event!");
+	ANOTHER_MATERIAL_SPLEEF(31,
+			"§6§lGet another block you want to set mineable for spleef on your hand and say 'Done' or say 'Next' to end the spleef materials",
+			"SPLEEF,SPLEGG"),
+
+	SAVE(997, "§6§lYou are about to save a Random Event, put 'Y' to confirm or 'N' to continue creating", "ALLMINIGAMES"),
+
+	DELETE(998, "§6§lChoose the field you want to remove", "ALLMINIGAMES"),
+
+	CANCEL(999, "§6§lYou are about to cancel a Random Event, put 'Y' to confirm or 'N' to continue creating", "ALLMINIGAMES");
 
 	private Integer position;
 	private String message;
 
-	private Creacion(Integer position, String message) {
+	private String allowed;
+
+	private Creacion(Integer position, String message, String allowed) {
 		this.position = position;
 		this.message = message;
+		this.allowed = allowed;
 	}
 
 	public static Creacion getByPosition(Integer position) {
 		Creacion creation = null;
-		for (Creacion w : Creacion.values()) {
+		if (position != null) {
+			for (Creacion w : Creacion.values()) {
 
-			if (w.getPosition().equals(position)) {
-				creation = w;
+				if (w.getPosition().equals(position)) {
+					creation = w;
+				}
 			}
 		}
 		return creation;
@@ -115,8 +140,29 @@ public enum Creacion {
 		}
 	}
 
+	public static List<Creacion> getCreaciones(Match m) {
+		List<Creacion> creaciones = new ArrayList<Creacion>();
+		for (Creacion c : Creacion.values()) {
+			String[] minijuegos = c.getAllowed().split(",");
+			List<String> list = Arrays.asList(minijuegos);
+			if (m.getMinigame() != null
+					&& (list.contains(m.getMinigame().getCodigo()) || list.contains(Constantes.ALL))) {
+				creaciones.add(c);
+			}
+		}
+		return creaciones;
+	}
+
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public String getAllowed() {
+		return allowed;
+	}
+
+	public void setAllowed(String allowed) {
+		this.allowed = allowed;
 	}
 
 }

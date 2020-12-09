@@ -1,9 +1,8 @@
 package com.adri1711.randomevents.util;
 
-import com.adri1711.randomevents.match.enums.Creacion;
-import com.adri1711.util.enums.XMaterial;
-
 public class Constantes {
+	
+	public static String ALL="ALLMINIGAMES";
 
 	public static String GUI_NAME = "RandomEvents_Stats";
 	public static String DONE = "Done";
@@ -12,6 +11,8 @@ public class Constantes {
 	public static String NEW = "New";
 	public static String CADENA_PLAYER = "%player%";
 	public static String SALTO_LINEA = "\n";
+	public static String TABULACION = "    ";
+
 	public static String INVENTORY_NAME = "§9RandomEvents";
 	public static String INVENTORY_NAME_STATS = "§9RandomEvents Stats";
 	public static String INVENTORY_INFO_WAVE = "§9RandomEvents Wave Info";
@@ -62,7 +63,12 @@ public class Constantes {
 		
 		NEXT_EVENT_NAME("nextEventName", "comun.nextEventName", "&6&lEvent: "),
 
+		CANCEL_MINE_CREATION("cancelOfMatchCreation", "creation.cancelOfMatchCreation", "&c&lEvent creation canceled "),
+		
+		LACKS_INFO_CREATION("lacksInfoCreation", "creation.lacksInfoCreation", "&c&lEvent cant be created, it lacks information, check the fields again "),
 
+		
+		
 		SECONDS_3_REMAINING("secondsRemaining3", "comun.secondsRemaining3", "&6&l3"),
 
 		SECONDS_2_REMAINING("secondsRemaining2", "comun.secondsRemaining2", "&6&l2"),
@@ -235,6 +241,9 @@ public class Constantes {
 
 		MINIGAME_DESC_BOAT_RUN("minigameDescriptionBOAT_RUN", "minigame.description.BOAT_RUN",
 				"&eBe the fastest sailor and reach the finish line before;&e your pursuers!"),
+		
+		MINIGAME_DESC_HORSE_RUN("minigameDescriptionHORSE_RUN", "minigame.description.HORSE_RUN",
+				"&eBe the fastest horse rider and reach the finish line before;&e your pursuers!"),
 
 		MINIGAME_DESC_ESCAPE_FROM_BEAST("minigameDescriptionESCAPE_FROM_BEAST",
 				"minigame.description.ESCAPE_FROM_BEAST",
@@ -250,7 +259,10 @@ public class Constantes {
 				"&eMake the other players fall by breaking the blocks on their feets,;&e be the one to stay safe to win the reward!"),
 
 		MINIGAME_DESC_SPLEGG("minigameDescriptionSPLEGG", "minigame.description.SPLEGG",
-				"&eAnother type of Spleef but this time use your pistol to throw eggs;&e that will break the floor!");
+				"&eAnother type of Spleef but this time use your pistol to throw eggs;&e that will break the floor!"),
+		
+		MINIGAME_DESC_OITC("minigameDescriptionOITC", "minigame.description.OITC",
+				"&eGame that arrows are letal, hit your enemies to get points;&e and if you get out of arrows... Good luck!");
 
 		private String javaField;
 		private String ymlField;

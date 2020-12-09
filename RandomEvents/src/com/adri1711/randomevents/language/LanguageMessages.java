@@ -96,6 +96,9 @@ public class LanguageMessages {
 
 	private String nextEventName;
 	private String startingMatch;
+	private String cancelOfMatchCreation;
+
+	private String lacksInfoCreation;
 
 	private List<String> minigameDescriptionBR;
 	private List<String> minigameDescriptionBRT2;
@@ -107,11 +110,14 @@ public class LanguageMessages {
 	private List<String> minigameDescriptionGEMC;
 	private List<String> minigameDescriptionBOMB;
 	private List<String> minigameDescriptionBOAT_RUN;
+	private List<String> minigameDescriptionHORSE_RUN;
 	private List<String> minigameDescriptionESCAPE_FROM_BEAST;
 	private List<String> minigameDescriptionRACE;
 	private List<String> minigameDescriptionTNTRUN;
 	private List<String> minigameDescriptionSPLEEF;
 	private List<String> minigameDescriptionSPLEGG;
+	private List<String> minigameDescriptionOITC;
+	
 
 	public LanguageMessages(RandomEvents plugin) {
 		this.file = new File(plugin.getDataFolder(), "messages.yml");
@@ -784,6 +790,14 @@ public class LanguageMessages {
 	public void setMinigameDescriptionBOAT_RUN(List<String> minigameDescriptionBOAT_RUN) {
 		this.minigameDescriptionBOAT_RUN = minigameDescriptionBOAT_RUN;
 	}
+	
+	public List<String> getMinigameDescriptionHORSE_RUN() {
+		return minigameDescriptionHORSE_RUN;
+	}
+
+	public void setMinigameDescriptionHORSE_RUN(List<String> minigameDescriptionHORSE_RUN) {
+		this.minigameDescriptionHORSE_RUN = minigameDescriptionHORSE_RUN;
+	}
 
 	public List<String> getMinigameDescriptionESCAPE_FROM_BEAST() {
 		return minigameDescriptionESCAPE_FROM_BEAST;
@@ -799,6 +813,14 @@ public class LanguageMessages {
 
 	public void setMinigameDescriptionRACE(List<String> minigameDescriptionRACE) {
 		this.minigameDescriptionRACE = minigameDescriptionRACE;
+	}
+	
+	public List<String> getMinigameDescriptionOITC() {
+		return minigameDescriptionOITC;
+	}
+
+	public void setMinigameDescriptionOITC(List<String> minigameDescriptionOITC) {
+		this.minigameDescriptionOITC = minigameDescriptionOITC;
 	}
 
 	public List<String> getMinigameDescriptionTNTRUN() {
@@ -943,6 +965,22 @@ public class LanguageMessages {
 
 	public void setStartingMatch(String startingMatch) {
 		this.startingMatch = startingMatch;
+	}
+
+	public String getCancelOfMatchCreation() {
+		return cancelOfMatchCreation.replaceAll("&", "§");
+	}
+
+	public void setCancelOfMatchCreation(String cancelOfMatchCreation) {
+		this.cancelOfMatchCreation = cancelOfMatchCreation;
+	}
+
+	public String getLacksInfoCreation() {
+		return lacksInfoCreation.replaceAll("&", "§");
+	}
+
+	public void setLacksInfoCreation(String lacksInfoCreation) {
+		this.lacksInfoCreation = lacksInfoCreation;
 	}
 
 }

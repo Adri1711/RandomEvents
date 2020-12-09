@@ -167,7 +167,7 @@ public class ComandosExecutor {
 		}
 
 	}
-	//TODO max players
+	// TODO max players
 
 	public void currentDate(RandomEvents plugin, Player player) {
 		player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + new Date());
@@ -230,9 +230,23 @@ public class ComandosExecutor {
 	}
 
 	public void createRandomEvent(RandomEvents plugin, Player player) {
-		Integer position = 0;
-		plugin.getPlayersCreation().put(player.getName(), position);
-		UtilsRandomEvents.pasaACreation(plugin, player, position, plugin.getPlayerMatches().get(player.getName()));
+		Match m = new Match();
+		plugin.getPlayerMatches().put(player.getName(), m);
+		player.sendMessage(UtilsRandomEvents.enviaInfoCreacion(m, player, plugin));
+	}
+
+	public void editRandomEvent(RandomEvents plugin, Player player, String number) {
+		try {
+
+			Match m = plugin.getMatches().get(Integer.valueOf(number));
+			plugin.getPlayerMatches().put(player.getName(), m);
+			plugin.getEditando().add(player.getName());
+			player.sendMessage(UtilsRandomEvents.enviaInfoCreacion(m, player, plugin));
+		} catch (Exception e) {
+			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidInput());
+
+		}
+
 	}
 
 	public void reloadPlugin(RandomEvents plugin, Player player) {

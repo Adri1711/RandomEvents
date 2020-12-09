@@ -109,6 +109,7 @@ public class WeaponShoot implements Listener {
 										}
 										break;
 									case BOAT_RUN:
+									case HORSE_RUN:
 									case RACE:
 									case TNT_RUN:
 									case SPLEEF:
@@ -172,6 +173,7 @@ public class WeaponShoot implements Listener {
 										}
 										break;
 									case BOAT_RUN:
+									case HORSE_RUN:
 									case RACE:
 									case TNT_RUN:
 									case SPLEEF:
@@ -222,6 +224,7 @@ public class WeaponShoot implements Listener {
 
 								break;
 							case BOAT_RUN:
+							case HORSE_RUN:
 							case RACE:
 							case TNT_RUN:
 							case SPLEEF:
@@ -245,6 +248,7 @@ public class WeaponShoot implements Listener {
 								ev.setDamage(0);
 								break;
 							case BOAT_RUN:
+							case HORSE_RUN:
 							case RACE:
 							case TNT_RUN:
 							case SPLEEF:

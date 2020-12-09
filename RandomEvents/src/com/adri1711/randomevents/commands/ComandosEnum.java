@@ -74,6 +74,9 @@ public enum ComandosEnum {
 	CMD_CREATE("create", 1, "randomevent.admin.create",
 			"   §6/revent create:\n          §e-> Begin the creation of a Random Event", "createRandomEvent", true,
 			false),
+	
+	CMD_EDIT("edit", 2, "randomevent.admin.edit", "   §6/revent edit <number>:\n          §e-> Edits a Random Event",
+			"editRandomEvent", true, true),
 
 	CMD_CANCEL("cancel", 1, "randomevent.admin.cancel",
 			"   §6/revent cancel:\n          §e-> Cancels the creation of a Random Event", "cancelCreationRandomEvent",

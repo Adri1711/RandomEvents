@@ -29,6 +29,7 @@ import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -58,38 +59,40 @@ import com.google.common.io.Files;
 
 public class UtilsRandomEvents {
 
-	public static Boolean pasaACreation(RandomEvents plugin, Player player, Integer position, Match match) {
-		Boolean ponerPlayerCreation = Boolean.TRUE;
-		player.sendMessage(
-				plugin.getLanguage().getTagPlugin() + " " + Creacion.getByPosition(position).getMessage(match));
-		switch (Creacion.getByPosition(position)) {
-		case MINIGAME_TYPE:
-			for (MinigameType m : MinigameType.values()) {
-				player.sendMessage("§6§l" + m.ordinal() + " - " + m.getMessage());
-			}
-			break;
-		case MOB_NAME:
-			for (EntityType m : EntityType.values()) {
-				player.sendMessage("§6§l" + m.ordinal() + " - " + m.name());
-			}
-			break;
-		case END:
-			terminaCreacionMatch(plugin, player);
-			ponerPlayerCreation = Boolean.FALSE;
-			break;
-		default:
-			break;
-
-		}
-
-		if (ponerPlayerCreation) {
-			plugin.getPlayersCreation().put(player.getName(), position);
-		} else {
-			plugin.getPlayersCreation().remove(player.getName(), position);
-		}
-		return ponerPlayerCreation;
-
-	}
+	// public static Boolean pasaACreation(RandomEvents plugin, Player player,
+	// Integer position, Match match) {
+	// Boolean ponerPlayerCreation = Boolean.TRUE;
+	// player.sendMessage(
+	// plugin.getLanguage().getTagPlugin() + " " +
+	// Creacion.getByPosition(position).getMessage(match));
+	// switch (Creacion.getByPosition(position)) {
+	// case MINIGAME_TYPE:
+	// for (MinigameType m : MinigameType.values()) {
+	// player.sendMessage("§6§l" + m.ordinal() + " - " + m.getMessage());
+	// }
+	// break;
+	// case MOB_NAME:
+	// for (EntityType m : EntityType.values()) {
+	// player.sendMessage("§6§l" + m.ordinal() + " - " + m.name());
+	// }
+	// break;
+	//// case END:
+	//// terminaCreacionMatch(plugin, player);
+	//// ponerPlayerCreation = Boolean.FALSE;
+	//// break;
+	// default:
+	// break;
+	//
+	// }
+	//
+	// if (ponerPlayerCreation) {
+	// plugin.getPlayersCreation().put(player.getName(), position);
+	// } else {
+	// plugin.getPlayersCreation().remove(player.getName(), position);
+	// }
+	// return ponerPlayerCreation;
+	//
+	// }
 
 	public static String preparaStringTiempo(Integer tiempo) {
 
@@ -128,6 +131,9 @@ public class UtilsRandomEvents {
 								+ ChatColor.stripColor(match.getName().replaceAll("<color>", "§")).replaceAll(" ", "_")
 								+ ".json");
 				if (!bossFile.exists()) {
+					bossFile.createNewFile();
+				} else {
+					bossFile.delete();
 					bossFile.createNewFile();
 				}
 				FileWriter fw = new FileWriter(bossFile, true);
@@ -448,8 +454,8 @@ public class UtilsRandomEvents {
 	public static Schedule findSchedule(RandomEvents plugin, Integer day, Integer hour, Integer minute) {
 		Schedule sched = null;
 		for (Schedule s : plugin.getSchedules()) {
-			if ((s.getDay().equals(DayWeek.EVERYDAY.getPosition()) || s.getDay().equals(day)) && s.getHour().equals(hour)
-					&& s.getMinute().equals(minute)) {
+			if ((s.getDay().equals(DayWeek.EVERYDAY.getPosition()) || s.getDay().equals(day))
+					&& s.getHour().equals(hour) && s.getMinute().equals(minute)) {
 				sched = s;
 			}
 		}
@@ -545,7 +551,11 @@ public class UtilsRandomEvents {
 			message = plugin.getLanguage().getTagPlugin() + " " + message;
 		}
 		for (Player p : players) {
-			p.sendMessage(message);
+			if(plugin.isOptionalTitles()){
+				plugin.getApi().usaTitle(p, "", message);
+			}else{
+				p.sendMessage(message);
+			}
 		}
 	}
 
@@ -1178,6 +1188,296 @@ public class UtilsRandomEvents {
 
 		return sch;
 
+	}
+
+	public static String enviaInfoCreacion(Match match, Player player, RandomEvents plugin) {
+		String info = plugin.getLanguage().getTagPlugin() + " ";
+		if (match.getMinigame() == null) {
+			info += Constantes.SALTO_LINEA + "§e§l " + Creacion.MINIGAME_TYPE.ordinal() + " - "
+					+ Creacion.MINIGAME_TYPE.getMessage();
+
+		} else {
+
+			for (Creacion c : Creacion.getCreaciones(match)) {
+				info += Constantes.SALTO_LINEA + "§e§l " + c.getPosition() + " - " + c.toString();
+
+				switch (c) {
+
+				case MINIGAME_TYPE:
+					if (match.getMinigame() != null) {
+						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getMinigame();
+					}
+
+					break;
+				case BATTLE_NAME:
+					if (match.getName() != null) {
+						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getName();
+					}
+
+					break;
+				case AMOUNT_PLAYERS:
+					if (match.getAmountPlayers() != null) {
+						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getAmountPlayers();
+					}
+					break;
+				case AMOUNT_PLAYERS_MIN:
+					if (match.getAmountPlayersMin() != null) {
+						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getAmountPlayersMin();
+					}
+					break;
+				case SPAWN_PLAYER:
+					if (match.getPlayerSpawn() != null) {
+						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
+								+ match.getPlayerSpawn().getWorld().getName() + " " + match.getPlayerSpawn().getX()
+								+ ", " + match.getPlayerSpawn().getY() + ", " + match.getPlayerSpawn().getZ();
+					}
+					break;
+				case ARENA_SPAWNS:
+				case ANOTHER_ARENA_SPAWNS:
+					if (match.getSpawns() != null && !match.getSpawns().isEmpty()) {
+
+						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9Spawns completed";
+					}
+					break;
+				case SPECTATOR_SPAWNS:
+					if (match.getSpectatorSpawns() != null && !match.getSpectatorSpawns().isEmpty()) {
+
+						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9Spawns completed";
+					}
+					break;
+				case REWARDS:
+				case ANOTHER_REWARDS:
+					if (match.getRewards() != null && !match.getRewards().isEmpty()) {
+						for (String s : match.getRewards()) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + s;
+						}
+					}
+
+					break;
+				case INVENTORY:
+					if (match.getInventory() != null) {
+
+						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9Inventory completed";
+					}
+
+					break;
+				case TIMER_MOB_SPAWN:
+				case TIMER_ARROW_SPAWN:
+				case TIMER_GEM_SPAWN:
+				case TIMER_BOMB:
+				case SECONDS_TO_SPAWN_BEAST:
+
+					if (match.getSecondsMobSpawn() != null) {
+						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getSecondsMobSpawn();
+					}
+					break;
+				case MOB_NAME:
+					if (match.getMob() != null) {
+						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getMob();
+					}
+					break;
+				case MOB_SPAWN:
+				case ENTITY_SPAWNS:
+				case ANOTHER_ENTITY_SPAWNS:
+					if (match.getEntitySpawns() != null && !match.getEntitySpawns().isEmpty()) {
+
+						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9Spawns completed";
+					}
+					break;
+				case PLAY_TIME:
+					if (match.getTiempoPartida() != null) {
+						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getTiempoPartida();
+					}
+					break;
+				case ARROW_LOCATION1:
+				case GEM_LOCATION1:
+				case GOAL_LOCATION1:
+					if (match.getLocation1() != null) {
+						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
+								+ match.getLocation1().getWorld().getName() + " " + match.getLocation1().getX() + ", "
+								+ match.getLocation1().getY() + ", " + match.getLocation1().getZ();
+					}
+					break;
+				case ARROW_LOCATION2:
+				case GEM_LOCATION2:
+				case GOAL_LOCATION2:
+					if (match.getLocation2() != null) {
+						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
+								+ match.getLocation2().getWorld().getName() + " " + match.getLocation2().getX() + ", "
+								+ match.getLocation2().getY() + ", " + match.getLocation2().getZ();
+					}
+					break;
+				case SPAWN_BEAST:
+					if (match.getBeastSpawn() != null) {
+						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
+								+ match.getBeastSpawn().getWorld().getName() + " " + match.getBeastSpawn().getX() + ", "
+								+ match.getBeastSpawn().getY() + ", " + match.getBeastSpawn().getZ();
+					}
+					break;
+				case INVENTORY_BEAST:
+					if (match.getInventoryBeast() != null) {
+
+						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9Inventory completed";
+					}
+					break;
+				case INVENTORY_RUNNERS:
+					if (match.getInventoryRunners() != null) {
+
+						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9Inventory completed";
+					}
+					break;
+
+				case MATERIAL_SPLEEF:
+				case ANOTHER_MATERIAL_SPLEEF:
+					if (match.getDatas() != null && !match.getDatas().isEmpty()) {
+						for (MaterialData s : match.getDatas()) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + s.getItemType().toString()
+									+ " : " + s.getData();
+						}
+					}
+					break;
+				default:
+					break;
+
+				}
+			}
+
+		}
+		return info;
+	}
+
+	public static String compruebaMatchCorrecta(Match match, RandomEvents plugin) {
+		Boolean res = Boolean.TRUE;
+		for (Creacion c : Creacion.getCreaciones(match)) {
+
+			switch (c) {
+
+			case MINIGAME_TYPE:
+				if (match.getMinigame() == null) {
+					res = Boolean.FALSE;
+				}
+
+				break;
+			case BATTLE_NAME:
+				if (match.getName() == null) {
+					res = Boolean.FALSE;
+				}
+
+				break;
+			case AMOUNT_PLAYERS:
+				if (match.getAmountPlayers() == null) {
+					res = Boolean.FALSE;
+				}
+				break;
+			case AMOUNT_PLAYERS_MIN:
+				if (match.getAmountPlayersMin() == null) {
+					res = Boolean.FALSE;
+				}
+				break;
+			case SPAWN_PLAYER:
+				if (match.getPlayerSpawn() == null) {
+					res = Boolean.FALSE;
+
+				}
+				break;
+			case ARENA_SPAWNS:
+			case ANOTHER_ARENA_SPAWNS:
+				if (match.getSpawns() == null || match.getSpawns().isEmpty()) {
+
+					res = Boolean.FALSE;
+				}
+				break;
+			case SPECTATOR_SPAWNS:
+				break;
+			case REWARDS:
+			case ANOTHER_REWARDS:
+				
+				break;
+			case INVENTORY:
+				if (match.getInventory() == null) {
+
+					res = Boolean.FALSE;
+				}
+
+				break;
+			case TIMER_MOB_SPAWN:
+			case TIMER_ARROW_SPAWN:
+			case TIMER_GEM_SPAWN:
+			case TIMER_BOMB:
+			case SECONDS_TO_SPAWN_BEAST:
+
+				if (match.getSecondsMobSpawn() == null) {
+					res = Boolean.FALSE;
+				}
+				break;
+			case MOB_NAME:
+				if (match.getMob() == null) {
+					res = Boolean.FALSE;
+				}
+				break;
+			case MOB_SPAWN:
+			case ENTITY_SPAWNS:
+			case ANOTHER_ENTITY_SPAWNS:
+				break;
+			case PLAY_TIME:
+				if (match.getTiempoPartida() == null) {
+					res = Boolean.FALSE;
+				}
+				break;
+			case ARROW_LOCATION1:
+			case GEM_LOCATION1:
+			case GOAL_LOCATION1:
+				if (match.getLocation1() == null) {
+					res = Boolean.FALSE;
+
+				}
+				break;
+			case ARROW_LOCATION2:
+			case GEM_LOCATION2:
+			case GOAL_LOCATION2:
+				if (match.getLocation2() == null) {
+					res = Boolean.FALSE;
+
+				}
+				break;
+			case SPAWN_BEAST:
+				if (match.getBeastSpawn() == null) {
+					res = Boolean.FALSE;
+
+				}
+				break;
+			case INVENTORY_BEAST:
+				if (match.getInventoryBeast() == null) {
+
+					res = Boolean.FALSE;
+				}
+				break;
+			case INVENTORY_RUNNERS:
+				if (match.getInventoryRunners() == null) {
+
+					res = Boolean.FALSE;
+				}
+				break;
+
+			case MATERIAL_SPLEEF:
+			case ANOTHER_MATERIAL_SPLEEF:
+				if (match.getDatas() == null || match.getDatas().isEmpty()) {
+					res = Boolean.FALSE;
+
+				}
+				break;
+			default:
+				break;
+
+			}
+		}
+		String respuesta = null;
+
+		if (!res) {
+			respuesta = plugin.getLanguage().getLacksInfoCreation();
+		}
+
+		return respuesta;
 	}
 
 }

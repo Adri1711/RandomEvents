@@ -48,6 +48,9 @@ secondsToStartMatch: 5
 #Highest priority level of events. Enable this to bypass damage protection of faction plugins for example.
 highestPriorityDamageEvents: false
 
+#Optional titles for some messages such as the seconds remaining to begin a match, turn this to true if you want to see titles instead of messages in chat.
+optionalTitles: false
+
 
 tournament:
   spawn:
@@ -76,6 +79,10 @@ idleTimeForDamage: 10
 #Commands that will be done each time a user join a random event, use it in case you need to get the god mode off, to set the gamemode to survival, etc
 commandsOnUserJoin:
 - 'psa %player%'
+
+#Commands that will be done when the match begin for all players, use it in case you need to get the god mode off, to set the gamemode to survival, etc
+commandsOnMatchBegin:
+- 'god %player% off'
 
 #Allowed cmds in matchs. (DONT USE CAPS HERE)
 allowedCmds:

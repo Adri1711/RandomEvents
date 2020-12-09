@@ -80,10 +80,15 @@ public class RandomEvents extends JavaPlugin {
 	private Map<String, Match> playerMatches;
 
 	private Map<String, Integer> playersCreation;
+	
+	private List<String> editando;
 
 	private Map<String, EntityType> playersEntity;
 
 	private List<String> commandsOnUserJoin;
+	
+	private List<String> commandsOnMatchBegin;
+	
 
 	private Boolean forzado = Boolean.FALSE;
 
@@ -139,10 +144,12 @@ public class RandomEvents extends JavaPlugin {
 
 	private boolean highestPriorityDamageEvents;
 
+	private boolean optionalTitles;
+
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
 		loadConfig();
-
+		this.editando=new ArrayList<String>();
 		this.comandosExecutor = new ComandosExecutor();
 
 		this.powerUpItem = new ItemStack(getApi().getMaterial(AMaterials.EMERALD));
@@ -202,7 +209,10 @@ public class RandomEvents extends JavaPlugin {
 		if (mysqlEnabled && hikari != null) {
 			hikari.close();
 		}
-
+		if(matchActive!=null && matchActive.getPlaying()){
+			matchActive.reiniciaValoresPartida();
+		}
+ 
 		getServer().getScheduler().cancelTasks((Plugin) this);
 		getLogger().info(" Author adri1711 - desactivado");
 	}
@@ -236,6 +246,7 @@ public class RandomEvents extends JavaPlugin {
 		this.inventoryManagement = getConfig().getBoolean("inventoryManagement");
 		this.dropItemsAfterDie = getConfig().getBoolean("dropItemsAfterDie");
 		this.commandsOnUserJoin = (List<String>) getConfig().getStringList("commandsOnUserJoin");
+		this.commandsOnMatchBegin = (List<String>) getConfig().getStringList("commandsOnMatchBegin");
 		this.allowedCmds = (List<String>) getConfig().getStringList("allowedCmds");
 
 		this.secondsToStartMatch = Integer.valueOf(getConfig().getInt("secondsToStartMatch"));
@@ -262,8 +273,9 @@ public class RandomEvents extends JavaPlugin {
 		this.highestPriorityDamageEvents = getConfig().getBoolean("highestPriorityDamageEvents");
 
 		this.debugMode = getConfig().getBoolean("debugMode");
-
+		
 		this.useLastLocation = getConfig().getBoolean("useLastLocation");
+		this.optionalTitles = getConfig().getBoolean("optionalTitles");
 
 		this.setProbabilityPowerUp(Integer.valueOf(getConfig().getInt("probabilityPowerUp")));
 
@@ -580,6 +592,16 @@ public class RandomEvents extends JavaPlugin {
 	public void setCommandsOnUserJoin(List<String> commandsOnUserJoin) {
 		this.commandsOnUserJoin = commandsOnUserJoin;
 	}
+	
+	
+
+	public List<String> getCommandsOnMatchBegin() {
+		return commandsOnMatchBegin;
+	}
+
+	public void setCommandsOnMatchBegin(List<String> commandsOnMatchBegin) {
+		this.commandsOnMatchBegin = commandsOnMatchBegin;
+	}
 
 	public void reiniciaPartida(Boolean forzada) {
 		if (forzada) {
@@ -837,4 +859,22 @@ public class RandomEvents extends JavaPlugin {
 		this.highestPriorityDamageEvents = highestPriorityDamageEvents;
 	}
 
+	public List<String> getEditando() {
+		return editando;
+	}
+
+	public void setEditando(List<String> editando) {
+		this.editando = editando;
+	}
+
+	public boolean isOptionalTitles() {
+		return optionalTitles;
+	}
+
+	public void setOptionalTitles(boolean optionalTitles) {
+		this.optionalTitles = optionalTitles;
+	}
+	
+
+	
 }

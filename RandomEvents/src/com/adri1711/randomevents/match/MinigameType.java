@@ -25,6 +25,8 @@ public enum MinigameType {
 
 	BOAT_RUN("BOAT_RUN", XMaterial.OAK_BOAT.parseMaterial(), "Boat Race"),
 
+	HORSE_RUN("HORSE_RUN", XMaterial.IRON_HORSE_ARMOR.parseMaterial(), "Horse Race"),
+
 	ESCAPE_FROM_BEAST("ESCAPE_FROM_BEAST", XMaterial.SKELETON_SKULL.parseMaterial(), "Escape from the beast"),
 
 	RACE("RACE", XMaterial.IRON_BOOTS.parseMaterial(), "Race"),
@@ -33,7 +35,17 @@ public enum MinigameType {
 
 	SPLEEF("SPLEEF", XMaterial.IRON_SHOVEL.parseMaterial(), "Spleef"),
 
-	SPLEGG("SPLEGG", XMaterial.EGG.parseMaterial(), "Splegg");
+	SPLEGG("SPLEGG", XMaterial.EGG.parseMaterial(), "Splegg"),
+
+	OITC("OITC", XMaterial.BOW.parseMaterial(), "One in the chamber"),
+
+	SG("SG", XMaterial.BEEF.parseMaterial(), "Survival Games"),
+
+	TSG("TSG", XMaterial.BEEF.parseMaterial(), "Team Survival Games"),
+
+	SW("SW", XMaterial.BEEF.parseMaterial(), "Survival Games"),
+
+	TSW("TSW", XMaterial.BEEF.parseMaterial(), "Survival Games");
 
 	private String codigo;
 	private Material material;

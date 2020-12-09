@@ -26,6 +26,7 @@ public class Move implements Listener {
 
 			switch (plugin.getMatchActive().getMatch().getMinigame()) {
 			case BOAT_RUN:
+			case HORSE_RUN:
 			case RACE:
 
 				if (plugin.getMatchActive().getCuboid().contains(player.getLocation())) {

@@ -59,6 +59,8 @@ public class MatchActive {
 
 	private Map<String, Integer> puntuacion;
 
+	private Map<String, Location> checkpoints;
+
 	private List<Player> goalPlayers;
 
 	private Player beast;
@@ -130,6 +132,7 @@ public class MatchActive {
 			this.numeroSegRestantes = match.getSecondsMobSpawn().intValue();
 			break;
 		case BOAT_RUN:
+		case HORSE_RUN:
 		case RACE:
 		case ESCAPE_FROM_BEAST:
 			this.cuboid = new Cuboid(match.getLocation1(), match.getLocation2());
@@ -152,6 +155,7 @@ public class MatchActive {
 		this.setForzada(forzada);
 		this.blockDisappear = new HashMap<Location, Long>();
 		this.blockDisappeared = new HashMap<Location, MaterialData>();
+		this.checkpoints = new HashMap<String, Location>();
 		tries = 0;
 		damageCounter = 0;
 		matchWaitingPlayers();
@@ -189,6 +193,7 @@ public class MatchActive {
 			this.numeroSegRestantes = match.getSecondsMobSpawn().intValue();
 			break;
 		case BOAT_RUN:
+		case HORSE_RUN:
 		case RACE:
 		case ESCAPE_FROM_BEAST:
 			this.cuboid = new Cuboid(match.getLocation1(), match.getLocation2());
@@ -208,6 +213,7 @@ public class MatchActive {
 		this.setForzada(forzada);
 		this.blockDisappear = new HashMap<Location, Long>();
 		this.blockDisappeared = new HashMap<Location, MaterialData>();
+		this.checkpoints = new HashMap<String, Location>();
 
 		tries = 0;
 
@@ -265,6 +271,14 @@ public class MatchActive {
 
 	private void hazComandosDeUnion(Player player) {
 		for (String cmd : plugin.getCommandsOnUserJoin()) {
+
+			Bukkit.dispatchCommand((CommandSender) Bukkit.getConsoleSender(),
+					cmd.replaceAll("%player%", player.getName()));
+
+		}
+	}
+	private void hazComandosDeComienzo(Player player) {
+		for (String cmd : plugin.getCommandsOnMatchBegin()) {
 
 			Bukkit.dispatchCommand((CommandSender) Bukkit.getConsoleSender(),
 					cmd.replaceAll("%player%", player.getName()));
@@ -596,6 +610,7 @@ public class MatchActive {
 			ganadores.addAll(getPlayersObj());
 			break;
 		case TOP_KILLER:
+		case OITC:
 		case TOP_KILLER_TEAM_2:
 			ganadores.addAll(sacaGanadoresPartidaTiempo());
 			break;
@@ -608,6 +623,7 @@ public class MatchActive {
 			}
 			break;
 		case BOAT_RUN:
+		case HORSE_RUN:
 		case RACE:
 		case ESCAPE_FROM_BEAST:
 			if (getPlayerContador() != null)
@@ -783,17 +799,16 @@ public class MatchActive {
 						true);
 
 			}
-
+			try {
+				Bukkit.getPluginManager().callEvent(new ReventEndEvent(this, ganadores));
+			} catch (Exception e) {
+				System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventEndEvent.");
+			}
 			reiniciaValoresPartida();
 		}
 	}
 
-	private void reiniciaValoresPartida() {
-		try {
-			Bukkit.getPluginManager().callEvent(new ReventEndEvent(this));
-		} catch (Exception e) {
-			System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventEndEvent.");
-		}
+	public void reiniciaValoresPartida() {
 
 		for (Entity ent : getMobs()) {
 			ent.remove();
@@ -802,7 +817,7 @@ public class MatchActive {
 		this.playersObj.clear();
 		this.playersGanadores.clear();
 		this.playersSpectators.clear();
-		this.activated=Boolean.FALSE;
+		this.activated = Boolean.FALSE;
 		if (task != null)
 			task.cancel();
 		Material mat = null;
@@ -1013,6 +1028,7 @@ public class MatchActive {
 
 			break;
 		case TOP_KILLER:
+		case OITC:
 			for (Player p : playersSpectators) {
 				if (!playersObj.contains(p)) {
 					mandaSpectatorPlayer(p);
@@ -1101,6 +1117,54 @@ public class MatchActive {
 
 			}
 			break;
+		case HORSE_RUN:
+
+			for (Player p : playersSpectators) {
+				if (!playersObj.contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
+			for (Player p : playersObj) {
+				iniciaPlayer(p);
+
+				Boat boat = null;
+				if (getMatch().getEntitySpawns() == null || getMatch().getEntitySpawns().isEmpty()) {
+					Horse horse = (Horse) p.getWorld().spawnEntity(p.getLocation(), EntityType.HORSE); // Spawns
+					// the
+					// horse
+					horse.getInventory().setSaddle(new ItemStack(plugin.getApi().getMaterial(AMaterials.SADDLE), 1)); // Gives
+					// horse
+					// saddle
+					horse.setTamed(true); // Sets horse to tamed
+					horse.setOwner(p); // Makes the horse the players
+					horse.setPassenger(p);
+
+					getMobs().add(horse);
+					getPets().put(p.getName(), horse);
+
+					horse.setPassenger(p);
+
+				} else {
+					Horse horse = (Horse) p.getWorld()
+							.spawnEntity(match.getEntitySpawns().get(getPlayersObj().indexOf(p)), EntityType.HORSE); // Spawns
+					// the
+					// horse
+					horse.getInventory().setSaddle(new ItemStack(plugin.getApi().getMaterial(AMaterials.SADDLE), 1)); // Gives
+					// horse
+					// saddle
+					horse.setTamed(true); // Sets horse to tamed
+					horse.setOwner(p); // Makes the horse the players
+
+					getMobs().add(horse);
+					getPets().put(p.getName(), horse);
+
+				}
+
+				getMobs().add(boat);
+				getPets().put(p.getName(), boat);
+
+			}
+			break;
 		case BOAT_RUN:
 			for (Player p : playersSpectators) {
 				if (!playersObj.contains(p)) {
@@ -1172,6 +1236,10 @@ public class MatchActive {
 			partidaBombTag();
 
 			break;
+		}
+		
+		for(Player p:playersObj){
+			hazComandosDeComienzo(p);
 		}
 
 	}
@@ -1383,6 +1451,7 @@ public class MatchActive {
 	private void teleportaPlayer(Player p) {
 
 		Location loc = match.getSpawns().get(getPlayersObj().indexOf(p));
+		getCheckpoints().put(p.getName(), loc);
 		UtilsRandomEvents.teleportaPlayer(p, loc, plugin);
 
 	}
@@ -1924,6 +1993,14 @@ public class MatchActive {
 
 	public void setActivated(Boolean activated) {
 		this.activated = activated;
+	}
+
+	public Map<String, Location> getCheckpoints() {
+		return checkpoints;
+	}
+
+	public void setCheckpoints(Map<String, Location> checkpoints) {
+		this.checkpoints = checkpoints;
 	}
 
 }

@@ -3,6 +3,7 @@ package com.adri1711.randomevents.listeners;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -27,6 +28,7 @@ import com.adri1711.randomevents.match.MinigameType;
 import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.util.enums.AMaterials;
+import com.adri1711.util.enums.XMaterial;
 
 public class Use implements Listener {
 
@@ -74,6 +76,12 @@ public class Use implements Listener {
 							&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEEF)) {
 						player.launchProjectile(Egg.class);
 					}
+				}
+			} else if (evt.getAction().equals(Action.PHYSICAL)) {
+				if (evt.getClickedBlock() != null
+						&& evt.getClickedBlock().getType() == XMaterial.STONE_PRESSURE_PLATE.parseMaterial()) {
+					plugin.getMatchActive().getCheckpoints().put(player.getName(), player.getLocation());
+
 				}
 			}
 		}
@@ -132,6 +140,14 @@ public class Use implements Listener {
 								nextBlock.getState().getData().clone());
 						nextBlock.setType(plugin.getApi().getMaterial(AMaterials.AIR));
 					}
+				}
+			}
+		} else if (entity instanceof Arrow) {
+			Arrow arrow = (Arrow) entity;
+			if (arrow.getShooter() != null && arrow.getShooter() instanceof Player) {
+				Player p = (Player) arrow.getShooter();
+				if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayers().contains(p.getName())) {
+					arrow.remove();
 				}
 			}
 		}
