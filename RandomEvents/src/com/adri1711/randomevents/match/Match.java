@@ -28,6 +28,8 @@ public class Match {
 	private List<Location> spectatorSpawns;
 
 	private Double secondsMobSpawn;
+	
+	private Integer secondsToBegin;
 
 	private Location location1;
 
@@ -249,6 +251,16 @@ public class Match {
 
 	public void setInventoryChests(InventoryPers inventoryChests) {
 		this.inventoryChests = inventoryChests;
+	}
+	
+	
+
+	public Integer getSecondsToBegin() {
+		return secondsToBegin;
+	}
+
+	public void setSecondsToBegin(Integer secondsToBegin) {
+		this.secondsToBegin = secondsToBegin;
 	}
 
 	@Override

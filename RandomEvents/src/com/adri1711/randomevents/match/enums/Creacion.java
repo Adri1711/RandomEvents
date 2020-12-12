@@ -101,6 +101,9 @@ public enum Creacion {
 	SHRINK_TIME(36, "§6§lChoose to shrink the border in seconds", "SG,TSG"),
 
 	BLOCKS_ALLOWED(37, "§6§lPut in your hand a block allowed to break/place in the map and say 'Done'", "SG,TSG,SW,TSW"),
+	
+	NO_MOVE_TIME(38, "§6§lChoose to allow players to move in seconds", "SG,TSG,SW,TSW"),
+
 
 	SAVE(997, "§6§lYou are about to save a Random Event, put 'Y' to confirm or 'N' to continue creating", "ALLMINIGAMES"),
 

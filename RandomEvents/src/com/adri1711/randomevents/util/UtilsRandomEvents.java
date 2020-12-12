@@ -55,6 +55,10 @@ import com.adri1711.randomevents.match.Schedule;
 import com.adri1711.randomevents.match.enums.Creacion;
 import com.adri1711.randomevents.stats.Stats;
 import com.adri1711.util.enums.AMaterials;
+import com.adri1711.util.enums.Particle1711;
+import com.adri1711.util.enums.ParticleDisplay;
+import com.adri1711.util.enums.XParticle;
+import com.adri1711.util.enums.XSound;
 import com.google.common.io.Files;
 
 public class UtilsRandomEvents {
@@ -551,9 +555,9 @@ public class UtilsRandomEvents {
 			message = plugin.getLanguage().getTagPlugin() + " " + message;
 		}
 		for (Player p : players) {
-			if(plugin.isOptionalTitles()){
+			if (plugin.isOptionalTitles()) {
 				plugin.getApi().usaTitle(p, "", message);
-			}else{
+			} else {
 				p.sendMessage(message);
 			}
 		}
@@ -677,18 +681,7 @@ public class UtilsRandomEvents {
 		return res;
 	}
 
-	public static Sound buscaSonido(String s, String s2) {
-		Sound sound = null;
-		for (Sound sou : Sound.values()) {
-			if (sou.toString().contains(s) && sou.toString().contains(s2)) {
-				sound = sou;
-				break;
-			}
-		}
-		return sound;
-	}
-
-	public static void playSound(List<Player> player, Sound sonido) {
+	public static void playSound(List<Player> player, XSound sonido) {
 		if (sonido != null) {
 			for (Player p : player) {
 				playSound(p, sonido);
@@ -696,9 +689,9 @@ public class UtilsRandomEvents {
 		}
 	}
 
-	public static void playSound(Player player, Sound sonido) {
+	public static void playSound(Player player, XSound sonido) {
 		if (sonido != null && player != null) {
-			player.playSound(player.getLocation(), sonido, 10.0F, 1.0F);
+			player.playSound(player.getLocation(), sonido.parseSound(), 10.0F, 1.0F);
 		}
 	}
 
@@ -889,9 +882,12 @@ public class UtilsRandomEvents {
 		Integer difX = cuboid.getMaxX() - cuboid.getMinX();
 		Integer difY = cuboid.getMaxY() - cuboid.getMinY();
 		Integer difZ = cuboid.getMaxZ() - cuboid.getMinZ();
-		Integer sumX = difX >= 0 ? plugin.getRandom().nextInt(difX) : (-1 * plugin.getRandom().nextInt(Math.abs(difX)));
-		Integer sumY = difY >= 0 ? plugin.getRandom().nextInt(difY) : (-1 * plugin.getRandom().nextInt(Math.abs(difY)));
-		Integer sumZ = difZ >= 0 ? plugin.getRandom().nextInt(difZ) : (-1 * plugin.getRandom().nextInt(Math.abs(difZ)));
+		Integer sumX = difX == 0 ? 0
+				: (difX > 0 ? plugin.getRandom().nextInt(difX) : (-1 * plugin.getRandom().nextInt(Math.abs(difX))));
+		Integer sumY = difY == 0 ? 0
+				: (difY > 0 ? plugin.getRandom().nextInt(difY) : (-1 * plugin.getRandom().nextInt(Math.abs(difY))));
+		Integer sumZ = difZ == 0 ? 0
+				: (difZ > 0 ? plugin.getRandom().nextInt(difZ) : (-1 * plugin.getRandom().nextInt(Math.abs(difZ))));
 
 		Location loc = null;
 
@@ -1291,6 +1287,11 @@ public class UtilsRandomEvents {
 						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getTiempoPartida();
 					}
 					break;
+				case NO_MOVE_TIME:
+					if (match.getSecondsToBegin() != null) {
+						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getSecondsToBegin();
+					}
+					break;
 				case ARROW_LOCATION1:
 				case GEM_LOCATION1:
 				case GOAL_LOCATION1:
@@ -1330,7 +1331,14 @@ public class UtilsRandomEvents {
 						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9Inventory completed";
 					}
 					break;
-
+				case INVENTORY_CHESTS:
+					if (match.getInventoryChests() != null) {
+						for (ItemStack i : match.getInventoryChests().getContents()) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9" + i.getType() + "x"
+									+ i.getAmount();
+						}
+					}
+					break;
 				case BLOCKS_ALLOWED:
 				case MATERIAL_SPLEEF:
 				case ANOTHER_MATERIAL_SPLEEF:
@@ -1396,7 +1404,7 @@ public class UtilsRandomEvents {
 				break;
 			case REWARDS:
 			case ANOTHER_REWARDS:
-				
+
 				break;
 			case INVENTORY:
 				if (match.getInventory() == null) {
@@ -1428,6 +1436,11 @@ public class UtilsRandomEvents {
 			case PLAY_TIME:
 			case SHRINK_TIME:
 				if (match.getTiempoPartida() == null) {
+					res = Boolean.FALSE;
+				}
+				break;
+			case NO_MOVE_TIME:
+				if (match.getSecondsToBegin() == null) {
 					res = Boolean.FALSE;
 				}
 				break;
@@ -1489,13 +1502,76 @@ public class UtilsRandomEvents {
 		return respuesta;
 	}
 
-	public static void setWorldBorder(RandomEvents plugin, Location center, Integer size, Player p) {
-		if(center!=null){
-			
-		}else{
-			
+	public static void setWorldBorder(RandomEvents plugin, Location center, Double size, Player p) {
+		plugin.getApi().createWorldBorder(p, size, center);
+
+	}
+
+	public static void spawnParticles(Particle1711 particle, RandomEvents plugin, Location location) {
+		if (plugin.isUseParticles()) {
+			try {
+				ParticleDisplay pa = ParticleDisplay.display(plugin.getApi(), location, particle);
+
+				String part = plugin.getParticleType().toUpperCase();
+				if (part.equals("RANDOM")) {
+					part = ParticleEffectRevent.values()[plugin.getRandom()
+							.nextInt(ParticleEffectRevent.values().length)].toString().toUpperCase();
+				}
+				switch (part) {
+				case "BLACKSUN":
+					XParticle.blackSun(plugin.getParticleRadius(), plugin.getParticleRadiusRate(),
+							plugin.getParticleRate(), plugin.getParticleRateChange(), pa);
+					break;
+				case "CIRCLE":
+					XParticle.circle(plugin.getParticleRadius(), plugin.getParticleRate(), pa);
+					break;
+				case "CRESCENT":
+					XParticle.crescent(plugin.getParticleRadius(), plugin.getParticleRate(), pa);
+					break;
+				case "CYLINDER":
+					XParticle.cylinder(plugin.getParticleHeight(), plugin.getParticleRadius(), plugin.getParticleRate(),
+							pa);
+					break;
+				case "DIAMOND":
+					XParticle.diamond(plugin.getParticleRadiusRate(), plugin.getParticleRate(),
+							plugin.getParticleHeight(), pa);
+					break;
+				case "ELLIPSE":
+					XParticle.ellipse(plugin.getParticleRadius(), plugin.getParticleRadius2(), plugin.getParticleRate(),
+							pa);
+					break;
+				case "EYE":
+					XParticle.eye(plugin.getParticleRadius(), plugin.getParticleRadius2(), plugin.getParticleRate(),
+							plugin.getParticleExtension(), pa);
+					break;
+				case "FILLEDCIRCLE":
+					XParticle.filledCircle(plugin.getParticleRadius(), plugin.getParticleRate(),
+							plugin.getParticleRadiusRate(), pa);
+					break;
+				case "ILLUMINATI":
+					XParticle.illuminati(plugin.getParticleSize(), plugin.getParticleExtension(), pa);
+					break;
+				case "INFINITY":
+					XParticle.infinity(plugin.getParticleRadius(), plugin.getParticleRate(), pa);
+					break;
+				case "RING":
+					XParticle.ring(plugin.getParticleRate(), plugin.getParticleRadius(), plugin.getParticleRadius2(),
+							pa);
+					break;
+				case "SPHERE":
+					location.setY(location.getY() + 1);
+					XParticle.sphere(plugin.getParticleRadius(), plugin.getParticleRate(), pa);
+					break;
+				case "MEGUMINEXPLOSION":
+					XParticle.meguminExplosion(plugin, plugin.getParticleSize(), pa);
+					break;
+				}
+
+			} catch (Exception e) {
+				System.out.println("RandomEvents:: Particle failed to spawn");
+			}
 		}
-		
+
 	}
 
 }

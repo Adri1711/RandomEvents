@@ -147,6 +147,34 @@ public class RandomEvents extends JavaPlugin {
 	private boolean optionalTitles;
 
 	private Integer maxItemOnChests;
+	
+	private Integer minItemOnChests;
+
+	private boolean showBorders;
+
+	private boolean useParticles;
+
+	private Double particleSize;
+
+	private String particleDeath;
+
+	private String particleTNTTag;
+
+	private String particleType;
+
+	private Double particleRadius;
+
+	private Double particleRadiusRate;
+
+	private Double particleRadius2;
+
+	private Double particleRate;
+
+	private Double particleRateChange;
+
+	private Double particleHeight;
+
+	private Double particleExtension;
 
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
@@ -252,6 +280,7 @@ public class RandomEvents extends JavaPlugin {
 		this.allowedCmds = (List<String>) getConfig().getStringList("allowedCmds");
 		
 		this.maxItemOnChests = Integer.valueOf(getConfig().getInt("maxItemOnChests"));
+		this.minItemOnChests = Integer.valueOf(getConfig().getInt("minItemOnChests"));
 		this.secondsToStartMatch = Integer.valueOf(getConfig().getInt("secondsToStartMatch"));
 		if (secondsToStartMatch == null) {
 			secondsToStartMatch = 0;
@@ -261,6 +290,30 @@ public class RandomEvents extends JavaPlugin {
 				secondsToStartMatch = 0;
 			}
 		}
+		
+		this.particleDeath = (getConfig().getString("particleDeath"));
+		this.particleTNTTag = (getConfig().getString("particleTNTTag"));
+
+		this.particleType = (getConfig().getString("particle.type"));
+
+		this.particleSize = Double.valueOf(getConfig().getDouble("particle.size"));
+		this.particleRadius = Double.valueOf(getConfig().getDouble("particle.radius"));
+		this.particleRadiusRate = Double.valueOf(getConfig().getDouble("particle.radiusRate"));
+		this.particleRadius2 = Double.valueOf(getConfig().getDouble("particle.radius2"));
+		this.particleRate = Double.valueOf(getConfig().getDouble("particle.rate"));
+		this.particleRateChange = Double.valueOf(getConfig().getDouble("particle.rateChange"));
+		this.particleHeight = Double.valueOf(getConfig().getDouble("particle.height"));
+		this.particleExtension = Double.valueOf(getConfig().getDouble("particle.extension"));
+
+		
+		
+		
+		
+
+		
+		
+		
+		
 		this.secondsTimer = Integer.valueOf(getConfig().getInt("secondsTimer"));
 		this.secondsCheckPlayers = Integer.valueOf(getConfig().getInt("secondsCheckPlayers"));
 		if (secondsCheckPlayers == null) {
@@ -279,7 +332,9 @@ public class RandomEvents extends JavaPlugin {
 		
 		this.useLastLocation = getConfig().getBoolean("useLastLocation");
 		this.optionalTitles = getConfig().getBoolean("optionalTitles");
-
+		this.showBorders = getConfig().getBoolean("showBorders");
+		this.useParticles = getConfig().getBoolean("useParticles");
+		
 		this.setProbabilityPowerUp(Integer.valueOf(getConfig().getInt("probabilityPowerUp")));
 
 		this.matches = UtilsRandomEvents.cargarPartidas(this);
@@ -885,6 +940,119 @@ public class RandomEvents extends JavaPlugin {
 	public void setMaxItemOnChests(Integer maxItemOnChests) {
 		this.maxItemOnChests = maxItemOnChests;
 	}
+
+	public boolean isShowBorders() {
+		return showBorders;
+	}
+
+	public void setShowBorders(boolean showBorders) {
+		this.showBorders = showBorders;
+	}
+
+	public Integer getMinItemOnChests() {
+		return minItemOnChests;
+	}
+
+	public void setMinItemOnChests(Integer minItemOnChests) {
+		this.minItemOnChests = minItemOnChests;
+	}
+
+	public boolean isUseParticles() {
+		return useParticles;
+	}
+
+	public void setUseParticles(boolean useParticles) {
+		this.useParticles = useParticles;
+	}
+
+	public Double getParticleSize() {
+		return particleSize;
+	}
+
+	public void setParticleSize(Double particleSize) {
+		this.particleSize = particleSize;
+	}
+
+	public String getParticleDeath() {
+		return particleDeath;
+	}
+
+	public void setParticleDeath(String particleDeath) {
+		this.particleDeath = particleDeath;
+	}
+
+	public String getParticleTNTTag() {
+		return particleTNTTag;
+	}
+
+	public void setParticleTNTTag(String particleTNTTag) {
+		this.particleTNTTag = particleTNTTag;
+	}
+
+	public String getParticleType() {
+		return particleType;
+	}
+
+	public void setParticleType(String particleType) {
+		this.particleType = particleType;
+	}
+
+	public Double getParticleRadius() {
+		return particleRadius;
+	}
+
+	public void setParticleRadius(Double particleRadius) {
+		this.particleRadius = particleRadius;
+	}
+
+	public Double getParticleRadiusRate() {
+		return particleRadiusRate;
+	}
+
+	public void setParticleRadiusRate(Double particleRadiusRate) {
+		this.particleRadiusRate = particleRadiusRate;
+	}
+
+	public Double getParticleRadius2() {
+		return particleRadius2;
+	}
+
+	public void setParticleRadius2(Double particleRadius2) {
+		this.particleRadius2 = particleRadius2;
+	}
+
+	public Double getParticleRate() {
+		return particleRate;
+	}
+
+	public void setParticleRate(Double particleRate) {
+		this.particleRate = particleRate;
+	}
+
+	public Double getParticleRateChange() {
+		return particleRateChange;
+	}
+
+	public void setParticleRateChange(Double particleRateChange) {
+		this.particleRateChange = particleRateChange;
+	}
+
+	public Double getParticleHeight() {
+		return particleHeight;
+	}
+
+	public void setParticleHeight(Double particleHeight) {
+		this.particleHeight = particleHeight;
+	}
+
+	public Double getParticleExtension() {
+		return particleExtension;
+	}
+
+	public void setParticleExtension(Double particleExtension) {
+		this.particleExtension = particleExtension;
+	}
+	
 	
 	
 

@@ -67,8 +67,12 @@ public class Constantes {
 		CANCEL_MINE_CREATION("cancelOfMatchCreation", "creation.cancelOfMatchCreation", "&c&lEvent creation canceled "),
 		
 		LACKS_INFO_CREATION("lacksInfoCreation", "creation.lacksInfoCreation", "&c&lEvent cant be created, it lacks information, check the fields again "),
-
 		
+		SHRINK("shrink", "comun.shrink", "&c&lMap border shrinking in %time% seconds"),
+		
+		WARMUP_END("warmupEnd", "comun.warmupEnd", "&c&lWarmup end in %time% seconds"),
+		
+		PLAYERS_MOVE("playersMove", "comun.playersMove", "&c&lPlayers will be able to move in %time% seconds"),
 		
 		SECONDS_3_REMAINING("secondsRemaining3", "comun.secondsRemaining3", "&6&l3"),
 
@@ -263,7 +267,19 @@ public class Constantes {
 				"&eAnother type of Spleef but this time use your pistol to throw eggs;&e that will break the floor!"),
 		
 		MINIGAME_DESC_OITC("minigameDescriptionOITC", "minigame.description.OITC",
-				"&eGame that arrows are letal, hit your enemies to get points;&e and if you get out of arrows... Good luck!");
+				"&eGame that arrows are letal, hit your enemies to get points;&e and if you get out of arrows... Good luck!"),
+		
+		MINIGAME_DESC_SG("minigameDescriptionSG", "minigame.description.SG",
+				"&eA fierce battle where just 1 player;&e or team can remain alive."),
+
+		MINIGAME_DESC_TSG("minigameDescriptionTSG", "minigame.description.TSG",
+				"&eA fierce battle where just 1 player;&e or team can remain alive."),
+		
+		MINIGAME_DESC_SW("minigameDescriptionSW", "minigame.description.SW",
+				"&eA fierce battle where just 1 player;&e or team can remain alive."),
+
+		MINIGAME_DESC_TSW("minigameDescriptionTSW", "minigame.description.TSW",
+				"&eA fierce battle where just 1 player;&e or team can remain alive.");
 
 		private String javaField;
 		private String ymlField;

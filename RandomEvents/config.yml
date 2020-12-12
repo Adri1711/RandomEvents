@@ -54,6 +54,55 @@ optionalTitles: false
 #Maximum items in chests on Survival Games or Skywars minigames
 maxItemOnChests: 10
 
+#Minimum items in chests on Survival Games or Skywars minigames
+minItemOnChests: 3
+
+#Show world border in some minigames
+showBorders: false
+
+#Use particles in some minigames
+useParticles: false
+
+#Allowed configurable particles ->
+#EXPLOSION_NORMAL  || EXPLOSION_LARGE    ||  EXPLOSION_HUGE    ||  FIREWORKS_SPARK
+#WATER_BUBBLE      || WATER_SPLASH       ||  WATER_WAKE        ||  SUSPENDED
+#SUSPENDED_DEPTH   || CRIT               ||  CRIT_MAGIC        ||  SMOKE_NORMAL
+#SMOKE_LARGE       || SPELL              ||  SPELL_INSTANT     ||  SPELL_MOB
+#SPELL_MOB_AMBIENT || SPELL_WITCH        ||  DRIP_WATER        ||  DRIP_LAVA
+#VILLAGER_ANGRY    || VILLAGER_HAPPY     ||  TOWN_AURA         ||  NOTE
+#PORTAL            || ENCHANTMENT_TABLE  ||  FLAME             ||  LAVA
+#CLOUD             || REDSTONE           ||  SNOWBALL          ||  SNOW_SHOVEL
+#SLIME             || HEART              ||  BARRIER           ||  ITEM_CRACK
+#BLOCK_CRACK       || BLOCK_DUST         ||  WATER_DROP        ||  MOB_APPEARANCE
+#DRAGON_BREATH     || END_ROD            ||  DAMAGE_INDICATOR  ||  SWEEP_ATTACK
+particleDeath: 'EXPLOSION_NORMAL'
+particleTNTTag: 'REDSTONE'
+
+#Particles forms:
+#blackSun(radius, radiusRate, rate, rateChange)    
+#circle(radius, rate)                               
+#crescent(radius, rate)                            
+#cylinder(height, radius, rate)                      
+#diamond(radiusRate, rate, height)                   
+#ellipse(radius, radius2, rate)                  
+#eye(radius, radius2, rate, extension)              
+#filledCircle(radius, rate, radiusRate)              
+#illuminati(size, extension)                        
+#infinity(radius, rate)                             
+#ring(rate, radius, radius2)                      
+#sphere(radius, rate)                                
+#meguminExplosion(size)    
+#Use RANDOM to spawn one of the effects at a time randomly    
+particle:
+  type: sphere
+  size: 1.0
+  radius: 1.0
+  radiusRate: 1.0
+  radius2: 1.0
+  rate: 4.0
+  rateChange: 1.0
+  height: 1.0
+  extension: 4.0
 
 tournament:
   spawn:

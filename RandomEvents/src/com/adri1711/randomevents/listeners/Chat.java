@@ -423,6 +423,11 @@ public class Chat implements Listener {
 						plugin.getPlayersCreation().remove(player.getName());
 
 						break;
+					case NO_MOVE_TIME:
+						match.setSecondsToBegin(Integer.valueOf(message.trim()));
+						plugin.getPlayersCreation().remove(player.getName());
+
+						break;
 					case ARROW_LOCATION1:
 						if (message.equals(Constantes.DONE)) {
 							match.setLocation1(player.getLocation());
@@ -465,8 +470,11 @@ public class Chat implements Listener {
 							if (player.getItemInHand() != null && player.getItemInHand()
 									.getType() != (plugin.getApi().getMaterial(AMaterials.AIR))) {
 								match.getDatas().add(player.getItemInHand().getData());
+								plugin.getPlayersCreation().remove(player.getName());
+
 							} else {
 								player.sendMessage(plugin.getLanguage().getInvalidInput());
+								actua=Boolean.FALSE;
 							}
 						}
 						break;
@@ -487,6 +495,8 @@ public class Chat implements Listener {
 								// match);
 							} else {
 								player.sendMessage(plugin.getLanguage().getInvalidInput());
+								actua=Boolean.FALSE;
+
 								// actualiza =
 								// UtilsRandomEvents.pasaACreation(plugin,
 								// player, position, match);
@@ -507,6 +517,8 @@ public class Chat implements Listener {
 								// match);
 							} else {
 								player.sendMessage(plugin.getLanguage().getInvalidInput());
+								actua=Boolean.FALSE;
+
 								// actualiza =
 								// UtilsRandomEvents.pasaACreation(plugin,
 								// player, position, match);

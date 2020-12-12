@@ -7,9 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -17,6 +15,7 @@ import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.commands.ComandosEnum;
 import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
+import com.adri1711.util.enums.XSound;
 
 public class TournamentActive {
 
@@ -216,7 +215,7 @@ public class TournamentActive {
 						for (Player p : Bukkit.getOnlinePlayers()) {
 							if (p.hasPermission(ComandosEnum.CMD_JOIN_TOURNAMENT.getPermission())) {
 								if (playSound) {
-									UtilsRandomEvents.playSound(p, UtilsRandomEvents.buscaSonido("VILLAGER", "HIT"));
+									UtilsRandomEvents.playSound(p, XSound.ENTITY_VILLAGER_HURT);
 								}
 								plugin.getApi().send(p, firstPart, plugin.getLanguage().getClickHere(),
 										new ArrayList<String>(), "/revent tjoin " + password,
@@ -295,7 +294,7 @@ public class TournamentActive {
 	public void daRecompensas(List<Player> ganadores, List<Player> playersSpectators) {
 		if (getPlaying()) {
 			setPlaying(Boolean.FALSE);
-			UtilsRandomEvents.playSound(playersSpectators, UtilsRandomEvents.buscaSonido("ENDERDRAGON", "DEATH"));
+			UtilsRandomEvents.playSound(playersSpectators, XSound.ENTITY_ENDER_DRAGON_DEATH);
 
 			String cadenaGanadores = "";
 			if (ganadores.size() == 1) {
@@ -461,7 +460,7 @@ public class TournamentActive {
 				getPlayersObj().add(player);
 				getPlayersSpectators().add(player);
 
-				UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("BAT", "HURT"));
+				UtilsRandomEvents.playSound(player, XSound.ENTITY_BAT_HURT);
 			} else {
 				UtilsRandomEvents.sacaInventario(plugin, player);
 

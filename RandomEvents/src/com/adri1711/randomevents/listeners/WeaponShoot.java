@@ -6,12 +6,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.match.MinigameType;
-import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
+import com.adri1711.util.enums.XSound;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 
 public class WeaponShoot implements Listener {
@@ -55,9 +54,9 @@ public class WeaponShoot implements Listener {
 										plugin.getMatchActive().echaDePartida(player, true, true, false);
 										player.setHealth(20);
 										UtilsRandomEvents.playSound(player,
-												UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
+												XSound.ENTITY_VILLAGER_DEATH);
 										UtilsRandomEvents.playSound(damager,
-												UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
+												XSound.ENTITY_PLAYER_LEVELUP);
 
 										break;
 									case KNOCKBACK_DUEL:
@@ -69,10 +68,10 @@ public class WeaponShoot implements Listener {
 									case TOP_KILLER_TEAM_2:
 										plugin.getMatchActive().reiniciaPlayer(player);
 										UtilsRandomEvents.playSound(player,
-												UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
+												XSound.ENTITY_VILLAGER_DEATH);
 										if (!player.getName().equals(damager.getName())) {
 											UtilsRandomEvents.playSound(damager,
-													UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
+													XSound.ENTITY_PLAYER_LEVELUP);
 											if (plugin.getMatchActive().getPuntuacion()
 													.containsKey(damager.getName())) {
 												plugin.getMatchActive().getPuntuacion().put(damager.getName(),
@@ -94,10 +93,10 @@ public class WeaponShoot implements Listener {
 									case GEM_CRAWLER:
 										plugin.getMatchActive().reiniciaPlayer(player);
 										UtilsRandomEvents.playSound(player,
-												UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
+												XSound.ENTITY_VILLAGER_DEATH);
 
 										UtilsRandomEvents.playSound(damager,
-												UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
+												XSound.ENTITY_PLAYER_LEVELUP);
 
 										break;
 									case BOMB_TAG:
@@ -105,9 +104,9 @@ public class WeaponShoot implements Listener {
 										if (damager.equals(plugin.getMatchActive().getPlayerContador())) {
 											UtilsRandomEvents.borraInventario(damager,plugin);
 											UtilsRandomEvents.playSound(damager,
-													UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
+													XSound.ENTITY_PLAYER_LEVELUP);
 											UtilsRandomEvents.playSound(player,
-													UtilsRandomEvents.buscaSonido("VILLAGER", "HIT"));
+													XSound.ENTITY_VILLAGER_HURT);
 											plugin.getMatchActive().ponInventarioMatch(player);
 											plugin.getMatchActive().setPlayerContador(player);
 										}
@@ -129,9 +128,9 @@ public class WeaponShoot implements Listener {
 											plugin.getMatchActive().echaDePartida(player, true, true, false);
 											player.setHealth(20);
 											UtilsRandomEvents.playSound(player,
-													UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
+													XSound.ENTITY_VILLAGER_DEATH);
 											UtilsRandomEvents.playSound(damager,
-													UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
+													XSound.ENTITY_PLAYER_LEVELUP);
 
 										} else {
 											ev.setCancelled(true);
@@ -173,9 +172,9 @@ public class WeaponShoot implements Listener {
 										if (damager.equals(plugin.getMatchActive().getPlayerContador())) {
 											UtilsRandomEvents.borraInventario(damager,plugin);
 											UtilsRandomEvents.playSound(damager,
-													UtilsRandomEvents.buscaSonido("LEVEL", "UP"));
+													XSound.ENTITY_PLAYER_LEVELUP);
 											UtilsRandomEvents.playSound(player,
-													UtilsRandomEvents.buscaSonido("VILLAGER", "HIT"));
+													XSound.ENTITY_VILLAGER_HURT);
 											plugin.getMatchActive().ponInventarioMatch(player);
 											plugin.getMatchActive().setPlayerContador(player);
 										}
@@ -215,14 +214,14 @@ public class WeaponShoot implements Listener {
 							case ESCAPE_ARROW:
 								plugin.getMatchActive().echaDePartida(player, true, true, false);
 								player.setHealth(20);
-								UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
+								UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
 
 								break;
 							case ESCAPE_FROM_BEAST:
 
 								plugin.getMatchActive().echaDePartida(player, true, true, false);
 								player.setHealth(20);
-								UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
+								UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
 
 								break;
 							case KNOCKBACK_DUEL:
@@ -232,7 +231,7 @@ public class WeaponShoot implements Listener {
 							case TOP_KILLER:
 							case GEM_CRAWLER:
 								plugin.getMatchActive().reiniciaPlayer(player);
-								UtilsRandomEvents.playSound(player, UtilsRandomEvents.buscaSonido("VILLAGER", "DEATH"));
+								UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
 
 								break;
 							case BOAT_RUN:

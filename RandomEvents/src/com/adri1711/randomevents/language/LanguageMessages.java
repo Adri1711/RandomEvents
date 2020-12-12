@@ -100,6 +100,10 @@ public class LanguageMessages {
 
 	private String lacksInfoCreation;
 
+	private String shrink;
+	private String warmupEnd;
+	private String playersMove;
+
 	private List<String> minigameDescriptionBR;
 	private List<String> minigameDescriptionBRT2;
 	private List<String> minigameDescriptionLJ;
@@ -117,7 +121,10 @@ public class LanguageMessages {
 	private List<String> minigameDescriptionSPLEEF;
 	private List<String> minigameDescriptionSPLEGG;
 	private List<String> minigameDescriptionOITC;
-	
+	private List<String> minigameDescriptionSG;
+	private List<String> minigameDescriptionTSG;
+	private List<String> minigameDescriptionSW;
+	private List<String> minigameDescriptionTSW;
 
 	public LanguageMessages(RandomEvents plugin) {
 		this.file = new File(plugin.getDataFolder(), "messages.yml");
@@ -790,7 +797,7 @@ public class LanguageMessages {
 	public void setMinigameDescriptionBOAT_RUN(List<String> minigameDescriptionBOAT_RUN) {
 		this.minigameDescriptionBOAT_RUN = minigameDescriptionBOAT_RUN;
 	}
-	
+
 	public List<String> getMinigameDescriptionHORSE_RUN() {
 		return minigameDescriptionHORSE_RUN;
 	}
@@ -814,7 +821,7 @@ public class LanguageMessages {
 	public void setMinigameDescriptionRACE(List<String> minigameDescriptionRACE) {
 		this.minigameDescriptionRACE = minigameDescriptionRACE;
 	}
-	
+
 	public List<String> getMinigameDescriptionOITC() {
 		return minigameDescriptionOITC;
 	}
@@ -981,6 +988,62 @@ public class LanguageMessages {
 
 	public void setLacksInfoCreation(String lacksInfoCreation) {
 		this.lacksInfoCreation = lacksInfoCreation;
+	}
+
+	public String getShrink() {
+		return shrink.replaceAll("&", "§");
+	}
+
+	public void setShrink(String shrink) {
+		this.shrink = shrink;
+	}
+
+	public List<String> getMinigameDescriptionSG() {
+		return minigameDescriptionSG;
+	}
+
+	public void setMinigameDescriptionSG(List<String> minigameDescriptionSG) {
+		this.minigameDescriptionSG = minigameDescriptionSG;
+	}
+
+	public List<String> getMinigameDescriptionTSG() {
+		return minigameDescriptionTSG;
+	}
+
+	public void setMinigameDescriptionTSG(List<String> minigameDescriptionTSG) {
+		this.minigameDescriptionTSG = minigameDescriptionTSG;
+	}
+
+	public List<String> getMinigameDescriptionSW() {
+		return minigameDescriptionSW;
+	}
+
+	public void setMinigameDescriptionSW(List<String> minigameDescriptionSW) {
+		this.minigameDescriptionSW = minigameDescriptionSW;
+	}
+
+	public List<String> getMinigameDescriptionTSW() {
+		return minigameDescriptionTSW;
+	}
+
+	public void setMinigameDescriptionTSW(List<String> minigameDescriptionTSW) {
+		this.minigameDescriptionTSW = minigameDescriptionTSW;
+	}
+
+	public String getWarmupEnd() {
+		return warmupEnd.replaceAll("&", "§");
+	}
+
+	public void setWarmupEnd(String warmupEnd) {
+		this.warmupEnd = warmupEnd;
+	}
+
+	public String getPlayersMove() {
+		return playersMove.replaceAll("&", "§");
+	}
+
+	public void setPlayersMove(String playersMove) {
+		this.playersMove = playersMove;
 	}
 
 }
