@@ -80,15 +80,14 @@ public class RandomEvents extends JavaPlugin {
 	private Map<String, Match> playerMatches;
 
 	private Map<String, Integer> playersCreation;
-	
+
 	private List<String> editando;
 
 	private Map<String, EntityType> playersEntity;
 
 	private List<String> commandsOnUserJoin;
-	
+
 	private List<String> commandsOnMatchBegin;
-	
 
 	private Boolean forzado = Boolean.FALSE;
 
@@ -147,7 +146,7 @@ public class RandomEvents extends JavaPlugin {
 	private boolean optionalTitles;
 
 	private Integer maxItemOnChests;
-	
+
 	private Integer minItemOnChests;
 
 	private boolean showBorders;
@@ -179,7 +178,7 @@ public class RandomEvents extends JavaPlugin {
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
 		loadConfig();
-		this.editando=new ArrayList<String>();
+		this.editando = new ArrayList<String>();
 		this.comandosExecutor = new ComandosExecutor();
 
 		this.powerUpItem = new ItemStack(getApi().getMaterial(AMaterials.EMERALD));
@@ -239,10 +238,10 @@ public class RandomEvents extends JavaPlugin {
 		if (mysqlEnabled && hikari != null) {
 			hikari.close();
 		}
-		if(matchActive!=null && matchActive.getPlaying()){
+		if (matchActive != null && matchActive.getPlaying()) {
 			matchActive.reiniciaValoresPartida();
 		}
- 
+
 		getServer().getScheduler().cancelTasks((Plugin) this);
 		getLogger().info(" Author adri1711 - desactivado");
 	}
@@ -278,7 +277,7 @@ public class RandomEvents extends JavaPlugin {
 		this.commandsOnUserJoin = (List<String>) getConfig().getStringList("commandsOnUserJoin");
 		this.commandsOnMatchBegin = (List<String>) getConfig().getStringList("commandsOnMatchBegin");
 		this.allowedCmds = (List<String>) getConfig().getStringList("allowedCmds");
-		
+
 		this.maxItemOnChests = Integer.valueOf(getConfig().getInt("maxItemOnChests"));
 		this.minItemOnChests = Integer.valueOf(getConfig().getInt("minItemOnChests"));
 		this.secondsToStartMatch = Integer.valueOf(getConfig().getInt("secondsToStartMatch"));
@@ -290,7 +289,7 @@ public class RandomEvents extends JavaPlugin {
 				secondsToStartMatch = 0;
 			}
 		}
-		
+
 		this.particleDeath = (getConfig().getString("particleDeath"));
 		this.particleTNTTag = (getConfig().getString("particleTNTTag"));
 
@@ -305,15 +304,6 @@ public class RandomEvents extends JavaPlugin {
 		this.particleHeight = Double.valueOf(getConfig().getDouble("particle.height"));
 		this.particleExtension = Double.valueOf(getConfig().getDouble("particle.extension"));
 
-		
-		
-		
-		
-
-		
-		
-		
-		
 		this.secondsTimer = Integer.valueOf(getConfig().getInt("secondsTimer"));
 		this.secondsCheckPlayers = Integer.valueOf(getConfig().getInt("secondsCheckPlayers"));
 		if (secondsCheckPlayers == null) {
@@ -329,12 +319,12 @@ public class RandomEvents extends JavaPlugin {
 		this.highestPriorityDamageEvents = getConfig().getBoolean("highestPriorityDamageEvents");
 
 		this.debugMode = getConfig().getBoolean("debugMode");
-		
+
 		this.useLastLocation = getConfig().getBoolean("useLastLocation");
 		this.optionalTitles = getConfig().getBoolean("optionalTitles");
 		this.showBorders = getConfig().getBoolean("showBorders");
 		this.useParticles = getConfig().getBoolean("useParticles");
-		
+
 		this.setProbabilityPowerUp(Integer.valueOf(getConfig().getInt("probabilityPowerUp")));
 
 		this.matches = UtilsRandomEvents.cargarPartidas(this);
@@ -448,7 +438,7 @@ public class RandomEvents extends JavaPlugin {
 		if (label.equals(Comandos.COMANDO_ALIASE1) || label.equals(Comandos.COMANDO_ALIASE2)) {
 			switch (args.length) {
 			case 0:
-				Comandos.muestraMenu(player);
+				Comandos.muestraMenu(this, player);
 				break;
 			case 1:
 				Comandos.ejecutaComandoSimple(this, player, args);
@@ -650,8 +640,6 @@ public class RandomEvents extends JavaPlugin {
 	public void setCommandsOnUserJoin(List<String> commandsOnUserJoin) {
 		this.commandsOnUserJoin = commandsOnUserJoin;
 	}
-	
-	
 
 	public List<String> getCommandsOnMatchBegin() {
 		return commandsOnMatchBegin;
@@ -1052,9 +1040,5 @@ public class RandomEvents extends JavaPlugin {
 	public void setParticleExtension(Double particleExtension) {
 		this.particleExtension = particleExtension;
 	}
-	
-	
-	
 
-	
 }

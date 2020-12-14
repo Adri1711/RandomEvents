@@ -1,5 +1,6 @@
 package com.adri1711.randomevents.commands;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.bukkit.entity.Player;
@@ -13,22 +14,34 @@ public class Comandos {
 
 	public static final String COMANDO_ALIASE2 = "randomevent";
 
-	public static void muestraMenu(Player player) {
+	public static void muestraMenu(RandomEvents plugin, Player player) {
 
-		String menu = "§6----------------- §9§lRandomEvents §6---------------------";
+		String menu = plugin.getLanguage().getHelpMenu();
 		menu += Constantes.SALTO_LINEA;
-		menu += "   §6/revent:\n          §e-> Shows this menu";
+		menu += plugin.getLanguage().getShowMenu();
 
 		for (ComandosEnum cmd : ComandosEnum.values()) {
 			if (player != null) {
 				if (cmd.getShowOnMenu() && player.hasPermission(cmd.getPermission())) {
 					menu += Constantes.SALTO_LINEA;
-					menu += cmd.getDescription();
+					try {
+						Method method = plugin.getLanguage().getClass().getDeclaredMethod(cmd.getDescription());
+						menu += method.invoke(plugin.getLanguage());
+					} catch (NoSuchMethodException | SecurityException | IllegalAccessException
+							| IllegalArgumentException | InvocationTargetException e) {
+						e.printStackTrace();
+					}
 				}
 			} else {
 				if (cmd.getShowOnMenu() && cmd.getCanConsole()) {
 					menu += Constantes.SALTO_LINEA;
-					menu += cmd.getDescription();
+					try {
+						Method method = plugin.getLanguage().getClass().getDeclaredMethod(cmd.getDescription());
+						menu += method.invoke(plugin.getLanguage());
+					} catch (NoSuchMethodException | SecurityException | IllegalAccessException
+							| IllegalArgumentException | InvocationTargetException e) {
+						e.printStackTrace();
+					}
 				}
 
 			}

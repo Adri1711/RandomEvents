@@ -233,7 +233,8 @@ public class UtilsRandomEvents {
 				arrayContenido = contenidoList.toArray(arrayContenido);
 				inventario.setGamemode(player.getGameMode().toString());
 				inventario.setContents(arrayContenido);
-
+				inventario.setTotalExp(player.getExp());
+				inventario.setLevel(player.getLevel());
 				inventario.setHelmet(player.getInventory().getHelmet());
 				inventario.setBoots(player.getInventory().getBoots());
 				inventario.setLeggings(player.getInventory().getLeggings());
@@ -281,6 +282,10 @@ public class UtilsRandomEvents {
 				}
 
 			}
+		}
+		if (exitoso) {
+			player.setExp(0);
+			player.setLevel(0);
 		}
 		return exitoso;
 
@@ -347,7 +352,12 @@ public class UtilsRandomEvents {
 						}
 						player.setGameMode(gm);
 						player.updateInventory();
-
+						if (inventario.getTotalExp() != -1) {
+							player.setExp(inventario.getTotalExp());
+						}
+						if (inventario.getLevel() != -1) {
+							player.setLevel(inventario.getLevel());
+						}
 						player.getInventory().setContents(inventario.getContents());
 						player.getInventory().setHelmet(inventario.getHelmet());
 						player.getInventory().setLeggings(inventario.getLeggings());

@@ -3,39 +3,37 @@ package com.adri1711.randomevents.match;
 import java.util.Arrays;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class InventoryPers {
-	
+
 	private String gamemode;
-	
+
 	private ItemStack[] contents;
-	
+
+	private float totalExp;
+	private int level;
+
 	private ItemStack helmet;
 	private ItemStack chestplate;
 	private ItemStack leggings;
 	private ItemStack boots;
-	
+
 	private Location lastLocation;
 
 	public InventoryPers() {
 		super();
 		this.contents = new ItemStack[0];
 	}
-	
-	
 
 	public String getGamemode() {
 		return gamemode;
 	}
 
-
-
 	public void setGamemode(String gamemode) {
 		this.gamemode = gamemode;
 	}
-
-
 
 	public ItemStack[] getContents() {
 		return contents;
@@ -83,6 +81,22 @@ public class InventoryPers {
 
 	public void setLastLocation(Location lastLocation) {
 		this.lastLocation = lastLocation;
+	}
+
+	public float getTotalExp() {
+		return totalExp;
+	}
+
+	public void setTotalExp(float  f) {
+		this.totalExp = f;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
 	}
 
 	@Override
@@ -142,9 +156,5 @@ public class InventoryPers {
 			return false;
 		return true;
 	}
-
-	
-	
-	
 
 }

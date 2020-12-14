@@ -1,8 +1,8 @@
 package com.adri1711.randomevents.util;
 
 public class Constantes {
-	
-	public static String ALL="ALLMINIGAMES";
+
+	public static String ALL = "ALLMINIGAMES";
 
 	public static String GUI_NAME = "RandomEvents_Stats";
 	public static String DONE = "Done";
@@ -40,40 +40,110 @@ public class Constantes {
 
 	public enum Messages {
 
+		CMD_HELP_MENU("helpMenu", "menu.helpMenu", "&6----------------- &9&lRandomEvents &6---------------------"),
+		
+		CMD_SHOW_MENU("showMenu", "menu.showMenu", "   &6/revent:\n          &e-> Shows this menu"),
+		
+		CMD_JOIN("join", "menu.join", "   &6/revent join:\n          &e-> Join the Random Event"),
+
+		CMD_JOIN_TOURNAMENT("tjoin", "menu.tjoin",
+				"   &6/revent tjoin:\n          &e-> Join the Tournament Random Event"),
+
+		CMD_LEAVE("leave", "menu.leave", "   &6/revent leave:\n          &e-> Leave the Random Event"),
+
+		CMD_LEAVE_TOURNAMENT("tleave", "menu.tleave",
+				"   &6/revent tleave:\n          &e-> Leave the Tournament Random Event"),
+
+		CMD_STATS("stats", "menu.stats", "   &6/revent stats:\n          &e-> Show the stats"),
+
+		CMD_STATS_OTHER("statsOther", "menu.statsOther",
+				"   &6/revent stats <player>:\n          &e-> Show the stats of a player"),
+
+		CMD_FORCESTOP("forcestop", "menu.admin.forcestop",
+				"   &6/revent forcestop:\n          &e-> Force the stop of the Random Event"),
+
+		CMD_SPAWNSET("spawnset", "menu.admin.spawnset",
+				"   &6/revent spawnset:\n          &e-> Set the spawn, where players will be teleported after finishing a Random Event"),
+
+		CMD_SPAWNSET_TOURNAMENT("tspawnset", "menu.admin.tspawnset",
+				"   &6/revent tspawnset:\n          &e-> Set the spawn where players will be teleported after joining a Tournament Random Event"),
+
+		CMD_MATCHES("menuMatches", "menu.admin.matches",
+				"   &6/revent matches:\n          &e-> Show all Random Events available"),
+		
+		CMD_CHECKPOINT("checkpoint",  "menu.checkpoint", "   &6/revent checkpoint:\n          &e-> Makes the user go back to the checkpoint"),
+
+
+		CMD_NEXT("next", "menu.next", "   &6/revent next:\n          &e-> Show next scheduled Random Events"),
+
+		CMD_CURRENT_DATE("date", "menu.admin.currentdate",
+				"   &6/revent date:\n          &e-> Shows the current date for the schedule"),
+
+		CMD_SCHEDULE("schedule", "menu.admin.schedule",
+				"   &6/revent schedule <monday:tuesday...> <hour> <minute>:\n          &e-> Create a schedule for a Random Event"),
+
+		CMD_SCHEDULE_SPECIFIC("scheduleSpecific", "menu.admin.scheduleSpecific",
+				"   &6/revent schedule <monday:tuesday...> <hour> <minute> <idmatch>:\n          &e-> Create a schedule for a Random Event and specific match"),
+
+		CMD_BEGIN("begin", "menu.admin.force", "   &6/revent begin:\n          &e-> Begins a Random Event"),
+
+		CMD_BEGIN_TOURNAMENT("tbegin", "menu.admin.tforce",
+				"   &6/revent tbegin:\n          &e-> Begins a Tournament Random Event"),
+
+		CMD_BEGIN_SPECIFIC("beginSpecific", "menu.admin.forceSpecific",
+				"   &6/revent begin <number>:\n          &e-> Begins a specific random event"),
+
+		CMD_BAN_PLAYER("ban", "menu.admin.ban",
+				"   &6/revent ban <player> <time>:\n          &e-> Ban a player from RandomEvents"),
+
+		CMD_UNBAN_PLAYER("unban", "menu.admin.unban",
+				"   &6/revent unban <player>:\n          &e-> Unban a player from RandomEvents"),
+
+		CMD_CREATE("create", "menu.admin.create",
+				"   &6/revent create:\n          &e-> Begin the creation of a Random Event"),
+
+		CMD_EDIT("edit", "menu.admin.edit", "   &6/revent edit <number>:\n          &e-> Edits a Random Event"),
+
+		CMD_CANCEL("cancel", "menu.admin.cancel",
+				"   &6/revent cancel:\n          &e-> Cancels the creation of a Random Event"),
+
+		CMD_RELOAD("reload", "menu.admin.reload", "   &6/revent reload:\n          &e-> Reload the plugin"),
+
 		TAG_PLUGIN("tagPlugin", "tagPlugin", "&9&l[RandomEvents]"),
 
 		INVALID_INPUT("invalidInput", "creation.invalidInput", "&c&lInvalid input, try another one"),
-		
+
 		STARTING_MATCH("startingMatch", "comun.startingMatch", "&6&lMatch starting in %time% seconds"),
-		
+
 		IDLE_DAMAGE("idleDamage", "comun.idleDamage", "&c&lTaking damage for afk..."),
-		
+
 		YOU_ARE_BANNED("youAreBanned", "comun.youAreBanned", "&c&lYou are banned from RandomEvents until %time%"),
-		
+
 		BAN_PLAYER("banPlayer", "comun.banPlayer", "&c&lPlayer banned until %time%"),
 
 		UNBAN_PLAYER("unbanPlayer", "comun.unbanPlayer", "&c&lPlayer unbanned from RandomEvents"),
 
 		PLAYER_NOT_BANNED("playerNotBanned", "comun.playerNotBanned", "&c&lPlayer is not banned from RandomEvents"),
-		
+
 		NO_SCHEDULED_EVENTS("noScheduledEvents", "comun.noScheduledEvents", "&c&lThere are not RandomEvents scheduled"),
-		
+
 		NEXT_EVENT("nextEvent", "comun.nextEvent", "&c&lNext RandomEvent:"),
-		
+
 		NEXT_EVENT_RANDOM("nextEventIsRandom", "comun.nextEventIsRandom", "&6&lRandomEvent"),
-		
+
 		NEXT_EVENT_NAME("nextEventName", "comun.nextEventName", "&6&lEvent: "),
 
 		CANCEL_MINE_CREATION("cancelOfMatchCreation", "creation.cancelOfMatchCreation", "&c&lEvent creation canceled "),
-		
-		LACKS_INFO_CREATION("lacksInfoCreation", "creation.lacksInfoCreation", "&c&lEvent cant be created, it lacks information, check the fields again "),
-		
+
+		LACKS_INFO_CREATION("lacksInfoCreation", "creation.lacksInfoCreation",
+				"&c&lEvent cant be created, it lacks information, check the fields again "),
+
 		SHRINK("shrink", "comun.shrink", "&c&lMap border shrinking in %time% seconds"),
-		
+
 		WARMUP_END("warmupEnd", "comun.warmupEnd", "&c&lWarmup end in %time% seconds"),
-		
+
 		PLAYERS_MOVE("playersMove", "comun.playersMove", "&c&lPlayers will be able to move in %time% seconds"),
-		
+
 		SECONDS_3_REMAINING("secondsRemaining3", "comun.secondsRemaining3", "&6&l3"),
 
 		SECONDS_2_REMAINING("secondsRemaining2", "comun.secondsRemaining2", "&6&l2"),
@@ -123,7 +193,7 @@ public class Constantes {
 
 		EVENT_ANNOUNCE("eventAnnounce", "announce.eventAnnounce",
 				"&6&lThe event &e&l'%event%'&6&l of type  &e&l'%type%'&6&l, begins in: "),
-		
+
 		EVENT_STOPPED("eventStopped", "announce.eventStopped",
 				"&6&lThe event &e&l'%event%'&6&l of type  &e&l'%type%'&6&l, was forced to stop."),
 
@@ -171,7 +241,7 @@ public class Constantes {
 
 		DISPOSE_LEATHER_ITEMS("disposeLeatherItems", "comun.disposeLeatherItems",
 				"&c&lFor security reasons please leave your leather items before entering the event"),
-		
+
 		CLEAR_INVENTORY("clearInventory", "comun.clearInventory",
 				"&c&lClear the inventory before joining the RandomEvent"),
 
@@ -246,7 +316,7 @@ public class Constantes {
 
 		MINIGAME_DESC_BOAT_RUN("minigameDescriptionBOAT_RUN", "minigame.description.BOAT_RUN",
 				"&eBe the fastest sailor and reach the finish line before;&e your pursuers!"),
-		
+
 		MINIGAME_DESC_HORSE_RUN("minigameDescriptionHORSE_RUN", "minigame.description.HORSE_RUN",
 				"&eBe the fastest horse rider and reach the finish line before;&e your pursuers!"),
 
@@ -265,16 +335,16 @@ public class Constantes {
 
 		MINIGAME_DESC_SPLEGG("minigameDescriptionSPLEGG", "minigame.description.SPLEGG",
 				"&eAnother type of Spleef but this time use your pistol to throw eggs;&e that will break the floor!"),
-		
+
 		MINIGAME_DESC_OITC("minigameDescriptionOITC", "minigame.description.OITC",
 				"&eGame that arrows are letal, hit your enemies to get points;&e and if you get out of arrows... Good luck!"),
-		
+
 		MINIGAME_DESC_SG("minigameDescriptionSG", "minigame.description.SG",
 				"&eA fierce battle where just 1 player;&e or team can remain alive."),
 
 		MINIGAME_DESC_TSG("minigameDescriptionTSG", "minigame.description.TSG",
 				"&eA fierce battle where just 1 player;&e or team can remain alive."),
-		
+
 		MINIGAME_DESC_SW("minigameDescriptionSW", "minigame.description.SW",
 				"&eA fierce battle where just 1 player;&e or team can remain alive."),
 

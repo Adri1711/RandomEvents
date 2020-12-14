@@ -5,11 +5,14 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.match.DayWeek;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
+import com.adri1711.randomevents.match.MinigameType;
 import com.adri1711.randomevents.match.Schedule;
 import com.adri1711.randomevents.match.TournamentActive;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
@@ -316,6 +319,26 @@ public class ComandosExecutor {
 
 			} else {
 				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNotInMatch());
+			}
+		}
+	}
+
+	public void checkpointRandomEvent(RandomEvents plugin, Player player) {
+		if (plugin.getMatchActive() != null) {
+			if (plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.RACE)) {
+				if (plugin.getMatchActive().getPlayersObj().contains(player)) {
+
+					if (plugin.getMatchActive().getCheckpoints().containsKey(player.getName())) {
+
+						UtilsRandomEvents.teleportaPlayer(player,
+								plugin.getMatchActive().getCheckpoints().get(player.getName()), plugin);
+						player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 99));
+
+					}
+				} else {
+					player.sendMessage(
+							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNotInMatch());
+				}
 			}
 		}
 	}

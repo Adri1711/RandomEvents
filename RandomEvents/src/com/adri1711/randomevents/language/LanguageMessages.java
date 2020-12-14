@@ -99,10 +99,35 @@ public class LanguageMessages {
 	private String cancelOfMatchCreation;
 
 	private String lacksInfoCreation;
-
 	private String shrink;
 	private String warmupEnd;
 	private String playersMove;
+	private String helpMenu;
+	private String showMenu;
+	private String join;
+	private String tjoin;
+	private String leave;
+	private String tleave;
+	private String stats;
+	private String statsOther;
+	private String forcestop;
+	private String spawnset;
+	private String tspawnset;
+	private String menuMatches;
+	private String next;
+	private String date;
+	private String schedule;
+	private String scheduleSpecific;
+	private String begin;
+	private String tbegin;
+	private String beginSpecific;
+	private String ban;
+	private String unban;
+	private String create;
+	private String edit;
+	private String cancel;
+	private String reload;
+	private String checkpoint;
 
 	private List<String> minigameDescriptionBR;
 	private List<String> minigameDescriptionBRT2;
@@ -1045,5 +1070,214 @@ public class LanguageMessages {
 	public void setPlayersMove(String playersMove) {
 		this.playersMove = playersMove;
 	}
+
+	public String getHelpMenu() {
+		return helpMenu.replaceAll("&", "§");
+	}
+
+	public void setHelpMenu(String helpMenu) {
+		this.helpMenu = helpMenu;
+	}
+
+	public String getShowMenu() {
+		return showMenu.replaceAll("&", "§");
+	}
+
+	public void setShowMenu(String showMenu) {
+		this.showMenu = showMenu;
+	}
+
+	public String getJoin() {
+		return join.replaceAll("&", "§");
+	}
+
+	public void setJoin(String join) {
+		this.join = join;
+	}
+
+	public String getTjoin() {
+		return tjoin.replaceAll("&", "§");
+	}
+
+	public void setTjoin(String tjoin) {
+		this.tjoin = tjoin;
+	}
+
+	public String getLeave() {
+		return leave.replaceAll("&", "§");
+	}
+
+	public void setLeave(String leave) {
+		this.leave = leave;
+	}
+
+	public String getTleave() {
+		return tleave.replaceAll("&", "§");
+	}
+
+	public void setTleave(String tleave) {
+		this.tleave = tleave;
+	}
+
+	public String getStats() {
+		return stats.replaceAll("&", "§");
+	}
+
+	public void setStats(String stats) {
+		this.stats = stats;
+	}
+
+	public String getStatsOther() {
+		return statsOther.replaceAll("&", "§");
+	}
+
+	public void setStatsOther(String statsOther) {
+		this.statsOther = statsOther;
+	}
+
+	public String getForcestop() {
+		return forcestop.replaceAll("&", "§");
+	}
+
+	public void setForcestop(String forcestop) {
+		this.forcestop = forcestop;
+	}
+
+	public String getSpawnset() {
+		return spawnset.replaceAll("&", "§");
+	}
+
+	public void setSpawnset(String spawnset) {
+		this.spawnset = spawnset;
+	}
+
+	public String getTspawnset() {
+		return tspawnset.replaceAll("&", "§");
+	}
+
+	public void setTspawnset(String tspawnset) {
+		this.tspawnset = tspawnset;
+	}
+
+	public String getMenuMatches() {
+		return menuMatches.replaceAll("&", "§");
+	}
+
+	public void setMenuMatches(String menuMatches) {
+		this.menuMatches = menuMatches;
+	}
+
+	public String getNext() {
+		return next.replaceAll("&", "§");
+	}
+
+	public void setNext(String next) {
+		this.next = next;
+	}
+
+	public String getDate() {
+		return date.replaceAll("&", "§");
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public String getSchedule() {
+		return schedule.replaceAll("&", "§");
+	}
+
+	public void setSchedule(String schedule) {
+		this.schedule = schedule;
+	}
+
+	public String getScheduleSpecific() {
+		return scheduleSpecific.replaceAll("&", "§");
+	}
+
+	public void setScheduleSpecific(String scheduleSpecific) {
+		this.scheduleSpecific = scheduleSpecific;
+	}
+
+	public String getBegin() {
+		return begin.replaceAll("&", "§");
+	}
+
+	public void setBegin(String begin) {
+		this.begin = begin;
+	}
+
+	public String getTbegin() {
+		return tbegin.replaceAll("&", "§");
+	}
+
+	public void setTbegin(String tbegin) {
+		this.tbegin = tbegin;
+	}
+
+	public String getBeginSpecific() {
+		return beginSpecific.replaceAll("&", "§");
+	}
+
+	public void setBeginSpecific(String beginSpecific) {
+		this.beginSpecific = beginSpecific;
+	}
+
+	public String getBan() {
+		return ban.replaceAll("&", "§");
+	}
+
+	public void setBan(String ban) {
+		this.ban = ban;
+	}
+
+	public String getUnban() {
+		return unban.replaceAll("&", "§");
+	}
+
+	public void setUnban(String unban) {
+		this.unban = unban;
+	}
+
+	public String getCreate() {
+		return create.replaceAll("&", "§");
+	}
+
+	public void setCreate(String create) {
+		this.create = create;
+	}
+
+	public String getEdit() {
+		return edit.replaceAll("&", "§");
+	}
+
+	public void setEdit(String edit) {
+		this.edit = edit;
+	}
+
+	public String getCancel() {
+		return cancel.replaceAll("&", "§");
+	}
+
+	public void setCancel(String cancel) {
+		this.cancel = cancel;
+	}
+
+	public String getReload() {
+		return reload.replaceAll("&", "§");
+	}
+
+	public void setReload(String reload) {
+		this.reload = reload;
+	}
+
+	public String getCheckpoint() {
+		return checkpoint.replaceAll("&", "§");
+	}
+
+	public void setCheckpoint(String checkpoint) {
+		this.checkpoint = checkpoint;
+	}
+	
 
 }
