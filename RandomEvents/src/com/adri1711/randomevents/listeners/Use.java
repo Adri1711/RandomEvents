@@ -26,7 +26,7 @@ import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
 import com.adri1711.randomevents.RandomEvents;
-import com.adri1711.randomevents.match.MinigameType;
+import com.adri1711.randomevents.match.enums.MinigameType;
 import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.util.enums.AMaterials;
@@ -45,15 +45,16 @@ public class Use implements Listener {
 	public void onInteract(PlayerInteractEvent evt) {
 		Player player = evt.getPlayer();
 		if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlaying()
-				&& plugin.getMatchActive().getPlayers().contains(player.getName())) {
+				&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())) {
 
 			if ((evt.getAction() == Action.RIGHT_CLICK_BLOCK || evt.getAction() == Action.LEFT_CLICK_BLOCK)
 					&& evt.getClickedBlock().getType() == XMaterial.CHEST.parseMaterial()) {
-				if (plugin.getMatchActive().getCuboid() != null
-						&& plugin.getMatchActive().getCuboid().contains(evt.getClickedBlock().getLocation())) {
-					if (!plugin.getMatchActive().getChests().contains(evt.getClickedBlock().getLocation())) {
+				if (plugin.getMatchActive().getMapHandler().getCuboid() != null
+						&& plugin.getMatchActive().getMapHandler().getCuboid().contains(evt.getClickedBlock().getLocation())) {
+					if (!plugin.getMatchActive().getMapHandler().getChests().contains(evt.getClickedBlock().getLocation()) && !plugin
+							.getMatchActive().getMapHandler().getBlockPlaced().keySet().contains(evt.getClickedBlock().getLocation())) {
 						if (evt.getClickedBlock().getState() instanceof Chest) {
-							plugin.getMatchActive().getChests().add(evt.getClickedBlock().getLocation());
+							plugin.getMatchActive().getMapHandler().getChests().add(evt.getClickedBlock().getLocation());
 							Chest chest = (Chest) evt.getClickedBlock().getState();
 							chest.getBlockInventory().clear();
 							Integer objetos = 0;
@@ -111,7 +112,7 @@ public class Use implements Listener {
 			} else if (evt.getAction().equals(Action.PHYSICAL)) {
 				if (evt.getClickedBlock() != null
 						&& evt.getClickedBlock().getType() == XMaterial.STONE_PRESSURE_PLATE.parseMaterial()) {
-					plugin.getMatchActive().getCheckpoints().put(player.getName(), player.getLocation());
+					plugin.getMatchActive().getMapHandler().getCheckpoints().put(player.getName(), player.getLocation());
 
 				}
 			}
@@ -124,7 +125,7 @@ public class Use implements Listener {
 		if (plugin.getMatchActive() != null
 				&& (plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEGG)
 						|| plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEEF))
-				&& plugin.getMatchActive().getPlayers().contains(player.getName())) {
+				&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())) {
 			evt.getEgg().setCustomName(Constantes.SPLEGG_EGG);
 		}
 	}
@@ -159,7 +160,7 @@ public class Use implements Listener {
 					if (nextBlock.getType() != null && plugin.getMatchActive().getMatch().getMaterial() != null
 							&& nextBlock.getType().toString()
 									.equals(plugin.getMatchActive().getMatch().getMaterial())) {
-						plugin.getMatchActive().getBlockDisappeared().put(nextBlock.getLocation(),
+						plugin.getMatchActive().getMapHandler().getBlockDisappeared().put(nextBlock.getLocation(),
 								nextBlock.getState().getData().clone());
 						nextBlock.setType(plugin.getApi().getMaterial(AMaterials.AIR));
 
@@ -167,7 +168,7 @@ public class Use implements Listener {
 							&& !plugin.getMatchActive().getMatch().getDatas().isEmpty() && nextBlock.getType() != null
 							&& nextBlock.getState().getData() != null && UtilsRandomEvents.contieneMaterialData(
 									nextBlock.getState().getData(), plugin.getMatchActive().getMatch())) {
-						plugin.getMatchActive().getBlockDisappeared().put(nextBlock.getLocation(),
+						plugin.getMatchActive().getMapHandler().getBlockDisappeared().put(nextBlock.getLocation(),
 								nextBlock.getState().getData().clone());
 						nextBlock.setType(plugin.getApi().getMaterial(AMaterials.AIR));
 					}
@@ -177,7 +178,7 @@ public class Use implements Listener {
 			Arrow arrow = (Arrow) entity;
 			if (arrow.getShooter() != null && arrow.getShooter() instanceof Player) {
 				Player p = (Player) arrow.getShooter();
-				if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayers().contains(p.getName())) {
+				if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayerHandler().getPlayers().contains(p.getName())) {
 					arrow.remove();
 				}
 			}
@@ -188,8 +189,17 @@ public class Use implements Listener {
 	public void onFoodLevelChangeEvent(FoodLevelChangeEvent evt) {
 		if (evt.getEntity() instanceof Player) {
 			Player player = (Player) evt.getEntity();
-			if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayers().contains(player.getName())) {
-				evt.setCancelled(true);
+			if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())) {
+				switch (plugin.getMatchActive().getMatch().getMinigame()) {
+				case SG:
+				case SW:
+				case TSG:
+				case TSW:
+					break;
+				default:
+					evt.setCancelled(true);
+					break;
+				}
 			}
 		}
 
@@ -199,9 +209,18 @@ public class Use implements Listener {
 	public void onEntityRegainHealthEvent(EntityRegainHealthEvent evt) {
 		if (evt.getEntity() instanceof Player) {
 			Player player = (Player) evt.getEntity();
-			if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayers().contains(player.getName())) {
+			if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())) {
 				if (evt.getRegainReason() == RegainReason.SATIATED) {
-					evt.setCancelled(true);
+					switch (plugin.getMatchActive().getMatch().getMinigame()) {
+					case SG:
+					case SW:
+					case TSG:
+					case TSW:
+						break;
+					default:
+						evt.setCancelled(true);
+						break;
+					}
 				}
 			}
 		}
@@ -210,17 +229,17 @@ public class Use implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onMine(BlockBreakEvent evt) {
 		Player player = evt.getPlayer();
-		if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayers().contains(player.getName())
+		if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())
 				&& plugin.getMatchActive().getPlaying()) {
-			if (plugin.getMatchActive().getBlockPlaced().containsKey(evt.getBlock().getLocation())) {
+			if (plugin.getMatchActive().getMapHandler().getBlockPlaced().containsKey(evt.getBlock().getLocation())) {
 				evt.setCancelled(false);
-				plugin.getMatchActive().getBlockPlaced().remove(evt.getBlock().getLocation());
+				plugin.getMatchActive().getMapHandler().getBlockPlaced().remove(evt.getBlock().getLocation());
 			} else if (plugin.getMatchActive().getMatch().getMaterial() != null
 
 					&& evt.getBlock().getType() != null
 					&& evt.getBlock().getType().toString().equals(plugin.getMatchActive().getMatch().getMaterial())) {
 				evt.setCancelled(true);
-				plugin.getMatchActive().getBlockDisappeared().put(evt.getBlock().getLocation(),
+				plugin.getMatchActive().getMapHandler().getBlockDisappeared().put(evt.getBlock().getLocation(),
 						evt.getBlock().getState().getData().clone());
 				evt.getBlock().setType(plugin.getApi().getMaterial(AMaterials.AIR));
 			} else if (plugin.getMatchActive().getMatch().getDatas() != null
@@ -228,7 +247,7 @@ public class Use implements Listener {
 					&& evt.getBlock().getState().getData() != null && UtilsRandomEvents.contieneMaterialData(
 							evt.getBlock().getState().getData(), plugin.getMatchActive().getMatch())) {
 				evt.setCancelled(true);
-				plugin.getMatchActive().getBlockDisappeared().put(evt.getBlock().getLocation(),
+				plugin.getMatchActive().getMapHandler().getBlockDisappeared().put(evt.getBlock().getLocation(),
 						evt.getBlock().getState().getData().clone());
 				evt.getBlock().setType(plugin.getApi().getMaterial(AMaterials.AIR));
 			} else {
@@ -241,7 +260,7 @@ public class Use implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlace(BlockPlaceEvent evt) {
 		Player player = evt.getPlayer();
-		if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayers().contains(player.getName())
+		if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())
 				&& plugin.getMatchActive().getPlaying()) {
 			if (plugin.getMatchActive().getMatch().getMaterial() != null
 
@@ -249,7 +268,7 @@ public class Use implements Listener {
 					&& evt.getBlock().getType().toString().equals(plugin.getMatchActive().getMatch().getMaterial())) {
 				// evt.setCancelled(true);
 				evt.setCancelled(false);
-				plugin.getMatchActive().getBlockPlaced().put(evt.getBlock().getLocation(),
+				plugin.getMatchActive().getMapHandler().getBlockPlaced().put(evt.getBlock().getLocation(),
 						evt.getBlock().getState().getData().clone());
 				// evt.getBlock().setType(plugin.getApi().getMaterial(AMaterials.AIR));
 			} else if (plugin.getMatchActive().getMatch().getDatas() != null
@@ -258,7 +277,7 @@ public class Use implements Listener {
 							evt.getBlock().getState().getData(), plugin.getMatchActive().getMatch())) {
 				// evt.setCancelled(true);
 				evt.setCancelled(false);
-				plugin.getMatchActive().getBlockPlaced().put(evt.getBlock().getLocation(),
+				plugin.getMatchActive().getMapHandler().getBlockPlaced().put(evt.getBlock().getLocation(),
 						evt.getBlock().getState().getData().clone());
 				// evt.getBlock().setType(plugin.getApi().getMaterial(AMaterials.AIR));
 			} else {

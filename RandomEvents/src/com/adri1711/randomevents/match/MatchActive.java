@@ -26,20 +26,24 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.Scoreboard;
 
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.api.events.ReventBeginEvent;
 import com.adri1711.randomevents.api.events.ReventEndEvent;
 import com.adri1711.randomevents.commands.ComandosEnum;
+import com.adri1711.randomevents.match.data.MatchMapDataHandler;
+import com.adri1711.randomevents.match.data.MatchPlayerHandler;
+import com.adri1711.randomevents.match.enums.MinigameType;
+import com.adri1711.randomevents.match.utils.Cuboid;
 import com.adri1711.randomevents.util.Constantes;
+import com.adri1711.randomevents.util.FeatherBoardUtils;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.randomevents.util.UtilsSQL;
+import com.adri1711.util.FastBoard;
 import com.adri1711.util.enums.AMaterials;
 import com.adri1711.util.enums.Particle1711;
-import com.adri1711.util.enums.ParticleDisplay;
 import com.adri1711.util.enums.XMaterial;
-import com.adri1711.util.enums.XParticle;
 import com.adri1711.util.enums.XSound;
 
 public class MatchActive {
@@ -48,44 +52,27 @@ public class MatchActive {
 
 	private Match match;
 
+	private MatchPlayerHandler playerHandler;
+
+	private MatchMapDataHandler mapHandler;
+
 	private String password;
 
-	private List<String> players;
-
-	private List<Player> playersObj;
-
-	private List<Player> playersGanadores;
-
-	private List<Player> playersSpectators;
-
 	private List<Entity> mobs;
-
-	private Map<Integer, List<Player>> equipos;
 
 	private Map<String, Entity> pets;
 
 	private Map<String, Integer> puntuacion;
-
-	private Map<String, Location> checkpoints;
-
-	private List<Player> goalPlayers;
-
-	private List<Location> chests;
-
-	private Player beast;
-
-	private String objetivo;
 
 	private Boolean playing;
 
 	private Random random;
 
 	private boolean firstAnnounce;
+
 	private Integer tiempoPartida;
 
 	private Integer maximo;
-
-	private Player playerContador;
 
 	private Integer numeroSegRestantes;
 
@@ -94,10 +81,6 @@ public class MatchActive {
 	private Integer timerPassword;
 
 	private Boolean forzada;
-
-	private Cuboid cuboid;
-
-	private Cuboid actualCuboid;
 
 	private Boolean tournament;
 
@@ -108,12 +91,7 @@ public class MatchActive {
 	private Integer tries;
 
 	private BukkitRunnable task;
-
-	private Map<Location, Long> blockDisappear;
-
-	private Map<Location, MaterialData> blockDisappeared;
-
-	private Map<Location, MaterialData> blockPlaced;
+	private BukkitRunnable task2;
 
 	private Integer damageCounter;
 
@@ -123,8 +101,11 @@ public class MatchActive {
 
 	private Boolean allowMove;
 
+	private long endDate;
+
 	public MatchActive(Match match, RandomEvents plugin, Boolean forzada) {
 		super();
+		this.mapHandler = new MatchMapDataHandler();
 		this.allowDamage = false;
 		this.allowMove = true;
 		this.match = match;
@@ -133,18 +114,11 @@ public class MatchActive {
 		this.plugin = plugin;
 		this.random = new Random();
 		this.tournament = false;
-		this.players = new ArrayList<String>();
-
-		this.playersObj = new ArrayList<Player>();
-		this.playersGanadores = new ArrayList<Player>();
-		this.playersSpectators = new ArrayList<Player>();
+		this.playerHandler = new MatchPlayerHandler();
 
 		this.mobs = new ArrayList<Entity>();
 
-		this.equipos = new HashMap<Integer, List<Player>>();
-
 		this.pets = new HashMap<String, Entity>();
-		this.goalPlayers = new ArrayList<Player>();
 		this.puntuacion = new HashMap<String, Integer>();
 		switch (match.getMinigame()) {
 		case BOMB_TAG:
@@ -154,7 +128,7 @@ public class MatchActive {
 		case HORSE_RUN:
 		case RACE:
 		case ESCAPE_FROM_BEAST:
-			this.cuboid = new Cuboid(match.getLocation1(), match.getLocation2());
+			getMapHandler().setCuboid(new Cuboid(match.getLocation1(), match.getLocation2()));
 			break;
 		case GEM_CRAWLER:
 			this.numeroSegRestantes = plugin.getNumberOfSecondsWithGems();
@@ -164,7 +138,7 @@ public class MatchActive {
 			break;
 		}
 		if (match.getLocation1() != null && match.getLocation2() != null)
-			this.cuboid = new Cuboid(match.getLocation1(), match.getLocation2());
+			getMapHandler().setCuboid(new Cuboid(match.getLocation1(), match.getLocation2()));
 		this.limitPlayers = 1;
 		this.playing = Boolean.FALSE;
 		this.activated = Boolean.FALSE;
@@ -172,18 +146,17 @@ public class MatchActive {
 		this.firstAnnounce = Boolean.TRUE;
 		this.gema = new ItemStack(plugin.getApi().getMaterial(AMaterials.EMERALD));
 		this.setForzada(forzada);
-		this.blockDisappear = new HashMap<Location, Long>();
-		this.blockDisappeared = new HashMap<Location, MaterialData>();
-		this.blockPlaced = new HashMap<Location, MaterialData>();
-		this.checkpoints = new HashMap<String, Location>();
-		this.chests = new ArrayList<Location>();
-		if (cuboid != null) {
-			this.actualCuboid = new Cuboid(
-					new Location(cuboid.getWorld(), cuboid.getMaxX(), cuboid.getMaxY(), cuboid.getMaxZ()),
-					new Location(cuboid.getWorld(), cuboid.getMinX(), cuboid.getMinY(), cuboid.getMinZ()));
+
+		if (getMapHandler().getCuboid() != null) {
+			getMapHandler().setActualCuboid(new Cuboid(
+					new Location(getMapHandler().getCuboid().getWorld(), getMapHandler().getCuboid().getMaxX(),
+							getMapHandler().getCuboid().getMaxY(), getMapHandler().getCuboid().getMaxZ()),
+					new Location(getMapHandler().getCuboid().getWorld(), getMapHandler().getCuboid().getMinX(),
+							getMapHandler().getCuboid().getMinY(), getMapHandler().getCuboid().getMinZ())));
 		}
 		tries = 0;
 		damageCounter = 0;
+
 		matchWaitingPlayers();
 	}
 
@@ -191,28 +164,22 @@ public class MatchActive {
 			TournamentActive tournamentObj, List<String> players, List<Player> playersGanadores,
 			List<Player> playersSpectators) {
 		super();
+		this.mapHandler = new MatchMapDataHandler();
 		this.allowDamage = false;
 		this.allowMove = true;
-
-		this.goalPlayers = new ArrayList<Player>();
+		this.playerHandler = new MatchPlayerHandler(players, playersGanadores, playersSpectators);
 
 		this.match = match;
 		this.maximo = 0;
 		this.setTiempoPartida(match.getTiempoPartida());
 		this.plugin = plugin;
 		this.random = new Random();
-		this.players = players;
 
-		this.playersObj = playersGanadores;
-		this.playersGanadores = new ArrayList<Player>();
-		this.playersSpectators = playersSpectators;
 		this.tournament = tournament;
 		this.tournamentObj = tournamentObj;
 		damageCounter = 0;
 		this.limitPlayers = tournamentObj.getRange().getTo() - 1;
 		this.mobs = new ArrayList<Entity>();
-
-		this.equipos = new HashMap<Integer, List<Player>>();
 
 		this.pets = new HashMap<String, Entity>();
 
@@ -225,7 +192,7 @@ public class MatchActive {
 		case HORSE_RUN:
 		case RACE:
 		case ESCAPE_FROM_BEAST:
-			this.cuboid = new Cuboid(match.getLocation1(), match.getLocation2());
+			getMapHandler().setCuboid(new Cuboid(match.getLocation1(), match.getLocation2()));
 			break;
 		case GEM_CRAWLER:
 			this.numeroSegRestantes = plugin.getNumberOfSecondsWithGems();
@@ -240,24 +207,21 @@ public class MatchActive {
 		this.firstAnnounce = Boolean.TRUE;
 		this.gema = new ItemStack(plugin.getApi().getMaterial(AMaterials.EMERALD));
 		this.setForzada(forzada);
-		this.blockDisappear = new HashMap<Location, Long>();
-		this.blockDisappeared = new HashMap<Location, MaterialData>();
-		this.blockPlaced = new HashMap<Location, MaterialData>();
 
-		this.checkpoints = new HashMap<String, Location>();
-		this.chests = new ArrayList<Location>();
-		if (cuboid != null) {
-			this.actualCuboid = new Cuboid(
-					new Location(cuboid.getWorld(), cuboid.getMaxX(), cuboid.getMaxY(), cuboid.getMaxZ()),
-					new Location(cuboid.getWorld(), cuboid.getMinX(), cuboid.getMinY(), cuboid.getMinZ()));
+		if (getMapHandler().getCuboid() != null) {
+			getMapHandler().setActualCuboid(new Cuboid(
+					new Location(getMapHandler().getCuboid().getWorld(), getMapHandler().getCuboid().getMaxX(),
+							getMapHandler().getCuboid().getMaxY(), getMapHandler().getCuboid().getMaxZ()),
+					new Location(getMapHandler().getCuboid().getWorld(), getMapHandler().getCuboid().getMinX(),
+							getMapHandler().getCuboid().getMinY(), getMapHandler().getCuboid().getMinZ())));
 		}
 		tries = 0;
 
 	}
 
 	public void uneAPlayer(Player player) {
-		if (!getPlayers().contains(player.getName())) {
-			if (getPlayers().size() < match.getAmountPlayers()) {
+		if (!getPlayerHandler().getPlayers().contains(player.getName())) {
+			if (getPlayerHandler().getPlayers().size() < match.getAmountPlayers()) {
 				if (!plugin.isForceEmptyInventoryToJoin()) {
 					if (UtilsRandomEvents.checkLeatherItems(player)) {
 						procesoUnirPlayer(player);
@@ -289,9 +253,9 @@ public class MatchActive {
 			if (UtilsRandomEvents.teleportaPlayer(player, match.getPlayerSpawn(), plugin)) {
 
 				hazComandosDeUnion(player);
-				getPlayers().add(player.getName());
-				getPlayersObj().add(player);
-				getPlayersSpectators().add(player);
+				getPlayerHandler().getPlayers().add(player.getName());
+				getPlayerHandler().getPlayersObj().add(player);
+				getPlayerHandler().getPlayersSpectators().add(player);
 				UtilsRandomEvents.playSound(player, XSound.ENTITY_BAT_HURT);
 			} else {
 				UtilsRandomEvents.sacaInventario(plugin, player);
@@ -332,19 +296,19 @@ public class MatchActive {
 		Location lastLocation = player.getLocation();
 
 		dropItems(player, forzado);
-		if (getPlayersSpectators().contains(player)) {
+		if (getPlayerHandler().getPlayersSpectators().contains(player)) {
 			if (comprueba) {
-				if (!getPlayersObj().remove(player)) {
-					UtilsRandomEvents.borraPlayerPorName(getPlayersObj(), player);
+				if (!getPlayerHandler().getPlayersObj().remove(player)) {
+					UtilsRandomEvents.borraPlayerPorName(getPlayerHandler().getPlayersObj(), player);
 				}
-				getPlayers().remove(player.getName());
+				getPlayerHandler().getPlayers().remove(player.getName());
 
 			}
 
 			if (compruebaSpectator
 					&& (sacaSpectator || match.getSpectatorSpawns() == null || match.getSpectatorSpawns().isEmpty())) {
-				if (!getPlayersSpectators().remove(player)) {
-					UtilsRandomEvents.borraPlayerPorName(getPlayersSpectators(), player);
+				if (!getPlayerHandler().getPlayersSpectators().remove(player)) {
+					UtilsRandomEvents.borraPlayerPorName(getPlayerHandler().getPlayersSpectators(), player);
 				}
 			}
 			UtilsRandomEvents.borraInventario(player, plugin);
@@ -394,10 +358,14 @@ public class MatchActive {
 		}
 		if (plugin.isShowBorders() && (getMatch().getMinigame().equals(MinigameType.SG)
 				|| getMatch().getMinigame().equals(MinigameType.TSG))) {
-			UtilsRandomEvents.setWorldBorder(plugin, new Location(actualCuboid.getWorld(), 0, 0, 0), Double.MAX_VALUE,
-					player);
+			UtilsRandomEvents.setWorldBorder(plugin,
+					new Location(getMapHandler().getActualCuboid().getWorld(), 0, 0, 0), Double.MAX_VALUE, player);
 		}
+		updateScoreboards();
+		if (sacaSpectator) {
+			borraScoreboard(player);
 
+		}
 		UtilsRandomEvents.spawnParticles(Particle1711.valueOf(plugin.getParticleDeath()), plugin, lastLocation);
 		if (comprueba)
 			compruebaPartida();
@@ -407,25 +375,25 @@ public class MatchActive {
 	public void echaDePartida(List<Player> players, Boolean comprueba, Boolean sacaInv, Boolean sacaSpectator,
 			Boolean compruebaSpectator) {
 		if (comprueba) {
-			if (!getPlayersObj().remove(players)) {
+			if (!getPlayerHandler().getPlayersObj().remove(players)) {
 				for (Player p : players) {
-					UtilsRandomEvents.borraPlayerPorName(getPlayersObj(), p);
+					UtilsRandomEvents.borraPlayerPorName(getPlayerHandler().getPlayersObj(), p);
 				}
 			}
 			for (Player p : players) {
 				if (plugin.isShowBorders() && (getMatch().getMinigame().equals(MinigameType.SG)
 						|| getMatch().getMinigame().equals(MinigameType.TSG))) {
-					UtilsRandomEvents.setWorldBorder(plugin, new Location(actualCuboid.getWorld(), 0, 0, 0),
-							Double.MAX_VALUE, p);
+					UtilsRandomEvents.setWorldBorder(plugin,
+							new Location(getMapHandler().getActualCuboid().getWorld(), 0, 0, 0), Double.MAX_VALUE, p);
 				}
-				getPlayers().remove(p.getName());
+				getPlayerHandler().getPlayers().remove(p.getName());
 			}
 		}
 		for (Player player : players) {
 			if (compruebaSpectator
 					&& (sacaSpectator || match.getSpectatorSpawns() == null || match.getSpectatorSpawns().isEmpty())) {
-				if (!getPlayersSpectators().remove(player)) {
-					UtilsRandomEvents.borraPlayerPorName(getPlayersSpectators(), player);
+				if (!getPlayerHandler().getPlayersSpectators().remove(player)) {
+					UtilsRandomEvents.borraPlayerPorName(getPlayerHandler().getPlayersSpectators(), player);
 				}
 			}
 
@@ -457,22 +425,29 @@ public class MatchActive {
 				UtilsRandomEvents.sacaInventario(plugin, player);
 			}
 		}
+		updateScoreboards();
+		if (sacaSpectator) {
+			for (Player p : players) {
+				borraScoreboard(p);
+			}
+		}
 		if (comprueba)
 			compruebaPartida();
 	}
 
 	public void echaDeEquipo(Integer equipo, Player player) {
-		equipos.get(equipo).remove(player);
-		if (equipos.get(equipo).isEmpty()) {
-			equipos.remove(equipo);
+		getPlayerHandler().getEquipos().get(equipo).remove(player);
+		if (getPlayerHandler().getEquipos().get(equipo).isEmpty()) {
+			getPlayerHandler().getEquipos().remove(equipo);
 		}
 
 	}
 
 	public Integer getEquipo(Player player) {
 		Integer equipo = null;
-		for (Integer numeroEquipo : equipos.keySet()) {
-			if (equipos.get(numeroEquipo).contains(player)) {
+
+		for (Integer numeroEquipo : getPlayerHandler().getEquipos().keySet()) {
+			if (getPlayerHandler().getEquipos().get(numeroEquipo).contains(player)) {
 				equipo = numeroEquipo;
 			}
 		}
@@ -482,58 +457,62 @@ public class MatchActive {
 
 	public void compruebaPartida() {
 		if (getPlaying()) {
-			if (getPlayersObj().isEmpty()) {
+			if (getPlayerHandler().getPlayersObj().isEmpty()) {
 				for (Entity entity : getMobs()) {
 					entity.remove();
 				}
 				if (tournamentObj != null)
-					tournamentObj.finalizaPartida(getCopiaP(getPlayersObj()), getCopiaP(getPlayersSpectators()),
-							Boolean.FALSE, Boolean.FALSE);
-				finalizaPartida(getPlayersObj(), Boolean.FALSE, Boolean.FALSE);
+					tournamentObj.finalizaPartida(getCopiaP(getPlayerHandler().getPlayersObj()),
+							getCopiaP(getPlayerHandler().getPlayersSpectators()), Boolean.FALSE, Boolean.FALSE);
+				finalizaPartida(getPlayerHandler().getPlayersObj(), Boolean.FALSE, Boolean.FALSE);
 
 			}
-			if (getPlayersObj().size() == 1) {
+			if (getPlayerHandler().getPlayersObj().size() == 1) {
 				if (getTournament()) {
-					tournamentObj.nextGame(getCopia(getPlayers()), getCopiaP(getPlayersObj()),
-							getCopiaP(getPlayersSpectators()));
+					tournamentObj.nextGame(getCopia(getPlayerHandler().getPlayers()),
+							getCopiaP(getPlayerHandler().getPlayersObj()),
+							getCopiaP(getPlayerHandler().getPlayersSpectators()));
 
 				} else {
 					daRecompensas(false);
 				}
-			} else if (getTournament()
-					&& (getPlayersObj().size() <= limitPlayers || getPlayersGanadores().size() >= limitPlayers)) {
+			} else if (getTournament() && (getPlayerHandler().getPlayersObj().size() <= limitPlayers
+					|| getPlayerHandler().getPlayersGanadores().size() >= limitPlayers)) {
 				if (limitPlayers == 1) {
-					tournamentObj.nextGame(getCopia(getPlayers()), getCopiaP(getPlayersObj()),
-							getCopiaP(getPlayersSpectators()));
+					tournamentObj.nextGame(getCopia(getPlayerHandler().getPlayers()),
+							getCopiaP(getPlayerHandler().getPlayersObj()),
+							getCopiaP(getPlayerHandler().getPlayersSpectators()));
 				} else {
-					if (!getPlayersGanadores().isEmpty()) {
+					if (!getPlayerHandler().getPlayersGanadores().isEmpty()) {
 						List<String> jugadores = new ArrayList<String>();
-						for (Player p : getPlayersGanadores()) {
+						for (Player p : getPlayerHandler().getPlayersGanadores()) {
 							jugadores.add(p.getName());
 						}
-						tournamentObj.nextGame(getCopia(jugadores), getCopiaP(getPlayersGanadores()),
-								getCopiaP(getPlayersSpectators()));
+						tournamentObj.nextGame(getCopia(jugadores), getCopiaP(getPlayerHandler().getPlayersGanadores()),
+								getCopiaP(getPlayerHandler().getPlayersSpectators()));
 					} else {
-						tournamentObj.nextGame(getCopia(getPlayers()), getCopiaP(getPlayersObj()),
-								getCopiaP(getPlayersSpectators()));
+						tournamentObj.nextGame(getCopia(getPlayerHandler().getPlayers()),
+								getCopiaP(getPlayerHandler().getPlayersObj()),
+								getCopiaP(getPlayerHandler().getPlayersSpectators()));
 
 					}
 					reiniciaValoresPartida();
 
 				}
-			} else if (!getTournament() && getPlayersGanadores().size() >= limitPlayers) {
+			} else if (!getTournament() && getPlayerHandler().getPlayersGanadores().size() >= limitPlayers) {
 				daRecompensas(false);
 
 			} else {
 				if (getMatch().getMinigame().equals(MinigameType.ESCAPE_FROM_BEAST)
-						&& !getPlayersObj().contains(beast)) {
+						&& !getPlayerHandler().getPlayersObj().contains(getPlayerHandler().getBeast())) {
 					daRecompensas(false);
 				}
 
-				if (getEquipos().keySet().size() == 1) {
+				if (playerHandler.getEquipos().keySet().size() == 1) {
 					if (getTournament()) {
-						tournamentObj.nextGame(getCopia(getPlayers()), getCopiaP(getPlayersObj()),
-								getCopiaP(getPlayersSpectators()));
+						tournamentObj.nextGame(getCopia(getPlayerHandler().getPlayers()),
+								getCopiaP(getPlayerHandler().getPlayersObj()),
+								getCopiaP(getPlayerHandler().getPlayersSpectators()));
 
 					} else {
 						daRecompensas(false);
@@ -573,11 +552,11 @@ public class MatchActive {
 		}
 		if (maximo >= plugin.getNumberOfGems()) {
 
-			for (Player p : getPlayersObj()) {
-				if (getPlayerContador() == null && getPuntuacion().containsKey(p.getName())
+			for (Player p : getPlayerHandler().getPlayersObj()) {
+				if (getPlayerHandler().getPlayerContador() == null && getPuntuacion().containsKey(p.getName())
 						&& getPuntuacion().get(p.getName()) == maximo) {
-					setPlayerContador(p);
-					UtilsRandomEvents.mandaMensaje(plugin, getPlayersSpectators(),
+					getPlayerHandler().setPlayerContador(p);
+					UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
 							plugin.getLanguage().getPlayerWinning().replace("%player%", p.getName()), true);
 					setTimerPassword(getRandom().nextInt(100000));
 				}
@@ -587,13 +566,14 @@ public class MatchActive {
 	}
 
 	private void empiezaTemporizadorGemas(Integer timerPass) {
-		if (getPlaying() && getPlayerContador() != null && getTimerPassword() != null
+		if (getPlaying() && getPlayerHandler().getPlayerContador() != null && getTimerPassword() != null
 				&& getTimerPassword().equals(timerPass)) {
 			if (numeroSegRestantes == 0) {
 				if (getTournament()) {
-					getPlayersGanadores().add(getPlayerContador());
-					tournamentObj.nextGame(getCopia(getPlayers()), getCopiaP(getPlayersGanadores()),
-							getCopiaP(getPlayersSpectators()));
+					getPlayerHandler().getPlayersGanadores().add(getPlayerHandler().getPlayerContador());
+					tournamentObj.nextGame(getCopia(getPlayerHandler().getPlayers()),
+							getCopiaP(getPlayerHandler().getPlayersGanadores()),
+							getCopiaP(getPlayerHandler().getPlayersSpectators()));
 
 				} else {
 					daRecompensas(false);
@@ -603,11 +583,11 @@ public class MatchActive {
 					public void run() {
 						numeroSegRestantes--;
 						if (numeroSegRestantes > 0 && getTimerPassword() != null && getTimerPassword().equals(timerPass)
-								&& getPlayerContador() != null)
-							UtilsRandomEvents.mandaMensaje(plugin, getPlayersSpectators(),
+								&& getPlayerHandler().getPlayerContador() != null)
+							UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
 									plugin.getLanguage().getPlayerWinningSeconds()
-											.replace("%seconds%", numeroSegRestantes.toString())
-											.replace("%player%", getPlayerContador().getName()),
+											.replace("%seconds%", numeroSegRestantes.toString()).replace("%player%",
+													getPlayerHandler().getPlayerContador().getName()),
 									true);
 
 						empiezaTemporizadorGemas(timerPass);
@@ -620,15 +600,15 @@ public class MatchActive {
 
 	public void dejarPartida(Player player, Boolean muerto) {
 		if (!getPlaying()) {
-			if (!getPlayersObj().remove(player)) {
-				UtilsRandomEvents.borraPlayerPorName(getPlayersObj(), player);
+			if (!getPlayerHandler().getPlayersObj().remove(player)) {
+				UtilsRandomEvents.borraPlayerPorName(getPlayerHandler().getPlayersObj(), player);
 			}
 
-			if (!getPlayersSpectators().remove(player)) {
-				UtilsRandomEvents.borraPlayerPorName(getPlayersSpectators(), player);
+			if (!getPlayerHandler().getPlayersSpectators().remove(player)) {
+				UtilsRandomEvents.borraPlayerPorName(getPlayerHandler().getPlayersSpectators(), player);
 			}
 
-			getPlayers().remove(player.getName());
+			getPlayerHandler().getPlayers().remove(player.getName());
 
 			UtilsRandomEvents.borraInventario(player, plugin);
 
@@ -645,7 +625,7 @@ public class MatchActive {
 
 	public void daRecompensas(Boolean tiempo) {
 		setPlaying(Boolean.FALSE);
-		UtilsRandomEvents.playSound(getPlayersSpectators(), XSound.ENTITY_ENDER_DRAGON_DEATH);
+		UtilsRandomEvents.playSound(getPlayerHandler().getPlayersSpectators(), XSound.ENTITY_ENDER_DRAGON_DEATH);
 		List<Player> ganadores = new ArrayList<Player>();
 		switch (getMatch().getMinigame()) {
 		case BATTLE_ROYALE:
@@ -661,7 +641,7 @@ public class MatchActive {
 		case TNT_RUN:
 		case SPLEEF:
 		case SPLEGG:
-			ganadores.addAll(getPlayersObj());
+			ganadores.addAll(getPlayerHandler().getPlayersObj());
 			break;
 		case TOP_KILLER:
 		case OITC:
@@ -669,19 +649,19 @@ public class MatchActive {
 			ganadores.addAll(sacaGanadoresPartidaTiempo());
 			break;
 		case GEM_CRAWLER:
-			if (getPlayersObj().size() == 1) {
-				ganadores.addAll(getPlayersObj());
+			if (getPlayerHandler().getPlayersObj().size() == 1) {
+				ganadores.addAll(getPlayerHandler().getPlayersObj());
 
 			} else {
-				ganadores.add(getPlayerContador());
+				ganadores.add(getPlayerHandler().getPlayerContador());
 			}
 			break;
 		case BOAT_RUN:
 		case HORSE_RUN:
 		case RACE:
 		case ESCAPE_FROM_BEAST:
-			if (getPlayerContador() != null)
-				ganadores.add(getPlayerContador());
+			if (getPlayerHandler().getPlayerContador() != null)
+				ganadores.add(getPlayerHandler().getPlayerContador());
 			break;
 		}
 
@@ -725,7 +705,7 @@ public class MatchActive {
 
 	private Collection<? extends Player> sacaGanadoresPartidaTiempo() {
 		List<Player> winners = new ArrayList<Player>();
-		if (equipos == null || equipos.isEmpty()) {
+		if (getPlayerHandler().getEquipos() == null || getPlayerHandler().getEquipos().isEmpty()) {
 			maximo = 0;
 			for (Integer puntos : puntuacion.values()) {
 				if (maximo < puntos) {
@@ -740,33 +720,21 @@ public class MatchActive {
 						gana.add(s);
 					}
 				}
-				for (Player p : playersObj) {
+				for (Player p : getPlayerHandler().getPlayersObj()) {
 					if (gana.contains(p.getName())) {
 						winners.add(p);
 					}
 				}
 
 			} else {
-				for (Player p : playersObj) {
+				for (Player p : getPlayerHandler().getPlayersObj()) {
 					if (puntuacion.containsKey(p.getName()) && puntuacion.get(p.getName()).equals(maximo)) {
 						winners.add(p);
 					}
 				}
 			}
 		} else {
-			Map<Integer, Integer> puntuacionesEquipo = new HashMap<Integer, Integer>();
-
-			for (Integer e : equipos.keySet()) {
-				List<Player> players = equipos.get(e);
-				Integer puntuacionEquipo = 0;
-				for (Player p : players) {
-
-					if (puntuacion.containsKey(p.getName())) {
-						puntuacionEquipo += puntuacion.get(p.getName());
-					}
-				}
-				puntuacionesEquipo.put(e, puntuacionEquipo);
-			}
+			Map<Integer, Integer> puntuacionesEquipo = createTeamPoints();
 
 			maximo = 0;
 
@@ -774,7 +742,7 @@ public class MatchActive {
 				puntuacionesEquipo = UtilsRandomEvents.sortByValue(puntuacionesEquipo);
 				for (Integer s : puntuacionesEquipo.keySet()) {
 					if (winners.size() < limitPlayers) {
-						winners.addAll(equipos.get(s));
+						winners.addAll(getPlayerHandler().getEquipos().get(s));
 					}
 				}
 
@@ -788,13 +756,30 @@ public class MatchActive {
 
 				for (Integer equipo : puntuacionesEquipo.keySet()) {
 					if (puntuacionesEquipo.get(equipo) == maximo) {
-						winners.addAll(equipos.get(equipo));
+						winners.addAll(getPlayerHandler().getEquipos().get(equipo));
 					}
 				}
 			}
 		}
 
 		return winners;
+	}
+
+	public Map<Integer, Integer> createTeamPoints() {
+		Map<Integer, Integer> puntuacionesEquipo = new HashMap<Integer, Integer>();
+
+		for (Integer e : getPlayerHandler().getEquipos().keySet()) {
+			List<Player> players = getPlayerHandler().getEquipos().get(e);
+			Integer puntuacionEquipo = 0;
+			for (Player p : players) {
+
+				if (puntuacion.containsKey(p.getName())) {
+					puntuacionEquipo += puntuacion.get(p.getName());
+				}
+			}
+			puntuacionesEquipo.put(e, puntuacionEquipo);
+		}
+		return puntuacionesEquipo;
 	}
 
 	public void finalizaPartida(List<Player> ganadores, Boolean abrupto, Boolean cancelled) {
@@ -807,7 +792,7 @@ public class MatchActive {
 				}
 			}
 
-			for (Player p : getPlayersSpectators()) {
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
 
 				// UtilsRandomEvents.borraInventario(p);
 				//
@@ -871,14 +856,20 @@ public class MatchActive {
 	}
 
 	public void reiniciaValoresPartida() {
+		List<FastBoard> listaRecorrer = new ArrayList<FastBoard>();
+		listaRecorrer.addAll(getPlayerHandler().getScoreboards().values());
+		for (FastBoard f : listaRecorrer) {
+			Player p = f.getPlayer();
+			borraScoreboard(p);
 
+		}
 		for (Entity ent : getMobs()) {
 			if (ent != null) {
 				ent.remove();
 			}
 		}
 
-		for (Location chest : chests) {
+		for (Location chest : getMapHandler().getChests()) {
 			if (chest.getBlock() != null && chest.getBlock().getType() == XMaterial.CHEST.parseMaterial()) {
 				if (chest.getBlock().getState() instanceof Chest) {
 					Chest c = (Chest) chest.getBlock().getState();
@@ -888,32 +879,35 @@ public class MatchActive {
 				chest.getBlock().setType(XMaterial.CHEST.parseMaterial());
 			}
 		}
-		this.players.clear();
-		this.playersObj.clear();
-		this.playersGanadores.clear();
-		this.playersSpectators.clear();
+		this.getPlayerHandler().getPlayers().clear();
+		this.getPlayerHandler().getPlayersObj().clear();
+		this.getPlayerHandler().getPlayersGanadores().clear();
+		this.getPlayerHandler().getPlayersSpectators().clear();
 		this.activated = Boolean.FALSE;
 		if (task != null) {
 			task.cancel();
 		}
+		if (task2 != null) {
+			task2.cancel();
+		}
 
 		Material mat = null;
 
-		for (Location l : getBlockPlaced().keySet()) {
+		for (Location l : getMapHandler().getBlockPlaced().keySet()) {
 			l.getBlock().setType(XMaterial.AIR.parseMaterial());
 		}
 		if (match.getMinigame().equals(MinigameType.TNT_RUN)) {
 			mat = plugin.getApi().getMaterial(AMaterials.TNT);
 		}
 		if (mat != null) {
-			for (Location l : getBlockDisappear().keySet()) {
-				getBlockDisappeared().put(l, null);
+			for (Location l : getMapHandler().getBlockDisappear().keySet()) {
+				getMapHandler().getBlockDisappeared().put(l, null);
 			}
-			for (Location l : getBlockDisappeared().keySet()) {
+			for (Location l : getMapHandler().getBlockDisappeared().keySet()) {
 				l.getBlock().setType(mat);
 			}
 		} else {
-			for (Entry<Location, MaterialData> entrada : getBlockDisappeared().entrySet()) {
+			for (Entry<Location, MaterialData> entrada : getMapHandler().getBlockDisappeared().entrySet()) {
 				entrada.getKey().getBlock().setType(entrada.getValue().getItemType());
 				try {
 					entrada.getKey().getBlock().setData(entrada.getValue().getData());
@@ -947,7 +941,7 @@ public class MatchActive {
 
 	private void mandaDescripcion() {
 		List<String> desc = getField("minigameDescription" + match.getMinigame().getCodigo());
-		for (Player p : getPlayersSpectators()) {
+		for (Player p : getPlayerHandler().getPlayersSpectators()) {
 			for (String d : desc) {
 				p.sendMessage(d.replaceAll("&", "§"));
 			}
@@ -979,26 +973,26 @@ public class MatchActive {
 
 	public void cuentaAtras(Boolean playSound) {
 
-		UtilsRandomEvents.mandaMensaje(plugin, getPlayersSpectators(),
+		UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
 				plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getEventAnnounce()
 						.replace("%event%", match.getName()).replace("%type%", match.getMinigame().getMessage()),
 				Boolean.FALSE);
 
-		UtilsRandomEvents.playSound(getPlayersSpectators(), XSound.ENTITY_PLAYER_LEVELUP);
-		UtilsRandomEvents.mandaMensaje(plugin, getPlayersSpectators(), plugin.getLanguage().getSecondsRemaining3(),
-				Boolean.FALSE);
+		UtilsRandomEvents.playSound(getPlayerHandler().getPlayersSpectators(), XSound.ENTITY_PLAYER_LEVELUP);
+		UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
+				plugin.getLanguage().getSecondsRemaining3(), Boolean.FALSE);
 		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 			public void run() {
-				UtilsRandomEvents.playSound(getPlayersSpectators(), XSound.ENTITY_PLAYER_LEVELUP);
-				UtilsRandomEvents.mandaMensaje(plugin, getPlayersSpectators(),
+				UtilsRandomEvents.playSound(getPlayerHandler().getPlayersSpectators(), XSound.ENTITY_PLAYER_LEVELUP);
+				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
 						plugin.getLanguage().getSecondsRemaining2(), Boolean.FALSE);
 			}
 		}, 20 * 1L);
 
 		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 			public void run() {
-				UtilsRandomEvents.playSound(getPlayersSpectators(), XSound.ENTITY_PLAYER_LEVELUP);
-				UtilsRandomEvents.mandaMensaje(plugin, getPlayersSpectators(),
+				UtilsRandomEvents.playSound(getPlayerHandler().getPlayersSpectators(), XSound.ENTITY_PLAYER_LEVELUP);
+				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
 						plugin.getLanguage().getSecondsRemaining1(), Boolean.FALSE);
 			}
 		}, 20 * 2L);
@@ -1006,7 +1000,8 @@ public class MatchActive {
 		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 			public void run() {
 				if (playSound) {
-					UtilsRandomEvents.playSound(getPlayersSpectators(), XSound.ENTITY_ENDER_DRAGON_GROWL);
+					UtilsRandomEvents.playSound(getPlayerHandler().getPlayersSpectators(),
+							XSound.ENTITY_ENDER_DRAGON_GROWL);
 				}
 				comienzaPartida();
 				// spawnMobs(bWave.getMobs(), getPlugin());
@@ -1017,14 +1012,24 @@ public class MatchActive {
 	}
 
 	public void comienzaPartida() {
+		getPlayerHandler().getPlayersTotal().clear();
+		getPlayerHandler().getPlayersTotal().addAll(getPlayerHandler().getPlayers());
+		for (Player p : getPlayerHandler().getPlayersObj()) {
+			hazComandosDeComienzo(p);
+			puntuacion.put(p.getName(), 0);
+
+			prepareScoreboards(p);
+
+		}
+
 		switch (match.getMinigame()) {
 		case SG:
-			for (Player p : playersSpectators) {
-				if (!playersObj.contains(p)) {
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
 					mandaSpectatorPlayer(p);
 				}
 			}
-			for (Player p : playersObj) {
+			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 
 			}
@@ -1032,73 +1037,23 @@ public class MatchActive {
 			doMoveAndWarmup();
 
 			if (plugin.isShowBorders()) {
-				for (Player p : playersObj) {
-					UtilsRandomEvents.setWorldBorder(getPlugin(), actualCuboid.getCenter(),
-							(actualCuboid.getMaxX() - actualCuboid.getMinX()) / 1., p);
+				for (Player p : getPlayerHandler().getPlayersObj()) {
+					UtilsRandomEvents.setWorldBorder(getPlugin(), getMapHandler().getActualCuboid().getCenter(),
+							(getMapHandler().getActualCuboid().getMaxX() - getMapHandler().getActualCuboid().getMinX())
+									/ 1.,
+							p);
 				}
+				partidaSG();
 
-				task = new BukkitRunnable() {
-					public void run() {
-						UtilsRandomEvents.mandaMensaje(plugin, playersObj,
-								plugin.getLanguage().getShrink().replaceAll("%time%", "5"), true);
-						Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
-							public void run() {
-
-								UtilsRandomEvents.mandaMensaje(plugin, playersObj,
-										plugin.getLanguage().getShrink().replaceAll("%time%", "4"), true);
-							}
-						}, 20 * 1);
-						Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
-							public void run() {
-
-								UtilsRandomEvents.mandaMensaje(plugin, playersObj,
-										plugin.getLanguage().getShrink().replaceAll("%time%", "3"), true);
-							}
-						}, 20 * 2);
-						Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
-							public void run() {
-
-								UtilsRandomEvents.mandaMensaje(plugin, playersObj,
-										plugin.getLanguage().getShrink().replaceAll("%time%", "2"), true);
-							}
-						}, 20 * 3);
-						Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
-							public void run() {
-
-								UtilsRandomEvents.mandaMensaje(plugin, playersObj,
-										plugin.getLanguage().getShrink().replaceAll("%time%", "1"), true);
-							}
-						}, 20 * 4);
-						Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
-							public void run() {
-
-								getActualCuboid().shrink(0.2);
-								for (Player p : playersObj) {
-									if (!getActualCuboid().contains(p.getLocation())) {
-										Location random = UtilsRandomEvents.getRandomLocation(plugin, getActualCuboid(),
-												getMatchActive());
-										UtilsRandomEvents.teleportaPlayer(p,
-												random.getWorld().getHighestBlockAt(random).getLocation(), plugin);
-									}
-									UtilsRandomEvents.setWorldBorder(getPlugin(), getActualCuboid().getCenter(),
-											(getActualCuboid().getMaxX() - getActualCuboid().getMinX()) / 1., p);
-								}
-							}
-						}, 20 * 5);
-
-					}
-				};
-				task.runTaskTimerAsynchronously(plugin, 20L * getMatch().getTiempoPartida(),
-						20L * getMatch().getTiempoPartida());
 			}
 			break;
 		case SW:
-			for (Player p : playersSpectators) {
-				if (!playersObj.contains(p)) {
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
 					mandaSpectatorPlayer(p);
 				}
 			}
-			for (Player p : playersObj) {
+			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 
 			}
@@ -1107,12 +1062,12 @@ public class MatchActive {
 			break;
 		case BATTLE_ROYALE:
 		case KNOCKBACK_DUEL:
-			for (Player p : playersSpectators) {
-				if (!playersObj.contains(p)) {
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
 					mandaSpectatorPlayer(p);
 				}
 			}
-			for (Player p : playersObj) {
+			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 
 			}
@@ -1127,13 +1082,13 @@ public class MatchActive {
 
 			break;
 		case TNT_RUN:
-			for (Player p : playersSpectators) {
-				if (!playersObj.contains(p)) {
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
 					mandaSpectatorPlayer(p);
 				}
 			}
 			this.allowDamage = true;
-			for (Player p : playersObj) {
+			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 
 			}
@@ -1146,36 +1101,36 @@ public class MatchActive {
 			task.runTaskTimer(plugin, plugin.getWarmupTimeTNTRUN() != -1 ? 20 * plugin.getWarmupTimeTNTRUN() : 0, 1L);
 			break;
 		case SPLEEF:
-			for (Player p : playersSpectators) {
-				if (!playersObj.contains(p)) {
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
 					mandaSpectatorPlayer(p);
 				}
 			}
 			this.allowDamage = true;
-			for (Player p : playersObj) {
+			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 
 			}
 			PotionEffect pot = new PotionEffect(PotionEffectType.FAST_DIGGING, 240, 99);
-			UtilsRandomEvents.applyPotionEffects(pot, getPlayersObj());
+			UtilsRandomEvents.applyPotionEffects(pot, getPlayerHandler().getPlayersObj());
 
 			task = new BukkitRunnable() {
 				public void run() {
 
-					UtilsRandomEvents.applyPotionEffects(pot, getPlayersObj());
+					UtilsRandomEvents.applyPotionEffects(pot, getPlayerHandler().getPlayersObj());
 				}
 			};
 			task.runTaskTimer(plugin, 0, 120L);
 			break;
 		case SPLEGG:
-			for (Player p : playersSpectators) {
-				if (!playersObj.contains(p)) {
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
 					mandaSpectatorPlayer(p);
 				}
 			}
 			this.allowDamage = true;
 			ItemStack item = new ItemStack(plugin.getApi().getMaterial(AMaterials.STONE_HOE));
-			for (Player p : playersObj) {
+			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 				p.getInventory().setItem(0, item);
 				p.updateInventory();
@@ -1184,16 +1139,17 @@ public class MatchActive {
 
 			break;
 		case ESCAPE_FROM_BEAST:
-			for (Player p : playersSpectators) {
-				if (!playersObj.contains(p)) {
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
 					mandaSpectatorPlayer(p);
 				}
 			}
 			this.allowDamage = true;
-			setBeast(playersObj.get(plugin.getRandom().nextInt(playersObj.size())));
-			setPlayerContador(getBeast());
-			for (Player p : playersObj) {
-				if (p.getName().equals(beast.getName())) {
+			getPlayerHandler().setBeast(getPlayerHandler().getPlayersObj()
+					.get(plugin.getRandom().nextInt(getPlayerHandler().getPlayersObj().size())));
+			getPlayerHandler().setPlayerContador(getPlayerHandler().getBeast());
+			for (Player p : getPlayerHandler().getPlayersObj()) {
+				if (p.getName().equals(getPlayerHandler().getBeast().getName())) {
 					iniciaPlayerBeast(p);
 
 				} else {
@@ -1205,169 +1161,120 @@ public class MatchActive {
 			break;
 		case TOP_KILLER:
 		case OITC:
-			for (Player p : playersSpectators) {
-				if (!playersObj.contains(p)) {
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
 					mandaSpectatorPlayer(p);
 				}
 			}
 			this.allowDamage = true;
-			for (Player p : playersObj) {
+			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 			}
 			partidaPorTiempo();
+
 			break;
 		case TOP_KILLER_TEAM_2:
-			for (Player p : playersSpectators) {
-				if (!playersObj.contains(p)) {
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
 					mandaSpectatorPlayer(p);
 				}
 			}
 			this.allowDamage = true;
-			for (Player p : playersObj) {
-				Integer indice = playersObj.indexOf(p);
+			for (Player p : getPlayerHandler().getPlayersObj()) {
+				Integer indice = getPlayerHandler().getPlayersObj().indexOf(p);
 
 				iniciaPlayer(p);
 				if (indice % 2 == 0) {
 					List<Player> players = new ArrayList<Player>();
 					players.add(p);
-					equipos.put(indice / 2, players);
+					getPlayerHandler().getEquipos().put(indice / 2, players);
 				} else {
-					equipos.get((indice - 1) / 2).add(p);
+					getPlayerHandler().getEquipos().get((indice - 1) / 2).add(p);
 				}
 			}
 
-			mandaMensajesEquipo(equipos);
+			mandaMensajesEquipo(getPlayerHandler().getEquipos());
 
 			partidaPorTiempo();
 			break;
 		case TSG:
-			for (Player p : playersSpectators) {
-				if (!playersObj.contains(p)) {
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
 					mandaSpectatorPlayer(p);
 				}
 			}
 			this.allowDamage = true;
-			for (Player p : playersObj) {
-				Integer indice = playersObj.indexOf(p);
+			for (Player p : getPlayerHandler().getPlayersObj()) {
+				Integer indice = getPlayerHandler().getPlayersObj().indexOf(p);
 				iniciaPlayer(p);
 
 				if (indice % 2 == 0) {
 					List<Player> players = new ArrayList<Player>();
 					players.add(p);
-					equipos.put(indice / 2, players);
+					getPlayerHandler().getEquipos().put(indice / 2, players);
 				} else {
-					equipos.get((indice - 1) / 2).add(p);
+					getPlayerHandler().getEquipos().get((indice - 1) / 2).add(p);
 				}
 
 			}
-			mandaMensajesEquipo(equipos);
+			mandaMensajesEquipo(getPlayerHandler().getEquipos());
 			doMoveAndWarmup();
 			if (plugin.isShowBorders()) {
-				for (Player p : playersObj) {
-					UtilsRandomEvents.setWorldBorder(getPlugin(), actualCuboid.getCenter(),
-							(actualCuboid.getMaxX() - actualCuboid.getMinX()) / 2., p);
+				for (Player p : getPlayerHandler().getPlayersObj()) {
+					UtilsRandomEvents.setWorldBorder(getPlugin(), getMapHandler().getActualCuboid().getCenter(),
+							(getMapHandler().getActualCuboid().getMaxX() - getMapHandler().getActualCuboid().getMinX())
+									/ 2.,
+							p);
 				}
 
-				task = new BukkitRunnable() {
-					public void run() {
-						UtilsRandomEvents.mandaMensaje(plugin, playersObj,
-								plugin.getLanguage().getShrink().replaceAll("%time%", "5"), true);
-						Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
-							public void run() {
-
-								UtilsRandomEvents.mandaMensaje(plugin, playersObj,
-										plugin.getLanguage().getShrink().replaceAll("%time%", "4"), true);
-							}
-						}, 20 * 1);
-						Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
-							public void run() {
-
-								UtilsRandomEvents.mandaMensaje(plugin, playersObj,
-										plugin.getLanguage().getShrink().replaceAll("%time%", "3"), true);
-							}
-						}, 20 * 2);
-						Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
-							public void run() {
-
-								UtilsRandomEvents.mandaMensaje(plugin, playersObj,
-										plugin.getLanguage().getShrink().replaceAll("%time%", "2"), true);
-							}
-						}, 20 * 3);
-						Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
-							public void run() {
-
-								UtilsRandomEvents.mandaMensaje(plugin, playersObj,
-										plugin.getLanguage().getShrink().replaceAll("%time%", "1"), true);
-							}
-						}, 20 * 4);
-						Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
-							public void run() {
-
-								getActualCuboid().shrink(0.2);
-								for (Player p : playersObj) {
-									if (!getActualCuboid().contains(p.getLocation())) {
-										Location random = UtilsRandomEvents.getRandomLocation(plugin, getActualCuboid(),
-												getMatchActive());
-										UtilsRandomEvents.teleportaPlayer(p,
-												random.getWorld().getHighestBlockAt(random).getLocation(), plugin);
-									}
-									UtilsRandomEvents.setWorldBorder(getPlugin(), getActualCuboid().getCenter(),
-											(getActualCuboid().getMaxX() - getActualCuboid().getMinX()) / 2., p);
-								}
-							}
-						}, 20 * 5);
-
-					}
-				};
-				task.runTaskTimerAsynchronously(plugin, 20L * getMatch().getTiempoPartida(),
-						20L * getMatch().getTiempoPartida());
+				partidaSG();
 			}
 			break;
 		case TSW:
-			for (Player p : playersSpectators) {
-				if (!playersObj.contains(p)) {
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
 					mandaSpectatorPlayer(p);
 				}
 			}
 			this.allowDamage = true;
-			for (Player p : playersObj) {
-				Integer indice = playersObj.indexOf(p);
+			for (Player p : getPlayerHandler().getPlayersObj()) {
+				Integer indice = getPlayerHandler().getPlayersObj().indexOf(p);
 				iniciaPlayer(p);
 
 				if (indice % 2 == 0) {
 					List<Player> players = new ArrayList<Player>();
 					players.add(p);
-					equipos.put(indice / 2, players);
+					getPlayerHandler().getEquipos().put(indice / 2, players);
 				} else {
-					equipos.get((indice - 1) / 2).add(p);
+					getPlayerHandler().getEquipos().get((indice - 1) / 2).add(p);
 				}
 
 			}
-			mandaMensajesEquipo(equipos);
+			mandaMensajesEquipo(getPlayerHandler().getEquipos());
 			doMoveAndWarmup();
 
 			break;
 		case BATTLE_ROYALE_TEAM_2:
-			for (Player p : playersSpectators) {
-				if (!playersObj.contains(p)) {
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
 					mandaSpectatorPlayer(p);
 				}
 			}
 			this.allowDamage = true;
-			for (Player p : playersObj) {
-				Integer indice = playersObj.indexOf(p);
+			for (Player p : getPlayerHandler().getPlayersObj()) {
+				Integer indice = getPlayerHandler().getPlayersObj().indexOf(p);
 				iniciaPlayer(p);
 
 				if (indice % 2 == 0) {
 					List<Player> players = new ArrayList<Player>();
 					players.add(p);
-					equipos.put(indice / 2, players);
+					getPlayerHandler().getEquipos().put(indice / 2, players);
 				} else {
-					equipos.get((indice - 1) / 2).add(p);
+					getPlayerHandler().getEquipos().get((indice - 1) / 2).add(p);
 				}
 
 			}
-			mandaMensajesEquipo(equipos);
+			mandaMensajesEquipo(getPlayerHandler().getEquipos());
 			task = new BukkitRunnable() {
 				public void run() {
 
@@ -1377,13 +1284,13 @@ public class MatchActive {
 			task.runTaskTimer(plugin, 0, 20L);
 			break;
 		case BATTLE_ROYALE_CABALLO:
-			for (Player p : playersSpectators) {
-				if (!playersObj.contains(p)) {
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
 					mandaSpectatorPlayer(p);
 				}
 			}
 			this.allowDamage = true;
-			for (Player p : playersObj) {
+			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 
 				Horse horse = (Horse) p.getWorld().spawnEntity(p.getLocation(), EntityType.HORSE); // Spawns
@@ -1405,13 +1312,13 @@ public class MatchActive {
 			break;
 		case HORSE_RUN:
 
-			for (Player p : playersSpectators) {
-				if (!playersObj.contains(p)) {
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
 					mandaSpectatorPlayer(p);
 				}
 			}
 			this.allowDamage = true;
-			for (Player p : playersObj) {
+			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 
 				Boat boat = null;
@@ -1432,8 +1339,9 @@ public class MatchActive {
 					horse.setPassenger(p);
 
 				} else {
-					Horse horse = (Horse) p.getWorld()
-							.spawnEntity(match.getEntitySpawns().get(getPlayersObj().indexOf(p)), EntityType.HORSE); // Spawns
+					Horse horse = (Horse) p.getWorld().spawnEntity(
+							match.getEntitySpawns().get(getPlayerHandler().getPlayersObj().indexOf(p)),
+							EntityType.HORSE); // Spawns
 					// the
 					// horse
 					horse.getInventory().setSaddle(new ItemStack(plugin.getApi().getMaterial(AMaterials.SADDLE), 1)); // Gives
@@ -1453,13 +1361,13 @@ public class MatchActive {
 			}
 			break;
 		case BOAT_RUN:
-			for (Player p : playersSpectators) {
-				if (!playersObj.contains(p)) {
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
 					mandaSpectatorPlayer(p);
 				}
 			}
 			this.allowDamage = true;
-			for (Player p : playersObj) {
+			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 
 				Boat boat = null;
@@ -1468,7 +1376,8 @@ public class MatchActive {
 					boat.setPassenger(p);
 
 				} else {
-					boat = (Boat) p.getWorld().spawnEntity(match.getEntitySpawns().get(getPlayersObj().indexOf(p)),
+					boat = (Boat) p.getWorld().spawnEntity(
+							match.getEntitySpawns().get(getPlayerHandler().getPlayersObj().indexOf(p)),
 							EntityType.BOAT);
 				}
 
@@ -1478,51 +1387,51 @@ public class MatchActive {
 			}
 			break;
 		case RACE:
-			for (Player p : playersSpectators) {
-				if (!playersObj.contains(p)) {
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
 					mandaSpectatorPlayer(p);
 				}
 			}
 
 			this.allowDamage = true;
-			for (Player p : playersObj) {
+			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 
 			}
 			break;
 
 		case ESCAPE_ARROW:
-			for (Player p : playersSpectators) {
-				if (!playersObj.contains(p)) {
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
 					mandaSpectatorPlayer(p);
 				}
 			}
 			this.allowDamage = true;
-			for (Player p : playersObj) {
+			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 			}
 			partidaEscapeArrow();
 			break;
 		case GEM_CRAWLER:
-			for (Player p : playersSpectators) {
-				if (!playersObj.contains(p)) {
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
 					mandaSpectatorPlayer(p);
 				}
 			}
 			this.allowDamage = true;
-			for (Player p : playersObj) {
+			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 			}
 			spawneaGemas();
 			break;
 		case BOMB_TAG:
-			for (Player p : playersSpectators) {
-				if (!playersObj.contains(p)) {
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
 					mandaSpectatorPlayer(p);
 				}
 			}
 			this.allowDamage = true;
-			for (Player p : playersObj) {
+			for (Player p : getPlayerHandler().getPlayersObj()) {
 				teleportaPlayer(p);
 			}
 			bombRandom();
@@ -1530,9 +1439,9 @@ public class MatchActive {
 			task = new BukkitRunnable() {
 				public void run() {
 
-					if (getPlayerContador() != null) {
+					if (getPlayerHandler().getPlayerContador() != null) {
 						UtilsRandomEvents.spawnParticles(Particle1711.valueOf(plugin.getParticleTNTTag()), plugin,
-								getPlayerContador().getLocation());
+								getPlayerHandler().getPlayerContador().getLocation());
 					}
 				}
 			};
@@ -1541,8 +1450,59 @@ public class MatchActive {
 			break;
 		}
 
-		for (Player p : playersObj) {
-			hazComandosDeComienzo(p);
+	}
+
+	private void partidaSG() {
+		endDate = new Date().getTime() + 1000 * getTiempoPartida();
+
+		task = new BukkitRunnable() {
+			public void run() {
+				updateScoreboards();
+				checkSG();
+			}
+		};
+		task.runTaskTimerAsynchronously(plugin, 20L * getMatch().getTiempoPartida(),
+				20L * getMatch().getTiempoPartida());
+
+	}
+
+	public void checkSG() {
+		if (getPlaying()) {
+			Date now = new Date();
+			long dif = (endDate - now.getTime()) / 1000;
+			if (dif <= 0) {
+
+				getMapHandler().getActualCuboid().shrink(0.2);
+				for (Player p : getPlayerHandler().getPlayersObj()) {
+					if (!getMapHandler().getActualCuboid().contains(p.getLocation())) {
+						Location random = UtilsRandomEvents.getRandomLocation(plugin, getMapHandler().getActualCuboid(),
+								getMatchActive());
+						UtilsRandomEvents.teleportaPlayer(p, random.getWorld().getHighestBlockAt(random).getLocation(),
+								plugin);
+					}
+					UtilsRandomEvents.setWorldBorder(getPlugin(), getMapHandler().getActualCuboid().getCenter(),
+							(getMapHandler().getActualCuboid().getMaxX() - getMapHandler().getActualCuboid().getMinX())
+									/ 1.,
+							p);
+				}
+				endDate = new Date().getTime() + 1000 * getTiempoPartida();
+
+			} else if (dif == 1) {
+				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersObj(),
+						plugin.getLanguage().getShrink().replaceAll("%time%", "1"), true);
+			} else if (dif == 2) {
+				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersObj(),
+						plugin.getLanguage().getShrink().replaceAll("%time%", "2"), true);
+			} else if (dif == 3) {
+				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersObj(),
+						plugin.getLanguage().getShrink().replaceAll("%time%", "3"), true);
+			} else if (dif == 4) {
+				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersObj(),
+						plugin.getLanguage().getShrink().replaceAll("%time%", "4"), true);
+			} else if (dif == 5) {
+				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersObj(),
+						plugin.getLanguage().getShrink().replaceAll("%time%", "5"), true);
+			}
 		}
 
 	}
@@ -1551,28 +1511,28 @@ public class MatchActive {
 
 		setAllowMove(false);
 
-		UtilsRandomEvents.mandaMensaje(plugin, playersObj, plugin.getLanguage().getPlayersMove().replaceAll("%time%",
-				"" + getMatch().getSecondsToBegin().longValue()), true);
+		UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersObj(), plugin.getLanguage().getPlayersMove()
+				.replaceAll("%time%", "" + getMatch().getSecondsToBegin().longValue()), true);
 
 		if (getMatch().getSecondsToBegin() > 3) {
 			Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
 				public void run() {
 
-					UtilsRandomEvents.mandaMensaje(plugin, playersObj,
+					UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersObj(),
 							plugin.getLanguage().getPlayersMove().replaceAll("%time%", "3"), true);
 				}
 			}, 20 * (getMatch().getSecondsToBegin().longValue() - 3));
 			Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
 				public void run() {
 
-					UtilsRandomEvents.mandaMensaje(plugin, playersObj,
+					UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersObj(),
 							plugin.getLanguage().getPlayersMove().replaceAll("%time%", "2"), true);
 				}
 			}, 20 * (getMatch().getSecondsToBegin().longValue() - 2));
 			Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
 				public void run() {
 
-					UtilsRandomEvents.mandaMensaje(plugin, playersObj,
+					UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersObj(),
 							plugin.getLanguage().getPlayersMove().replaceAll("%time%", "1"), true);
 				}
 			}, 20 * (getMatch().getSecondsToBegin().longValue() - 1));
@@ -1580,32 +1540,33 @@ public class MatchActive {
 		}
 
 		Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
+
 			public void run() {
 
 				setAllowMove(true);
 
-				UtilsRandomEvents.mandaMensaje(plugin, playersObj, plugin.getLanguage().getWarmupEnd()
-						.replaceAll("%time%", "" + getMatch().getSecondsMobSpawn().longValue()), true);
+				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersObj(), plugin.getLanguage()
+						.getWarmupEnd().replaceAll("%time%", "" + getMatch().getSecondsMobSpawn().longValue()), true);
 
 				if (getMatch().getSecondsMobSpawn() > 3) {
 					Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
 						public void run() {
 
-							UtilsRandomEvents.mandaMensaje(plugin, playersObj,
+							UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersObj(),
 									plugin.getLanguage().getWarmupEnd().replaceAll("%time%", "3"), true);
 						}
 					}, 20 * (getMatch().getSecondsMobSpawn().longValue() - 3));
 					Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
 						public void run() {
 
-							UtilsRandomEvents.mandaMensaje(plugin, playersObj,
+							UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersObj(),
 									plugin.getLanguage().getWarmupEnd().replaceAll("%time%", "2"), true);
 						}
 					}, 20 * (getMatch().getSecondsMobSpawn().longValue() - 2));
 					Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
 						public void run() {
 
-							UtilsRandomEvents.mandaMensaje(plugin, playersObj,
+							UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersObj(),
 									plugin.getLanguage().getWarmupEnd().replaceAll("%time%", "1"), true);
 						}
 					}, 20 * (getMatch().getSecondsMobSpawn().longValue() - 1));
@@ -1613,10 +1574,12 @@ public class MatchActive {
 				}
 
 				Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
+
 					public void run() {
 
 						setAllowDamage(true);
 					}
+
 				}, 20 * getMatch().getSecondsMobSpawn().longValue());
 
 			}
@@ -1625,67 +1588,80 @@ public class MatchActive {
 	}
 
 	public void bombRandom() {
-		setPlayerContador(getPlayersObj().get(getRandom().nextInt(getPlayersObj().size())));
-		ponInventarioMatch(getPlayerContador());
-		UtilsRandomEvents.mandaMensaje(plugin, getPlayersSpectators(),
-				plugin.getLanguage().getPlayerHasBomb().replace("%player%", getPlayerContador().getName()), true);
-		UtilsRandomEvents.playSound(getPlayerContador(), XSound.ENTITY_VILLAGER_HURT);
+		getPlayerHandler().setPlayerContador(
+				getPlayerHandler().getPlayersObj().get(getRandom().nextInt(getPlayerHandler().getPlayersObj().size())));
+		ponInventarioMatch(getPlayerHandler().getPlayerContador());
+		UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(), plugin.getLanguage()
+				.getPlayerHasBomb().replace("%player%", getPlayerHandler().getPlayerContador().getName()), true);
+		UtilsRandomEvents.playSound(getPlayerHandler().getPlayerContador(), XSound.ENTITY_VILLAGER_HURT);
 
 	}
 
 	private void partidaBombTag() {
 
 		if (getPlaying()) {
-			for (Player p : getPlayersObj()) {
-				if (p.equals(getPlayerContador())) {
-					p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 120, 1));
+			endDate = Double.valueOf(new Date().getTime() + 1000 * getMatch().getSecondsMobSpawn()).longValue();
+
+			task2 = new BukkitRunnable() {
+				public void run() {
+					updateScoreboards();
+					checkTNTTag();
+				}
+			};
+			task2.runTaskTimer(plugin, 0, 20L);
+
+		}
+
+	}
+
+	public void checkTNTTag() {
+		if (getPlaying()) {
+			Date now = new Date();
+			long dif = (endDate - now.getTime()) / 1000;
+			for (Player p : getPlayerHandler().getPlayersObj()) {
+				if (p.equals(getPlayerHandler().getPlayerContador())) {
+					p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 120, 2));
 				} else {
 					p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 120, 0));
 				}
 			}
 
-			if (numeroSegRestantes == 0) {
+			if (dif <= 0) {
 
-				UtilsRandomEvents.playSound(getPlayersSpectators(), XSound.ENTITY_GENERIC_EXPLODE);
+				UtilsRandomEvents.playSound(getPlayerHandler().getPlayersSpectators(), XSound.ENTITY_GENERIC_EXPLODE);
 
-				List<Player> muertos = UtilsRandomEvents.getPlayersWithin(getPlayerContador(), getPlayersObj(), 4);
-				if (muertos.size() == getPlayersObj().size()) {
+				List<Player> muertos = UtilsRandomEvents.getPlayersWithin(getPlayerHandler().getPlayerContador(),
+						getPlayerHandler().getPlayersObj(), 4);
+				if (muertos.size() == getPlayerHandler().getPlayersObj().size()) {
 					muertos.clear();
-					muertos.add(getPlayerContador());
+					muertos.add(getPlayerHandler().getPlayerContador());
 				}
 
 				for (Player p : muertos) {
-					UtilsRandomEvents.mandaMensaje(plugin, getPlayersSpectators(),
+					UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
 							plugin.getLanguage().getBombExplode().replace("%player%", p.getName()), true);
 				}
 				echaDePartida(muertos, true, true, false, true);
-				if (getPlayersObj().size() > limitPlayers) {
-					numeroSegRestantes = match.getSecondsMobSpawn().intValue();
+				if (getPlayerHandler().getPlayersObj().size() > limitPlayers) {
 					bombRandom();
-					partidaBombTag();
 				} else {
 					compruebaPartida();
 				}
+				endDate = Double.valueOf(new Date().getTime() + 1000 * getMatch().getSecondsMobSpawn()).longValue();
 			} else {
-				Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
-					public void run() {
-						numeroSegRestantes--;
-						if (numeroSegRestantes > 5 && numeroSegRestantes % 5 == 0) {
-							UtilsRandomEvents.mandaMensaje(plugin, getPlayersSpectators(), plugin.getLanguage()
-									.getBombSeconds().replace("%seconds%", numeroSegRestantes.toString()), true);
-						} else if (numeroSegRestantes > 0 && numeroSegRestantes <= 5) {
-							UtilsRandomEvents.playSound(getPlayersSpectators(), XSound.BLOCK_NOTE_BLOCK_BANJO);
-							UtilsRandomEvents.mandaMensaje(plugin, getPlayersSpectators(), plugin.getLanguage()
-									.getBombSeconds().replace("%seconds%", numeroSegRestantes.toString()), true);
-						}
 
-						partidaBombTag();
+				if (dif > 5 && dif % 5 == 0) {
+					UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
+							plugin.getLanguage().getBombSeconds().replace("%seconds%", dif + ""), true);
+				} else if (dif > 0 && dif <= 5) {
+					UtilsRandomEvents.playSound(getPlayerHandler().getPlayersSpectators(),
+							XSound.BLOCK_NOTE_BLOCK_BANJO);
+					UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
+							plugin.getLanguage().getBombSeconds().replace("%seconds%", dif + ""), true);
+				}
 
-					}
-				}, 20);
 			}
 		}
-
 	}
 
 	private void spawneaGemas() {
@@ -1695,7 +1671,8 @@ public class MatchActive {
 			Bukkit.getServer().getScheduler().runTaskLaterAsynchronously((Plugin) getPlugin(), new Runnable() {
 				public void run() {
 
-					Location l = UtilsRandomEvents.getRandomLocation(plugin, getCuboid(), getMatchActive());
+					Location l = UtilsRandomEvents.getRandomLocation(plugin, getMapHandler().getCuboid(),
+							getMatchActive());
 
 					Bukkit.getServer().getScheduler().runTask((Plugin) getPlugin(), new Runnable() {
 						public void run() {
@@ -1717,7 +1694,8 @@ public class MatchActive {
 			Bukkit.getServer().getScheduler().runTaskLaterAsynchronously((Plugin) getPlugin(), new Runnable() {
 				public void run() {
 
-					Location l = UtilsRandomEvents.getRandomLocation(plugin, getCuboid(), getMatchActive());
+					Location l = UtilsRandomEvents.getRandomLocation(plugin, getMapHandler().getCuboid(),
+							getMatchActive());
 					if (getRandom().nextInt(1000) <= plugin.getProbabilityPowerUp()) {
 
 						Bukkit.getServer().getScheduler().runTask((Plugin) getPlugin(), new Runnable() {
@@ -1741,65 +1719,52 @@ public class MatchActive {
 	}
 
 	private void partidaPorTiempo() {
-		if (getTiempoPartida() <= 60) {
-			Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
-				public void run() {
-					acabaPartidaEnTiempo();
-				}
-			}, 20 * getTiempoPartida());
-		} else {
-			Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
-
-				public void run() {
-					setTiempoPartida(getTiempoPartida() - 60);
-					UtilsRandomEvents.mandaMensaje(plugin, playersObj, plugin.getLanguage().getTimeRemaining()
-							.replace("%minutes%", UtilsRandomEvents.preparaStringTiempo(tiempoPartida)), true);
-					partidaPorTiempo();
-				}
-
-			}, 20 * 60);
-		}
+		endDate = new Date().getTime() + 1000 * getTiempoPartida();
+		task = new BukkitRunnable() {
+			public void run() {
+				updateScoreboards();
+				checkTimeMatch();
+			}
+		};
+		task.runTaskTimer(plugin, 0, 20L);
 
 	}
 
-	public void acabaPartidaEnTiempo() {
+	private void checkTimeMatch() {
+		if (getPlaying()) {
+			Date now = new Date();
+			long dif = (endDate - now.getTime()) / 1000;
 
-		UtilsRandomEvents.playSound(getPlayersSpectators(), XSound.ENTITY_PLAYER_LEVELUP);
-		UtilsRandomEvents.mandaMensaje(plugin, getPlayersSpectators(), plugin.getLanguage().getSecondsRemaining3(),
-				Boolean.TRUE);
-		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
-			public void run() {
-				UtilsRandomEvents.playSound(getPlayersSpectators(), XSound.ENTITY_PLAYER_LEVELUP);
-				UtilsRandomEvents.mandaMensaje(plugin, getPlayersSpectators(),
-						plugin.getLanguage().getSecondsRemaining2(), Boolean.TRUE);
-			}
-		}, 20 * 1L);
+			if (dif <= 0) {
 
-		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
-			public void run() {
-				UtilsRandomEvents.playSound(getPlayersSpectators(), XSound.ENTITY_PLAYER_LEVELUP);
-				UtilsRandomEvents.mandaMensaje(plugin, getPlayersSpectators(),
-						plugin.getLanguage().getSecondsRemaining1(), Boolean.TRUE);
-			}
-		}, 20 * 2L);
-
-		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
-			public void run() {
 				if (getTournament()) {
-					playersGanadores.addAll(sacaGanadoresPartidaTiempo());
+					getPlayerHandler().getPlayersGanadores().addAll(sacaGanadoresPartidaTiempo());
 					List<String> jugadores = new ArrayList<String>();
-					for (Player p : getPlayersGanadores()) {
+					for (Player p : getPlayerHandler().getPlayersGanadores()) {
 						jugadores.add(p.getName());
 					}
-					tournamentObj.nextGame(getCopia(jugadores), getCopiaP(getPlayersGanadores()),
-							getCopiaP(getPlayersSpectators()));
+					tournamentObj.nextGame(getCopia(jugadores), getCopiaP(getPlayerHandler().getPlayersGanadores()),
+							getCopiaP(getPlayerHandler().getPlayersSpectators()));
 				} else {
 					daRecompensas(true);
 				}
 				// spawnMobs(bWave.getMobs(), getPlugin());
-			}
 
-		}, 20 * 3L);
+			} else if (dif == 1) {
+				UtilsRandomEvents.playSound(getPlayerHandler().getPlayersSpectators(), XSound.ENTITY_PLAYER_LEVELUP);
+				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
+						plugin.getLanguage().getSecondsRemaining1(), Boolean.TRUE);
+			} else if (dif == 2) {
+				UtilsRandomEvents.playSound(getPlayerHandler().getPlayersSpectators(), XSound.ENTITY_PLAYER_LEVELUP);
+				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
+						plugin.getLanguage().getSecondsRemaining2(), Boolean.TRUE);
+			} else if (dif == 3) {
+				UtilsRandomEvents.playSound(getPlayerHandler().getPlayersSpectators(), XSound.ENTITY_PLAYER_LEVELUP);
+				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
+						plugin.getLanguage().getSecondsRemaining3(), Boolean.TRUE);
+			}
+		}
+
 	}
 
 	public void iniciaPlayer(Player p) {
@@ -1830,8 +1795,8 @@ public class MatchActive {
 
 	private void teleportaPlayer(Player p) {
 
-		Location loc = match.getSpawns().get(getPlayersObj().indexOf(p));
-		getCheckpoints().put(p.getName(), loc);
+		Location loc = match.getSpawns().get(getPlayerHandler().getPlayersObj().indexOf(p));
+		getMapHandler().getCheckpoints().put(p.getName(), loc);
 		UtilsRandomEvents.teleportaPlayer(p, loc, plugin);
 
 	}
@@ -1858,18 +1823,21 @@ public class MatchActive {
 				puntos.setAmount(amount);
 				location.getWorld().dropItem(location, puntos);
 				getPuntuacion().put(p.getName(), 0);
-				UtilsRandomEvents.mandaMensaje(plugin, getPlayersSpectators(),
+				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
 						plugin.getLanguage().getLostGems().replace("%player%", p.getName()), true);
-				if (getPlayerContador() != null && getPlayerContador().equals(p)) {
-					setPlayerContador(null);
+				if (getPlayerHandler().getPlayerContador() != null
+						&& getPlayerHandler().getPlayerContador().equals(p)) {
+					getPlayerHandler().setPlayerContador(null);
 					setNumeroSegRestantes(plugin.getNumberOfSecondsWithGems());
 				}
 				compruebaPartida();
 			}
 			break;
+
 		default:
 			break;
 		}
+		updateScoreboards();
 
 	}
 
@@ -1944,7 +1912,9 @@ public class MatchActive {
 			p.getInventory().setLeggings(match.getInventory().getLeggings());
 			p.getInventory().setBoots(match.getInventory().getBoots());
 			p.getInventory().setChestplate(match.getInventory().getChestplate());
-
+			if (match.getMinigame().equals(MinigameType.BOMB_TAG)) {
+				p.getInventory().setHelmet(XMaterial.TNT.parseItem());
+			}
 			p.updateInventory();
 			p.setHealth(20);
 			p.setFoodLevel(20);
@@ -1958,6 +1928,7 @@ public class MatchActive {
 			}
 
 			p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20, 2));
+
 		}
 
 	}
@@ -2019,82 +1990,157 @@ public class MatchActive {
 		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 			public void run() {
 				if (plugin.getMatchActive() != null && plugin.getMatchActive().getPassword().equals(getPassword())) {
-					tries++;
-					Boolean playSound = Boolean.FALSE;
+					if (!getPlaying()) {
+						tries++;
+						Boolean playSound = Boolean.FALSE;
 
-					if (match.getAmountPlayersMin() <= (getPlayers().size())) {
-						if (!getPlaying()) {
-							Integer startTime = plugin.getSecondsToStartMatch() + 3;
-							String startingMatch = plugin.getLanguage().getStartingMatch().replaceAll("%time%",
-									startTime.toString());
+						if (match.getAmountPlayersMin() <= (getPlayerHandler().getPlayers().size())) {
+							if (!getPlaying()) {
+								Integer startTime = plugin.getSecondsToStartMatch() + 3;
+								String startingMatch = plugin.getLanguage().getStartingMatch().replaceAll("%time%",
+										startTime.toString());
+								for (Player p : Bukkit.getOnlinePlayers()) {
+									if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())) {
+
+										p.sendMessage(plugin.getLanguage().getTagPlugin() + " " + startingMatch);
+									}
+								}
+								Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
+
+									@Override
+									public void run() {
+										matchBegin();
+
+									}
+								}, 20 * plugin.getSecondsToStartMatch());
+							}
+						} else {
+							// if (!getPlayerHandler().getPlayers().isEmpty()) {
+							// String waiting = Constantes.WAITING_FOR_PLAYERS;
+							// UtilsRandomEvents
+							// .mandaMensaje(plugin,getPlayerHandler().getPlayersSpectators(),
+							// waiting.replaceAll("%players%", "" +
+							// getPlayerHandler().getPlayers().size())
+							// .replaceAll("%neededPlayers%",
+							// match.getAmountPlayersMin().toString()),
+							// Boolean.TRUE);
+							// }
+							String firstPart = plugin.getLanguage().getTagPlugin() + " ";
+
+							if (firstAnnounce) {
+								playSound = Boolean.TRUE;
+								firstPart += plugin.getLanguage().getFirstAnnounce();
+								firstAnnounce = Boolean.FALSE;
+							} else {
+								firstPart += plugin.getLanguage().getNextAnnounce();
+
+							}
+
+							firstPart = firstPart.replaceAll("%event%", match.getName()).replaceAll("%type%",
+									match.getMinigame().getMessage());
+
+							String lastPart = plugin.getLanguage().getLastPart();
+
+							lastPart = lastPart.replaceAll("%event%", match.getName()).replaceAll("%type%",
+									match.getMinigame().getMessage());
+
 							for (Player p : Bukkit.getOnlinePlayers()) {
 								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())) {
-
-									p.sendMessage(plugin.getLanguage().getTagPlugin() + " " + startingMatch);
+									if (playSound) {
+										UtilsRandomEvents.playSound(p, XSound.ENTITY_VILLAGER_HURT);
+									}
+									plugin.getApi()
+											.send(p, firstPart,
+													plugin.getLanguage()
+															.getClickHere(),
+													new ArrayList<String>(), "/revent join " + password,
+													lastPart.replaceAll("%players%",
+															"" + getPlayerHandler().getPlayers().size())
+															.replaceAll("%neededPlayers%",
+																	match.getAmountPlayersMin().toString())
+															.replaceAll("%maxPlayers%",
+																	match.getAmountPlayers().toString()));
 								}
 							}
-							Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
+							if (tries <= plugin.getNumberOfTriesBeforeCancelling()) {
+								matchWaitingPlayers();
+							} else {
+								finalizaPartida(new ArrayList<Player>(), Boolean.FALSE, Boolean.TRUE);
 
-								@Override
-								public void run() {
-									matchBegin();
-
-								}
-							}, 20 * plugin.getSecondsToStartMatch());
-						}
-					} else {
-						// if (!getPlayers().isEmpty()) {
-						// String waiting = Constantes.WAITING_FOR_PLAYERS;
-						// UtilsRandomEvents
-						// .mandaMensaje(plugin,getPlayersSpectators(),
-						// waiting.replaceAll("%players%", "" +
-						// getPlayers().size())
-						// .replaceAll("%neededPlayers%",
-						// match.getAmountPlayersMin().toString()),
-						// Boolean.TRUE);
-						// }
-						String firstPart = plugin.getLanguage().getTagPlugin() + " ";
-
-						if (firstAnnounce) {
-							playSound = Boolean.TRUE;
-							firstPart += plugin.getLanguage().getFirstAnnounce();
-							firstAnnounce = Boolean.FALSE;
-						} else {
-							firstPart += plugin.getLanguage().getNextAnnounce();
-
-						}
-
-						firstPart = firstPart.replaceAll("%event%", match.getName()).replaceAll("%type%",
-								match.getMinigame().getMessage());
-
-						String lastPart = plugin.getLanguage().getLastPart();
-
-						lastPart = lastPart.replaceAll("%event%", match.getName()).replaceAll("%type%",
-								match.getMinigame().getMessage());
-
-						for (Player p : Bukkit.getOnlinePlayers()) {
-							if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())) {
-								if (playSound) {
-									UtilsRandomEvents.playSound(p, XSound.ENTITY_VILLAGER_HURT);
-								}
-								plugin.getApi().send(p, firstPart, plugin.getLanguage().getClickHere(),
-										new ArrayList<String>(), "/revent join " + password,
-										lastPart.replaceAll("%players%", "" + getPlayers().size())
-												.replaceAll("%neededPlayers%", match.getAmountPlayersMin().toString())
-												.replaceAll("%maxPlayers%", match.getAmountPlayers().toString()));
 							}
 						}
-						if (tries <= plugin.getNumberOfTriesBeforeCancelling()) {
-							matchWaitingPlayers();
-						} else {
-							finalizaPartida(new ArrayList<Player>(), Boolean.FALSE, Boolean.TRUE);
 
-						}
 					}
-
 				}
 			}
 		}, 20 * plugin.getSecondsCheckPlayers());
+
+	}
+
+	public void prepareScoreboards(Player p) {
+		if (plugin.isUseScoreboard()) {
+			switch (match.getMinigame()) {
+			case BATTLE_ROYALE:
+			case BATTLE_ROYALE_CABALLO:
+			case BATTLE_ROYALE_TEAM_2:
+			case BOMB_TAG:
+			case ESCAPE_ARROW:
+			case ESCAPE_FROM_BEAST:
+			case GEM_CRAWLER:
+			case KNOCKBACK_DUEL:
+			case OITC:
+			case SG:
+			case SPLEEF:
+			case SPLEGG:
+			case SW:
+			case TNT_RUN:
+			case TOP_KILLER:
+			case TOP_KILLER_TEAM_2:
+			case TSG:
+			case TSW:
+				getPlayerHandler().getOldScoreboards().put(p.getName(), p.getScoreboard());
+				FastBoard fBoard = new FastBoard(p);
+
+				fBoard.updateTitle(plugin.getLanguage().getScoreboardTitle());
+
+				fBoard.updateLines(UtilsRandomEvents.prepareLines(plugin, this, p));
+
+				getPlayerHandler().getScoreboards().put(p.getName(), fBoard);
+				break;
+			default:
+				break;
+			}
+
+		}
+
+	}
+
+	public void updateScoreboards() {
+		if (plugin.isUseScoreboard()) {
+			for (FastBoard fBoard : getPlayerHandler().getScoreboards().values()) {
+
+				fBoard.updateLines(UtilsRandomEvents.prepareLines(plugin, this, fBoard.getPlayer()));
+
+			}
+		}
+
+	}
+
+	private void borraScoreboard(Player player) {
+		if (plugin.isUseScoreboard()) {
+			if (player != null) {
+				if (getPlayerHandler().getScoreboards().containsKey(player.getName())) {
+					getPlayerHandler().getScoreboards().get(player.getName()).delete();
+					FeatherBoardUtils.recoverFeatherBoard(plugin, player);
+					getPlayerHandler().getScoreboards().remove(player.getName());
+				}
+				if (getPlayerHandler().getOldScoreboards().get(player.getName()) != null) {
+
+					player.setScoreboard(getPlayerHandler().getOldScoreboards().get(player.getName()));
+
+				}
+			}
+		}
 
 	}
 
@@ -2114,28 +2160,12 @@ public class MatchActive {
 		this.match = match;
 	}
 
-	public List<String> getPlayers() {
-		return players;
-	}
-
-	public void setPlayers(List<String> players) {
-		this.players = players;
-	}
-
 	public List<Entity> getMobs() {
 		return mobs;
 	}
 
 	public void setMobs(List<Entity> mobs) {
 		this.mobs = mobs;
-	}
-
-	public Map<Integer, List<Player>> getEquipos() {
-		return equipos;
-	}
-
-	public void setEquipos(Map<Integer, List<Player>> equipos) {
-		this.equipos = equipos;
 	}
 
 	public Map<String, Entity> getPets() {
@@ -2154,28 +2184,12 @@ public class MatchActive {
 		this.puntuacion = puntuacion;
 	}
 
-	public String getObjetivo() {
-		return objetivo;
-	}
-
-	public void setObjetivo(String objetivo) {
-		this.objetivo = objetivo;
-	}
-
 	public Boolean getPlaying() {
 		return playing;
 	}
 
 	public void setPlaying(Boolean playing) {
 		this.playing = playing;
-	}
-
-	public List<Player> getPlayersObj() {
-		return playersObj;
-	}
-
-	public void setPlayersObj(List<Player> playersObj) {
-		this.playersObj = playersObj;
 	}
 
 	public String getPassword() {
@@ -2218,14 +2232,6 @@ public class MatchActive {
 		this.maximo = maximo;
 	}
 
-	public Player getPlayerContador() {
-		return playerContador;
-	}
-
-	public void setPlayerContador(Player playerContador) {
-		this.playerContador = playerContador;
-	}
-
 	public Integer getNumeroSegRestantes() {
 		return numeroSegRestantes;
 	}
@@ -2258,36 +2264,12 @@ public class MatchActive {
 		this.forzada = forzada;
 	}
 
-	public List<Player> getPlayersSpectators() {
-		return playersSpectators;
-	}
-
-	public void setPlayersSpectators(List<Player> playersSpectators) {
-		this.playersSpectators = playersSpectators;
-	}
-
-	public Cuboid getCuboid() {
-		return cuboid;
-	}
-
-	public void setCuboid(Cuboid cuboid) {
-		this.cuboid = cuboid;
-	}
-
 	public Boolean getTournament() {
 		return tournament;
 	}
 
 	public void setTournament(Boolean tournament) {
 		this.tournament = tournament;
-	}
-
-	public List<Player> getPlayersGanadores() {
-		return playersGanadores;
-	}
-
-	public void setPlayersGanadores(List<Player> playersGanadores) {
-		this.playersGanadores = playersGanadores;
 	}
 
 	public TournamentActive getTournamentObj() {
@@ -2308,24 +2290,10 @@ public class MatchActive {
 
 	@Override
 	public String toString() {
-		return "MatchActive [match=" + match + ", players=" + players + ", playersObj=" + playersObj
-				+ ", playersGanadores=" + playersGanadores + ", playersSpectators=" + playersSpectators + "]";
-	}
-
-	public Player getBeast() {
-		return beast;
-	}
-
-	public void setBeast(Player beast) {
-		this.beast = beast;
-	}
-
-	public List<Player> getGoalPlayers() {
-		return goalPlayers;
-	}
-
-	public void setGoalPlayers(List<Player> goalPlayers) {
-		this.goalPlayers = goalPlayers;
+		return "MatchActive [match=" + match + ", players=" + getPlayerHandler().getPlayers()
+				+ ", getPlayerHandler().getPlayers()=" + getPlayerHandler().getPlayersObj() + ", playersGanadores="
+				+ getPlayerHandler().getPlayersGanadores() + ", playersSpectators="
+				+ getPlayerHandler().getPlayersSpectators() + "]";
 	}
 
 	public MatchActive getMatchActive() {
@@ -2348,22 +2316,6 @@ public class MatchActive {
 		this.task = task;
 	}
 
-	public Map<Location, Long> getBlockDisappear() {
-		return blockDisappear;
-	}
-
-	public void setBlockDisappear(Map<Location, Long> blockDisappear) {
-		this.blockDisappear = blockDisappear;
-	}
-
-	public Map<Location, MaterialData> getBlockDisappeared() {
-		return blockDisappeared;
-	}
-
-	public void setBlockDisappeared(Map<Location, MaterialData> blockDisappeared) {
-		this.blockDisappeared = blockDisappeared;
-	}
-
 	public Integer getDamageCounter() {
 		return damageCounter;
 	}
@@ -2380,30 +2332,6 @@ public class MatchActive {
 		this.activated = activated;
 	}
 
-	public Map<String, Location> getCheckpoints() {
-		return checkpoints;
-	}
-
-	public void setCheckpoints(Map<String, Location> checkpoints) {
-		this.checkpoints = checkpoints;
-	}
-
-	public List<Location> getChests() {
-		return chests;
-	}
-
-	public void setChests(List<Location> chests) {
-		this.chests = chests;
-	}
-
-	public Cuboid getActualCuboid() {
-		return actualCuboid;
-	}
-
-	public void setActualCuboid(Cuboid actualCuboid) {
-		this.actualCuboid = actualCuboid;
-	}
-
 	public Boolean getAllowDamage() {
 		return allowDamage;
 	}
@@ -2412,20 +2340,36 @@ public class MatchActive {
 		this.allowDamage = allowDamage;
 	}
 
-	public Map<Location, MaterialData> getBlockPlaced() {
-		return blockPlaced;
-	}
-
-	public void setBlockPlaced(Map<Location, MaterialData> blockPlaced) {
-		this.blockPlaced = blockPlaced;
-	}
-
 	public Boolean getAllowMove() {
 		return allowMove;
 	}
 
 	public void setAllowMove(Boolean allowMove) {
 		this.allowMove = allowMove;
+	}
+
+	public MatchMapDataHandler getMapHandler() {
+		return mapHandler;
+	}
+
+	public void setMapHandler(MatchMapDataHandler mapHandler) {
+		this.mapHandler = mapHandler;
+	}
+
+	public long getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(long endDate) {
+		this.endDate = endDate;
+	}
+
+	public MatchPlayerHandler getPlayerHandler() {
+		return playerHandler;
+	}
+
+	public void setPlayerHandler(MatchPlayerHandler playerHandler) {
+		this.playerHandler = playerHandler;
 	}
 
 }

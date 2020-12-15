@@ -1,4 +1,4 @@
-package com.adri1711.randomevents.match;
+package com.adri1711.randomevents.match.utils;
 
 public class RangePlayers {
 

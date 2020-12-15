@@ -8,7 +8,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import com.adri1711.randomevents.RandomEvents;
-import com.adri1711.randomevents.match.MinigameType;
+import com.adri1711.randomevents.match.enums.MinigameType;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.util.enums.XSound;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
@@ -28,7 +28,7 @@ public class WeaponShoot implements Listener {
 		if (ev.getVictim() instanceof Player) {
 
 			Player player = (Player) ev.getVictim();
-			if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayers().contains(player.getName())) {
+			if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())) {
 				if (!plugin.getMatchActive().getPlaying()) {
 					ev.setCancelled(true);
 				} else {
@@ -39,7 +39,7 @@ public class WeaponShoot implements Listener {
 										.getEquipo(player).equals(plugin.getMatchActive().getEquipo(damager))) {
 							ev.setCancelled(true);
 						} else {
-							if (plugin.getMatchActive().getPlayers().contains(damager.getName())) {
+							if (plugin.getMatchActive().getPlayerHandler().getPlayers().contains(damager.getName())) {
 
 								if (((player.getHealth() - ev.getDamage()) <= 0)) {
 									ev.setCancelled(true);
@@ -101,14 +101,14 @@ public class WeaponShoot implements Listener {
 										break;
 									case BOMB_TAG:
 										ev.setDamage(0);
-										if (damager.equals(plugin.getMatchActive().getPlayerContador())) {
+										if (damager.equals(plugin.getMatchActive().getPlayerHandler().getPlayerContador())) {
 											UtilsRandomEvents.borraInventario(damager,plugin);
 											UtilsRandomEvents.playSound(damager,
 													XSound.ENTITY_PLAYER_LEVELUP);
 											UtilsRandomEvents.playSound(player,
 													XSound.ENTITY_VILLAGER_HURT);
 											plugin.getMatchActive().ponInventarioMatch(player);
-											plugin.getMatchActive().setPlayerContador(player);
+											plugin.getMatchActive().getPlayerHandler().setPlayerContador(player);
 										}
 										break;
 									case BOAT_RUN:
@@ -122,9 +122,9 @@ public class WeaponShoot implements Listener {
 									case ESCAPE_FROM_BEAST:
 										if (damager == null
 												|| damager.getName()
-														.equals(plugin.getMatchActive().getBeast().getName())
+														.equals(plugin.getMatchActive().getPlayerHandler().getBeast().getName())
 												|| player.getName()
-														.equals(plugin.getMatchActive().getBeast().getName())) {
+														.equals(plugin.getMatchActive().getPlayerHandler().getBeast().getName())) {
 											plugin.getMatchActive().echaDePartida(player, true, true, false);
 											player.setHealth(20);
 											UtilsRandomEvents.playSound(player,
@@ -154,9 +154,9 @@ public class WeaponShoot implements Listener {
 									case ESCAPE_FROM_BEAST:
 										if (damager == null
 												|| damager.getName()
-														.equals(plugin.getMatchActive().getBeast().getName())
+														.equals(plugin.getMatchActive().getPlayerHandler().getBeast().getName())
 												|| player.getName()
-														.equals(plugin.getMatchActive().getBeast().getName())) {
+														.equals(plugin.getMatchActive().getPlayerHandler().getBeast().getName())) {
 
 										} else {
 											ev.setCancelled(true);
@@ -169,14 +169,14 @@ public class WeaponShoot implements Listener {
 										break;
 									case BOMB_TAG:
 										ev.setDamage(0);
-										if (damager.equals(plugin.getMatchActive().getPlayerContador())) {
+										if (damager.equals(plugin.getMatchActive().getPlayerHandler().getPlayerContador())) {
 											UtilsRandomEvents.borraInventario(damager,plugin);
 											UtilsRandomEvents.playSound(damager,
 													XSound.ENTITY_PLAYER_LEVELUP);
 											UtilsRandomEvents.playSound(player,
 													XSound.ENTITY_VILLAGER_HURT);
 											plugin.getMatchActive().ponInventarioMatch(player);
-											plugin.getMatchActive().setPlayerContador(player);
+											plugin.getMatchActive().getPlayerHandler().setPlayerContador(player);
 										}
 										break;
 									case BOAT_RUN:
@@ -192,7 +192,7 @@ public class WeaponShoot implements Listener {
 									}
 								}
 							} else {
-								if (plugin.getMatchActive().getPlayersSpectators().contains(damager)) {
+								if (plugin.getMatchActive().getPlayerHandler().getPlayersSpectators().contains(damager)) {
 									ev.setCancelled(true);
 								}
 							}
@@ -278,12 +278,12 @@ public class WeaponShoot implements Listener {
 					}
 				}
 			} else if (plugin.getMatchActive() != null
-					&& plugin.getMatchActive().getPlayersSpectators().contains(player)) {
+					&& plugin.getMatchActive().getPlayerHandler().getPlayersSpectators().contains(player)) {
 				ev.setCancelled(true);
 			}
 		} else if (ev.getVictim() instanceof Horse && ev.getPlayer() instanceof Player) {
 			Player player = (Player) ev.getPlayer();
-			if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayers().contains(player.getName())) {
+			if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())) {
 				if (plugin.getMatchActive().getMatch().getMinigame().getCodigo()
 						.equals(MinigameType.BATTLE_ROYALE_CABALLO.getCodigo())) {
 					ev.setDamage(0);

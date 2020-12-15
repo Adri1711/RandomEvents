@@ -15,7 +15,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import com.adri1711.randomevents.RandomEvents;
-import com.adri1711.randomevents.match.MinigameType;
+import com.adri1711.randomevents.match.enums.MinigameType;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.util.enums.XMaterial;
 import com.adri1711.util.enums.XSound;
@@ -38,14 +38,14 @@ public class Death implements Listener {
 
 				Player player = (Player) ev.getEntity();
 				if (plugin.getMatchActive() != null
-						&& plugin.getMatchActive().getPlayers().contains(player.getName())) {
+						&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())) {
 					plugin.getMatchActive().setDamageCounter(0);
 					if (!plugin.getMatchActive().getPlaying()) {
 						ev.setCancelled(true);
 					} else {
 
 						if (((player.getHealth() - ev.getFinalDamage()) <= 0)) {
-
+							Boolean manda = Boolean.FALSE;
 							ev.setCancelled(true);
 							switch (plugin.getMatchActive().getMatch().getMinigame()) {
 							case SW:
@@ -55,9 +55,10 @@ public class Death implements Listener {
 								if (!plugin.getMatchActive().getAllowDamage()) {
 									ev.setCancelled(true);
 								} else {
-								plugin.getMatchActive().echaDePartida(player, true, true, false, true, true);
-								UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+									plugin.getMatchActive().echaDePartida(player, true, true, false, true, true);
+									UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
 								}
+								manda = Boolean.TRUE;
 								break;
 							case BATTLE_ROYALE:
 							case KNOCKBACK_DUEL:
@@ -68,7 +69,7 @@ public class Death implements Listener {
 							case SPLEGG:
 								plugin.getMatchActive().echaDePartida(player, true, true, false);
 								UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
-
+								manda = Boolean.TRUE;
 								break;
 							case ESCAPE_FROM_BEAST:
 
@@ -80,11 +81,12 @@ public class Death implements Listener {
 							case TOP_KILLER_TEAM_2:
 								plugin.getMatchActive().reiniciaPlayer(player);
 								UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
-
+								manda = Boolean.TRUE;
 								break;
 							case GEM_CRAWLER:
 								plugin.getMatchActive().reiniciaPlayer(player);
 								UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+								manda = Boolean.TRUE;
 								break;
 							case BOMB_TAG:
 								ev.setDamage(0);
@@ -96,12 +98,19 @@ public class Death implements Listener {
 							case RACE:
 								ev.setCancelled(true);
 								UtilsRandomEvents.teleportaPlayer(player,
-										plugin.getMatchActive().getCheckpoints().get(player.getName()), plugin);
+										plugin.getMatchActive().getMapHandler().getCheckpoints().get(player.getName()),
+										plugin);
 								player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 99));
 
 								break;
 							default:
 								break;
+							}
+							if (manda) {
+								UtilsRandomEvents.mandaMensaje(plugin,
+										plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+										plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()),
+										false);
 							}
 						} else {
 							switch (plugin.getMatchActive().getMatch().getMinigame()) {
@@ -113,9 +122,11 @@ public class Death implements Listener {
 								break;
 							case RACE:
 								ev.setCancelled(true);
-								UtilsRandomEvents.teleportaPlayer(player,
-										plugin.getMatchActive().getCheckpoints().get(player.getName()), plugin);
-								player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 99));
+								// UtilsRandomEvents.teleportaPlayer(player,
+								// plugin.getMatchActive().getCheckpoints().get(player.getName()),
+								// plugin);
+								// player.addPotionEffect(new
+								// PotionEffect(PotionEffectType.SLOW, 60, 99));
 
 								break;
 							case SG:
@@ -124,15 +135,10 @@ public class Death implements Listener {
 							case TSW:
 								if (!plugin.getMatchActive().getAllowDamage()) {
 									ev.setCancelled(true);
-								} else if (plugin.isHighestPriorityDamageEvents()) {
-									ev.setCancelled(false);
-
 								}
 								break;
 							default:
-								if (plugin.isHighestPriorityDamageEvents()) {
-									ev.setCancelled(false);
-								}
+
 								break;
 							}
 						}
@@ -153,7 +159,9 @@ public class Death implements Listener {
 		if (ev.getEntity() instanceof Player) {
 
 			Player player = (Player) ev.getEntity();
-			if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayers().contains(player.getName())) {
+			if (plugin.getMatchActive() != null
+					&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())) {
+				Boolean manda = Boolean.FALSE;
 				plugin.getMatchActive().setDamageCounter(0);
 				if (!plugin.getMatchActive().getPlaying()) {
 					ev.setCancelled(true);
@@ -165,7 +173,7 @@ public class Death implements Listener {
 										.getEquipo(player).equals(plugin.getMatchActive().getEquipo(damager))) {
 							ev.setCancelled(true);
 						} else {
-							if (plugin.getMatchActive().getPlayers().contains(damager.getName())) {
+							if (plugin.getMatchActive().getPlayerHandler().getPlayers().contains(damager.getName())) {
 
 								if (((player.getHealth() - ev.getFinalDamage()) <= 0)) {
 
@@ -178,24 +186,22 @@ public class Death implements Listener {
 										if (!plugin.getMatchActive().getAllowDamage()) {
 											ev.setCancelled(true);
 										} else {
-										plugin.getMatchActive().echaDePartida(player, true, true, false, true, true);
-										player.setHealth(20);
-										UtilsRandomEvents.playSound(player,
-												XSound.ENTITY_VILLAGER_DEATH);
-										UtilsRandomEvents.playSound(damager,
-												XSound.ENTITY_PLAYER_LEVELUP);
+											plugin.getMatchActive().echaDePartida(player, true, true, false, true,
+													true);
+											player.setHealth(20);
+											UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+											UtilsRandomEvents.playSound(damager, XSound.ENTITY_PLAYER_LEVELUP);
 										}
+										manda = Boolean.TRUE;
 										break;
 									case BATTLE_ROYALE:
 									case BATTLE_ROYALE_CABALLO:
 									case BATTLE_ROYALE_TEAM_2:
 										plugin.getMatchActive().echaDePartida(player, true, true, false);
 										player.setHealth(20);
-										UtilsRandomEvents.playSound(player,
-												XSound.ENTITY_VILLAGER_DEATH);
-										UtilsRandomEvents.playSound(damager,
-												XSound.ENTITY_PLAYER_LEVELUP);
-
+										UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+										UtilsRandomEvents.playSound(damager, XSound.ENTITY_PLAYER_LEVELUP);
+										manda = Boolean.TRUE;
 										break;
 									case KNOCKBACK_DUEL:
 									case ESCAPE_ARROW:
@@ -209,11 +215,9 @@ public class Death implements Listener {
 										break;
 									case OITC:
 										plugin.getMatchActive().reiniciaPlayer(player);
-										UtilsRandomEvents.playSound(player,
-												XSound.ENTITY_VILLAGER_DEATH);
+										UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
 
-										UtilsRandomEvents.playSound(damager,
-												XSound.ENTITY_PLAYER_LEVELUP);
+										UtilsRandomEvents.playSound(damager, XSound.ENTITY_PLAYER_LEVELUP);
 										if (plugin.getMatchActive().getPuntuacion().containsKey(damager.getName())) {
 											plugin.getMatchActive().getPuntuacion().put(damager.getName(),
 													plugin.getMatchActive().getPuntuacion().get(damager.getName()) + 1);
@@ -227,17 +231,15 @@ public class Death implements Listener {
 														plugin.getMatchActive().getPuntuacion().get(damager.getName())
 																.toString()));
 										damager.getInventory().addItem(XMaterial.ARROW.parseItem());
-
+										manda = Boolean.TRUE;
 										break;
 
 									case TOP_KILLER:
 									case TOP_KILLER_TEAM_2:
 										plugin.getMatchActive().reiniciaPlayer(player);
-										UtilsRandomEvents.playSound(player,
-												XSound.ENTITY_VILLAGER_DEATH);
+										UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
 
-										UtilsRandomEvents.playSound(damager,
-												XSound.ENTITY_PLAYER_LEVELUP);
+										UtilsRandomEvents.playSound(damager, XSound.ENTITY_PLAYER_LEVELUP);
 										if (plugin.getMatchActive().getPuntuacion().containsKey(damager.getName())) {
 											plugin.getMatchActive().getPuntuacion().put(damager.getName(),
 													plugin.getMatchActive().getPuntuacion().get(damager.getName()) + 1);
@@ -250,28 +252,25 @@ public class Death implements Listener {
 												+ plugin.getLanguage().getNowPoints().replace("%points%",
 														plugin.getMatchActive().getPuntuacion().get(damager.getName())
 																.toString()));
-
+										manda = Boolean.TRUE;
 										break;
 
 									case GEM_CRAWLER:
 										plugin.getMatchActive().reiniciaPlayer(player);
-										UtilsRandomEvents.playSound(player,
-												XSound.ENTITY_VILLAGER_DEATH);
+										UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
 
-										UtilsRandomEvents.playSound(damager,
-												XSound.ENTITY_PLAYER_LEVELUP);
-
+										UtilsRandomEvents.playSound(damager, XSound.ENTITY_PLAYER_LEVELUP);
+										manda = Boolean.TRUE;
 										break;
 									case BOMB_TAG:
 										ev.setDamage(0);
-										if (damager.equals(plugin.getMatchActive().getPlayerContador())) {
+										if (damager.equals(
+												plugin.getMatchActive().getPlayerHandler().getPlayerContador())) {
 											UtilsRandomEvents.borraInventario(damager, plugin);
-											UtilsRandomEvents.playSound(damager,
-													XSound.ENTITY_PLAYER_LEVELUP);
-											UtilsRandomEvents.playSound(player,
-													XSound.ENTITY_VILLAGER_HURT);
+											UtilsRandomEvents.playSound(damager, XSound.ENTITY_PLAYER_LEVELUP);
+											UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_HURT);
 											plugin.getMatchActive().ponInventarioMatch(player);
-											plugin.getMatchActive().setPlayerContador(player);
+											plugin.getMatchActive().getPlayerHandler().setPlayerContador(player);
 										}
 										break;
 									case BOAT_RUN:
@@ -280,26 +279,26 @@ public class Death implements Listener {
 										ev.setCancelled(true);
 										break;
 									case ESCAPE_FROM_BEAST:
-										if (plugin.getMatchActive().getBeast() == null) {
+										if (plugin.getMatchActive().getPlayerHandler().getBeast() == null) {
 											ev.setCancelled(true);
 
 										} else {
 											if (damager == null
 													|| damager.getName()
-															.equals(plugin.getMatchActive().getBeast().getName())
-													|| player.getName()
-															.equals(plugin.getMatchActive().getBeast().getName())) {
-												if (player.getName()
-														.equals(plugin.getMatchActive().getBeast().getName())) {
-													plugin.getMatchActive().setPlayerContador(damager);
+															.equals(plugin.getMatchActive().getPlayerHandler()
+																	.getBeast().getName())
+													|| player.getName().equals(plugin.getMatchActive()
+															.getPlayerHandler().getBeast().getName())) {
+												if (player.getName().equals(plugin.getMatchActive().getPlayerHandler()
+														.getBeast().getName())) {
+													plugin.getMatchActive().getPlayerHandler()
+															.setPlayerContador(damager);
 												}
 												plugin.getMatchActive().echaDePartida(player, true, true, false);
 												player.setHealth(20);
-												UtilsRandomEvents.playSound(player,
-														XSound.ENTITY_VILLAGER_DEATH);
-												UtilsRandomEvents.playSound(damager,
-														XSound.ENTITY_PLAYER_LEVELUP);
-
+												UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+												UtilsRandomEvents.playSound(damager, XSound.ENTITY_PLAYER_LEVELUP);
+												manda = Boolean.TRUE;
 											} else {
 												ev.setCancelled(true);
 											}
@@ -334,16 +333,17 @@ public class Death implements Listener {
 										}
 										break;
 									case ESCAPE_FROM_BEAST:
-										if (plugin.getMatchActive().getBeast() == null) {
+										if (plugin.getMatchActive().getPlayerHandler().getBeast() == null) {
 											ev.setCancelled(true);
 
 										} else {
 
 											if (damager == null
 													|| damager.getName()
-															.equals(plugin.getMatchActive().getBeast().getName())
-													|| player.getName()
-															.equals(plugin.getMatchActive().getBeast().getName())) {
+															.equals(plugin.getMatchActive().getPlayerHandler()
+																	.getBeast().getName())
+													|| player.getName().equals(plugin.getMatchActive()
+															.getPlayerHandler().getBeast().getName())) {
 												if (plugin.isHighestPriorityDamageEvents()) {
 													ev.setCancelled(false);
 												}
@@ -371,14 +371,14 @@ public class Death implements Listener {
 										if (plugin.isHighestPriorityDamageEvents()) {
 											ev.setCancelled(false);
 										}
-										if (damager.equals(plugin.getMatchActive().getPlayerContador())) {
+										if (damager.equals(
+												plugin.getMatchActive().getPlayerHandler().getPlayerContador())) {
 											UtilsRandomEvents.borraInventario(damager, plugin);
-											UtilsRandomEvents.playSound(damager,
-													XSound.ENTITY_PLAYER_LEVELUP);
-											UtilsRandomEvents.playSound(player,
-													XSound.ENTITY_VILLAGER_HURT);
+											UtilsRandomEvents.playSound(damager, XSound.ENTITY_PLAYER_LEVELUP);
+											UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_HURT);
 											plugin.getMatchActive().ponInventarioMatch(player);
-											plugin.getMatchActive().setPlayerContador(player);
+											plugin.getMatchActive().getPlayerHandler().setPlayerContador(player);
+
 										}
 										break;
 									case BOAT_RUN:
@@ -394,12 +394,19 @@ public class Death implements Listener {
 									}
 								}
 							} else {
-								if (plugin.getMatchActive().getPlayersSpectators().contains(damager)) {
+								if (plugin.getMatchActive().getPlayerHandler().getPlayersSpectators()
+										.contains(damager)) {
 									ev.setCancelled(true);
 								}
 							}
 						}
-
+						if (manda) {
+							UtilsRandomEvents.mandaMensaje(plugin,
+									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+									plugin.getLanguage().getPvpKill().replaceAll("%victim%", player.getName())
+											.replaceAll("%killer%", damager.getName()),
+									false);
+						}
 					} else {
 
 						if (((player.getHealth() - ev.getFinalDamage()) <= 0)) {
@@ -415,9 +422,9 @@ public class Death implements Listener {
 								} else {
 									plugin.getMatchActive().echaDePartida(player, true, true, false, true, true);
 									player.setHealth(20);
-									UtilsRandomEvents.playSound(player,
-											XSound.ENTITY_VILLAGER_DEATH);
+									UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
 								}
+								manda = Boolean.TRUE;
 								break;
 							case BATTLE_ROYALE:
 							case BATTLE_ROYALE_CABALLO:
@@ -426,6 +433,7 @@ public class Death implements Listener {
 								plugin.getMatchActive().echaDePartida(player, true, true, false);
 								player.setHealth(20);
 								UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+								manda = Boolean.TRUE;
 
 								break;
 							case ESCAPE_FROM_BEAST:
@@ -433,6 +441,7 @@ public class Death implements Listener {
 								plugin.getMatchActive().echaDePartida(player, true, true, false);
 								player.setHealth(20);
 								UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+								manda = Boolean.TRUE;
 
 								break;
 							case KNOCKBACK_DUEL:
@@ -455,14 +464,13 @@ public class Death implements Listener {
 
 										Player p = (Player) arrow.getShooter();
 
-										if (plugin.getMatchActive().getPlayers().contains(p.getName())
-												&& !player.getName().equals(p.getName())) {
+										if (plugin.getMatchActive().getPlayerHandler().getPlayers()
+												.contains(p.getName()) && !player.getName().equals(p.getName())) {
 											plugin.getMatchActive().reiniciaPlayer(player);
-											UtilsRandomEvents.playSound(player,
-													XSound.ENTITY_VILLAGER_DEATH);
+											UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+											manda = Boolean.TRUE;
 
-											UtilsRandomEvents.playSound(p,
-													XSound.ENTITY_PLAYER_LEVELUP);
+											UtilsRandomEvents.playSound(p, XSound.ENTITY_PLAYER_LEVELUP);
 											if (plugin.getMatchActive().getPuntuacion().containsKey(p.getName())) {
 												plugin.getMatchActive().getPuntuacion().put(p.getName(),
 														plugin.getMatchActive().getPuntuacion().get(p.getName()) + 1);
@@ -480,13 +488,13 @@ public class Death implements Listener {
 										}
 									} else {
 										plugin.getMatchActive().reiniciaPlayer(player);
-										UtilsRandomEvents.playSound(player,
-												XSound.ENTITY_VILLAGER_DEATH);
+										UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+										manda = Boolean.TRUE;
 									}
 								} else {
 									plugin.getMatchActive().reiniciaPlayer(player);
-									UtilsRandomEvents.playSound(player,
-											XSound.ENTITY_VILLAGER_DEATH);
+									UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+									manda = Boolean.TRUE;
 								}
 
 								break;
@@ -495,7 +503,7 @@ public class Death implements Listener {
 							case GEM_CRAWLER:
 								plugin.getMatchActive().reiniciaPlayer(player);
 								UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
-
+								manda = Boolean.TRUE;
 								break;
 							case BOAT_RUN:
 							case HORSE_RUN:
@@ -508,6 +516,12 @@ public class Death implements Listener {
 								}
 								break;
 							}
+							if (manda) {
+								UtilsRandomEvents.mandaMensaje(plugin,
+										plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+										plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()),
+										false);
+							}
 						} else {
 							switch (plugin.getMatchActive().getMatch().getMinigame()) {
 							case OITC:
@@ -518,14 +532,12 @@ public class Death implements Listener {
 
 										Player p = (Player) arrow.getShooter();
 
-										if (plugin.getMatchActive().getPlayers().contains(p.getName())
-												&& !player.getName().equals(p.getName())) {
+										if (plugin.getMatchActive().getPlayerHandler().getPlayers()
+												.contains(p.getName()) && !player.getName().equals(p.getName())) {
 											plugin.getMatchActive().reiniciaPlayer(player);
-											UtilsRandomEvents.playSound(player,
-													XSound.ENTITY_VILLAGER_DEATH);
+											UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
 
-											UtilsRandomEvents.playSound(p,
-													XSound.ENTITY_PLAYER_LEVELUP);
+											UtilsRandomEvents.playSound(p, XSound.ENTITY_PLAYER_LEVELUP);
 											if (plugin.getMatchActive().getPuntuacion().containsKey(p.getName())) {
 												plugin.getMatchActive().getPuntuacion().put(p.getName(),
 														plugin.getMatchActive().getPuntuacion().get(p.getName()) + 1);
@@ -603,12 +615,13 @@ public class Death implements Listener {
 					}
 				}
 			} else if (plugin.getMatchActive() != null
-					&& plugin.getMatchActive().getPlayersSpectators().contains(player)) {
+					&& plugin.getMatchActive().getPlayerHandler().getPlayersSpectators().contains(player)) {
 				ev.setCancelled(true);
 			}
 		} else if (ev.getEntity() instanceof Horse && ev.getDamager() instanceof Player) {
 			Player player = (Player) ev.getDamager();
-			if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayers().contains(player.getName())) {
+			if (plugin.getMatchActive() != null
+					&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())) {
 				plugin.getMatchActive().setDamageCounter(0);
 				if (plugin.getMatchActive().getMatch().getMinigame().getCodigo()
 						.equals(MinigameType.BATTLE_ROYALE_CABALLO.getCodigo())) {

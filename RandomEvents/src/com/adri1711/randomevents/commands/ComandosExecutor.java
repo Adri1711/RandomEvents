@@ -9,12 +9,12 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import com.adri1711.randomevents.RandomEvents;
-import com.adri1711.randomevents.match.DayWeek;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
-import com.adri1711.randomevents.match.MinigameType;
-import com.adri1711.randomevents.match.Schedule;
 import com.adri1711.randomevents.match.TournamentActive;
+import com.adri1711.randomevents.match.enums.MinigameType;
+import com.adri1711.randomevents.match.schedule.DayWeek;
+import com.adri1711.randomevents.match.schedule.Schedule;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.randomevents.util.UtilsSQL;
 
@@ -28,7 +28,7 @@ public class ComandosExecutor {
 		if (plugin.getMatchActive() != null) {
 
 			if (!plugin.getMatchActive().getPlaying()) {
-				if (plugin.getMatchActive().getPlayers().size() < plugin.getMatchActive().getMatch()
+				if (plugin.getMatchActive().getPlayerHandler().getPlayers().size() < plugin.getMatchActive().getMatch()
 						.getAmountPlayers()) {
 					if (plugin.getMatchActive().getPassword().equals(password)) {
 						if (UtilsRandomEvents.checkBanned(player, plugin)) {
@@ -182,7 +182,16 @@ public class ComandosExecutor {
 		player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + new Date());
 
 	}
+	
+	
 
+	public void forceBeginRandomEvent(RandomEvents plugin, Player player) {
+		if (plugin.getMatchActive() != null) {
+			plugin.getMatchActive().matchBegin();
+		}
+
+	}
+	
 	public void forceRandomEvent(RandomEvents plugin, Player player) {
 		if (plugin.getMatchActive() == null) {
 			plugin.setForzado(Boolean.TRUE);
@@ -298,9 +307,9 @@ public class ComandosExecutor {
 
 	public void leaveRandomEvent(RandomEvents plugin, Player player) {
 		if (plugin.getMatchActive() != null) {
-			if (plugin.getMatchActive().getPlayersObj().contains(player)) {
+			if (plugin.getMatchActive().getPlayerHandler().getPlayersObj().contains(player)) {
 				plugin.getMatchActive().dejarPartida(player, false);
-			} else if (plugin.getMatchActive().getPlayersSpectators().contains(player)) {
+			} else if (plugin.getMatchActive().getPlayerHandler().getPlayersSpectators().contains(player)) {
 				plugin.getMatchActive().echaDePartida(player, false, true, true);
 
 			} else {
@@ -326,12 +335,12 @@ public class ComandosExecutor {
 	public void checkpointRandomEvent(RandomEvents plugin, Player player) {
 		if (plugin.getMatchActive() != null) {
 			if (plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.RACE)) {
-				if (plugin.getMatchActive().getPlayersObj().contains(player)) {
+				if (plugin.getMatchActive().getPlayerHandler().getPlayersObj().contains(player)) {
 
-					if (plugin.getMatchActive().getCheckpoints().containsKey(player.getName())) {
+					if (plugin.getMatchActive().getMapHandler().getCheckpoints().containsKey(player.getName())) {
 
 						UtilsRandomEvents.teleportaPlayer(player,
-								plugin.getMatchActive().getCheckpoints().get(player.getName()), plugin);
+								plugin.getMatchActive().getMapHandler().getCheckpoints().get(player.getName()), plugin);
 						player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 99));
 
 					}

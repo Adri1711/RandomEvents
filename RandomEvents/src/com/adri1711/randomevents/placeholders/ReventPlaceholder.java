@@ -3,7 +3,7 @@ package com.adri1711.randomevents.placeholders;
 import org.bukkit.entity.Player;
 
 import com.adri1711.randomevents.RandomEvents;
-import com.adri1711.randomevents.match.MinigameType;
+import com.adri1711.randomevents.match.enums.MinigameType;
 import com.adri1711.randomevents.util.UtilsSQL;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;

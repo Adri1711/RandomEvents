@@ -15,10 +15,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
 import com.adri1711.randomevents.RandomEvents;
-import com.adri1711.randomevents.match.InventoryPers;
 import com.adri1711.randomevents.match.Match;
-import com.adri1711.randomevents.match.MinigameType;
 import com.adri1711.randomevents.match.enums.Creacion;
+import com.adri1711.randomevents.match.enums.MinigameType;
+import com.adri1711.randomevents.match.utils.InventoryPers;
 import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.util.enums.AMaterials;
@@ -35,7 +35,7 @@ public class Chat implements Listener {
 	public void onPlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event) {
 
 		Player p = event.getPlayer();
-		if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayersSpectators().contains(p)) {
+		if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayerHandler().getPlayersSpectators().contains(p)) {
 			String aliase = event.getMessage().split(" ")[0];
 			aliase = aliase.replaceAll("/", "");
 			if (!plugin.getAllowedCmds().contains(aliase.toLowerCase()) && !p.hasPermission("randomevent.bypass")) {

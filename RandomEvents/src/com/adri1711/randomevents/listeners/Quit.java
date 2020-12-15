@@ -10,7 +10,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 
 import com.adri1711.randomevents.RandomEvents;
-import com.adri1711.randomevents.match.MinigameType;
+import com.adri1711.randomevents.match.enums.MinigameType;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 
 public class Quit implements Listener {
@@ -25,7 +25,7 @@ public class Quit implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerDisconnect(PlayerQuitEvent evt) {
 		Player player = evt.getPlayer();
-		if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayersSpectators().contains(player)) {
+		if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayerHandler().getPlayersSpectators().contains(player)) {
 			UtilsRandomEvents.borraInventario(player,plugin);
 			plugin.getMatchActive().echaDePartida(player, true, false, true);
 		}
@@ -40,7 +40,7 @@ public class Quit implements Listener {
 			if (e.getExited() instanceof Player) {
 				Player p = (Player) e.getExited();
 
-				if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayersObj().contains(p)) {
+				if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayerHandler().getPlayersObj().contains(p)) {
 					switch (plugin.getMatchActive().getMatch().getMinigame()) {
 					case BATTLE_ROYALE_CABALLO:
 

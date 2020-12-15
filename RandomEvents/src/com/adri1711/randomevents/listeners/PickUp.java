@@ -22,7 +22,7 @@ public class PickUp implements Listener {
 	@EventHandler
 	public void onPickUp(PlayerPickupItemEvent evt) {
 		Player player = evt.getPlayer();
-		if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayersObj().contains(player)) {
+		if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayerHandler().getPlayersObj().contains(player)) {
 
 			switch (plugin.getMatchActive().getMatch().getMinigame()) {
 			case GEM_CRAWLER:
@@ -37,8 +37,8 @@ public class PickUp implements Listener {
 					plugin.getMatchActive().getPuntuacion().put(player.getName(), item.getItemStack().getAmount());
 				}
 				item.remove();
-				if (plugin.getMatchActive().getPlayerContador() == null) {
-					UtilsRandomEvents.mandaMensaje(plugin, plugin.getMatchActive().getPlayersObj(),
+				if (plugin.getMatchActive().getPlayerHandler().getPlayerContador() == null) {
+					UtilsRandomEvents.mandaMensaje(plugin, plugin.getMatchActive().getPlayerHandler().getPlayersObj(),
 							plugin.getLanguage().getNowGems().replace("%player%", player.getName()).replace("%points%",
 									plugin.getMatchActive().getPuntuacion().get(player.getName()).toString()),
 							true);

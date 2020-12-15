@@ -37,6 +37,8 @@ public enum ComandosEnum {
 	CMD_SCHEDULE_SPECIFIC("schedule", 5, "randomevent.admin.schedule", "getScheduleSpecific", "scheduleRandomEvent",
 			true, false),
 
+	CMD_FORCE_BEGIN("forcebegin", 1, "randomevent.admin.force", "getForcebegin", "forceBeginRandomEvent", true, true),
+	
 	CMD_BEGIN("begin", 1, "randomevent.admin.force", "getBegin", "forceRandomEvent", true, true),
 
 	CMD_BEGIN_TOURNAMENT("tbegin", 1, "randomevent.admin.tforce", "getTbegin", "forceTournamentRandomEvent", true,

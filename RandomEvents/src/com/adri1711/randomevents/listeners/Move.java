@@ -24,7 +24,7 @@ public class Move implements Listener {
 		Player player = evt.getPlayer();
 		
 		if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlaying()
-				&& plugin.getMatchActive().getPlayersObj().contains(player)) {
+				&& plugin.getMatchActive().getPlayerHandler().getPlayersObj().contains(player)) {
 			if (plugin.getMatchActive().getAllowMove()) {
 
 				switch (plugin.getMatchActive().getMatch().getMinigame()) {
@@ -32,20 +32,20 @@ public class Move implements Listener {
 				case HORSE_RUN:
 				case RACE:
 
-					if (plugin.getMatchActive().getCuboid().contains(player.getLocation())) {
+					if (plugin.getMatchActive().getMapHandler().getCuboid().contains(player.getLocation())) {
 
-						plugin.getMatchActive().setPlayerContador(player);
+						plugin.getMatchActive().getPlayerHandler().setPlayerContador(player);
 						if (plugin.getTournamentActive() == null) {
 							plugin.getMatchActive().daRecompensas(false);
 						} else {
-							if (!plugin.getMatchActive().getPlayersGanadores().contains(player)) {
-								plugin.getMatchActive().getPlayersGanadores().add(player);
-								for (Player p : plugin.getMatchActive().getPlayersSpectators()) {
+							if (!plugin.getMatchActive().getPlayerHandler().getPlayersGanadores().contains(player)) {
+								plugin.getMatchActive().getPlayerHandler().getPlayersGanadores().add(player);
+								for (Player p : plugin.getMatchActive().getPlayerHandler().getPlayersSpectators()) {
 									p.sendMessage(plugin.getLanguage().getTagPlugin() + " "
 											+ plugin.getLanguage().getRaceTournament()
 													.replaceAll("%player%", player.getName())
 													.replaceAll("%players%",
-															"" + plugin.getMatchActive().getPlayersGanadores().size())
+															"" + plugin.getMatchActive().getPlayerHandler().getPlayersGanadores().size())
 													.replaceAll("%neededPlayers%",
 															plugin.getMatchActive().getLimitPlayers().toString()));
 								}
@@ -55,11 +55,11 @@ public class Move implements Listener {
 					}
 					break;
 				case ESCAPE_FROM_BEAST:
-					if (plugin.getMatchActive().getBeast() != null
-							&& !plugin.getMatchActive().getBeast().getName().equals(player.getName())
-							&& plugin.getMatchActive().getCuboid().contains(player.getLocation())) {
-						if (!plugin.getMatchActive().getGoalPlayers().contains(player)) {
-							plugin.getMatchActive().getGoalPlayers().add(player);
+					if (plugin.getMatchActive().getPlayerHandler().getBeast() != null
+							&& !plugin.getMatchActive().getPlayerHandler().getBeast().getName().equals(player.getName())
+							&& plugin.getMatchActive().getMapHandler().getCuboid().contains(player.getLocation())) {
+						if (!plugin.getMatchActive().getPlayerHandler().getGoalPlayers().contains(player)) {
+							plugin.getMatchActive().getPlayerHandler().getGoalPlayers().add(player);
 							plugin.getMatchActive().ponInventarioRunner(player);
 							UtilsRandomEvents.playSound(player, XSound.ENTITY_PLAYER_LEVELUP);
 						}

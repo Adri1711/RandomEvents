@@ -128,6 +128,19 @@ public class LanguageMessages {
 	private String cancel;
 	private String reload;
 	private String checkpoint;
+	private String forcebegin;
+
+	private String scoreboardTitle;
+	private String scoreboardPoints;
+	private String scoreboardAlive;
+	private String scoreboardDeath;
+	private String scoreboardTeammate;
+	private String scoreboardTime;
+	private String scoreboardBeast;
+	private String scoreboardHolder;
+
+	private String pvpDeath;
+	private String pvpKill;
 
 	private List<String> minigameDescriptionBR;
 	private List<String> minigameDescriptionBRT2;
@@ -1278,6 +1291,96 @@ public class LanguageMessages {
 	public void setCheckpoint(String checkpoint) {
 		this.checkpoint = checkpoint;
 	}
+
+	public String getScoreboardTitle() {
+		return scoreboardTitle.replaceAll("&", "§");
+	}
+
+	public void setScoreboardTitle(String scoreboardTitle) {
+		this.scoreboardTitle = scoreboardTitle;
+	}
+
+	public String getScoreboardPoints() {
+		return scoreboardPoints.replaceAll("&", "§");
+	}
+
+	public void setScoreboardPoints(String scoreboardPoints) {
+		this.scoreboardPoints = scoreboardPoints;
+	}
+
+	public String getScoreboardAlive() {
+		return scoreboardAlive.replaceAll("&", "§");
+	}
+
+	public void setScoreboardAlive(String scoreboardAlive) {
+		this.scoreboardAlive = scoreboardAlive;
+	}
+
+	public String getScoreboardDeath() {
+		return scoreboardDeath.replaceAll("&", "§");
+	}
+
+	public void setScoreboardDeath(String scoreboardDeath) {
+		this.scoreboardDeath = scoreboardDeath;
+	}
+
+	public String getScoreboardTeammate() {
+		return scoreboardTeammate.replaceAll("&", "§");
+	}
+
+	public void setScoreboardTeammate(String scoreboardTeammate) {
+		this.scoreboardTeammate = scoreboardTeammate;
+	}
+
+	public String getScoreboardTime() {
+		return scoreboardTime.replaceAll("&", "§");
+	}
+
+	public void setScoreboardTime(String scoreboardTime) {
+		this.scoreboardTime = scoreboardTime;
+	}
+
+	public String getScoreboardBeast() {
+		return scoreboardBeast.replaceAll("&", "§");
+	}
+
+	public void setScoreboardBeast(String scoreboardBeast) {
+		this.scoreboardBeast = scoreboardBeast;
+	}
+
+	public String getScoreboardHolder() {
+		return scoreboardHolder.replaceAll("&", "§");
+	}
+
+	public void setScoreboardHolder(String scoreboardHolder) {
+		this.scoreboardHolder = scoreboardHolder;
+	}
+
+	public String getPvpDeath() {
+		return pvpDeath.replaceAll("&", "§");
+	}
+
+	public void setPvpDeath(String pvpDeath) {
+		this.pvpDeath = pvpDeath;
+	}
+
+	public String getPvpKill() {
+		return pvpKill.replaceAll("&", "§");
+	}
+
+	public void setPvpKill(String pvpKill) {
+		this.pvpKill = pvpKill;
+	}
+
+	public String getForcebegin() {
+		return forcebegin.replaceAll("&", "§");
+	}
+
+	public void setForcebegin(String forcebegin) {
+		this.forcebegin = forcebegin;
+	}
+	
+	
 	
 
 }

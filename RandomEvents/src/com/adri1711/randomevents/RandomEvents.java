@@ -37,12 +37,12 @@ import com.adri1711.randomevents.listeners.PickUp;
 import com.adri1711.randomevents.listeners.Quit;
 import com.adri1711.randomevents.listeners.Use;
 import com.adri1711.randomevents.listeners.WeaponShoot;
-import com.adri1711.randomevents.match.BannedPlayers;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
-import com.adri1711.randomevents.match.Schedule;
 import com.adri1711.randomevents.match.Tournament;
 import com.adri1711.randomevents.match.TournamentActive;
+import com.adri1711.randomevents.match.schedule.Schedule;
+import com.adri1711.randomevents.match.utils.BannedPlayers;
 import com.adri1711.randomevents.metrics.Metrics;
 import com.adri1711.randomevents.placeholders.ReventPlaceholder;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
@@ -174,6 +174,8 @@ public class RandomEvents extends JavaPlugin {
 	private Double particleHeight;
 
 	private Double particleExtension;
+
+	private boolean useScoreboard;
 
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
@@ -324,7 +326,7 @@ public class RandomEvents extends JavaPlugin {
 		this.optionalTitles = getConfig().getBoolean("optionalTitles");
 		this.showBorders = getConfig().getBoolean("showBorders");
 		this.useParticles = getConfig().getBoolean("useParticles");
-
+		this.useScoreboard = getConfig().getBoolean("useScoreboard");
 		this.setProbabilityPowerUp(Integer.valueOf(getConfig().getInt("probabilityPowerUp")));
 
 		this.matches = UtilsRandomEvents.cargarPartidas(this);
@@ -1040,5 +1042,14 @@ public class RandomEvents extends JavaPlugin {
 	public void setParticleExtension(Double particleExtension) {
 		this.particleExtension = particleExtension;
 	}
+
+	public boolean isUseScoreboard() {
+		return useScoreboard;
+	}
+
+	public void setUseScoreboard(boolean useScoreboard) {
+		this.useScoreboard = useScoreboard;
+	}
+	
 
 }

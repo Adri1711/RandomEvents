@@ -13,6 +13,8 @@ import org.bukkit.plugin.Plugin;
 
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.commands.ComandosEnum;
+import com.adri1711.randomevents.match.enums.MinigameType;
+import com.adri1711.randomevents.match.utils.RangePlayers;
 import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.util.enums.XSound;
@@ -275,9 +277,9 @@ public class TournamentActive {
 				Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 					public void run() {
 
-						getPartida().setPlayers(players);
-						getPartida().setPlayersObj(playersGanadores);
-						getPartida().setPlayersSpectators(playersSpectators);
+						getPartida().getPlayerHandler().setPlayers(players);
+						getPartida().getPlayerHandler().setPlayersObj(playersGanadores);
+						getPartida().getPlayerHandler().setPlayersSpectators(playersSpectators);
 
 						plugin.setMatchActive(getPartida());
 

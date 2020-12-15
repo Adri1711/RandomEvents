@@ -60,6 +60,9 @@ minItemOnChests: 3
 #Show world border in some minigames
 showBorders: false
 
+#Use scoreboard in some minigames
+useScoreboard: true
+
 #Use particles in some minigames
 useParticles: false
 

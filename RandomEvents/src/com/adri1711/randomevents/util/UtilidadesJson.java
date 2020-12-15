@@ -3,10 +3,10 @@ package com.adri1711.randomevents.util;
 import java.io.BufferedReader;
 
 import com.adri1711.randomevents.RandomEvents;
-import com.adri1711.randomevents.match.BannedPlayers;
-import com.adri1711.randomevents.match.InventoryPers;
 import com.adri1711.randomevents.match.Match;
-import com.adri1711.randomevents.match.Schedule;
+import com.adri1711.randomevents.match.schedule.Schedule;
+import com.adri1711.randomevents.match.utils.BannedPlayers;
+import com.adri1711.randomevents.match.utils.InventoryPers;
 
 public class UtilidadesJson {
 

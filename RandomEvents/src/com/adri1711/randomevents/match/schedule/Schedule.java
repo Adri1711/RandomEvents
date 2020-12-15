@@ -1,4 +1,4 @@
-package com.adri1711.randomevents.match;
+package com.adri1711.randomevents.match.schedule;
 
 public class Schedule {
 

@@ -16,7 +16,7 @@ import com.adri1711.randomevents.bbdd.callback.Callback;
 import com.adri1711.randomevents.bbdd.runnables.ExecuteBukkitRunnable;
 import com.adri1711.randomevents.bbdd.runnables.QueryBukkitRunnable;
 import com.adri1711.randomevents.bbdd.runnables.UpdateBukkitRunnable;
-import com.adri1711.randomevents.match.MinigameType;
+import com.adri1711.randomevents.match.enums.MinigameType;
 import com.adri1711.randomevents.placeholders.PlaceholderType;
 import com.adri1711.randomevents.stats.Stats;
 

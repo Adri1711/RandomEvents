@@ -7,6 +7,9 @@ import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.material.MaterialData;
 
+import com.adri1711.randomevents.match.enums.MinigameType;
+import com.adri1711.randomevents.match.utils.InventoryPers;
+
 public class Match {
 
 	private String name;
@@ -28,7 +31,7 @@ public class Match {
 	private List<Location> spectatorSpawns;
 
 	private Double secondsMobSpawn;
-	
+	 
 	private Integer secondsToBegin;
 
 	private Location location1;

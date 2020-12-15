@@ -6,7 +6,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import com.adri1711.randomevents.api.events.ReventBeginEvent;
-import com.adri1711.randomevents.api.events.ReventEndEvent;
 
 import me.blackvein.quests.CustomObjective;
 import me.blackvein.quests.Quest;
@@ -25,8 +24,8 @@ public class ParticipateReventObjective extends CustomObjective implements Liste
 
 	@EventHandler
 	public void onWinRandomEvent(ReventBeginEvent evt) {
-		if (evt.getMatchActive().getPlayersObj() != null && !evt.getMatchActive().getPlayersObj().isEmpty()) {
-			for (Player p : evt.getMatchActive().getPlayersObj()) {
+		if (evt.getMatchActive().getPlayerHandler().getPlayersObj() != null && !evt.getMatchActive().getPlayerHandler().getPlayersObj().isEmpty()) {
+			for (Player p : evt.getMatchActive().getPlayerHandler().getPlayersObj()) {
 				for (Quest quest : qp.getQuester(p.getUniqueId()).getCurrentQuests().keySet()) {
 					incrementObjective(p, this, 1, quest);
 				}

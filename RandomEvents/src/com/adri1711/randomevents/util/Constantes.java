@@ -14,33 +14,33 @@ public class Constantes {
 	public static String SALTO_LINEA = "\n";
 	public static String TABULACION = "    ";
 
-	public static String INVENTORY_NAME = "§9RandomEvents";
-	public static String INVENTORY_NAME_STATS = "§9RandomEvents Stats";
-	public static String INVENTORY_INFO_WAVE = "§9RandomEvents Wave Info";
-	public static String INVENTORY_NAME_STATS_WITHOUT = "§9Stats";
-	public static String WAITING = "§2Waiting";
-	public static String PLAYING = "§cPlaying";
+	public static String INVENTORY_NAME = "Â§9RandomEvents";
+	public static String INVENTORY_NAME_STATS = "Â§9RandomEvents Stats";
+	public static String INVENTORY_INFO_WAVE = "Â§9RandomEvents Wave Info";
+	public static String INVENTORY_NAME_STATS_WITHOUT = "Â§9Stats";
+	public static String WAITING = "Â§2Waiting";
+	public static String PLAYING = "Â§cPlaying";
 	public static String PROBABILITY_CMD = "reprob";
-	public static String MATCH_PLAYED = "§6§lNumber of tries";
-	public static String MATCH_WIN = "§6§lNumber of wins";
-	public static String TOP_1 = "§6§lTop 1";
-	public static String TOP_2 = "§6§lTop 2";
-	public static String TOP_3 = "§6§lTop 3";
-	public static String COOLDOWN_OUT = "§6You can play again:";
+	public static String MATCH_PLAYED = "Â§6Â§lNumber of tries";
+	public static String MATCH_WIN = "Â§6Â§lNumber of wins";
+	public static String TOP_1 = "Â§6Â§lTop 1";
+	public static String TOP_2 = "Â§6Â§lTop 2";
+	public static String TOP_3 = "Â§6Â§lTop 3";
+	public static String COOLDOWN_OUT = "Â§6You can play again:";
 	public static String PERMISO_TOP = "bossbattle.see.top";
-	public static String CHOOSE_MOB = "§6§lChoose Mob";
-	public static String SPAWN_MOB = "§6§lSpawn Mob";
-	public static String SEE_INFO_WAVE = "§6§lSee Info Wave";
-	public static String NEXT_WAVE = "§2§lNext Wave";
-	public static String END_CREATION = "§c§lEnd RandomEvent";
+	public static String CHOOSE_MOB = "Â§6Â§lChoose Mob";
+	public static String SPAWN_MOB = "Â§6Â§lSpawn Mob";
+	public static String SEE_INFO_WAVE = "Â§6Â§lSee Info Wave";
+	public static String NEXT_WAVE = "Â§2Â§lNext Wave";
+	public static String END_CREATION = "Â§cÂ§lEnd RandomEvent";
 	public static String CONTENTS = "contents";
 	public static String EQUIPMENT = "equipment";
-	public static String GREEN = "§2§l";
+	public static String GREEN = "Â§2Â§l";
 	public static String SPLEGG_EGG = "Splegg Egg Code 001";
 
 	public enum Messages {
 
-		CMD_HELP_MENU("helpMenu", "menu.helpMenu", "&6----------------- &9&lRandomEvents &6---------------------"),
+		CMD_HELP_MENU("helpMenu", "menu.helpMenu", "&6----------------- &e&lRandomEvents &6---------------------"),
 		
 		CMD_SHOW_MENU("showMenu", "menu.showMenu", "   &6/revent:\n          &e-> Shows this menu"),
 		
@@ -85,6 +85,9 @@ public class Constantes {
 		CMD_SCHEDULE_SPECIFIC("scheduleSpecific", "menu.admin.scheduleSpecific",
 				"   &6/revent schedule <monday:tuesday...> <hour> <minute> <idmatch>:\n          &e-> Create a schedule for a Random Event and specific match"),
 
+		CMD_FORCE_BEGIN("forcebegin", "menu.admin.forcebegin", "   &6/revent forcebegin:\n          &e-> Force to begin the match"),
+
+		
 		CMD_BEGIN("begin", "menu.admin.force", "   &6/revent begin:\n          &e-> Begins a Random Event"),
 
 		CMD_BEGIN_TOURNAMENT("tbegin", "menu.admin.tforce",
@@ -109,7 +112,7 @@ public class Constantes {
 
 		CMD_RELOAD("reload", "menu.admin.reload", "   &6/revent reload:\n          &e-> Reload the plugin"),
 
-		TAG_PLUGIN("tagPlugin", "tagPlugin", "&9&l[RandomEvents]"),
+		TAG_PLUGIN("tagPlugin", "tagPlugin", "&a&lRandomEvents &f&l>>"),
 
 		INVALID_INPUT("invalidInput", "creation.invalidInput", "&c&lInvalid input, try another one"),
 
@@ -215,7 +218,7 @@ public class Constantes {
 		NEXT_ANNOUNCE_TOURNAMENT("nextAnnounceTournament", "announce.nextAnnounceTournament",
 				"&6&lA Tournament Random Event is still waiting for players, "),
 
-		CLICK_HERE("clickHere", "announce.clickHere", "&9&l[Click here to join]"),
+		CLICK_HERE("clickHere", "announce.clickHere", "&b[Click here to join]"),
 
 		LAST_PART("lastPart", "announce.lastPart", "&6&l ( %players% / %neededPlayers% )"),
 
@@ -286,6 +289,31 @@ public class Constantes {
 		STATS_WINS("statsWins", "stats.statsWins", "&2Wins: "),
 
 		STATS_WIN_RATIO("statsWinsRatio", "stats.statsWinsRatio", "&eWin Ratio: "),
+		
+		PVP_DEATH("pvpDeath", "pvp.death", "&câ˜  %victim%"),
+		
+		PVP_KILL("pvpKill", "pvp.kill", "&a%killer% &4âš” &c%victim%"),
+
+		
+		
+		SCOREBOARD_TITLE("scoreboardTitle", "scoreboard.title", "      &a&lRandomEvents      "),
+		
+		SCOREBOARD_POINTS_FORMAT("scoreboardPoints", "scoreboard.points", "&6%name% - &e%points%"),
+		
+		SCOREBOARD_ALIVE_FORMAT("scoreboardAlive", "scoreboard.alive", "&aâœ” %name%"),
+		
+		SCOREBOARD_DEATH_FORMAT("scoreboardDeath", "scoreboard.dead", "&câ˜  %name%"),
+		
+		SCOREBOARD_COMPANION_FORMAT("scoreboardTeammate", "scoreboard.teammate", "&6Mate: &e%name%"),
+		
+		SCOREBOARD_BEAST_FORMAT("scoreboardBeast", "scoreboard.beast", "&6Beast: &e%name%"),
+		
+		SCOREBOARD_HOLDER_FORMAT("scoreboardHolder", "scoreboard.holder", "&6Holder: &e%name%"),
+		
+		SCOREBOARD_TIME_FORMAT("scoreboardTime", "scoreboard.time", "&b%time%"),
+		
+		
+		
 
 		MINIGAME_DESC_BR("minigameDescriptionBR", "minigame.description.BR",
 				"&eA fierce battle where just 1 player;&e or team can remain alive."),

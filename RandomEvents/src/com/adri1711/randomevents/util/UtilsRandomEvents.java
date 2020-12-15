@@ -3,9 +3,12 @@ package com.adri1711.randomevents.util;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -29,8 +32,6 @@ import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
@@ -44,15 +45,15 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
 import com.adri1711.randomevents.RandomEvents;
-import com.adri1711.randomevents.match.BannedPlayers;
-import com.adri1711.randomevents.match.Cuboid;
-import com.adri1711.randomevents.match.DayWeek;
-import com.adri1711.randomevents.match.InventoryPers;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
-import com.adri1711.randomevents.match.MinigameType;
-import com.adri1711.randomevents.match.Schedule;
 import com.adri1711.randomevents.match.enums.Creacion;
+import com.adri1711.randomevents.match.enums.MinigameType;
+import com.adri1711.randomevents.match.schedule.DayWeek;
+import com.adri1711.randomevents.match.schedule.Schedule;
+import com.adri1711.randomevents.match.utils.BannedPlayers;
+import com.adri1711.randomevents.match.utils.Cuboid;
+import com.adri1711.randomevents.match.utils.InventoryPers;
 import com.adri1711.randomevents.stats.Stats;
 import com.adri1711.util.enums.AMaterials;
 import com.adri1711.util.enums.Particle1711;
@@ -62,41 +63,6 @@ import com.adri1711.util.enums.XSound;
 import com.google.common.io.Files;
 
 public class UtilsRandomEvents {
-
-	// public static Boolean pasaACreation(RandomEvents plugin, Player player,
-	// Integer position, Match match) {
-	// Boolean ponerPlayerCreation = Boolean.TRUE;
-	// player.sendMessage(
-	// plugin.getLanguage().getTagPlugin() + " " +
-	// Creacion.getByPosition(position).getMessage(match));
-	// switch (Creacion.getByPosition(position)) {
-	// case MINIGAME_TYPE:
-	// for (MinigameType m : MinigameType.values()) {
-	// player.sendMessage("§6§l" + m.ordinal() + " - " + m.getMessage());
-	// }
-	// break;
-	// case MOB_NAME:
-	// for (EntityType m : EntityType.values()) {
-	// player.sendMessage("§6§l" + m.ordinal() + " - " + m.name());
-	// }
-	// break;
-	//// case END:
-	//// terminaCreacionMatch(plugin, player);
-	//// ponerPlayerCreation = Boolean.FALSE;
-	//// break;
-	// default:
-	// break;
-	//
-	// }
-	//
-	// if (ponerPlayerCreation) {
-	// plugin.getPlayersCreation().put(player.getName(), position);
-	// } else {
-	// plugin.getPlayersCreation().remove(player.getName(), position);
-	// }
-	// return ponerPlayerCreation;
-	//
-	// }
 
 	public static String preparaStringTiempo(Integer tiempo) {
 
@@ -140,9 +106,11 @@ public class UtilsRandomEvents {
 					bossFile.delete();
 					bossFile.createNewFile();
 				}
-				FileWriter fw = new FileWriter(bossFile, true);
-
-				PrintWriter pw = new PrintWriter(fw);
+				
+				
+				OutputStream os = new FileOutputStream(bossFile, true);
+				PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
+				
 
 				pw.println(json);
 
@@ -525,8 +493,8 @@ public class UtilsRandomEvents {
 	public static String preparaNombrePartida(MatchActive match) {
 		String resultado = "";
 
-		resultado = match.getMatch().getName().replaceAll("&", "§") + " ( " + match.getPlayers().size() + " / "
-				+ match.getMatch().getAmountPlayers() + " )";
+		resultado = match.getMatch().getName().replaceAll("&", "§") + " ( "
+				+ match.getPlayerHandler().getPlayers().size() + " / " + match.getMatch().getAmountPlayers() + " )";
 		return resultado;
 	}
 
@@ -867,8 +835,16 @@ public class UtilsRandomEvents {
 	}
 
 	public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
+		return sortByValue(map, true);
+	}
+
+	public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map, Boolean reverseOrder) {
 		List<Entry<K, V>> list = new ArrayList<>(map.entrySet());
-		list.sort(Collections.reverseOrder(Entry.comparingByValue()));
+		if (reverseOrder) {
+			list.sort(Collections.reverseOrder(Entry.comparingByValue()));
+		} else {
+			list.sort(Entry.comparingByValue());
+		}
 
 		Map<K, V> result = new LinkedHashMap<>();
 		for (Entry<K, V> entry : list) {
@@ -928,12 +904,13 @@ public class UtilsRandomEvents {
 		Location l3 = l.clone();
 		l3.setY(l3.getY() - 1);
 
-		if (l3.getBlock() != null && !matchActive.getBlockDisappear().containsKey(l3.getBlock().getLocation())
+		if (l3.getBlock() != null
+				&& !matchActive.getMapHandler().getBlockDisappear().containsKey(l3.getBlock().getLocation())
 				&& l3.getBlock().getType() == plugin.getApi().getMaterial(AMaterials.TNT)) {
 			Date d = new Date();
 			Long time = d.getTime();
 			time += (long) (300);
-			matchActive.getBlockDisappear().put(l3.getBlock().getLocation(), time);
+			matchActive.getMapHandler().getBlockDisappear().put(l3.getBlock().getLocation(), time);
 		}
 		if (comprueba && distance < 0.1) {
 			Location l2 = l.clone();
@@ -969,15 +946,15 @@ public class UtilsRandomEvents {
 	public static void checkBlocksDisappear(RandomEvents plugin, MatchActive matchActive, Date date) {
 		List<Location> blocksToDisappear = new ArrayList<Location>();
 		Long time = date.getTime();
-		for (Entry<Location, Long> entry : matchActive.getBlockDisappear().entrySet()) {
+		for (Entry<Location, Long> entry : matchActive.getMapHandler().getBlockDisappear().entrySet()) {
 			if (entry.getValue() <= time) {
 
 				blocksToDisappear.add(entry.getKey());
 			}
 		}
 		for (Location l : blocksToDisappear) {
-			matchActive.getBlockDisappear().remove(l);
-			matchActive.getBlockDisappeared().put(l, l.getBlock().getState().getData());
+			matchActive.getMapHandler().getBlockDisappear().remove(l);
+			matchActive.getMapHandler().getBlockDisappeared().put(l, l.getBlock().getState().getData());
 			l.getBlock().setType(plugin.getApi().getMaterial(AMaterials.AIR));
 
 		}
@@ -1126,6 +1103,30 @@ public class UtilsRandomEvents {
 		return s;
 	}
 
+	public static String calculateTimeTwoPoints(long seconds) {
+		long minute = TimeUnit.SECONDS.toMinutes(seconds);
+		long second = TimeUnit.SECONDS.toSeconds(seconds) - TimeUnit.MINUTES.toSeconds(minute);
+
+		String s = "";
+
+		if (minute > 9) {
+			s += minute + "";
+		} else if (minute > 0) {
+			s += "0" + minute;
+		} else {
+			s += "00";
+		}
+		s += ":";
+		if (second > 9) {
+			s += second + "";
+		} else if (second > 0) {
+			s += "0" + second;
+		} else {
+			s += "00";
+		}
+		return s;
+	}
+
 	public static boolean checkBanned(Player player, RandomEvents plugin) {
 		Boolean res = Boolean.FALSE;
 		Long now = (new Date()).getTime();
@@ -1143,7 +1144,7 @@ public class UtilsRandomEvents {
 	public static void checkDamageCounter(RandomEvents plugin, MatchActive matchActive) {
 		List<Player> playerMuertos = new ArrayList<Player>();
 		if (matchActive.getDamageCounter() >= plugin.getIdleTimeForDamage()) {
-			for (Player p : matchActive.getPlayersObj()) {
+			for (Player p : matchActive.getPlayerHandler().getPlayersObj()) {
 				p.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getIdleDamage());
 				if (p.getHealth() > 1) {
 					p.damage(1);
@@ -1584,4 +1585,132 @@ public class UtilsRandomEvents {
 
 	}
 
+	public static List<String> prepareLines(RandomEvents plugin, MatchActive matchActive, Player player) {
+		List<String> lines = new ArrayList<String>();
+		List<String> playersDead = new ArrayList<String>();
+		playersDead.addAll(matchActive.getPlayerHandler().getPlayersTotal());
+		playersDead.removeAll(matchActive.getPlayerHandler().getPlayers());
+		lines.add("");
+		switch (matchActive.getMatch().getMinigame()) {
+		case BATTLE_ROYALE_TEAM_2:
+		case TSW:
+
+			lines = prepareLinesTeammate(lines, matchActive, plugin, player);
+			lines.add("");
+			lines = prepareLinesDeadAlive(lines, matchActive, plugin, playersDead);
+
+			break;
+		case BOMB_TAG:
+			lines = prepareLinesHolder(lines, matchActive, plugin, player);
+			lines.add("");
+			lines = prepareLinesTime(lines, plugin, matchActive);
+			lines.add("");
+			lines = prepareLinesDeadAlive(lines, matchActive, plugin, playersDead);
+
+			break;
+		case TSG:
+			lines = prepareLinesTeammate(lines, matchActive, plugin, player);
+			lines.add("");
+			lines = prepareLinesTime(lines, plugin, matchActive);
+			lines.add("");
+			lines = prepareLinesDeadAlive(lines, matchActive, plugin, playersDead);
+			break;
+		case SG:
+			lines = prepareLinesTime(lines, plugin, matchActive);
+			lines.add("");
+			lines = prepareLinesDeadAlive(lines, matchActive, plugin, playersDead);
+			break;
+		case BATTLE_ROYALE:
+		case BATTLE_ROYALE_CABALLO:
+		case ESCAPE_ARROW:
+		case KNOCKBACK_DUEL:
+		case SPLEEF:
+		case SPLEGG:
+		case SW:
+		case TNT_RUN:
+			lines = prepareLinesDeadAlive(lines, matchActive, plugin, playersDead);
+			break;
+
+		case ESCAPE_FROM_BEAST:
+			lines = prepareLinesBeast(lines, matchActive, plugin, player);
+			lines.add("");
+			lines = prepareLinesDeadAlive(lines, matchActive, plugin, playersDead);
+			break;
+		case TOP_KILLER_TEAM_2:
+			lines = prepareLinesTeammate(lines, matchActive, plugin, player);
+			lines.add("");
+		case TOP_KILLER:
+		case OITC:
+		case GEM_CRAWLER:
+			lines = prepareLinesTime(lines, plugin, matchActive);
+			lines.add("");
+
+			Map<String, Integer> mapaOrdenado = sortByValue(matchActive.getPuntuacion(), true);
+			for (Entry<String, Integer> entrada : mapaOrdenado.entrySet()) {
+				lines.add(plugin.getLanguage().getScoreboardPoints().replaceAll("%name%", entrada.getKey())
+						.replaceAll("%points%", "" + entrada.getValue()));
+			}
+			break;
+
+		default:
+			break;
+		}
+		lines.add("");
+
+		return lines;
+	}
+
+	private static List<String> prepareLinesBeast(List<String> lines, MatchActive matchActive, RandomEvents plugin,
+			Player player) {
+		if (matchActive.getPlayerHandler().getPlayerContador() == null) {
+			lines.add(plugin.getLanguage().getScoreboardBeast().replaceAll("%name%", "-"));
+		} else {
+			lines.add(plugin.getLanguage().getScoreboardBeast().replaceAll("%name%",
+					matchActive.getPlayerHandler().getPlayerContador().getName()));
+
+		}
+		return lines;
+	}
+	private static List<String> prepareLinesHolder(List<String> lines, MatchActive matchActive, RandomEvents plugin,
+			Player player) {
+		if (matchActive.getPlayerHandler().getPlayerContador() == null) {
+			lines.add(plugin.getLanguage().getScoreboardHolder().replaceAll("%name%", "-"));
+		} else {
+			lines.add(plugin.getLanguage().getScoreboardHolder().replaceAll("%name%",
+					matchActive.getPlayerHandler().getPlayerContador().getName()));
+
+		}
+		return lines;
+	}
+
+	private static List<String> prepareLinesTime(List<String> lines, RandomEvents plugin, MatchActive matchActive) {
+		long seconds = (matchActive.getEndDate() - new Date().getTime()) / 1000;
+		lines.add(plugin.getLanguage().getScoreboardTime().replaceAll("%time%", calculateTimeTwoPoints(seconds)));
+		return lines;
+	}
+
+	private static List<String> prepareLinesTeammate(List<String> lines, MatchActive matchActive, RandomEvents plugin,
+			Player player) {
+		Integer equipo = matchActive.getEquipo(player);
+		List<Player> playersTeam = matchActive.getPlayerHandler().getEquipos().get(equipo);
+		playersTeam.remove(player);
+		if (playersTeam.isEmpty()) {
+			lines.add(plugin.getLanguage().getScoreboardTeammate().replaceAll("%name%", "-"));
+		} else {
+			lines.add(plugin.getLanguage().getScoreboardTeammate().replaceAll("%name%", playersTeam.get(0).getName()));
+
+		}
+		return lines;
+	}
+
+	private static List<String> prepareLinesDeadAlive(List<String> lines, MatchActive matchActive, RandomEvents plugin,
+			List<String> playersDead) {
+		for (String p : matchActive.getPlayerHandler().getPlayers()) {
+			lines.add(plugin.getLanguage().getScoreboardAlive().replaceAll("%name%", p));
+		}
+		for (String p : playersDead) {
+			lines.add(plugin.getLanguage().getScoreboardDeath().replaceAll("%name%", p));
+		}
+		return lines;
+	}
 }
