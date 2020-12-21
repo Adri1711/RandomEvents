@@ -20,6 +20,7 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.BlockIterator;
@@ -49,12 +50,15 @@ public class Use implements Listener {
 
 			if ((evt.getAction() == Action.RIGHT_CLICK_BLOCK || evt.getAction() == Action.LEFT_CLICK_BLOCK)
 					&& evt.getClickedBlock().getType() == XMaterial.CHEST.parseMaterial()) {
-				if (plugin.getMatchActive().getMapHandler().getCuboid() != null
-						&& plugin.getMatchActive().getMapHandler().getCuboid().contains(evt.getClickedBlock().getLocation())) {
-					if (!plugin.getMatchActive().getMapHandler().getChests().contains(evt.getClickedBlock().getLocation()) && !plugin
-							.getMatchActive().getMapHandler().getBlockPlaced().keySet().contains(evt.getClickedBlock().getLocation())) {
+				if (plugin.getMatchActive().getMapHandler().getCuboid() != null && plugin.getMatchActive()
+						.getMapHandler().getCuboid().contains(evt.getClickedBlock().getLocation())) {
+					if (!plugin.getMatchActive().getMapHandler().getChests()
+							.contains(evt.getClickedBlock().getLocation())
+							&& !plugin.getMatchActive().getMapHandler().getBlockPlaced().keySet()
+									.contains(evt.getClickedBlock().getLocation())) {
 						if (evt.getClickedBlock().getState() instanceof Chest) {
-							plugin.getMatchActive().getMapHandler().getChests().add(evt.getClickedBlock().getLocation());
+							plugin.getMatchActive().getMapHandler().getChests()
+									.add(evt.getClickedBlock().getLocation());
 							Chest chest = (Chest) evt.getClickedBlock().getState();
 							chest.getBlockInventory().clear();
 							Integer objetos = 0;
@@ -95,9 +99,15 @@ public class Use implements Listener {
 						player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 60, 5));
 						player.sendMessage(
 								plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNowProtected());
+					} else if (player.getItemInHand().equals(plugin.getCheckpointItem())) {
+						UtilsRandomEvents.teleportaPlayer(player,
+								plugin.getMatchActive().getMapHandler().getCheckpoints().get(player.getName()), plugin);
+						player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 99));
+
 					} else if (player.getItemInHand().getType() == plugin.getApi().getMaterial(AMaterials.STONE_HOE)
 							&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEGG)) {
 						player.launchProjectile(Egg.class);
+
 					} else if ((player.getItemInHand().getType() == plugin.getApi().getMaterial(AMaterials.WOOD_SPADE)
 							|| player.getItemInHand().getType() == plugin.getApi().getMaterial(AMaterials.STONE_SPADE)
 							|| player.getItemInHand().getType() == plugin.getApi().getMaterial(AMaterials.IRON_SPADE)
@@ -112,7 +122,8 @@ public class Use implements Listener {
 			} else if (evt.getAction().equals(Action.PHYSICAL)) {
 				if (evt.getClickedBlock() != null
 						&& evt.getClickedBlock().getType() == XMaterial.STONE_PRESSURE_PLATE.parseMaterial()) {
-					plugin.getMatchActive().getMapHandler().getCheckpoints().put(player.getName(), player.getLocation());
+					plugin.getMatchActive().getMapHandler().getCheckpoints().put(player.getName(),
+							player.getLocation());
 
 				}
 			}
@@ -127,6 +138,7 @@ public class Use implements Listener {
 						|| plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEEF))
 				&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())) {
 			evt.getEgg().setCustomName(Constantes.SPLEGG_EGG);
+
 		}
 	}
 
@@ -134,11 +146,15 @@ public class Use implements Listener {
 	public void onProjectileHitEvent(ProjectileHitEvent event) {
 		Projectile entity = event.getEntity();
 
-		if (entity instanceof Egg && entity.getCustomName() != null
-				&& entity.getCustomName().equals(Constantes.SPLEGG_EGG)) {
-			if (plugin.getMatchActive() != null
-					&& (plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEGG)
-							|| plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEEF))) {
+		if (entity != null && entity.getShooter() != null && entity.getShooter() instanceof Player
+				&& (plugin.getMatchActive() != null
+						&& (plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEGG)
+								|| plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEEF)))) {
+
+			Player p = (Player) entity.getShooter();
+
+			if (plugin.getMatchActive().getPlayerHandler().getPlayers().contains(p.getName())) {
+
 				Location hitLoc = entity.getLocation();
 
 				Vector arrowVector = entity.getVelocity();
@@ -178,7 +194,8 @@ public class Use implements Listener {
 			Arrow arrow = (Arrow) entity;
 			if (arrow.getShooter() != null && arrow.getShooter() instanceof Player) {
 				Player p = (Player) arrow.getShooter();
-				if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayerHandler().getPlayers().contains(p.getName())) {
+				if (plugin.getMatchActive() != null
+						&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(p.getName())) {
 					arrow.remove();
 				}
 			}
@@ -189,7 +206,8 @@ public class Use implements Listener {
 	public void onFoodLevelChangeEvent(FoodLevelChangeEvent evt) {
 		if (evt.getEntity() instanceof Player) {
 			Player player = (Player) evt.getEntity();
-			if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())) {
+			if (plugin.getMatchActive() != null
+					&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())) {
 				switch (plugin.getMatchActive().getMatch().getMinigame()) {
 				case SG:
 				case SW:
@@ -209,7 +227,8 @@ public class Use implements Listener {
 	public void onEntityRegainHealthEvent(EntityRegainHealthEvent evt) {
 		if (evt.getEntity() instanceof Player) {
 			Player player = (Player) evt.getEntity();
-			if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())) {
+			if (plugin.getMatchActive() != null
+					&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())) {
 				if (evt.getRegainReason() == RegainReason.SATIATED) {
 					switch (plugin.getMatchActive().getMatch().getMinigame()) {
 					case SG:
@@ -229,7 +248,8 @@ public class Use implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onMine(BlockBreakEvent evt) {
 		Player player = evt.getPlayer();
-		if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())
+		if (plugin.getMatchActive() != null
+				&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())
 				&& plugin.getMatchActive().getPlaying()) {
 			if (plugin.getMatchActive().getMapHandler().getBlockPlaced().containsKey(evt.getBlock().getLocation())) {
 				evt.setCancelled(false);
@@ -260,7 +280,8 @@ public class Use implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlace(BlockPlaceEvent evt) {
 		Player player = evt.getPlayer();
-		if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())
+		if (plugin.getMatchActive() != null
+				&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())
 				&& plugin.getMatchActive().getPlaying()) {
 			if (plugin.getMatchActive().getMatch().getMaterial() != null
 

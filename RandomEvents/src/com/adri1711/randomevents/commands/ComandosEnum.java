@@ -52,6 +52,12 @@ public enum ComandosEnum {
 
 	CMD_CREATE("create", 1, "randomevent.admin.create", "getCreate", "createRandomEvent", true, false),
 
+	CMD_DELETE("delete", 2, "randomevent.admin.delete", "getDelete", "deleteRandomEvent", true, true),
+
+	CMD_DISABLE("disable", 2, "randomevent.admin.disable", "getDisable", "disableRandomEvent", true, true),
+
+	CMD_ENABLE("enable", 2, "randomevent.admin.enable", "getEnable", "enableRandomEvent", true, true),
+
 	CMD_EDIT("edit", 2, "randomevent.admin.edit", "getEdit", "editRandomEvent", true, true),
 
 	CMD_CANCEL("cancel", 1, "randomevent.admin.cancel", "getCancel", "cancelCreationRandomEvent", true, false),

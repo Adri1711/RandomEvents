@@ -142,6 +142,15 @@ public class LanguageMessages {
 	private String pvpDeath;
 	private String pvpKill;
 
+	private String eventDeleted;
+	private String eventDisabled;
+	private String eventEnabled;
+	private String eventIsDisabled;
+
+	private String delete;
+	private String disable;
+	private String enable;
+
 	private List<String> minigameDescriptionBR;
 	private List<String> minigameDescriptionBRT2;
 	private List<String> minigameDescriptionLJ;
@@ -1379,8 +1388,61 @@ public class LanguageMessages {
 	public void setForcebegin(String forcebegin) {
 		this.forcebegin = forcebegin;
 	}
-	
-	
-	
+
+	public String getEventDeleted() {
+		return eventDeleted.replaceAll("&", "§");
+	}
+
+	public void setEventDeleted(String eventDeleted) {
+		this.eventDeleted = eventDeleted;
+	}
+
+	public String getEventDisabled() {
+		return eventDisabled.replaceAll("&", "§");
+	}
+
+	public void setEventDisabled(String eventDisabled) {
+		this.eventDisabled = eventDisabled;
+	}
+
+	public String getEventEnabled() {
+		return eventEnabled.replaceAll("&", "§");
+	}
+
+	public void setEventEnabled(String eventEnabled) {
+		this.eventEnabled = eventEnabled;
+	}
+
+	public String getEventIsDisabled() {
+		return eventIsDisabled.replaceAll("&", "§");
+	}
+
+	public void setEventIsDisabled(String eventIsDisabled) {
+		this.eventIsDisabled = eventIsDisabled;
+	}
+
+	public String getDelete() {
+		return delete.replaceAll("&", "§");
+	}
+
+	public void setDelete(String delete) {
+		this.delete = delete;
+	}
+
+	public String getDisable() {
+		return disable.replaceAll("&", "§");
+	}
+
+	public void setDisable(String disable) {
+		this.disable = disable;
+	}
+
+	public String getEnable() {
+		return enable.replaceAll("&", "§");
+	}
+
+	public void setEnable(String enable) {
+		this.enable = enable;
+	}
 
 }

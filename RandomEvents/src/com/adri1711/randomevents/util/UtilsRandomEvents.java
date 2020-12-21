@@ -106,11 +106,9 @@ public class UtilsRandomEvents {
 					bossFile.delete();
 					bossFile.createNewFile();
 				}
-				
-				
+
 				OutputStream os = new FileOutputStream(bossFile, true);
 				PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
-				
 
 				pw.println(json);
 
@@ -129,6 +127,142 @@ public class UtilsRandomEvents {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+
+		}
+
+	}
+
+	public static void enableMatch(RandomEvents plugin, Match match, Player player) {
+		if (match.getEnabled() != null && !match.getEnabled()) {
+			plugin.getMatches().remove(match);
+			match.setEnabled(Boolean.TRUE);
+			try {
+				String json = UtilidadesJson.fromMatchToJSON(plugin, match);
+				if (json != null) {
+					File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//events");
+					if (!dataFolder.exists()) {
+						dataFolder.mkdir();
+					}
+
+					File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//events",
+							match.getMinigame().getCodigo() + "_" + ChatColor
+									.stripColor(match.getName().replaceAll("<color>", "§")).replaceAll(" ", "_")
+									+ ".json");
+					if (!bossFile.exists()) {
+						bossFile.createNewFile();
+					} else {
+						bossFile.delete();
+						bossFile.createNewFile();
+					}
+
+					OutputStream os = new FileOutputStream(bossFile, true);
+					PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
+
+					pw.println(json);
+
+					pw.flush();
+
+					pw.close();
+					plugin.getMatches().add(match);
+					plugin.getMatchesAvailable().add(match);
+					if (player != null) {
+						player.sendMessage(
+								plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getEventEnabled());
+					}
+				} else {
+					System.out.println("JSON was null.");
+					if (player != null) {
+						player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+					}
+				}
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				if (player != null) {
+					player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+				}
+			}
+		}
+	}
+
+	public static void disableMatch(RandomEvents plugin, Match match, Player player) {
+		if (match.getEnabled() == null || match.getEnabled()) {
+			plugin.getMatches().remove(match);
+			plugin.getMatchesAvailable().remove(match);
+			match.setEnabled(Boolean.FALSE);
+			try {
+				String json = UtilidadesJson.fromMatchToJSON(plugin, match);
+				if (json != null) {
+					File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//events");
+					if (!dataFolder.exists()) {
+						dataFolder.mkdir();
+					}
+
+					File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//events",
+							match.getMinigame().getCodigo() + "_" + ChatColor
+									.stripColor(match.getName().replaceAll("<color>", "§")).replaceAll(" ", "_")
+									+ ".json");
+					if (!bossFile.exists()) {
+						bossFile.createNewFile();
+					} else {
+						bossFile.delete();
+						bossFile.createNewFile();
+					}
+
+					OutputStream os = new FileOutputStream(bossFile, true);
+					PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
+
+					pw.println(json);
+
+					pw.flush();
+
+					pw.close();
+					plugin.getMatches().add(match);
+					if (player != null) {
+						player.sendMessage(
+								plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getEventDisabled());
+					}
+				} else {
+					System.out.println("JSON was null.");
+					if (player != null) {
+						player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+					}
+				}
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				if (player != null) {
+					player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+				}
+			}
+		}
+	}
+
+	public static void borraMatch(RandomEvents plugin, Match match, Player player) {
+		try {
+
+			// File dataFolder = new
+			// File(String.valueOf(plugin.getDataFolder().getPath()) +
+			// "//events");
+
+			File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//events",
+					match.getMinigame().getCodigo() + "_"
+							+ ChatColor.stripColor(match.getName().replaceAll("<color>", "§")).replaceAll(" ", "_")
+							+ ".json");
+			if (bossFile.exists()) {
+				bossFile.delete();
+			}
+			plugin.getMatches().remove(match);
+			plugin.getMatchesAvailable().remove(match);
+
+			if (player != null) {
+				player.sendMessage(
+						plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getEventDeleted());
+			}
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			if (player != null) {
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+			}
 
 		}
 
@@ -711,9 +845,17 @@ public class UtilsRandomEvents {
 	}
 
 	public static MatchActive escogeMatchActiveAleatoria(RandomEvents plugin, List<Match> matches, Boolean forzada) {
+		Match m = null;
+		List<Match> matchAvailables = new ArrayList<Match>();
 
-		MatchActive matchActive = new MatchActive(matches.get(plugin.getRandom().nextInt(matches.size())), plugin,
-				forzada);
+		for (Match match : matches) {
+			if (match.getEnabled() == null || match.getEnabled()) {
+				matchAvailables.add(match);
+			}
+		}
+		m = matches.get(plugin.getRandom().nextInt(matchAvailables.size()));
+
+		MatchActive matchActive = new MatchActive(m, plugin, forzada);
 
 		return matchActive;
 	}
@@ -903,6 +1045,8 @@ public class UtilsRandomEvents {
 			Boolean comprueba) {
 		Location l3 = l.clone();
 		l3.setY(l3.getY() - 1);
+		Location l4 = l.clone();
+		l4.setY(l4.getY() - 2);
 
 		if (l3.getBlock() != null
 				&& !matchActive.getMapHandler().getBlockDisappear().containsKey(l3.getBlock().getLocation())
@@ -911,6 +1055,14 @@ public class UtilsRandomEvents {
 			Long time = d.getTime();
 			time += (long) (300);
 			matchActive.getMapHandler().getBlockDisappear().put(l3.getBlock().getLocation(), time);
+		} else if (l4.getBlock() != null
+				&& !matchActive.getMapHandler().getBlockDisappear().containsKey(l4.getBlock().getLocation())
+				&& l4.getBlock().getType() == plugin.getApi().getMaterial(AMaterials.TNT)) {
+			Date d = new Date();
+			Long time = d.getTime();
+			time += (long) (300);
+			matchActive.getMapHandler().getBlockDisappear().put(l3.getBlock().getLocation(), time);
+			matchActive.getMapHandler().getBlockDisappear().put(l4.getBlock().getLocation(), time);
 		}
 		if (comprueba && distance < 0.1) {
 			Location l2 = l.clone();
@@ -1671,6 +1823,7 @@ public class UtilsRandomEvents {
 		}
 		return lines;
 	}
+
 	private static List<String> prepareLinesHolder(List<String> lines, MatchActive matchActive, RandomEvents plugin,
 			Player player) {
 		if (matchActive.getPlayerHandler().getPlayerContador() == null) {
@@ -1692,13 +1845,17 @@ public class UtilsRandomEvents {
 	private static List<String> prepareLinesTeammate(List<String> lines, MatchActive matchActive, RandomEvents plugin,
 			Player player) {
 		Integer equipo = matchActive.getEquipo(player);
-		List<Player> playersTeam = matchActive.getPlayerHandler().getEquipos().get(equipo);
-		playersTeam.remove(player);
-		if (playersTeam.isEmpty()) {
-			lines.add(plugin.getLanguage().getScoreboardTeammate().replaceAll("%name%", "-"));
-		} else {
-			lines.add(plugin.getLanguage().getScoreboardTeammate().replaceAll("%name%", playersTeam.get(0).getName()));
-
+		if (equipo != null) {
+			List<Player> playersTeam = matchActive.getPlayerHandler().getEquipos().get(equipo);
+			if (playersTeam != null) {
+				playersTeam.remove(player);
+				if (playersTeam.isEmpty()) {
+					lines.add(plugin.getLanguage().getScoreboardTeammate().replaceAll("%name%", "-"));
+				} else {
+					lines.add(plugin.getLanguage().getScoreboardTeammate().replaceAll("%name%",
+							playersTeam.get(0).getName()));
+				}
+			}
 		}
 		return lines;
 	}

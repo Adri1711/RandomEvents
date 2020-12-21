@@ -74,7 +74,7 @@ public class TournamentActive {
 		Integer nPlayer = Integer.valueOf(max);
 		Integer fromIni = Integer.valueOf(max);
 		Integer maxMatch = 0;
-		for (Match m : plugin.getMatches()) {
+		for (Match m : plugin.getMatchesAvailable()) {
 			if (m.getAmountPlayers() > maxMatch) {
 				maxMatch = m.getAmountPlayers();
 			}
@@ -117,7 +117,7 @@ public class TournamentActive {
 	private Match searchCompatibleMatch(Integer from, Integer to) {
 		List<Match> matches = new ArrayList<Match>();
 
-		for (Match m : plugin.getMatches()) {
+		for (Match m : plugin.getMatchesAvailable()) {
 
 			if (from >= m.getAmountPlayersMin() && from <= m.getAmountPlayers()) {
 

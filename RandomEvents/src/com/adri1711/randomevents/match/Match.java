@@ -57,6 +57,8 @@ public class Match {
 	private String material;
 
 	private List<MaterialData> datas;
+	
+	private Boolean enabled;
 
 	public Match() {
 		super();
@@ -264,6 +266,16 @@ public class Match {
 
 	public void setSecondsToBegin(Integer secondsToBegin) {
 		this.secondsToBegin = secondsToBegin;
+	}
+	
+	 
+
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	@Override

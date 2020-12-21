@@ -277,12 +277,30 @@ public class MatchActive {
 
 		}
 	}
+	
+	private void hazComandosDeSalir(Player player) {
+		for (String cmd : plugin.getCommandsOnUserLeave()) {
+
+			Bukkit.dispatchCommand((CommandSender) Bukkit.getConsoleSender(),
+					cmd.replaceAll("%player%", player.getName()));
+
+		}
+	}
 
 	private void hazComandosDeComienzo(Player player) {
 		for (String cmd : plugin.getCommandsOnMatchBegin()) {
 
 			Bukkit.dispatchCommand((CommandSender) Bukkit.getConsoleSender(),
 					cmd.replaceAll("%player%", player.getName()));
+
+		}
+	}
+	
+	private void hazComandosDeFin() {
+		for (String cmd : plugin.getCommandsOnMatchEnd()) {
+
+			Bukkit.dispatchCommand((CommandSender) Bukkit.getConsoleSender(),
+					cmd.replaceAll("%event%", this.getMatch().getName()));
 
 		}
 	}
@@ -352,6 +370,8 @@ public class MatchActive {
 			}
 			if (sacaInv
 					&& (sacaSpectator || match.getSpectatorSpawns() == null || match.getSpectatorSpawns().isEmpty())) {
+				hazComandosDeSalir(player);
+				borraScoreboard(player);
 				if (plugin.isInventoryManagement())
 					UtilsRandomEvents.sacaInventario(plugin, player);
 			}
@@ -362,10 +382,7 @@ public class MatchActive {
 					new Location(getMapHandler().getActualCuboid().getWorld(), 0, 0, 0), Double.MAX_VALUE, player);
 		}
 		updateScoreboards();
-		if (sacaSpectator) {
-			borraScoreboard(player);
-
-		}
+		
 		UtilsRandomEvents.spawnParticles(Particle1711.valueOf(plugin.getParticleDeath()), plugin, lastLocation);
 		if (comprueba)
 			compruebaPartida();
@@ -422,6 +439,7 @@ public class MatchActive {
 
 			if (sacaInv
 					&& (sacaSpectator || match.getSpectatorSpawns() == null || match.getSpectatorSpawns().isEmpty())) {
+				hazComandosDeSalir(player);
 				UtilsRandomEvents.sacaInventario(plugin, player);
 			}
 		}
@@ -856,6 +874,7 @@ public class MatchActive {
 	}
 
 	public void reiniciaValoresPartida() {
+		hazComandosDeFin();
 		List<FastBoard> listaRecorrer = new ArrayList<FastBoard>();
 		listaRecorrer.addAll(getPlayerHandler().getScoreboards().values());
 		for (FastBoard f : listaRecorrer) {
@@ -896,17 +915,17 @@ public class MatchActive {
 		for (Location l : getMapHandler().getBlockPlaced().keySet()) {
 			l.getBlock().setType(XMaterial.AIR.parseMaterial());
 		}
-		if (match.getMinigame().equals(MinigameType.TNT_RUN)) {
-			mat = plugin.getApi().getMaterial(AMaterials.TNT);
-		}
-		if (mat != null) {
-			for (Location l : getMapHandler().getBlockDisappear().keySet()) {
-				getMapHandler().getBlockDisappeared().put(l, null);
-			}
-			for (Location l : getMapHandler().getBlockDisappeared().keySet()) {
-				l.getBlock().setType(mat);
-			}
-		} else {
+//		if (match.getMinigame().equals(MinigameType.TNT_RUN)) {
+//			mat = plugin.getApi().getMaterial(AMaterials.TNT);
+//		}
+//		if (mat != null) {
+//			for (Location l : getMapHandler().getBlockDisappear().keySet()) {
+//				getMapHandler().getBlockDisappeared().put(l, null);
+//			}
+//			for (Location l : getMapHandler().getBlockDisappeared().keySet()) {
+//				l.getBlock().setType(mat);
+//			}
+//		} else {
 			for (Entry<Location, MaterialData> entrada : getMapHandler().getBlockDisappeared().entrySet()) {
 				entrada.getKey().getBlock().setType(entrada.getValue().getItemType());
 				try {
@@ -917,7 +936,7 @@ public class MatchActive {
 
 				entrada.getKey().getBlock().getState().setData(entrada.getValue());
 			}
-		}
+//		}
 		setPlaying(Boolean.FALSE);
 		if (tournamentObj == null)
 			plugin.reiniciaPartida(forzada);
@@ -1018,7 +1037,6 @@ public class MatchActive {
 			hazComandosDeComienzo(p);
 			puntuacion.put(p.getName(), 0);
 
-			prepareScoreboards(p);
 
 		}
 
@@ -1392,10 +1410,12 @@ public class MatchActive {
 					mandaSpectatorPlayer(p);
 				}
 			}
-
+			
 			this.allowDamage = true;
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
+				p.getInventory().addItem(plugin.getCheckpointItem());
+				p.updateInventory();
 
 			}
 			break;
@@ -1448,6 +1468,13 @@ public class MatchActive {
 			task.runTaskTimer(plugin, 0, 1L);
 
 			break;
+		}
+		
+		for (Player p : getPlayerHandler().getPlayersObj()) {
+
+
+			prepareScoreboards(p);
+
 		}
 
 	}

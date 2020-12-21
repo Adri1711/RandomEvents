@@ -138,12 +138,64 @@ public class ComandosExecutor {
 
 	}
 
+	public void deleteRandomEvent(RandomEvents plugin, Player player, String number) {
+		try {
+			Match match = plugin.getMatches().get(Integer.valueOf(number));
+			if (match != null) {
+				UtilsRandomEvents.borraMatch(plugin, match, player);
+			} else {
+				if (player != null)
+					player.sendMessage(
+							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidInput());
+			}
+		} catch (Exception e) {
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidInput());
+		}
+
+	}
+
+	public void disableRandomEvent(RandomEvents plugin, Player player, String number) {
+		try {
+			Match match = plugin.getMatches().get(Integer.valueOf(number));
+			if (match != null) {
+				UtilsRandomEvents.disableMatch(plugin, match, player);
+			} else {
+				if (player != null)
+					player.sendMessage(
+							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidInput());
+			}
+		} catch (Exception e) {
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidInput());
+		}
+
+	}
+
+	public void enableRandomEvent(RandomEvents plugin, Player player, String number) {
+		try {
+			Match match = plugin.getMatches().get(Integer.valueOf(number));
+			if (match != null) {
+				UtilsRandomEvents.enableMatch(plugin, match, player);
+			} else {
+				if (player != null)
+					player.sendMessage(
+							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidInput());
+			}
+		} catch (Exception e) {
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidInput());
+		}
+
+	}
+
 	public void showRandomEvents(RandomEvents plugin, Player player) {
 		player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getMatches());
 		for (Match m : plugin.getMatches()) {
 			if (player != null) {
-				player.sendMessage("§6§l" + plugin.getMatches().indexOf(m) + " - " + m.getMinigame().getMessage()
-						+ " -> " + m.getName());
+
+				player.sendMessage(((m.getEnabled() == null || m.getEnabled()) ? "§6" : "§c") + "§l"
+						+ plugin.getMatches().indexOf(m) + " - " + m.getMinigame().getMessage() + " -> " + m.getName());
 			} else {
 				System.out.println(
 						plugin.getMatches().indexOf(m) + " - " + m.getMinigame().getMessage() + " -> " + m.getName());
@@ -182,8 +234,6 @@ public class ComandosExecutor {
 		player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + new Date());
 
 	}
-	
-	
 
 	public void forceBeginRandomEvent(RandomEvents plugin, Player player) {
 		if (plugin.getMatchActive() != null) {
@@ -191,11 +241,12 @@ public class ComandosExecutor {
 		}
 
 	}
-	
+
 	public void forceRandomEvent(RandomEvents plugin, Player player) {
 		if (plugin.getMatchActive() == null) {
 			plugin.setForzado(Boolean.TRUE);
-			plugin.setMatchActive(UtilsRandomEvents.escogeMatchActiveAleatoria(plugin, plugin.getMatches(), true));
+			plugin.setMatchActive(
+					UtilsRandomEvents.escogeMatchActiveAleatoria(plugin, plugin.getMatchesAvailable(), true));
 			if (player != null)
 				player.sendMessage(
 						plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getMatchBeginSoon());
@@ -223,11 +274,20 @@ public class ComandosExecutor {
 	public void forceRandomEvent(RandomEvents plugin, Player player, String number) {
 		if (plugin.getMatchActive() == null) {
 			try {
-				plugin.setForzado(Boolean.TRUE);
-				plugin.setMatchActive(new MatchActive(plugin.getMatches().get(Integer.valueOf(number)), plugin, true));
-				if (player != null)
-					player.sendMessage(
-							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getMatchBeginSoon());
+
+				Match m = plugin.getMatches().get(Integer.valueOf(number));
+				if (m.getEnabled() == null || m.getEnabled()) {
+					plugin.setForzado(Boolean.TRUE);
+					plugin.setMatchActive(new MatchActive(m, plugin, true));
+					if (player != null)
+						player.sendMessage(
+								plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getMatchBeginSoon());
+				} else {
+					if (player != null)
+						player.sendMessage(
+								plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getEventIsDisabled());
+				}
+
 			} catch (Exception e) {
 				if (player != null)
 					player.sendMessage(

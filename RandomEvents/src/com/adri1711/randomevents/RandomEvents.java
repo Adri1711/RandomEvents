@@ -48,6 +48,7 @@ import com.adri1711.randomevents.placeholders.ReventPlaceholder;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.randomevents.util.UtilsSQL;
 import com.adri1711.util.enums.AMaterials;
+import com.adri1711.util.enums.XMaterial;
 
 public class RandomEvents extends JavaPlugin {
 
@@ -74,6 +75,7 @@ public class RandomEvents extends JavaPlugin {
 	private TournamentActive tournamentActive;
 
 	private List<Match> matches;
+	private List<Match> matchesAvailable;
 
 	private Tournament tournament;
 
@@ -92,6 +94,7 @@ public class RandomEvents extends JavaPlugin {
 	private Boolean forzado = Boolean.FALSE;
 
 	private ItemStack powerUpItem;
+	private ItemStack checkpointItem;
 
 	private LanguageMessages language;
 
@@ -177,6 +180,10 @@ public class RandomEvents extends JavaPlugin {
 
 	private boolean useScoreboard;
 
+	private List<String> commandsOnMatchEnd;
+
+	private List<String> commandsOnUserLeave;
+
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
 		loadConfig();
@@ -187,6 +194,12 @@ public class RandomEvents extends JavaPlugin {
 		ItemMeta itemMeta = this.powerUpItem.getItemMeta();
 		itemMeta.setDisplayName("§2§lPowerUP");
 		this.powerUpItem.setItemMeta(itemMeta);
+		
+		
+		this.checkpointItem = new ItemStack(XMaterial.BLAZE_ROD.parseMaterial());
+		ItemMeta itemMetaCheck = this.checkpointItem.getItemMeta();
+		itemMetaCheck.setDisplayName("§2§lReturn to checkpoint");
+		this.checkpointItem.setItemMeta(itemMetaCheck);
 
 		inicializaVariables();
 
@@ -228,7 +241,12 @@ public class RandomEvents extends JavaPlugin {
 			@Override
 			public void run() {
 				setMatches(UtilsRandomEvents.cargarPartidas(getPlugin()));
-
+				matchesAvailable=new ArrayList<Match>();
+				for (Match match : matches) {
+					if (match.getEnabled() == null || match.getEnabled()) {
+						matchesAvailable.add(match);
+					}
+				}
 			}
 
 		}, 400);
@@ -278,6 +296,12 @@ public class RandomEvents extends JavaPlugin {
 		this.dropItemsAfterDie = getConfig().getBoolean("dropItemsAfterDie");
 		this.commandsOnUserJoin = (List<String>) getConfig().getStringList("commandsOnUserJoin");
 		this.commandsOnMatchBegin = (List<String>) getConfig().getStringList("commandsOnMatchBegin");
+		this.commandsOnMatchEnd = (List<String>) getConfig().getStringList("commandsOnMatchEnd");
+		this.commandsOnUserLeave = (List<String>) getConfig().getStringList("commandsOnUserLeave");
+		
+		
+		
+		
 		this.allowedCmds = (List<String>) getConfig().getStringList("allowedCmds");
 
 		this.maxItemOnChests = Integer.valueOf(getConfig().getInt("maxItemOnChests"));
@@ -330,6 +354,14 @@ public class RandomEvents extends JavaPlugin {
 		this.setProbabilityPowerUp(Integer.valueOf(getConfig().getInt("probabilityPowerUp")));
 
 		this.matches = UtilsRandomEvents.cargarPartidas(this);
+		
+		matchesAvailable=new ArrayList<Match>();
+		for (Match match : matches) {
+			if (match.getEnabled() == null || match.getEnabled()) {
+				matchesAvailable.add(match);
+			}
+		}
+		
 		this.bannedPlayers = UtilsRandomEvents.cargarBannedPlayers(this);
 		if (bannedPlayers == null || bannedPlayers.getBannedPlayers() == null) {
 			bannedPlayers = new BannedPlayers();
@@ -372,14 +404,16 @@ public class RandomEvents extends JavaPlugin {
 			tournamentActive = null;
 			Bukkit.getServer().getScheduler().runTaskLater((Plugin) this, new Runnable() {
 				public void run() {
-					if (matches != null && !matches.isEmpty() && Bukkit.getOnlinePlayers().size() >= minPlayers) {
+
+					
+					if (matchesAvailable != null && !matchesAvailable.isEmpty() && Bukkit.getOnlinePlayers().size() >= minPlayers) {
 						if (!forzado) {
 
 							if (probabilityRandomEvent > random.nextInt(100)) {
 								if (probabilityRandomEventTournament > random.nextInt(100)) {
 									tournamentActive = new TournamentActive(tournament, getPlugin(), false);
 								} else {
-									matchActive = UtilsRandomEvents.escogeMatchActiveAleatoria(getPlugin(), matches,
+									matchActive = UtilsRandomEvents.escogeMatchActiveAleatoria(getPlugin(), matchesAvailable,
 											false);
 								}
 							} else {
@@ -397,11 +431,11 @@ public class RandomEvents extends JavaPlugin {
 												matchActive = new MatchActive(match, getPlugin(), false);
 											} else {
 												matchActive = UtilsRandomEvents.escogeMatchActiveAleatoria(getPlugin(),
-														matches, false);
+														matchesAvailable, false);
 											}
 										} else {
 											matchActive = UtilsRandomEvents.escogeMatchActiveAleatoria(getPlugin(),
-													matches, false);
+													matchesAvailable, false);
 										}
 									} else {
 										comienzaTemporizador();
@@ -1049,6 +1083,38 @@ public class RandomEvents extends JavaPlugin {
 
 	public void setUseScoreboard(boolean useScoreboard) {
 		this.useScoreboard = useScoreboard;
+	}
+
+	public ItemStack getCheckpointItem() {
+		return checkpointItem;
+	}
+
+	public void setCheckpointItem(ItemStack checkpointItem) {
+		this.checkpointItem = checkpointItem;
+	}
+
+	public List<String> getCommandsOnMatchEnd() {
+		return commandsOnMatchEnd;
+	}
+
+	public void setCommandsOnMatchEnd(List<String> commandsOnMatchEnd) {
+		this.commandsOnMatchEnd = commandsOnMatchEnd;
+	}
+
+	public List<String> getCommandsOnUserLeave() {
+		return commandsOnUserLeave;
+	}
+
+	public void setCommandsOnUserLeave(List<String> commandsOnUserLeave) {
+		this.commandsOnUserLeave = commandsOnUserLeave;
+	}
+
+	public List<Match> getMatchesAvailable() {
+		return matchesAvailable;
+	}
+
+	public void setMatchesAvailable(List<Match> matchesAvailable) {
+		this.matchesAvailable = matchesAvailable;
 	}
 	
 

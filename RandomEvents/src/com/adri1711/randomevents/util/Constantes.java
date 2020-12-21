@@ -41,9 +41,9 @@ public class Constantes {
 	public enum Messages {
 
 		CMD_HELP_MENU("helpMenu", "menu.helpMenu", "&6----------------- &e&lRandomEvents &6---------------------"),
-		
+
 		CMD_SHOW_MENU("showMenu", "menu.showMenu", "   &6/revent:\n          &e-> Shows this menu"),
-		
+
 		CMD_JOIN("join", "menu.join", "   &6/revent join:\n          &e-> Join the Random Event"),
 
 		CMD_JOIN_TOURNAMENT("tjoin", "menu.tjoin",
@@ -70,9 +70,9 @@ public class Constantes {
 
 		CMD_MATCHES("menuMatches", "menu.admin.matches",
 				"   &6/revent matches:\n          &e-> Show all Random Events available"),
-		
-		CMD_CHECKPOINT("checkpoint",  "menu.checkpoint", "   &6/revent checkpoint:\n          &e-> Makes the user go back to the checkpoint"),
 
+		CMD_CHECKPOINT("checkpoint", "menu.checkpoint",
+				"   &6/revent checkpoint:\n          &e-> Makes the user go back to the checkpoint"),
 
 		CMD_NEXT("next", "menu.next", "   &6/revent next:\n          &e-> Show next scheduled Random Events"),
 
@@ -85,9 +85,9 @@ public class Constantes {
 		CMD_SCHEDULE_SPECIFIC("scheduleSpecific", "menu.admin.scheduleSpecific",
 				"   &6/revent schedule <monday:tuesday...> <hour> <minute> <idmatch>:\n          &e-> Create a schedule for a Random Event and specific match"),
 
-		CMD_FORCE_BEGIN("forcebegin", "menu.admin.forcebegin", "   &6/revent forcebegin:\n          &e-> Force to begin the match"),
+		CMD_FORCE_BEGIN("forcebegin", "menu.admin.forcebegin",
+				"   &6/revent forcebegin:\n          &e-> Force to begin the match"),
 
-		
 		CMD_BEGIN("begin", "menu.admin.force", "   &6/revent begin:\n          &e-> Begins a Random Event"),
 
 		CMD_BEGIN_TOURNAMENT("tbegin", "menu.admin.tforce",
@@ -104,6 +104,15 @@ public class Constantes {
 
 		CMD_CREATE("create", "menu.admin.create",
 				"   &6/revent create:\n          &e-> Begin the creation of a Random Event"),
+		
+		CMD_DELETE("delete", "menu.admin.delete",
+				"   &6/revent delete <number>:\n          &e-> Delete a Random Event"),
+		
+		CMD_DISABLE("disable", "menu.admin.disable",
+				"   &6/revent disable <number>:\n          &e-> Disables a Random Event"),
+		
+		CMD_ENABLE("enable", "menu.admin.enable",
+				"   &6/revent enable <number>:\n          &e-> Enables a Random Event"),
 
 		CMD_EDIT("edit", "menu.admin.edit", "   &6/revent edit <number>:\n          &e-> Edits a Random Event"),
 
@@ -289,31 +298,34 @@ public class Constantes {
 		STATS_WINS("statsWins", "stats.statsWins", "&2Wins: "),
 
 		STATS_WIN_RATIO("statsWinsRatio", "stats.statsWinsRatio", "&eWin Ratio: "),
-		
+
 		PVP_DEATH("pvpDeath", "pvp.death", "&c☠ %victim%"),
-		
+
 		PVP_KILL("pvpKill", "pvp.kill", "&a%killer% &4⚔ &c%victim%"),
 
-		
-		
 		SCOREBOARD_TITLE("scoreboardTitle", "scoreboard.title", "      &a&lRandomEvents      "),
-		
+
 		SCOREBOARD_POINTS_FORMAT("scoreboardPoints", "scoreboard.points", "&6%name% - &e%points%"),
-		
+
 		SCOREBOARD_ALIVE_FORMAT("scoreboardAlive", "scoreboard.alive", "&a✔ %name%"),
-		
+
 		SCOREBOARD_DEATH_FORMAT("scoreboardDeath", "scoreboard.dead", "&c☠ %name%"),
-		
+
 		SCOREBOARD_COMPANION_FORMAT("scoreboardTeammate", "scoreboard.teammate", "&6Mate: &e%name%"),
-		
+
 		SCOREBOARD_BEAST_FORMAT("scoreboardBeast", "scoreboard.beast", "&6Beast: &e%name%"),
-		
+
 		SCOREBOARD_HOLDER_FORMAT("scoreboardHolder", "scoreboard.holder", "&6Holder: &e%name%"),
-		
+
 		SCOREBOARD_TIME_FORMAT("scoreboardTime", "scoreboard.time", "&b%time%"),
+
+		EVENT_DELETED("eventDeleted", "comun.eventDeleted", "&c&lThe RandomEvents was deleted!"),
+
+		EVENT_DISABLED("eventDisabled", "comun.eventDisabled", "&c&lThe RandomEvents was disabled!"),
+
+		EVENT_ENABLED("eventEnabled", "comun.eventEnabled", "&6&lThe RandomEvents was enabled!"),
 		
-		
-		
+		EVENT_IS_DISABLED("eventIsDisabled", "comun.eventIsDisabled", "&c&lThe RandomEvents is disabled!"),
 
 		MINIGAME_DESC_BR("minigameDescriptionBR", "minigame.description.BR",
 				"&eA fierce battle where just 1 player;&e or team can remain alive."),
