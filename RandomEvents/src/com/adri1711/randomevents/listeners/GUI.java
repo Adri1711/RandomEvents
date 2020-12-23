@@ -19,7 +19,7 @@ public class GUI implements Listener {
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
 		if (ChatColor.stripColor(plugin.getApi().getInventoryName(event)) != null
-				&& ChatColor.stripColor(plugin.getApi().getInventoryName(event)).contains(Constantes.GUI_NAME)) {
+				&& ChatColor.stripColor(plugin.getApi().getInventoryName(event)).contains(ChatColor.stripColor(plugin.getLanguage().getStatsGuiName()))) {
 			event.setCancelled(true);
 		}
 	}

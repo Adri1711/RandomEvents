@@ -82,17 +82,17 @@ public enum Creacion {
 			"BOAT_RUN,HORSE_RUN,ESCAPE_FROM_BEAST,RACE"),
 
 	MATERIAL_SPLEEF(30, "§6§lGet the block you want to set mineable for spleef on your hand and say 'Done'",
-			"SPLEEF,SPLEGG"),
+			"SPLEEF,SPLEGG,ANVIL_SPLEEF"),
 
 	ANOTHER_MATERIAL_SPLEEF(31,
 			"§6§lGet another block you want to set mineable for spleef on your hand and say 'Done' or say 'Next' to end the spleef materials",
-			"SPLEEF,SPLEGG"),
+			""),
 
 	MAP_LOCATION1(32, "§6§lSet the first location of the cuboid of the map, say 'Done'",
-			"SG,TSG,SW,TSW"),
+			"SG,TSG,SW,TSW,ANVIL_SPLEEF"),
 
 	MAP_LOCATION2(33, "§6§lSet the second location of the cuboid of the map, say 'Done'",
-			"SG,TSG,SW,TSW"),
+			"SG,TSG,SW,TSW,ANVIL_SPLEEF"),
 	
 	INVENTORY_CHESTS(34, "§6§lTake the inventory that will have a probability to appear in chests and say 'Done' to set it or 'Add' to add the items", "SG,TSG,SW,TSW"),
 	
@@ -103,6 +103,8 @@ public enum Creacion {
 	BLOCKS_ALLOWED(37, "§6§lPut in your hand a block allowed to break/place in the map and say 'Done'", "SG,TSG,SW,TSW"),
 	
 	NO_MOVE_TIME(38, "§6§lChoose to allow players to move in seconds", "SG,TSG,SW,TSW"),
+	
+	TIMER_ANVIL_SPAWN(39, "§6§lWrite the number of seconds (it can have decimals) to respawn each anvil", "ANVIL_SPLEEF"),
 
 
 	SAVE(997, "§6§lYou are about to save a Random Event, put 'Y' to confirm or 'N' to continue creating", "ALLMINIGAMES"),

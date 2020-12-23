@@ -5,19 +5,24 @@ import org.bukkit.World;
 
 public class Cuboid {
 	private final World world;
-	private int minX;
-	private int maxX;
-	private int minY;
-	private int maxY;
-	private int minZ;
-	private int maxZ;
+	private double minX;
+	private double maxX;
+	private double minY;
+	private double maxY;
+	private double minZ;
+	private double maxZ;
 
 	public Cuboid(Location loc1, Location loc2) {
-		this(loc1.getWorld(), loc1.getBlockX(), loc1.getBlockY(), loc1.getBlockZ(), loc2.getBlockX(), loc2.getBlockY(),
-				loc2.getBlockZ());
+		this(loc1.getWorld(), loc1.getX(), loc1.getY(), loc1.getZ(), loc2.getX(), loc2.getY(),
+				loc2.getZ());
+	}
+	
+	public Cuboid(Cuboid cube) {
+		this(cube.getWorld(), cube.getMaxX(), cube.getMaxY(), cube.getMaxZ(), cube.getMinX(), cube.getMinY(),
+				cube.getMinZ());
 	}
 
-	public Cuboid(World world, int x1, int y1, int z1, int x2, int y2, int z2) {
+	public Cuboid(World world, double x1, double y1, double z1, double x2, double y2, double z2) {
 		this.world = world;
 
 		minX = Math.min(x1, x2);
@@ -32,27 +37,27 @@ public class Cuboid {
 		return world;
 	}
 
-	public int getMinX() {
+	public double getMinX() {
 		return minX;
 	}
 
-	public int getMinY() {
+	public double getMinY() {
 		return minY;
 	}
 
-	public int getMinZ() {
+	public double getMinZ() {
 		return minZ;
 	}
 
-	public int getMaxX() {
+	public double getMaxX() {
 		return maxX;
 	}
 
-	public int getMaxY() {
+	public double getMaxY() {
 		return maxY;
 	}
 
-	public int getMaxZ() {
+	public double getMaxZ() {
 		return maxZ;
 	}
 
@@ -77,23 +82,31 @@ public class Cuboid {
 	}
 
 	public void shrink(Double percen) {
-		Integer difX = (maxX - minX);
-		Integer difZ = (maxZ - minZ);
-		difX = Double.valueOf((difX / 2) * percen).intValue();
-		difZ = Double.valueOf((difZ / 2) * percen).intValue();
+		Double difX = (maxX - minX);
+		Double difZ = (maxZ - minZ);
+		difX = Double.valueOf((difX / 2) * percen);
+		difZ = Double.valueOf((difZ / 2) * percen);
 		maxX -= difX;
 		maxZ -= difZ;
 		minX += difX;
 		minZ += difZ;
 	}
+	
+	public void withdraw(Double blocks) {
+		
+		maxX -= blocks;
+		maxZ -= blocks;
+		minX += blocks;
+		minZ += blocks;
+	}
 
 	public Location getCenter() {
-		Integer difX = (maxX - minX);
-		Integer difY = (maxY - minY);
-		Integer difZ = (maxZ - minZ);
-		difX = Double.valueOf((difX / 2)).intValue();
-		difY = Double.valueOf((difY / 2)).intValue();
-		difZ = Double.valueOf((difZ / 2)).intValue();
+		Double difX = (maxX - minX);
+		Double difY = (maxY - minY);
+		Double difZ = (maxZ - minZ);
+		difX = Double.valueOf((difX / 2));
+		difY = Double.valueOf((difY / 2));
+		difZ = Double.valueOf((difZ / 2));
 		return new Location(world, maxX - difX, maxY - difY, maxZ - difZ);
 	}
 

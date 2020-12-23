@@ -4,7 +4,6 @@ public class Constantes {
 
 	public static String ALL = "ALLMINIGAMES";
 
-	public static String GUI_NAME = "RandomEvents_Stats";
 	public static String DONE = "Done";
 	public static String ADD = "Add";
 	public static String NEXT = "Next";
@@ -217,22 +216,22 @@ public class Constantes {
 
 		INVALID_PASSWORD("invalidPassword", "comun.invalidPassword", "&c&lInvalid password for the event"),
 
-		FIRST_ANNOUNCE("firstAnnounce", "announce.firstAnnounce", "&6&lA Random Event has just begun, "),
+		FIRST_ANNOUNCE("firstAnnounce", "announce.firstAnnounce", "\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█  &5&lRandom Event\n&f█&8█&f██&8███&f█  &c%type%\n&f█&8█&f████&8█&f█  &8[ &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█  "),
 
-		NEXT_ANNOUNCE("nextAnnounce", "announce.nextAnnounce", "&6&lA Random Event is still waiting for players, "),
+		NEXT_ANNOUNCE("nextAnnounce", "announce.nextAnnounce", "\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█  &5&lRandom Event\n&f█&8█&f██&8███&f█  &c%type%\n&f█&8█&f████&8█&f█  &8[ &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█  "),
 
 		FIRST_ANNOUNCE_TOURNAMENT("firstAnnounceTournament", "announce.firstAnnounceTournament",
-				"&6&lA Tournament Random Event has just begun, "),
+				"\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█  &5&lTournament Random Event\n&f█&8█&f██&8███&f█  &c%type%\n&f█&8█&f████&8█&f█  &8[ &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█  "),
 
 		NEXT_ANNOUNCE_TOURNAMENT("nextAnnounceTournament", "announce.nextAnnounceTournament",
-				"&6&lA Tournament Random Event is still waiting for players, "),
+				"\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█  &5&lTournament Random Event\n&f█&8█&f██&8███&f█  &c%type%\n&f█&8█&f████&8█&f█  &8[ &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█  "),
 
 		CLICK_HERE("clickHere", "announce.clickHere", "&b[Click here to join]"),
 
-		LAST_PART("lastPart", "announce.lastPart", "&6&l ( %players% / %neededPlayers% )"),
+		LAST_PART("lastPart", "announce.lastPart", "\n&f█&8██████&f█\n&f████████"),
 
 		LAST_PART_TOURNAMENT("lastPartTournament", "announce.lastPartTournament",
-				"&6&l ( %players% / %neededPlayers% )"),
+				"\n&f█&8██████&f█\n&f████████"),
 
 		RACE_TOURNAMENT("raceTournament", "announce.raceTournament",
 				"&6&lThe player %player% has reached the goal ( %players% / %neededPlayers% )"),
@@ -318,6 +317,8 @@ public class Constantes {
 		SCOREBOARD_HOLDER_FORMAT("scoreboardHolder", "scoreboard.holder", "&6Holder: &e%name%"),
 
 		SCOREBOARD_TIME_FORMAT("scoreboardTime", "scoreboard.time", "&b%time%"),
+		
+		STATS_GUI_NAME("statsGuiName", "stats.guiname", "&bRandomEvents_Stats "),
 
 		EVENT_DELETED("eventDeleted", "comun.eventDeleted", "&c&lThe RandomEvents was deleted!"),
 
@@ -389,7 +390,10 @@ public class Constantes {
 				"&eA fierce battle where just 1 player;&e or team can remain alive."),
 
 		MINIGAME_DESC_TSW("minigameDescriptionTSW", "minigame.description.TSW",
-				"&eA fierce battle where just 1 player;&e or team can remain alive.");
+				"&eA fierce battle where just 1 player;&e or team can remain alive."),
+		
+		MINIGAME_DESC_ANVIL_SPLEEF("minigameDescriptionANVIL_SPLEEF", "minigame.description.ANVIL_SPLEEF",
+				"&eAvoid the anvils coming from the sky if you;&e dont want to lose your head!");
 
 		private String javaField;
 		private String ymlField;

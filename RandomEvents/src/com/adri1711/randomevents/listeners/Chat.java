@@ -509,7 +509,7 @@ public class Chat implements Listener {
 							if (player.getItemInHand() != null && player.getItemInHand()
 									.getType() != (plugin.getApi().getMaterial(AMaterials.AIR))) {
 								match.getDatas().add(player.getItemInHand().getData());
-
+								actua=Boolean.FALSE;
 								// actualiza =
 								// UtilsRandomEvents.pasaACreation(plugin,
 								// player,
@@ -533,6 +533,7 @@ public class Chat implements Listener {
 						}
 						break;
 					case TIMER_ARROW_SPAWN:
+					case TIMER_ANVIL_SPAWN:
 					case TIMER_GEM_SPAWN:
 					case SECONDS_TO_SPAWN_BEAST:
 					case TIMER_BOMB:

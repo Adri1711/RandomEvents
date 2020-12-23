@@ -171,7 +171,7 @@ public class TournamentActive {
 			}
 		} else {
 			player.sendMessage(
-					plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getAlreadyPlayingMatch());
+					plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getAlreadyPlayingMatch());
 		}
 	}
 
@@ -245,7 +245,7 @@ public class TournamentActive {
 			if (playersGanadores.size() == 1) {
 				daRecompensas(playersGanadores, playersSpectators);
 			} else {
-				String info = plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getTournamentAlive()
+				String info = plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getTournamentAlive()
 						+ Constantes.SALTO_LINEA;
 				for (Player p : playersGanadores) {
 					info += "§6§l" + p.getName() + ", ";
@@ -438,13 +438,13 @@ public class TournamentActive {
 						procesoUnirPlayer(player);
 					} else {
 						player.sendMessage(
-								plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getClearInventory());
+								plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getClearInventory());
 
 					}
 				}
 
 			} else {
-				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getMatchFull());
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getMatchFull());
 			}
 
 		}
@@ -470,7 +470,7 @@ public class TournamentActive {
 
 		} else {
 			player.sendMessage(
-					plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getErrorSavingInventory());
+					plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getErrorSavingInventory());
 
 		}
 

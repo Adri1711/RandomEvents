@@ -23,6 +23,9 @@ useLastLocation: false
 #Number of annoucements the random event will do before being cancelled for lack of players
 numberOfTriesBeforeCancelling: 10
 
+#Advanced spectator mode
+advancedSpectatorMode: false
+
 #Force Empty Inventory to Join the RandomEvents
 forceEmptyInventoryToJoin: false
 
@@ -135,7 +138,7 @@ idleTimeForDamage: 10
 commandsOnUserJoin:
 - 'psa %player%'
 
-#Commands that will be done each time a user join a random event, use it in case you need to get the god mode off, to set the gamemode to survival, etc
+#Commands that will be done each time a user leave a random event, use it in case you need to get the god mode off, to set the gamemode to survival, etc
 commandsOnUserLeave:
 - 'psa %player%'
 
@@ -143,7 +146,7 @@ commandsOnUserLeave:
 commandsOnMatchBegin:
 - 'god %player% off'
 
-#Commands that will be done when the match begin for all players, use it in case you need to get the god mode off, to set the gamemode to survival, etc
+#Commands that will be done when the match ends
 commandsOnMatchEnd:
 - 'broadcast %event% has ended'
 
@@ -164,6 +167,32 @@ spawn:
   pitch: 0.0
   yaw: 0.0
   
+#Use -1 to hide a stat in the GUI
+statsmenu:
+  fill: 'STAINED_GLASS_PANE'
+  ALLTIME: 4
+  BR: 10
+  BRT2: 11
+  LJ: 12
+  TKLL: 13
+  TKLLT2: 14
+  KBD: 15
+  EARR: 16
+  GEMC: 19
+  BOMB: 20
+  BOAT_RUN: 21
+  HORSE_RUN: 22
+  ESCAPE_FROM_BEAST: 23
+  RACE: 24
+  TNTRUN: 25
+  SPLEEF: 28
+  SPLEGG: 29
+  OITC: 30
+  SG: 31
+  TSG: 32
+  SW: 33
+  TSW: 34
+  ANVIL_SPLEEF: 40
 
 #Enable MySQL to have statistics of the games!
 mysql:

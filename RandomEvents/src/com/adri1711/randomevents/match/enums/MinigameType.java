@@ -18,6 +18,8 @@ public enum MinigameType {
 	KNOCKBACK_DUEL("KBD", XMaterial.WOODEN_SWORD.parseMaterial(), "Knockback Duel"),
 
 	ESCAPE_ARROW("EARR", XMaterial.ARROW.parseMaterial(), "Arrow Rain"),
+	
+	ANVIL_SPLEEF("ANVIL_SPLEEF", XMaterial.ANVIL.parseMaterial(), "Anvil Spleef"),
 
 	GEM_CRAWLER("GEMC", XMaterial.EMERALD.parseMaterial(), "Gem Carrier"),
 

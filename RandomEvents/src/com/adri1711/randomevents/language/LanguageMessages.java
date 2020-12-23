@@ -130,6 +130,8 @@ public class LanguageMessages {
 	private String checkpoint;
 	private String forcebegin;
 
+	private String statsGuiName;
+
 	private String scoreboardTitle;
 	private String scoreboardPoints;
 	private String scoreboardAlive;
@@ -172,6 +174,7 @@ public class LanguageMessages {
 	private List<String> minigameDescriptionTSG;
 	private List<String> minigameDescriptionSW;
 	private List<String> minigameDescriptionTSW;
+	private List<String> minigameDescriptionANVIL_SPLEEF;
 
 	public LanguageMessages(RandomEvents plugin) {
 		this.file = new File(plugin.getDataFolder(), "messages.yml");
@@ -1077,6 +1080,14 @@ public class LanguageMessages {
 		this.minigameDescriptionTSW = minigameDescriptionTSW;
 	}
 
+	public List<String> getMinigameDescriptionANVIL_SPLEEF() {
+		return minigameDescriptionANVIL_SPLEEF;
+	}
+
+	public void setMinigameDescriptionANVIL_SPLEEF(List<String> minigameDescriptionANVIL_SPLEEF) {
+		this.minigameDescriptionANVIL_SPLEEF = minigameDescriptionANVIL_SPLEEF;
+	}
+
 	public String getWarmupEnd() {
 		return warmupEnd.replaceAll("&", "§");
 	}
@@ -1443,6 +1454,14 @@ public class LanguageMessages {
 
 	public void setEnable(String enable) {
 		this.enable = enable;
+	}
+
+	public String getStatsGuiName() {
+		return statsGuiName.replaceAll("&", "§");
+	}
+
+	public void setStatsGuiName(String statsGuiName) {
+		this.statsGuiName = statsGuiName;
 	}
 
 }

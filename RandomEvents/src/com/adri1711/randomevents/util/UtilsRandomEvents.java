@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
@@ -58,6 +60,7 @@ import com.adri1711.randomevents.stats.Stats;
 import com.adri1711.util.enums.AMaterials;
 import com.adri1711.util.enums.Particle1711;
 import com.adri1711.util.enums.ParticleDisplay;
+import com.adri1711.util.enums.XMaterial;
 import com.adri1711.util.enums.XParticle;
 import com.adri1711.util.enums.XSound;
 import com.google.common.io.Files;
@@ -118,15 +121,14 @@ public class UtilsRandomEvents {
 				plugin.getPlayersCreation().remove(player.getName());
 				plugin.getPlayerMatches().remove(player.getName());
 				plugin.getMatches().add(match);
-				player.sendMessage(
-						plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getEndOfArenaCreation());
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getEndOfArenaCreation());
 			} else {
 				System.out.println("JSON was null.");
-				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+			player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 
 		}
 
@@ -167,18 +169,18 @@ public class UtilsRandomEvents {
 					plugin.getMatchesAvailable().add(match);
 					if (player != null) {
 						player.sendMessage(
-								plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getEventEnabled());
+								plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getEventEnabled());
 					}
 				} else {
 					System.out.println("JSON was null.");
 					if (player != null) {
-						player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+						player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 					}
 				}
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 				if (player != null) {
-					player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+					player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 				}
 			}
 		}
@@ -219,18 +221,18 @@ public class UtilsRandomEvents {
 					plugin.getMatches().add(match);
 					if (player != null) {
 						player.sendMessage(
-								plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getEventDisabled());
+								plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getEventDisabled());
 					}
 				} else {
 					System.out.println("JSON was null.");
 					if (player != null) {
-						player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+						player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 					}
 				}
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 				if (player != null) {
-					player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+					player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 				}
 			}
 		}
@@ -254,14 +256,13 @@ public class UtilsRandomEvents {
 			plugin.getMatchesAvailable().remove(match);
 
 			if (player != null) {
-				player.sendMessage(
-						plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getEventDeleted());
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getEventDeleted());
 			}
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			if (player != null) {
-				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 			}
 
 		}
@@ -293,14 +294,14 @@ public class UtilsRandomEvents {
 				pw.close();
 
 				player.sendMessage(
-						plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getEndOfScheduleCreation());
+						plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getEndOfScheduleCreation());
 			} else {
 				System.out.println("JSON was null.");
-				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-			player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+			player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 
 		}
 
@@ -664,7 +665,7 @@ public class UtilsRandomEvents {
 	public static void mandaMensaje(RandomEvents plugin, List<Player> players, String message, Boolean tag) {
 		message = message.replaceAll("<color>", "§");
 		if (tag) {
-			message = plugin.getLanguage().getTagPlugin() + " " + message;
+			message = plugin.getLanguage().getTagPlugin() + message;
 		}
 		for (Player p : players) {
 			if (plugin.isOptionalTitles()) {
@@ -679,7 +680,7 @@ public class UtilsRandomEvents {
 		String message = "";
 		for (String msg : messages) {
 			if (tag) {
-				message += plugin.getLanguage().getTagPlugin() + " " + msg.replaceAll("<color>", "§") + "\n";
+				message += plugin.getLanguage().getTagPlugin() + msg.replaceAll("<color>", "§") + "\n";
 			} else {
 				message += msg.replaceAll("<color>", "§") + "\n";
 			}
@@ -1007,9 +1008,9 @@ public class UtilsRandomEvents {
 	}
 
 	public static Location getRandomLocation(RandomEvents plugin, Cuboid cuboid, MatchActive matchActive) {
-		Integer difX = cuboid.getMaxX() - cuboid.getMinX();
-		Integer difY = cuboid.getMaxY() - cuboid.getMinY();
-		Integer difZ = cuboid.getMaxZ() - cuboid.getMinZ();
+		Integer difX = Double.valueOf(cuboid.getMaxX()).intValue() - Double.valueOf(cuboid.getMinX()).intValue();
+		Integer difY = Double.valueOf(cuboid.getMaxY()).intValue() - Double.valueOf(cuboid.getMinY()).intValue();
+		Integer difZ = Double.valueOf(cuboid.getMaxZ()).intValue() - Double.valueOf(cuboid.getMinZ()).intValue();
 		Integer sumX = difX == 0 ? 0
 				: (difX > 0 ? plugin.getRandom().nextInt(difX) : (-1 * plugin.getRandom().nextInt(Math.abs(difX))));
 		Integer sumY = difY == 0 ? 0
@@ -1123,15 +1124,62 @@ public class UtilsRandomEvents {
 	}
 
 	public static Inventory createGUI(String name, Stats estadisticas, RandomEvents plugin) {
-		Inventory inv = Bukkit.createInventory(null, sacaTamanyoGUI(plugin), Constantes.GUI_NAME + " " + name);
-		int i = 0;
+		Inventory inv = Bukkit.createInventory(null, 45, plugin.getLanguage().getStatsGuiName() + name);
 		for (MinigameType minigame : MinigameType.values()) {
-			ItemStack item = new ItemStack(minigame.getMaterial());
+			Integer position = -1;
+			try {
+				Method method = plugin.getClass().getDeclaredMethod("getStats" + minigame.getCodigo());
+				position = (Integer) method.invoke(plugin);
+			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException e) {
+				e.printStackTrace();
+			}
+
+			if (position >= 0) {
+
+				ItemStack item = new ItemStack(minigame.getMaterial());
+				ItemMeta itemMeta = item.getItemMeta();
+				itemMeta.setDisplayName("§6§l" + minigame.getMessage());
+				List<String> lore = new ArrayList<String>();
+				Integer wins = estadisticas.getWins(minigame.getCodigo());
+				Integer tries = estadisticas.getTries(minigame.getCodigo());
+				Double rat = (tries > 0) ? (wins * 1.0 / tries) : 0.;
+				BigDecimal ratio = new BigDecimal(rat).setScale(2, RoundingMode.HALF_UP);
+
+				lore.add(plugin.getLanguage().getStatsWins() + wins);
+				lore.add(plugin.getLanguage().getStatsTries() + tries);
+				lore.add(plugin.getLanguage().getStatsWinsRatio() + ratio.toPlainString());
+				itemMeta.setLore(lore);
+				item.setItemMeta(itemMeta);
+				inv.setItem(position, item);
+			}
+		}
+		
+		
+		Integer position = -1;
+		try {
+			Method method = plugin.getClass().getDeclaredMethod("getStatsALLTIME");
+			position = (Integer) method.invoke(plugin);
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			e.printStackTrace();
+		}
+
+		if (position >= 0) {
+
+			ItemStack item = new ItemStack(XMaterial.NETHER_STAR.parseMaterial());
 			ItemMeta itemMeta = item.getItemMeta();
-			itemMeta.setDisplayName("§6§l" + minigame.getMessage());
+			itemMeta.setDisplayName("§6§lAll_Time");
 			List<String> lore = new ArrayList<String>();
-			Integer wins = estadisticas.getWins(minigame.getCodigo());
-			Integer tries = estadisticas.getTries(minigame.getCodigo());
+			
+			Integer wins = 0;
+			Integer tries = 0;
+			for(Integer w:estadisticas.getWins().values()){
+				wins+=w;
+			}
+			for(Integer t:estadisticas.getTries().values()){
+				tries+=t;
+			}
 			Double rat = (tries > 0) ? (wins * 1.0 / tries) : 0.;
 			BigDecimal ratio = new BigDecimal(rat).setScale(2, RoundingMode.HALF_UP);
 
@@ -1140,7 +1188,18 @@ public class UtilsRandomEvents {
 			lore.add(plugin.getLanguage().getStatsWinsRatio() + ratio.toPlainString());
 			itemMeta.setLore(lore);
 			item.setItemMeta(itemMeta);
-			inv.setItem(i, item);
+			inv.setItem(position, item);
+		}
+		
+		
+		
+		ItemStack[] contents = inv.getContents();
+		int i = 0;
+		ItemStack itemFill = new ItemStack(plugin.getStatsFill());
+		for (ItemStack item : contents) {
+			if (item == null) {
+				inv.setItem(i, itemFill);
+			}
 			i++;
 		}
 		return inv;
@@ -1297,7 +1356,7 @@ public class UtilsRandomEvents {
 		List<Player> playerMuertos = new ArrayList<Player>();
 		if (matchActive.getDamageCounter() >= plugin.getIdleTimeForDamage()) {
 			for (Player p : matchActive.getPlayerHandler().getPlayersObj()) {
-				p.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getIdleDamage());
+				p.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getIdleDamage());
 				if (p.getHealth() > 1) {
 					p.damage(1);
 				} else {
@@ -1387,8 +1446,8 @@ public class UtilsRandomEvents {
 				case SPAWN_PLAYER:
 					if (match.getPlayerSpawn() != null) {
 						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
-								+ match.getPlayerSpawn().getWorld().getName() + " " + match.getPlayerSpawn().getX()
-								+ ", " + match.getPlayerSpawn().getY() + ", " + match.getPlayerSpawn().getZ();
+								+ match.getPlayerSpawn().getWorld().getName() + match.getPlayerSpawn().getX() + ", "
+								+ match.getPlayerSpawn().getY() + ", " + match.getPlayerSpawn().getZ();
 					}
 					break;
 				case ARENA_SPAWNS:
@@ -1422,6 +1481,7 @@ public class UtilsRandomEvents {
 					break;
 				case TIMER_MOB_SPAWN:
 				case TIMER_ARROW_SPAWN:
+				case TIMER_ANVIL_SPAWN:
 				case TIMER_GEM_SPAWN:
 				case TIMER_BOMB:
 				case WARMUP_TIME:
@@ -1461,7 +1521,7 @@ public class UtilsRandomEvents {
 				case MAP_LOCATION1:
 					if (match.getLocation1() != null) {
 						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
-								+ match.getLocation1().getWorld().getName() + " " + match.getLocation1().getX() + ", "
+								+ match.getLocation1().getWorld().getName() + match.getLocation1().getX() + ", "
 								+ match.getLocation1().getY() + ", " + match.getLocation1().getZ();
 					}
 					break;
@@ -1471,14 +1531,14 @@ public class UtilsRandomEvents {
 				case MAP_LOCATION2:
 					if (match.getLocation2() != null) {
 						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
-								+ match.getLocation2().getWorld().getName() + " " + match.getLocation2().getX() + ", "
+								+ match.getLocation2().getWorld().getName() + match.getLocation2().getX() + ", "
 								+ match.getLocation2().getY() + ", " + match.getLocation2().getZ();
 					}
 					break;
 				case SPAWN_BEAST:
 					if (match.getBeastSpawn() != null) {
 						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
-								+ match.getBeastSpawn().getWorld().getName() + " " + match.getBeastSpawn().getX() + ", "
+								+ match.getBeastSpawn().getWorld().getName() + match.getBeastSpawn().getX() + ", "
 								+ match.getBeastSpawn().getY() + ", " + match.getBeastSpawn().getZ();
 					}
 					break;
@@ -1578,6 +1638,7 @@ public class UtilsRandomEvents {
 				break;
 			case TIMER_MOB_SPAWN:
 			case TIMER_ARROW_SPAWN:
+			case TIMER_ANVIL_SPAWN:
 			case TIMER_GEM_SPAWN:
 			case TIMER_BOMB:
 			case WARMUP_TIME:
@@ -1775,6 +1836,7 @@ public class UtilsRandomEvents {
 		case BATTLE_ROYALE:
 		case BATTLE_ROYALE_CABALLO:
 		case ESCAPE_ARROW:
+		case ANVIL_SPLEEF:
 		case KNOCKBACK_DUEL:
 		case SPLEEF:
 		case SPLEGG:

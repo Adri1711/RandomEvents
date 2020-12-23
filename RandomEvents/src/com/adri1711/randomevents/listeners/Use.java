@@ -6,6 +6,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -14,6 +16,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
@@ -32,6 +35,7 @@ import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.util.enums.AMaterials;
 import com.adri1711.util.enums.XMaterial;
+import com.adri1711.util.enums.XSound;
 
 public class Use implements Listener {
 
@@ -98,7 +102,7 @@ public class Use implements Listener {
 						}
 						player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 60, 5));
 						player.sendMessage(
-								plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNowProtected());
+								plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getNowProtected());
 					} else if (player.getItemInHand().equals(plugin.getCheckpointItem())) {
 						UtilsRandomEvents.teleportaPlayer(player,
 								plugin.getMatchActive().getMapHandler().getCheckpoints().get(player.getName()), plugin);
@@ -251,28 +255,33 @@ public class Use implements Listener {
 		if (plugin.getMatchActive() != null
 				&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())
 				&& plugin.getMatchActive().getPlaying()) {
-			if (plugin.getMatchActive().getMapHandler().getBlockPlaced().containsKey(evt.getBlock().getLocation())) {
-				evt.setCancelled(false);
-				plugin.getMatchActive().getMapHandler().getBlockPlaced().remove(evt.getBlock().getLocation());
-			} else if (plugin.getMatchActive().getMatch().getMaterial() != null
-
-					&& evt.getBlock().getType() != null
-					&& evt.getBlock().getType().toString().equals(plugin.getMatchActive().getMatch().getMaterial())) {
+			if (plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.ANVIL_SPLEEF)) {
 				evt.setCancelled(true);
-				plugin.getMatchActive().getMapHandler().getBlockDisappeared().put(evt.getBlock().getLocation(),
-						evt.getBlock().getState().getData().clone());
-				evt.getBlock().setType(plugin.getApi().getMaterial(AMaterials.AIR));
-			} else if (plugin.getMatchActive().getMatch().getDatas() != null
-					&& !plugin.getMatchActive().getMatch().getDatas().isEmpty() && evt.getBlock().getType() != null
-					&& evt.getBlock().getState().getData() != null && UtilsRandomEvents.contieneMaterialData(
-							evt.getBlock().getState().getData(), plugin.getMatchActive().getMatch())) {
-				evt.setCancelled(true);
-				plugin.getMatchActive().getMapHandler().getBlockDisappeared().put(evt.getBlock().getLocation(),
-						evt.getBlock().getState().getData().clone());
-				evt.getBlock().setType(plugin.getApi().getMaterial(AMaterials.AIR));
 			} else {
-				evt.setCancelled(true);
+				if (plugin.getMatchActive().getMapHandler().getBlockPlaced()
+						.containsKey(evt.getBlock().getLocation())) {
+					evt.setCancelled(false);
+					plugin.getMatchActive().getMapHandler().getBlockPlaced().remove(evt.getBlock().getLocation());
+				} else if (plugin.getMatchActive().getMatch().getMaterial() != null
 
+						&& evt.getBlock().getType() != null && evt.getBlock().getType().toString()
+								.equals(plugin.getMatchActive().getMatch().getMaterial())) {
+					evt.setCancelled(true);
+					plugin.getMatchActive().getMapHandler().getBlockDisappeared().put(evt.getBlock().getLocation(),
+							evt.getBlock().getState().getData().clone());
+					evt.getBlock().breakNaturally();
+				} else if (plugin.getMatchActive().getMatch().getDatas() != null
+						&& !plugin.getMatchActive().getMatch().getDatas().isEmpty() && evt.getBlock().getType() != null
+						&& evt.getBlock().getState().getData() != null && UtilsRandomEvents.contieneMaterialData(
+								evt.getBlock().getState().getData(), plugin.getMatchActive().getMatch())) {
+					evt.setCancelled(true);
+					plugin.getMatchActive().getMapHandler().getBlockDisappeared().put(evt.getBlock().getLocation(),
+							evt.getBlock().getState().getData().clone());
+					evt.getBlock().breakNaturally();
+				} else {
+					evt.setCancelled(true);
+
+				}
 			}
 		}
 	}
@@ -283,27 +292,67 @@ public class Use implements Listener {
 		if (plugin.getMatchActive() != null
 				&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())
 				&& plugin.getMatchActive().getPlaying()) {
-			if (plugin.getMatchActive().getMatch().getMaterial() != null
-
-					&& evt.getBlock().getType() != null
-					&& evt.getBlock().getType().toString().equals(plugin.getMatchActive().getMatch().getMaterial())) {
-				// evt.setCancelled(true);
-				evt.setCancelled(false);
-				plugin.getMatchActive().getMapHandler().getBlockPlaced().put(evt.getBlock().getLocation(),
-						evt.getBlock().getState().getData().clone());
-				// evt.getBlock().setType(plugin.getApi().getMaterial(AMaterials.AIR));
-			} else if (plugin.getMatchActive().getMatch().getDatas() != null
-					&& !plugin.getMatchActive().getMatch().getDatas().isEmpty() && evt.getBlock().getType() != null
-					&& evt.getBlock().getState().getData() != null && UtilsRandomEvents.contieneMaterialData(
-							evt.getBlock().getState().getData(), plugin.getMatchActive().getMatch())) {
-				// evt.setCancelled(true);
-				evt.setCancelled(false);
-				plugin.getMatchActive().getMapHandler().getBlockPlaced().put(evt.getBlock().getLocation(),
-						evt.getBlock().getState().getData().clone());
-				// evt.getBlock().setType(plugin.getApi().getMaterial(AMaterials.AIR));
-			} else {
+			if (plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.ANVIL_SPLEEF)) {
 				evt.setCancelled(true);
+			} else {
+				if (plugin.getMatchActive().getMatch().getMaterial() != null
 
+						&& evt.getBlock().getType() != null && evt.getBlock().getType().toString()
+								.equals(plugin.getMatchActive().getMatch().getMaterial())) {
+					// evt.setCancelled(true);
+					evt.setCancelled(false);
+					plugin.getMatchActive().getMapHandler().getBlockPlaced().put(evt.getBlock().getLocation(),
+							evt.getBlock().getState().getData().clone());
+					// evt.getBlock().setType(plugin.getApi().getMaterial(AMaterials.AIR));
+				} else if (plugin.getMatchActive().getMatch().getDatas() != null
+						&& !plugin.getMatchActive().getMatch().getDatas().isEmpty() && evt.getBlock().getType() != null
+						&& evt.getBlock().getState().getData() != null && UtilsRandomEvents.contieneMaterialData(
+								evt.getBlock().getState().getData(), plugin.getMatchActive().getMatch())) {
+					// evt.setCancelled(true);
+					evt.setCancelled(false);
+					plugin.getMatchActive().getMapHandler().getBlockPlaced().put(evt.getBlock().getLocation(),
+							evt.getBlock().getState().getData().clone());
+					// evt.getBlock().setType(plugin.getApi().getMaterial(AMaterials.AIR));
+				} else {
+					evt.setCancelled(true);
+
+				}
+			}
+		}
+	}
+
+	@EventHandler
+	public void onAnvilFall(EntityChangeBlockEvent event) {
+		if (plugin.getMatchActive() != null
+				&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.ANVIL_SPLEEF)
+				&& plugin.getMatchActive().getMapHandler().getCuboid() != null
+				&& plugin.getMatchActive().getMapHandler().getCuboid().contains(event.getBlock().getLocation())) {
+			if (event.getEntityType().equals(EntityType.FALLING_BLOCK)) {
+				FallingBlock fb = (FallingBlock) event.getEntity();
+				if (fb.getMaterial().equals(XMaterial.ANVIL.parseMaterial())) {
+					if (event.getBlock().getType().equals(XMaterial.AIR.parseMaterial())) {
+						Location l = event.getBlock().getLocation();
+						Location l2 = l.clone();
+						l2.setY(l2.getY() - 1);
+						if (!l2.getBlock().getType().equals(XMaterial.AIR.parseMaterial())) {
+							fb.getWorld().playSound(fb.getLocation(), XSound.BLOCK_ANVIL_BREAK.parseSound(), 1, 1);
+							fb.remove();
+							event.getBlock().setType(XMaterial.AIR.parseMaterial());
+							event.setCancelled(true);
+
+							if (plugin.getMatchActive().getMatch().getDatas() != null
+									&& !plugin.getMatchActive().getMatch().getDatas().isEmpty()
+									&& l2.getBlock().getType() != null && l2.getBlock().getState().getData() != null
+									&& UtilsRandomEvents.contieneMaterialData(l2.getBlock().getState().getData(),
+											plugin.getMatchActive().getMatch())) {
+								plugin.getMatchActive().getMapHandler().getBlockDisappeared()
+										.put(l2.getBlock().getLocation(), l2.getBlock().getState().getData().clone());
+								l2.getBlock().setType(XMaterial.AIR.parseMaterial());
+
+							}
+						}
+					}
+				}
 			}
 		}
 	}

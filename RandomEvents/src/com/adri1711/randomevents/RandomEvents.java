@@ -12,6 +12,7 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -184,6 +185,56 @@ public class RandomEvents extends JavaPlugin {
 
 	private List<String> commandsOnUserLeave;
 
+	private boolean advancedSpectatorMode;
+
+	private Material statsFill;
+
+	private int statsBR;
+
+	private int statsBRT2;
+
+	private int statsLJ;
+
+	private int statsTKLL;
+
+	private int statsTKLLT2;
+
+	private int statsKBD;
+
+	private int statsEARR;
+
+	private int statsGEMC;
+
+	private int statsBOMB;
+
+	private int statsBOAT_RUN;
+
+	private int statsHORSE_RUN;
+
+	private int statsESCAPE_FROM_BEAST;
+
+	private int statsRACE;
+
+	private int statsTNTRUN;
+
+	private int statsSPLEEF;
+
+	private int statsSPLEGG;
+
+	private int statsOITC;
+
+	private int statsSG;
+
+	private int statsTSG;
+
+	private int statsSW;
+
+	private int statsTSW;
+
+	private int statsALLTIME;
+
+	private int statsANVIL_SPLEEF;
+
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
 		loadConfig();
@@ -194,8 +245,7 @@ public class RandomEvents extends JavaPlugin {
 		ItemMeta itemMeta = this.powerUpItem.getItemMeta();
 		itemMeta.setDisplayName("§2§lPowerUP");
 		this.powerUpItem.setItemMeta(itemMeta);
-		
-		
+
 		this.checkpointItem = new ItemStack(XMaterial.BLAZE_ROD.parseMaterial());
 		ItemMeta itemMetaCheck = this.checkpointItem.getItemMeta();
 		itemMetaCheck.setDisplayName("§2§lReturn to checkpoint");
@@ -241,7 +291,7 @@ public class RandomEvents extends JavaPlugin {
 			@Override
 			public void run() {
 				setMatches(UtilsRandomEvents.cargarPartidas(getPlugin()));
-				matchesAvailable=new ArrayList<Match>();
+				matchesAvailable = new ArrayList<Match>();
 				for (Match match : matches) {
 					if (match.getEnabled() == null || match.getEnabled()) {
 						matchesAvailable.add(match);
@@ -294,14 +344,37 @@ public class RandomEvents extends JavaPlugin {
 		this.idleTimeForDamage = Integer.valueOf(getConfig().getInt("idleTimeForDamage"));
 		this.inventoryManagement = getConfig().getBoolean("inventoryManagement");
 		this.dropItemsAfterDie = getConfig().getBoolean("dropItemsAfterDie");
+		this.advancedSpectatorMode = getConfig().getBoolean("advancedSpectatorMode");
 		this.commandsOnUserJoin = (List<String>) getConfig().getStringList("commandsOnUserJoin");
 		this.commandsOnMatchBegin = (List<String>) getConfig().getStringList("commandsOnMatchBegin");
 		this.commandsOnMatchEnd = (List<String>) getConfig().getStringList("commandsOnMatchEnd");
 		this.commandsOnUserLeave = (List<String>) getConfig().getStringList("commandsOnUserLeave");
-		
-		
-		
-		
+
+		this.statsFill = Material.valueOf(getConfig().getString("statsmenu.fill"));
+		this.statsALLTIME = getConfig().getInt("statsmenu.ALLTIME");
+		this.statsBR = getConfig().getInt("statsmenu.BR");
+		this.statsBRT2 = getConfig().getInt("statsmenu.BRT2");
+		this.statsLJ = getConfig().getInt("statsmenu.LJ");
+		this.statsTKLL = getConfig().getInt("statsmenu.TKLL");
+		this.statsTKLLT2 = getConfig().getInt("statsmenu.TKLLT2");
+		this.statsKBD = getConfig().getInt("statsmenu.KBD");
+		this.statsEARR = getConfig().getInt("statsmenu.EARR");
+		this.statsGEMC = getConfig().getInt("statsmenu.GEMC");
+		this.statsBOMB = getConfig().getInt("statsmenu.BOMB");
+		this.statsBOAT_RUN = getConfig().getInt("statsmenu.BOAT_RUN");
+		this.statsHORSE_RUN = getConfig().getInt("statsmenu.HORSE_RUN");
+		this.statsESCAPE_FROM_BEAST = getConfig().getInt("statsmenu.ESCAPE_FROM_BEAST");
+		this.statsRACE = getConfig().getInt("statsmenu.RACE");
+		this.statsTNTRUN = getConfig().getInt("statsmenu.TNTRUN");
+		this.statsSPLEEF = getConfig().getInt("statsmenu.SPLEEF");
+		this.statsSPLEGG = getConfig().getInt("statsmenu.SPLEGG");
+		this.statsOITC = getConfig().getInt("statsmenu.OITC");
+		this.statsSG = getConfig().getInt("statsmenu.SG");
+		this.statsTSG = getConfig().getInt("statsmenu.TSG");
+		this.statsSW = getConfig().getInt("statsmenu.SW");
+		this.statsTSW = getConfig().getInt("statsmenu.TSW");
+		this.statsANVIL_SPLEEF = getConfig().getInt("statsmenu.ANVIL_SPLEEF");
+
 		this.allowedCmds = (List<String>) getConfig().getStringList("allowedCmds");
 
 		this.maxItemOnChests = Integer.valueOf(getConfig().getInt("maxItemOnChests"));
@@ -354,14 +427,14 @@ public class RandomEvents extends JavaPlugin {
 		this.setProbabilityPowerUp(Integer.valueOf(getConfig().getInt("probabilityPowerUp")));
 
 		this.matches = UtilsRandomEvents.cargarPartidas(this);
-		
-		matchesAvailable=new ArrayList<Match>();
+
+		matchesAvailable = new ArrayList<Match>();
 		for (Match match : matches) {
 			if (match.getEnabled() == null || match.getEnabled()) {
 				matchesAvailable.add(match);
 			}
 		}
-		
+
 		this.bannedPlayers = UtilsRandomEvents.cargarBannedPlayers(this);
 		if (bannedPlayers == null || bannedPlayers.getBannedPlayers() == null) {
 			bannedPlayers = new BannedPlayers();
@@ -405,16 +478,16 @@ public class RandomEvents extends JavaPlugin {
 			Bukkit.getServer().getScheduler().runTaskLater((Plugin) this, new Runnable() {
 				public void run() {
 
-					
-					if (matchesAvailable != null && !matchesAvailable.isEmpty() && Bukkit.getOnlinePlayers().size() >= minPlayers) {
+					if (matchesAvailable != null && !matchesAvailable.isEmpty()
+							&& Bukkit.getOnlinePlayers().size() >= minPlayers) {
 						if (!forzado) {
 
 							if (probabilityRandomEvent > random.nextInt(100)) {
 								if (probabilityRandomEventTournament > random.nextInt(100)) {
 									tournamentActive = new TournamentActive(tournament, getPlugin(), false);
 								} else {
-									matchActive = UtilsRandomEvents.escogeMatchActiveAleatoria(getPlugin(), matchesAvailable,
-											false);
+									matchActive = UtilsRandomEvents.escogeMatchActiveAleatoria(getPlugin(),
+											matchesAvailable, false);
 								}
 							} else {
 								if (getSchedules() != null && !getSchedules().isEmpty()) {
@@ -493,9 +566,9 @@ public class RandomEvents extends JavaPlugin {
 				break;
 			default:
 				if (player != null) {
-					player.sendMessage(getLanguage().getTagPlugin() + " " + language.getInvalidCmd());
+					player.sendMessage(getLanguage().getTagPlugin() + language.getInvalidCmd());
 				} else {
-					System.out.println(getLanguage().getTagPlugin() + " " + language.getInvalidCmd());
+					System.out.println(getLanguage().getTagPlugin() + language.getInvalidCmd());
 				}
 				break;
 
@@ -1116,6 +1189,208 @@ public class RandomEvents extends JavaPlugin {
 	public void setMatchesAvailable(List<Match> matchesAvailable) {
 		this.matchesAvailable = matchesAvailable;
 	}
+
+	public boolean isAdvancedSpectatorMode() {
+		return advancedSpectatorMode;
+	}
+
+	public void setAdvancedSpectatorMode(boolean advancedSpectatorMode) {
+		this.advancedSpectatorMode = advancedSpectatorMode;
+	}
+
+	public Material getStatsFill() {
+		return statsFill;
+	}
+
+	public void setStatsFill(Material statsFill) {
+		this.statsFill = statsFill;
+	}
+
+	public int getStatsBR() {
+		return statsBR;
+	}
+
+	public void setStatsBR(int statsBR) {
+		this.statsBR = statsBR;
+	}
+
+	public int getStatsBRT2() {
+		return statsBRT2;
+	}
+
+	public void setStatsBRT2(int statsBRT2) {
+		this.statsBRT2 = statsBRT2;
+	}
+
+	public int getStatsLJ() {
+		return statsLJ;
+	}
+
+	public void setStatsLJ(int statsLJ) {
+		this.statsLJ = statsLJ;
+	}
+
+	public int getStatsTKLL() {
+		return statsTKLL;
+	}
+
+	public void setStatsTKLL(int statsTKLL) {
+		this.statsTKLL = statsTKLL;
+	}
+
+	public int getStatsTKLLT2() {
+		return statsTKLLT2;
+	}
+
+	public void setStatsTKLLT2(int statsTKLLT2) {
+		this.statsTKLLT2 = statsTKLLT2;
+	}
+
+	public int getStatsKBD() {
+		return statsKBD;
+	}
+
+	public void setStatsKBD(int statsKBD) {
+		this.statsKBD = statsKBD;
+	}
+
+	public int getStatsEARR() {
+		return statsEARR;
+	}
+
+	public void setStatsEARR(int statsEARR) {
+		this.statsEARR = statsEARR;
+	}
+
+	public int getStatsGEMC() {
+		return statsGEMC;
+	}
+
+	public void setStatsGEMC(int statsGEMC) {
+		this.statsGEMC = statsGEMC;
+	}
+
+	public int getStatsBOMB() {
+		return statsBOMB;
+	}
+
+	public void setStatsBOMB(int statsBOMB) {
+		this.statsBOMB = statsBOMB;
+	}
+
+	public int getStatsBOAT_RUN() {
+		return statsBOAT_RUN;
+	}
+
+	public void setStatsBOAT_RUN(int statsBOAT_RUN) {
+		this.statsBOAT_RUN = statsBOAT_RUN;
+	}
+
+	public int getStatsHORSE_RUN() {
+		return statsHORSE_RUN;
+	}
+
+	public void setStatsHORSE_RUN(int statsHORSE_RUN) {
+		this.statsHORSE_RUN = statsHORSE_RUN;
+	}
+
+	public int getStatsESCAPE_FROM_BEAST() {
+		return statsESCAPE_FROM_BEAST;
+	}
+
+	public void setStatsESCAPE_FROM_BEAST(int statsESCAPE_FROM_BEAST) {
+		this.statsESCAPE_FROM_BEAST = statsESCAPE_FROM_BEAST;
+	}
+
+	public int getStatsRACE() {
+		return statsRACE;
+	}
+
+	public void setStatsRACE(int statsRACE) {
+		this.statsRACE = statsRACE;
+	}
+
+	public int getStatsTNTRUN() {
+		return statsTNTRUN;
+	}
+
+	public void setStatsTNTRUN(int statsTNTRUN) {
+		this.statsTNTRUN = statsTNTRUN;
+	}
+
+	public int getStatsSPLEEF() {
+		return statsSPLEEF;
+	}
+
+	public void setStatsSPLEEF(int statsSPLEEF) {
+		this.statsSPLEEF = statsSPLEEF;
+	}
+
+	public int getStatsSPLEGG() {
+		return statsSPLEGG;
+	}
+
+	public void setStatsSPLEGG(int statsSPLEGG) {
+		this.statsSPLEGG = statsSPLEGG;
+	}
+
+	public int getStatsOITC() {
+		return statsOITC;
+	}
+
+	public void setStatsOITC(int statsOITC) {
+		this.statsOITC = statsOITC;
+	}
+
+	public int getStatsSG() {
+		return statsSG;
+	}
+
+	public void setStatsSG(int statsSG) {
+		this.statsSG = statsSG;
+	}
+
+	public int getStatsTSG() {
+		return statsTSG;
+	}
+
+	public void setStatsTSG(int statsTSG) {
+		this.statsTSG = statsTSG;
+	}
+
+	public int getStatsSW() {
+		return statsSW;
+	}
+
+	public void setStatsSW(int statsSW) {
+		this.statsSW = statsSW;
+	}
+
+	public int getStatsTSW() {
+		return statsTSW;
+	}
+
+	public void setStatsTSW(int statsTSW) {
+		this.statsTSW = statsTSW;
+	}
+
+	public int getStatsALLTIME() {
+		return statsALLTIME;
+	}
+
+	public void setStatsALLTIME(int statsALLTIME) {
+		this.statsALLTIME = statsALLTIME;
+	}
+
+	public int getStatsANVIL_SPLEEF() {
+		return statsANVIL_SPLEEF;
+	}
+
+	public void setStatsANVIL_SPLEEF(int statsANVIL_SPLEEF) {
+		this.statsANVIL_SPLEEF = statsANVIL_SPLEEF;
+	}
+	
+
 	
 
 }

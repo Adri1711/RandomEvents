@@ -67,19 +67,19 @@ public class Comandos {
 				} else {
 					if (player != null)
 						player.sendMessage(
-								plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
+								plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getNoPermission());
 
 				}
 			} else {
 				if (player != null)
 					player.sendMessage(
-							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidCmd());
+							plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidCmd());
 			}
 
 		} catch (Throwable e) {
 			System.out.println(e);
 			if (player != null)
-				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 		}
 
 	}
@@ -99,19 +99,19 @@ public class Comandos {
 				} else {
 					if (player != null)
 						player.sendMessage(
-								plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
+								plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getNoPermission());
 
 				}
 			} else {
 				if (player != null)
 					player.sendMessage(
-							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidCmd());
+							plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidCmd());
 			}
 
 		} catch (Throwable e) {
 			System.out.println(e);
 			if (player != null)
-				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 		}
 
 	}
@@ -131,19 +131,19 @@ public class Comandos {
 				} else {
 					if (player != null)
 						player.sendMessage(
-								plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
+								plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getNoPermission());
 
 				}
 			} else {
 				if (player != null)
 					player.sendMessage(
-							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidCmd());
+							plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidCmd());
 			}
 
 		} catch (Throwable e) {
 			System.out.println(e);
 			if (player != null)
-				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 		}
 
 	}
@@ -162,19 +162,19 @@ public class Comandos {
 				} else {
 					if (player != null)
 						player.sendMessage(
-								plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
+								plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getNoPermission());
 
 				}
 			} else {
 				if (player != null)
 					player.sendMessage(
-							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidCmd());
+							plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidCmd());
 			}
 
 		} catch (Throwable e) {
 			System.out.println(e);
 			if (player != null)
-				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 		}
 
 	}
@@ -193,19 +193,19 @@ public class Comandos {
 				} else {
 					if (player != null)
 						player.sendMessage(
-								plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getNoPermission());
+								plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getNoPermission());
 
 				}
 			} else {
 				if (player != null)
 					player.sendMessage(
-							plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getInvalidCmd());
+							plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidCmd());
 			}
 
 		} catch (Throwable e) {
 			System.out.println(e);
 			if (player != null)
-				player.sendMessage(plugin.getLanguage().getTagPlugin() + " " + plugin.getLanguage().getError());
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 		}
 
 	}

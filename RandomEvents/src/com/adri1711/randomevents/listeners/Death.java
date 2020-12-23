@@ -66,6 +66,7 @@ public class Death implements Listener {
 							case BATTLE_ROYALE_TEAM_2:
 							case TNT_RUN:
 							case SPLEEF:
+							case ANVIL_SPLEEF:
 							case SPLEGG:
 								plugin.getMatchActive().echaDePartida(player, true, true, false);
 								UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
@@ -97,17 +98,18 @@ public class Death implements Listener {
 								break;
 							case RACE:
 								ev.setCancelled(true);
-								
 
 								break;
 							default:
 								break;
 							}
 							if (manda) {
-								UtilsRandomEvents.mandaMensaje(plugin,
-										plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
-										plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()),
-										false);
+								if (plugin.getMatchActive() != null) {
+									UtilsRandomEvents.mandaMensaje(plugin,
+											plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+											plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()),
+											false);
+								}
 							}
 						} else {
 							switch (plugin.getMatchActive().getMatch().getMinigame()) {
@@ -202,9 +204,10 @@ public class Death implements Listener {
 										break;
 									case KNOCKBACK_DUEL:
 									case ESCAPE_ARROW:
-
+									
 										ev.setDamage(0);
 										break;
+									case ANVIL_SPLEEF:
 									case TNT_RUN:
 									case SPLEEF:
 									case SPLEGG:
@@ -358,6 +361,7 @@ public class Death implements Listener {
 											ev.setCancelled(false);
 										}
 										break;
+									case ANVIL_SPLEEF:
 									case TNT_RUN:
 									case SPLEEF:
 									case SPLEGG:
@@ -427,6 +431,7 @@ public class Death implements Listener {
 							case BATTLE_ROYALE_CABALLO:
 							case BATTLE_ROYALE_TEAM_2:
 							case ESCAPE_ARROW:
+							case ANVIL_SPLEEF:
 								plugin.getMatchActive().echaDePartida(player, true, true, false);
 								player.setHealth(20);
 								UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
@@ -580,6 +585,7 @@ public class Death implements Listener {
 							case TOP_KILLER:
 							case TOP_KILLER_TEAM_2:
 							case ESCAPE_ARROW:
+							case ANVIL_SPLEEF:
 							case ESCAPE_FROM_BEAST:
 								if (plugin.isHighestPriorityDamageEvents()) {
 									ev.setCancelled(false);
