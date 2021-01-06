@@ -105,7 +105,8 @@ public enum Creacion {
 	NO_MOVE_TIME(38, "§6§lChoose to allow players to move in seconds", "SG,TSG,SW,TSW"),
 	
 	TIMER_ANVIL_SPAWN(39, "§6§lWrite the number of seconds (it can have decimals) to respawn each anvil", "ANVIL_SPLEEF"),
-
+	
+	WATER_DROP_SCENES(40, "§6§lChoose a scene to add to the event", "WDROP"),
 
 	SAVE(997, "§6§lYou are about to save a Random Event, put 'Y' to confirm or 'N' to continue creating", "ALLMINIGAMES"),
 

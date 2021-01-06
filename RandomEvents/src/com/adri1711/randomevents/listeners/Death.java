@@ -89,6 +89,10 @@ public class Death implements Listener {
 								UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
 								manda = Boolean.TRUE;
 								break;
+							case WDROP:
+								plugin.getMatchActive().reiniciaPlayer(player);
+								UtilsRandomEvents.playSound(player, XSound.ENTITY_BAT_HURT);
+								break;
 							case BOMB_TAG:
 								ev.setDamage(0);
 								break;
@@ -113,7 +117,10 @@ public class Death implements Listener {
 							}
 						} else {
 							switch (plugin.getMatchActive().getMatch().getMinigame()) {
-
+							case WDROP:
+								plugin.getMatchActive().reiniciaPlayer(player);
+								UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+								break;
 							case ESCAPE_FROM_BEAST:
 
 								ev.setCancelled(true);
@@ -209,6 +216,7 @@ public class Death implements Listener {
 										break;
 									case ANVIL_SPLEEF:
 									case TNT_RUN:
+									case WDROP:
 									case SPLEEF:
 									case SPLEGG:
 										ev.setCancelled(true);
@@ -363,6 +371,7 @@ public class Death implements Listener {
 										break;
 									case ANVIL_SPLEEF:
 									case TNT_RUN:
+									case WDROP:
 									case SPLEEF:
 									case SPLEGG:
 										ev.setCancelled(true);
@@ -454,6 +463,7 @@ public class Death implements Listener {
 								}
 								break;
 							case TNT_RUN:
+							case WDROP:
 							case SPLEEF:
 							case SPLEGG:
 								ev.setCancelled(true);
@@ -600,6 +610,7 @@ public class Death implements Listener {
 								}
 								break;
 							case TNT_RUN:
+							case WDROP:
 							case SPLEEF:
 							case SPLEGG:
 							case BOAT_RUN:

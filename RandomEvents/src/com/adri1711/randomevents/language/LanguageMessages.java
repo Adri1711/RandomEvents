@@ -129,6 +129,12 @@ public class LanguageMessages {
 	private String reload;
 	private String checkpoint;
 	private String forcebegin;
+	
+	
+	private String announceFirst;
+	private String announceNext;
+	private String announceFirstTournament;
+	private String announceNextTournament;
 
 	private String statsGuiName;
 
@@ -140,6 +146,7 @@ public class LanguageMessages {
 	private String scoreboardTime;
 	private String scoreboardBeast;
 	private String scoreboardHolder;
+	private String scoreboardStep;
 
 	private String pvpDeath;
 	private String pvpKill;
@@ -175,6 +182,7 @@ public class LanguageMessages {
 	private List<String> minigameDescriptionSW;
 	private List<String> minigameDescriptionTSW;
 	private List<String> minigameDescriptionANVIL_SPLEEF;
+	private List<String> minigameDescriptionWDROP;
 
 	public LanguageMessages(RandomEvents plugin) {
 		this.file = new File(plugin.getDataFolder(), "messages.yml");
@@ -1463,5 +1471,56 @@ public class LanguageMessages {
 	public void setStatsGuiName(String statsGuiName) {
 		this.statsGuiName = statsGuiName;
 	}
+
+	public String getAnnounceFirst() {
+		return announceFirst.replaceAll("&", "§");
+	}
+
+	public void setAnnounceFirst(String announceFirst) {
+		this.announceFirst = announceFirst;
+	}
+
+	public String getAnnounceNext() {
+		return announceNext.replaceAll("&", "§");
+	}
+
+	public void setAnnounceNext(String announceNext) {
+		this.announceNext = announceNext;
+	}
+
+	public String getAnnounceFirstTournament() {
+		return announceFirstTournament.replaceAll("&", "§");
+	}
+
+	public void setAnnounceFirstTournament(String announceFirstTournament) {
+		this.announceFirstTournament = announceFirstTournament;
+	}
+
+	public String getAnnounceNextTournament() {
+		return announceNextTournament.replaceAll("&", "§");
+	}
+
+	public void setAnnounceNextTournament(String announceNextTournament) {
+		this.announceNextTournament = announceNextTournament;
+	}
+
+	public String getScoreboardStep() {
+		return scoreboardStep.replaceAll("&", "§");
+	}
+
+	public void setScoreboardStep(String scoreboardStep) {
+		this.scoreboardStep = scoreboardStep;
+	}
+
+	public List<String> getMinigameDescriptionWDROP() {
+		return minigameDescriptionWDROP;
+	}
+
+	public void setMinigameDescriptionWDROP(List<String> minigameDescriptionWDROP) {
+		this.minigameDescriptionWDROP = minigameDescriptionWDROP;
+	}
+	
+	
+	
 
 }

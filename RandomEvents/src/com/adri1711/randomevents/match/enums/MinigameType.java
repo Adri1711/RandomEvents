@@ -47,7 +47,9 @@ public enum MinigameType {
 
 	SW("SW", XMaterial.DIRT.parseMaterial(), "Skywars"),
 
-	TSW("TSW", XMaterial.STONE.parseMaterial(), "Team Skywars");
+	TSW("TSW", XMaterial.STONE.parseMaterial(), "Team Skywars"),
+	
+	WDROP("WDROP", XMaterial.WATER_BUCKET.parseMaterial(), "Water Drop");
 
 	private String codigo;
 	private Material material;

@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import com.adri1711.randomevents.RandomEvents;
+import com.adri1711.randomevents.match.WaterDropStepActive;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.util.enums.XSound;
 
@@ -62,6 +63,15 @@ public class Move implements Listener {
 							plugin.getMatchActive().getPlayerHandler().getGoalPlayers().add(player);
 							plugin.getMatchActive().ponInventarioRunner(player);
 							UtilsRandomEvents.playSound(player, XSound.ENTITY_PLAYER_LEVELUP);
+						}
+					}
+					break;
+				case WDROP:
+					if(plugin.getMatchActive().getStep().containsKey(player)){
+						Integer step=plugin.getMatchActive().getStep().get(player);
+						WaterDropStepActive wd=plugin.getMatchActive().getWaterDrops().get(step);
+						if(wd.getGoal().contains(player.getLocation())){
+							plugin.getMatchActive().avanzaWaterDrop(player);
 						}
 					}
 					break;

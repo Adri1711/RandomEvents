@@ -216,22 +216,31 @@ public class Constantes {
 
 		INVALID_PASSWORD("invalidPassword", "comun.invalidPassword", "&c&lInvalid password for the event"),
 
-		FIRST_ANNOUNCE("firstAnnounce", "announce.firstAnnounce", "\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█  &5&lRandom Event\n&f█&8█&f██&8███&f█  &c%type%\n&f█&8█&f████&8█&f█  &8[ &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█  "),
-
-		NEXT_ANNOUNCE("nextAnnounce", "announce.nextAnnounce", "\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█  &5&lRandom Event\n&f█&8█&f██&8███&f█  &c%type%\n&f█&8█&f████&8█&f█  &8[ &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█  "),
-
-		FIRST_ANNOUNCE_TOURNAMENT("firstAnnounceTournament", "announce.firstAnnounceTournament",
-				"\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█  &5&lTournament Random Event\n&f█&8█&f██&8███&f█  &c%type%\n&f█&8█&f████&8█&f█  &8[ &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█  "),
-
-		NEXT_ANNOUNCE_TOURNAMENT("nextAnnounceTournament", "announce.nextAnnounceTournament",
-				"\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█  &5&lTournament Random Event\n&f█&8█&f██&8███&f█  &c%type%\n&f█&8█&f████&8█&f█  &8[ &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█  "),
-
+		ANNOUNCEMENT_FIRST("announceFirst", "announce.announceFirst", "\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█  &5&lRandom Event\n&f█&8█&f██&8███&f█  &c%type%\n&f█&8█&f████&8█&f█  &8[ &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█  %clickhere% \n&f█&8██████&f█\n&f████████"),
+		
+		ANNOUNCEMENT_NEXT("announceNext", "announce.announceNext", "&6&lRandom Event &e&l>> &c%type% %clickhere% &8[ &a%players%/%neededPlayers% &8] "),
+		
+		ANNOUNCEMENT_FIRST_TOURNAMENT("announceFirstTournament", "announce.announceFirstTournament", "\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█  &5&lTournament Random Event\n&f█&8█&f██&8███&f█  \n&f█&8█&f████&8█&f█  &8[ &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█  %clickhere% \n&f█&8██████&f█\n&f████████"),
+		
+		ANNOUNCEMENT_NEXT_TOURNAMENT("announceNextTournament", "announce.announceNextTournament", "&6&lTournament Random Event &e&l>>  %clickhere% &8[ &a%players%/%neededPlayers% &8] "),
+		
 		CLICK_HERE("clickHere", "announce.clickHere", "&b[Click here to join]"),
-
-		LAST_PART("lastPart", "announce.lastPart", "\n&f█&8██████&f█\n&f████████"),
-
-		LAST_PART_TOURNAMENT("lastPartTournament", "announce.lastPartTournament",
-				"\n&f█&8██████&f█\n&f████████"),
+		
+//		FIRST_ANNOUNCE("firstAnnounce", "announce.firstAnnounce", "\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█  &5&lRandom Event\n&f█&8█&f██&8███&f█  &c%type%\n&f█&8█&f████&8█&f█  &8[ &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█  "),
+//
+//		NEXT_ANNOUNCE("nextAnnounce", "announce.nextAnnounce", "\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█  &5&lRandom Event\n&f█&8█&f██&8███&f█  &c%type%\n&f█&8█&f████&8█&f█  &8[ &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█  "),
+//
+//		FIRST_ANNOUNCE_TOURNAMENT("firstAnnounceTournament", "announce.firstAnnounceTournament",
+//				"\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█  &5&lTournament Random Event\n&f█&8█&f██&8███&f█  &c%type%\n&f█&8█&f████&8█&f█  &8[ &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█  "),
+//
+//		NEXT_ANNOUNCE_TOURNAMENT("nextAnnounceTournament", "announce.nextAnnounceTournament",
+//				"\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█  &5&lTournament Random Event\n&f█&8█&f██&8███&f█  &c%type%\n&f█&8█&f████&8█&f█  &8[ &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█  "),
+//
+//
+//		LAST_PART("lastPart", "announce.lastPart", "\n&f█&8██████&f█\n&f████████"),
+//
+//		LAST_PART_TOURNAMENT("lastPartTournament", "announce.lastPartTournament",
+//				"\n&f█&8██████&f█\n&f████████"),
 
 		RACE_TOURNAMENT("raceTournament", "announce.raceTournament",
 				"&6&lThe player %player% has reached the goal ( %players% / %neededPlayers% )"),
@@ -305,6 +314,8 @@ public class Constantes {
 		SCOREBOARD_TITLE("scoreboardTitle", "scoreboard.title", "      &a&lRandomEvents      "),
 
 		SCOREBOARD_POINTS_FORMAT("scoreboardPoints", "scoreboard.points", "&6%name% - &e%points%"),
+		
+		SCOREBOARD_STEP_FORMAT("scoreboardStep", "scoreboard.step", "&6%name% - &e(%actual%/%max%)"),
 
 		SCOREBOARD_ALIVE_FORMAT("scoreboardAlive", "scoreboard.alive", "&a✔ %name%"),
 
@@ -367,6 +378,9 @@ public class Constantes {
 
 		MINIGAME_DESC_RACE("minigameDescriptionRACE", "minigame.description.RACE",
 				"&eRun and be the first to reach the goal;&e to get your reward!"),
+		
+		MINIGAME_DESC_WDROP("minigameDescriptionWDROP", "minigame.description.WDROP",
+				"&eRun and drop safe!;&e be the first to reach the last goal;&e to get your reward!"),
 
 		MINIGAME_DESC_TNTRUN("minigameDescriptionTNTRUN", "minigame.description.TNTRUN",
 				"&eRun for your life, the tnt behind you will disappear,;&e try to stay over them to win the match!"),

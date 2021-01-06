@@ -58,6 +58,8 @@ public class Match {
 
 	private List<MaterialData> datas;
 	
+	private List<String> scenes;
+	
 	private Boolean enabled;
 
 	public Match() {
@@ -69,6 +71,7 @@ public class Match {
 		this.spawns = new ArrayList<Location>();
 		this.spectatorSpawns = new ArrayList<Location>();
 		this.datas = new ArrayList<MaterialData>();
+		this.scenes= new ArrayList<String>();
 	}
 
 	public String getName() {
@@ -276,6 +279,15 @@ public class Match {
 
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
+	}
+	
+
+	public List<String> getScenes() {
+		return scenes;
+	}
+
+	public void setScenes(List<String> scenes) {
+		this.scenes = scenes;
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.match.Match;
+import com.adri1711.randomevents.match.WaterDropStep;
 import com.adri1711.randomevents.match.schedule.Schedule;
 import com.adri1711.randomevents.match.utils.BannedPlayers;
 import com.adri1711.randomevents.match.utils.InventoryPers;
@@ -37,6 +38,37 @@ public class UtilidadesJson {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			System.out.println("Error :: Error at loading match: " + br);
+		}
+		return match;
+	}
+	
+	public static String fromWDToJSON(RandomEvents plugin, WaterDropStep match) {
+		String resultado = null;
+
+		try {
+			resultado = plugin.getApi().toJson(match);
+
+			// JsonSerializerDeserializer<BossMatch> jsonSerializer = new
+			// JsonSerializerDeserializer<BossMatch>();
+			//
+			// resultado = jsonSerializer.serialize(match);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println("Error :: Error at creating waterDrop");
+		}
+		return resultado;
+
+	}
+
+	public static WaterDropStep fromJSONToWD(RandomEvents plugin, BufferedReader br) {
+		WaterDropStep match = null;
+		try {
+			match = (WaterDropStep) plugin.getApi().fromJson(br, WaterDropStep.class);
+			UtilsRandomEvents.normalizaColorsWaterDrop(match);
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println("Error :: Error at loading waterDrop: " + br);
 		}
 		return match;
 	}

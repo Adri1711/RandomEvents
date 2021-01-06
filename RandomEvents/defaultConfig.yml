@@ -192,7 +192,8 @@ statsmenu:
   TSG: 32
   SW: 33
   TSW: 34
-  ANVIL_SPLEEF: 40
+  ANVIL_SPLEEF: 39
+  WDROP: 41
 
 #Enable MySQL to have statistics of the games!
 mysql:

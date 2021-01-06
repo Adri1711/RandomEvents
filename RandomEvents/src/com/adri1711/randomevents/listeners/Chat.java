@@ -16,7 +16,9 @@ import org.bukkit.material.MaterialData;
 
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.match.Match;
+import com.adri1711.randomevents.match.WaterDropStep;
 import com.adri1711.randomevents.match.enums.Creacion;
+import com.adri1711.randomevents.match.enums.CreacionWaterDrop;
 import com.adri1711.randomevents.match.enums.MinigameType;
 import com.adri1711.randomevents.match.utils.InventoryPers;
 import com.adri1711.randomevents.util.Constantes;
@@ -35,7 +37,8 @@ public class Chat implements Listener {
 	public void onPlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event) {
 
 		Player p = event.getPlayer();
-		if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayerHandler().getPlayersSpectators().contains(p)) {
+		if (plugin.getMatchActive() != null
+				&& plugin.getMatchActive().getPlayerHandler().getPlayersSpectators().contains(p)) {
 			String aliase = event.getMessage().split(" ")[0];
 			aliase = aliase.replaceAll("/", "");
 			if (!plugin.getAllowedCmds().contains(aliase.toLowerCase()) && !p.hasPermission("randomevent.bypass")) {
@@ -48,11 +51,230 @@ public class Chat implements Listener {
 	@EventHandler
 	public void onPlayerChat(AsyncPlayerChatEvent event) {
 		Player player = event.getPlayer();
-		if (plugin.getPlayerMatches().containsKey(player.getName())) {
+
+		if (plugin.getPlayerWaterDrop().containsKey(player.getName())) {
+
+			checkMessageCreationWaterDrop(event.getMessage(), player,
+					plugin.getPlayersCreationWaterDrop().get(player.getName()));
+
+			event.setCancelled(Boolean.TRUE);
+
+		} else if (plugin.getPlayerMatches().containsKey(player.getName())) {
 
 			checkMessageCreation(event.getMessage(), player, plugin.getPlayersCreation().get(player.getName()));
 
 			event.setCancelled(Boolean.TRUE);
+
+		}
+	}
+
+	private void checkMessageCreationWaterDrop(String message, Player player, Integer position) {
+		WaterDropStep waterDrop = plugin.getPlayerWaterDrop().get(player.getName());
+		Boolean actualiza = Boolean.TRUE;
+		Boolean actua = Boolean.TRUE;
+		Boolean pasado = Boolean.FALSE;
+		if (waterDrop == null)
+			waterDrop = new WaterDropStep();
+
+		CreacionWaterDrop c = null;
+		if (position != null) {
+			c = CreacionWaterDrop.getByPosition(position);
+		} else {
+			try {
+				position = Integer.valueOf(message);
+				if (CreacionWaterDrop.getByPosition(Integer.valueOf(message)) != null) {
+					c = CreacionWaterDrop.getByPosition(Integer.valueOf(message));
+					actua = Boolean.FALSE;
+				}
+			} catch (Exception e) {
+			}
+		}
+
+		if (c != null) {
+			if (actua) {
+				try {
+
+					switch (c) {
+					case NAME:
+						waterDrop.setName(UtilsRandomEvents.cambiarMensajeConEtiqueta(message).trim());
+						plugin.getPlayersCreationWaterDrop().remove(player.getName());
+
+						break;
+
+					case SPAWN:
+						if (message.equals(Constantes.DONE)) {
+							waterDrop.setSpawn(player.getLocation());
+							plugin.getPlayersCreationWaterDrop().remove(player.getName());
+
+						}
+						break;
+					case GOAL_LOCATION1:
+						if (message.equals(Constantes.DONE)) {
+							waterDrop.setGoalLoc1(player.getLocation());
+							plugin.getPlayersCreationWaterDrop().remove(player.getName());
+						}
+						break;
+					case GOAL_LOCATION2:
+						if (message.equals(Constantes.DONE)) {
+							waterDrop.setGoalLoc2(player.getLocation());
+							plugin.getPlayersCreationWaterDrop().remove(player.getName());
+						}
+						break;
+					case SAVE:
+
+						if (actua) {
+							try {
+								if (message.toUpperCase().equals("Y")) {
+
+									String s = UtilsRandomEvents.compruebaWaterDropCorrecto(waterDrop, plugin);
+
+									if (s != null) {
+										player.sendMessage(s);
+										actua = Boolean.FALSE;
+									} else {
+
+										UtilsRandomEvents.terminaCreacionWD(plugin, player);
+
+										actualiza = Boolean.FALSE;
+									}
+								} else {
+
+									plugin.getPlayersCreationWaterDrop().remove(player.getName());
+									actua = Boolean.TRUE;
+
+								}
+
+							} catch (Exception e) {
+								player.sendMessage(plugin.getLanguage().getInvalidInput());
+								player.sendMessage(c.getMessage());
+								actua = Boolean.FALSE;
+
+							}
+						} else {
+							if (plugin.getPlayerWaterDrop().keySet().contains(player.getName())) {
+								player.sendMessage(c.getMessage());
+								plugin.getPlayersCreationWaterDrop().put(player.getName(), c.getPosition());
+								actua = Boolean.FALSE;
+							} else {
+								String s = UtilsRandomEvents.compruebaWaterDropCorrecto(waterDrop, plugin);
+								if (s != null) {
+									player.sendMessage(s);
+								} else {
+
+									UtilsRandomEvents.terminaCreacionMatch(plugin, player);
+
+									actualiza = Boolean.FALSE;
+								}
+							}
+
+						}
+
+						break;
+					case CANCEL:
+						if (message.toUpperCase().equals("Y")) {
+
+							plugin.getPlayerWaterDrop().remove(player.getName());
+							plugin.getPlayersCreationWaterDrop().remove(player.getName());
+
+							actualiza = Boolean.FALSE;
+
+						} else {
+
+							plugin.getPlayersCreationWaterDrop().remove(player.getName());
+							actua = Boolean.TRUE;
+
+						}
+
+						break;
+					case DELETE:
+						try {
+							Integer valor = Integer.valueOf(message);
+
+							CreacionWaterDrop delete = null;
+
+							try {
+								if (CreacionWaterDrop.getByPosition(valor) != null) {
+									delete = CreacionWaterDrop.getByPosition(valor);
+									actua = Boolean.FALSE;
+								}
+							} catch (Exception e) {
+							}
+							switch (delete) {
+
+							case NAME:
+								waterDrop.setName(null);
+								break;
+							case SPAWN:
+								waterDrop.setSpawn(null);
+								break;
+							case GOAL_LOCATION1:
+								waterDrop.setGoalLoc1(null);
+								break;
+							case GOAL_LOCATION2:
+								waterDrop.setGoalLoc2(null);
+								break;
+							default:
+								break;
+							}
+							actua = Boolean.TRUE;
+
+							plugin.getPlayersCreationWaterDrop().remove(player.getName());
+
+						} catch (Exception e) {
+							player.sendMessage(plugin.getLanguage().getInvalidInput());
+							player.sendMessage(c.getMessage());
+							actua = Boolean.FALSE;
+
+						}
+
+						break;
+					default:
+						break;
+					}
+				} catch (Exception e) {
+					player.sendMessage(plugin.getLanguage().getInvalidInput());
+					switch (CreacionWaterDrop.getByPosition(position)) {
+
+					default:
+						player.sendMessage(c.getMessage());
+						break;
+					}
+					actua = Boolean.FALSE;
+				}
+			} else {
+				// pasado = Boolean.TRUE;
+				actua=Boolean.FALSE;
+				player.sendMessage(Constantes.SALTO_LINEA);
+				switch (CreacionWaterDrop.getByPosition(position)) {
+
+				default:
+					plugin.getPlayersCreationWaterDrop().put(player.getName(), c.getPosition());
+
+					break;
+				}
+			}
+		}
+
+		if (actualiza) {
+			plugin.getPlayerWaterDrop().put(player.getName(), waterDrop);
+			plugin.getPlayerWaterDrop().put(player.getName(), waterDrop);
+			if (actua) {
+				player.sendMessage(UtilsRandomEvents.enviaInfoCreacionWaterDrop(waterDrop, player, plugin));
+			} else {
+				c = CreacionWaterDrop.getByPosition(plugin.getPlayersCreationWaterDrop().get(player.getName()));
+				if (c != null && !pasado) {
+					player.sendMessage(c.getMessage());
+				}
+			}
+		} else {
+			plugin.getPlayerWaterDrop().remove(player.getName());
+			plugin.getPlayersCreationWaterDrop().remove(player.getName());
+			player.sendMessage(Creacion.WATER_DROP_SCENES.getMessage());
+			for (WaterDropStep m : plugin.getWaterDrops()) {
+				player.sendMessage("§6§l" + plugin.getWaterDrops().indexOf(m) + " - " + m.getName());
+			}
+			player.sendMessage("§6§l" + plugin.getWaterDrops().size() + " - §e§lNew Water Drop");
+
 
 		}
 	}
@@ -474,7 +696,7 @@ public class Chat implements Listener {
 
 							} else {
 								player.sendMessage(plugin.getLanguage().getInvalidInput());
-								actua=Boolean.FALSE;
+								actua = Boolean.FALSE;
 							}
 						}
 						break;
@@ -495,7 +717,7 @@ public class Chat implements Listener {
 								// match);
 							} else {
 								player.sendMessage(plugin.getLanguage().getInvalidInput());
-								actua=Boolean.FALSE;
+								actua = Boolean.FALSE;
 
 								// actualiza =
 								// UtilsRandomEvents.pasaACreation(plugin,
@@ -509,7 +731,7 @@ public class Chat implements Listener {
 							if (player.getItemInHand() != null && player.getItemInHand()
 									.getType() != (plugin.getApi().getMaterial(AMaterials.AIR))) {
 								match.getDatas().add(player.getItemInHand().getData());
-								actua=Boolean.FALSE;
+								actua = Boolean.FALSE;
 								// actualiza =
 								// UtilsRandomEvents.pasaACreation(plugin,
 								// player,
@@ -517,7 +739,7 @@ public class Chat implements Listener {
 								// match);
 							} else {
 								player.sendMessage(plugin.getLanguage().getInvalidInput());
-								actua=Boolean.FALSE;
+								actua = Boolean.FALSE;
 
 								// actualiza =
 								// UtilsRandomEvents.pasaACreation(plugin,
@@ -551,6 +773,28 @@ public class Chat implements Listener {
 							// UtilsRandomEvents.pasaACreation(plugin,
 							// player, position, match);
 						}
+						break;
+					case WATER_DROP_SCENES:
+						try {
+							Integer value = Integer.valueOf(message);
+							if (value.equals(plugin.getWaterDrops().size())) {
+								WaterDropStep wd = new WaterDropStep();
+								plugin.getPlayerWaterDrop().put(player.getName(), wd);
+								player.sendMessage(UtilsRandomEvents.enviaInfoCreacionWaterDrop(wd, player, plugin));
+								actua = Boolean.FALSE;
+								pasado = Boolean.TRUE;
+							} else if (value < plugin.getWaterDrops().size() && value >= 0) {
+								match.getScenes().add(plugin.getWaterDrops().get(value).getName());
+								plugin.getPlayersCreation().remove(player.getName());
+
+							} else {
+								player.sendMessage(plugin.getLanguage().getInvalidInput());
+
+							}
+						} catch (Exception e) {
+							player.sendMessage(plugin.getLanguage().getInvalidInput());
+						}
+
 						break;
 					case SAVE:
 
@@ -746,6 +990,7 @@ public class Chat implements Listener {
 						}
 
 						break;
+
 					default:
 						break;
 					}
@@ -761,6 +1006,14 @@ public class Chat implements Listener {
 						for (EntityType m : EntityType.values()) {
 							player.sendMessage("§6§l" + m.ordinal() + " - " + m.name());
 						}
+						break;
+					case WATER_DROP_SCENES:
+						player.sendMessage(c.getMessage(match));
+						for (WaterDropStep m : plugin.getWaterDrops()) {
+							player.sendMessage("§6§l" + plugin.getWaterDrops().indexOf(m) + " - " + m.getName());
+						}
+						player.sendMessage("§6§l" + plugin.getWaterDrops().size() + " - §e§lNew Water Drop");
+
 						break;
 					default:
 						player.sendMessage(c.getMessage(match));
@@ -791,6 +1044,15 @@ public class Chat implements Listener {
 						player.sendMessage("§6§l" + m.ordinal() + " - " + m.name());
 					}
 					plugin.getPlayersCreation().put(player.getName(), c.getPosition());
+
+					break;
+				case WATER_DROP_SCENES:
+					player.sendMessage(c.getMessage(match));
+					plugin.getPlayersCreation().put(player.getName(), c.getPosition());
+					for (WaterDropStep m : plugin.getWaterDrops()) {
+						player.sendMessage("§6§l" + plugin.getWaterDrops().indexOf(m) + " - " + m.getName());
+					}
+					player.sendMessage("§6§l" + plugin.getWaterDrops().size() + " - §e§lNew Water Drop");
 
 					break;
 				default:

@@ -368,7 +368,9 @@ public class ComandosExecutor {
 	public void leaveRandomEvent(RandomEvents plugin, Player player) {
 		if (plugin.getMatchActive() != null) {
 			if (plugin.getMatchActive().getPlayerHandler().getPlayersObj().contains(player)) {
-				plugin.getMatchActive().dejarPartida(player, false);
+				plugin.getMatchActive().echaDePartida(player, true, true, true);
+
+//				plugin.getMatchActive().dejarPartida(player, false);
 			} else if (plugin.getMatchActive().getPlayerHandler().getPlayersSpectators().contains(player)) {
 				plugin.getMatchActive().echaDePartida(player, false, true, true);
 

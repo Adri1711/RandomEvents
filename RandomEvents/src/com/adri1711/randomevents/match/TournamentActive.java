@@ -1,11 +1,13 @@
 package com.adri1711.randomevents.match;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -170,8 +172,7 @@ public class TournamentActive {
 				UtilsRandomEvents.sacaInventario(plugin, player);
 			}
 		} else {
-			player.sendMessage(
-					plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getAlreadyPlayingMatch());
+			player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getAlreadyPlayingMatch());
 		}
 	}
 
@@ -203,28 +204,74 @@ public class TournamentActive {
 
 						}
 					} else {
-						String firstPart = plugin.getLanguage().getTagPlugin() + " ";
 
+						String firstPart = "";
+						String[] totalPart;
 						if (firstAnnounce) {
 							playSound = Boolean.TRUE;
-							firstPart += plugin.getLanguage().getFirstAnnounceTournament();
+							totalPart = plugin.getLanguage().getAnnounceFirstTournament().split("%clickhere%");
 							firstAnnounce = Boolean.FALSE;
 						} else {
-							firstPart += plugin.getLanguage().getNextAnnounceTournament();
+							totalPart = plugin.getLanguage().getAnnounceNextTournament().split("%clickhere%");
 
 						}
-						String lastPart = plugin.getLanguage().getLastPartTournament();
+						firstPart = totalPart[0];
+						firstPart = StringEscapeUtils.unescapeJava(firstPart.toString());
+						firstPart = firstPart.replaceAll("\\n", "<jump>")
+								.replaceAll("%neededPlayers%", tournament.getMinPlayers().toString())
+								.replaceAll("%maxPlayers%", tournament.getMaxPlayers().toString())
+								.replaceAll("%players%", "" + getPlayers().size());
+
+						List<String> primerasPartes = Arrays.asList(firstPart.split("<jump>"));
+						// System.out.println(primerasPartes);
+
+						firstPart = primerasPartes.get(primerasPartes.size() - 1);
+
+						// primerasPartes.remove(primerasPartes.size() - 1);
+						primerasPartes = primerasPartes.subList(0, primerasPartes.size() - 1);
+
+						String lastPart = totalPart[1];
+						lastPart = StringEscapeUtils.unescapeJava(lastPart.toString());
+
+						lastPart = lastPart.replaceAll("\\n", "<jump>")
+								.replaceAll("%neededPlayers%", tournament.getMinPlayers().toString())
+								.replaceAll("%maxPlayers%", tournament.getMaxPlayers().toString())
+								.replaceAll("%players%", "" + getPlayers().size());
+
+						List<String> ultimasPartes = Arrays.asList(lastPart.split("<jump>"));
+						// System.out.println(ultimasPartes);
+
+						lastPart = ultimasPartes.get(0);
+
+						ultimasPartes = ultimasPartes.subList(1, ultimasPartes.size());
+
+						// ultimasPartes.remove(0);
+
 						for (Player p : Bukkit.getOnlinePlayers()) {
 							if (p.hasPermission(ComandosEnum.CMD_JOIN_TOURNAMENT.getPermission())) {
 								if (playSound) {
 									UtilsRandomEvents.playSound(p, XSound.ENTITY_VILLAGER_HURT);
 								}
-								plugin.getApi().send(p, firstPart, plugin.getLanguage().getClickHere(),
-										new ArrayList<String>(), "/revent tjoin " + password,
-										lastPart.replaceAll("%players%", "" + getPlayers().size())
-												.replaceAll("%neededPlayers%", tournament.getMinPlayers().toString()));
+								for (String pri : primerasPartes) {
+									p.sendMessage(pri);
+								}
+								plugin.getApi().send(p,
+										firstPart.replaceAll("\\n", "<jump>")
+												.replaceAll("%neededPlayers%", tournament.getMinPlayers().toString())
+												.replaceAll("%maxPlayers%", tournament.getMaxPlayers().toString())
+												.replaceAll("%players%", "" + getPlayers().size()),
+										plugin.getLanguage().getClickHere(), new ArrayList<String>(),
+										"/revent join " + password,
+										lastPart.replaceAll("\\n", "<jump>")
+												.replaceAll("%neededPlayers%", tournament.getMinPlayers().toString())
+												.replaceAll("%maxPlayers%", tournament.getMaxPlayers().toString())
+												.replaceAll("%players%", "" + getPlayers().size()));
+								for (String la : ultimasPartes) {
+									p.sendMessage(la);
+								}
 							}
 						}
+
 						if (tries <= plugin.getNumberOfTriesBeforeCancelling()) {
 							matchWaitingPlayers();
 						} else {
@@ -469,8 +516,7 @@ public class TournamentActive {
 			}
 
 		} else {
-			player.sendMessage(
-					plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getErrorSavingInventory());
+			player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getErrorSavingInventory());
 
 		}
 

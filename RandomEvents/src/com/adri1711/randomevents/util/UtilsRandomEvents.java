@@ -49,7 +49,9 @@ import org.bukkit.util.Vector;
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
+import com.adri1711.randomevents.match.WaterDropStep;
 import com.adri1711.randomevents.match.enums.Creacion;
+import com.adri1711.randomevents.match.enums.CreacionWaterDrop;
 import com.adri1711.randomevents.match.enums.MinigameType;
 import com.adri1711.randomevents.match.schedule.DayWeek;
 import com.adri1711.randomevents.match.schedule.Schedule;
@@ -122,6 +124,49 @@ public class UtilsRandomEvents {
 				plugin.getPlayerMatches().remove(player.getName());
 				plugin.getMatches().add(match);
 				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getEndOfArenaCreation());
+			} else {
+				System.out.println("JSON was null.");
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
+
+		}
+
+	}
+
+	public static void terminaCreacionWD(RandomEvents plugin, Player player) {
+		WaterDropStep waterDrop = plugin.getPlayerWaterDrop().get(player.getName());
+		try {
+			String json = UtilidadesJson.fromWDToJSON(plugin, waterDrop);
+			if (json != null) {
+				File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//waterdrop");
+				if (!dataFolder.exists()) {
+					dataFolder.mkdir();
+				}
+
+				File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//waterdrop",
+						ChatColor.stripColor(waterDrop.getName().replaceAll("<color>", "§")).replaceAll(" ", "_")
+								+ ".json");
+				if (!bossFile.exists()) {
+					bossFile.createNewFile();
+				} else {
+					bossFile.delete();
+					bossFile.createNewFile();
+				}
+
+				OutputStream os = new FileOutputStream(bossFile, true);
+				PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
+
+				pw.println(json);
+
+				pw.flush();
+
+				pw.close();
+				plugin.getPlayersCreationWaterDrop().remove(player.getName());
+				plugin.getPlayerWaterDrop().remove(player.getName());
+				plugin.getWaterDrops().add(waterDrop);
 			} else {
 				System.out.println("JSON was null.");
 				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
@@ -821,6 +866,11 @@ public class UtilsRandomEvents {
 
 	}
 
+	public static void normalizaColorsWaterDrop(WaterDropStep match) {
+		match.setName(match.getName().replace("<color>", "§"));
+
+	}
+
 	public static void borraPlayerPorName(List<Player> players, Player player) {
 		Player p = null;
 		for (Player jugador : players) {
@@ -1154,8 +1204,7 @@ public class UtilsRandomEvents {
 				inv.setItem(position, item);
 			}
 		}
-		
-		
+
 		Integer position = -1;
 		try {
 			Method method = plugin.getClass().getDeclaredMethod("getStatsALLTIME");
@@ -1171,14 +1220,14 @@ public class UtilsRandomEvents {
 			ItemMeta itemMeta = item.getItemMeta();
 			itemMeta.setDisplayName("§6§lAll_Time");
 			List<String> lore = new ArrayList<String>();
-			
+
 			Integer wins = 0;
 			Integer tries = 0;
-			for(Integer w:estadisticas.getWins().values()){
-				wins+=w;
+			for (Integer w : estadisticas.getWins().values()) {
+				wins += w;
 			}
-			for(Integer t:estadisticas.getTries().values()){
-				tries+=t;
+			for (Integer t : estadisticas.getTries().values()) {
+				tries += t;
 			}
 			Double rat = (tries > 0) ? (wins * 1.0 / tries) : 0.;
 			BigDecimal ratio = new BigDecimal(rat).setScale(2, RoundingMode.HALF_UP);
@@ -1190,9 +1239,7 @@ public class UtilsRandomEvents {
 			item.setItemMeta(itemMeta);
 			inv.setItem(position, item);
 		}
-		
-		
-		
+
 		ItemStack[] contents = inv.getContents();
 		int i = 0;
 		ItemStack itemFill = new ItemStack(plugin.getStatsFill());
@@ -1417,164 +1464,174 @@ public class UtilsRandomEvents {
 		} else {
 
 			for (Creacion c : Creacion.getCreaciones(match)) {
-				info += Constantes.SALTO_LINEA + "§e§l " + c.getPosition() + " - " + c.toString();
+				if (!match.getMinigame().equals(MinigameType.WDROP)
+						|| (match.getMinigame().equals(MinigameType.WDROP) && !c.equals(Creacion.ARENA_SPAWNS))) {
+					info += Constantes.SALTO_LINEA + "§e§l " + c.getPosition() + " - " + c.toString();
 
-				switch (c) {
+					switch (c) {
 
-				case MINIGAME_TYPE:
-					if (match.getMinigame() != null) {
-						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getMinigame();
-					}
-
-					break;
-				case BATTLE_NAME:
-					if (match.getName() != null) {
-						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getName();
-					}
-
-					break;
-				case AMOUNT_PLAYERS:
-					if (match.getAmountPlayers() != null) {
-						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getAmountPlayers();
-					}
-					break;
-				case AMOUNT_PLAYERS_MIN:
-					if (match.getAmountPlayersMin() != null) {
-						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getAmountPlayersMin();
-					}
-					break;
-				case SPAWN_PLAYER:
-					if (match.getPlayerSpawn() != null) {
-						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
-								+ match.getPlayerSpawn().getWorld().getName() + match.getPlayerSpawn().getX() + ", "
-								+ match.getPlayerSpawn().getY() + ", " + match.getPlayerSpawn().getZ();
-					}
-					break;
-				case ARENA_SPAWNS:
-				case ANOTHER_ARENA_SPAWNS:
-					if (match.getSpawns() != null && !match.getSpawns().isEmpty()) {
-
-						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9Spawns completed";
-					}
-					break;
-				case SPECTATOR_SPAWNS:
-					if (match.getSpectatorSpawns() != null && !match.getSpectatorSpawns().isEmpty()) {
-
-						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9Spawns completed";
-					}
-					break;
-				case REWARDS:
-				case ANOTHER_REWARDS:
-					if (match.getRewards() != null && !match.getRewards().isEmpty()) {
-						for (String s : match.getRewards()) {
-							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + s;
+					case MINIGAME_TYPE:
+						if (match.getMinigame() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getMinigame();
 						}
-					}
 
-					break;
-				case INVENTORY:
-					if (match.getInventory() != null) {
-
-						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9Inventory completed";
-					}
-
-					break;
-				case TIMER_MOB_SPAWN:
-				case TIMER_ARROW_SPAWN:
-				case TIMER_ANVIL_SPAWN:
-				case TIMER_GEM_SPAWN:
-				case TIMER_BOMB:
-				case WARMUP_TIME:
-				case SECONDS_TO_SPAWN_BEAST:
-
-					if (match.getSecondsMobSpawn() != null) {
-						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getSecondsMobSpawn();
-					}
-					break;
-				case MOB_NAME:
-					if (match.getMob() != null) {
-						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getMob();
-					}
-					break;
-				case MOB_SPAWN:
-				case ENTITY_SPAWNS:
-				case ANOTHER_ENTITY_SPAWNS:
-					if (match.getEntitySpawns() != null && !match.getEntitySpawns().isEmpty()) {
-
-						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9Spawns completed";
-					}
-					break;
-				case PLAY_TIME:
-				case SHRINK_TIME:
-					if (match.getTiempoPartida() != null) {
-						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getTiempoPartida();
-					}
-					break;
-				case NO_MOVE_TIME:
-					if (match.getSecondsToBegin() != null) {
-						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getSecondsToBegin();
-					}
-					break;
-				case ARROW_LOCATION1:
-				case GEM_LOCATION1:
-				case GOAL_LOCATION1:
-				case MAP_LOCATION1:
-					if (match.getLocation1() != null) {
-						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
-								+ match.getLocation1().getWorld().getName() + match.getLocation1().getX() + ", "
-								+ match.getLocation1().getY() + ", " + match.getLocation1().getZ();
-					}
-					break;
-				case ARROW_LOCATION2:
-				case GEM_LOCATION2:
-				case GOAL_LOCATION2:
-				case MAP_LOCATION2:
-					if (match.getLocation2() != null) {
-						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
-								+ match.getLocation2().getWorld().getName() + match.getLocation2().getX() + ", "
-								+ match.getLocation2().getY() + ", " + match.getLocation2().getZ();
-					}
-					break;
-				case SPAWN_BEAST:
-					if (match.getBeastSpawn() != null) {
-						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
-								+ match.getBeastSpawn().getWorld().getName() + match.getBeastSpawn().getX() + ", "
-								+ match.getBeastSpawn().getY() + ", " + match.getBeastSpawn().getZ();
-					}
-					break;
-				case INVENTORY_BEAST:
-					if (match.getInventoryBeast() != null) {
-
-						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9Inventory completed";
-					}
-					break;
-				case INVENTORY_RUNNERS:
-					if (match.getInventoryRunners() != null) {
-
-						info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9Inventory completed";
-					}
-					break;
-				case INVENTORY_CHESTS:
-					if (match.getInventoryChests() != null) {
-						for (ItemStack i : match.getInventoryChests().getContents()) {
-							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9" + i.getType() + "x"
-									+ i.getAmount();
+						break;
+					case BATTLE_NAME:
+						if (match.getName() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getName();
 						}
-					}
-					break;
-				case BLOCKS_ALLOWED:
-				case MATERIAL_SPLEEF:
-				case ANOTHER_MATERIAL_SPLEEF:
-					if (match.getDatas() != null && !match.getDatas().isEmpty()) {
-						for (MaterialData s : match.getDatas()) {
-							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + s.getItemType().toString()
-									+ " : " + s.getData();
-						}
-					}
-					break;
-				default:
-					break;
 
+						break;
+					case AMOUNT_PLAYERS:
+						if (match.getAmountPlayers() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getAmountPlayers();
+						}
+						break;
+					case AMOUNT_PLAYERS_MIN:
+						if (match.getAmountPlayersMin() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
+									+ match.getAmountPlayersMin();
+						}
+						break;
+					case SPAWN_PLAYER:
+						if (match.getPlayerSpawn() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
+									+ match.getPlayerSpawn().getWorld().getName() + match.getPlayerSpawn().getX() + ", "
+									+ match.getPlayerSpawn().getY() + ", " + match.getPlayerSpawn().getZ();
+						}
+						break;
+					case ARENA_SPAWNS:
+					case ANOTHER_ARENA_SPAWNS:
+						if (match.getSpawns() != null && !match.getSpawns().isEmpty()) {
+
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9Spawns completed";
+						}
+						break;
+					case SPECTATOR_SPAWNS:
+						if (match.getSpectatorSpawns() != null && !match.getSpectatorSpawns().isEmpty()) {
+
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9Spawns completed";
+						}
+						break;
+					case REWARDS:
+					case ANOTHER_REWARDS:
+						if (match.getRewards() != null && !match.getRewards().isEmpty()) {
+							for (String s : match.getRewards()) {
+								info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + s;
+							}
+						}
+
+						break;
+					case INVENTORY:
+						if (match.getInventory() != null) {
+
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9Inventory completed";
+						}
+
+						break;
+					case TIMER_MOB_SPAWN:
+					case TIMER_ARROW_SPAWN:
+					case TIMER_ANVIL_SPAWN:
+					case TIMER_GEM_SPAWN:
+					case TIMER_BOMB:
+					case WARMUP_TIME:
+					case SECONDS_TO_SPAWN_BEAST:
+
+						if (match.getSecondsMobSpawn() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getSecondsMobSpawn();
+						}
+						break;
+					case MOB_NAME:
+						if (match.getMob() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getMob();
+						}
+						break;
+					case MOB_SPAWN:
+					case ENTITY_SPAWNS:
+					case ANOTHER_ENTITY_SPAWNS:
+						if (match.getEntitySpawns() != null && !match.getEntitySpawns().isEmpty()) {
+
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9Spawns completed";
+						}
+						break;
+					case PLAY_TIME:
+					case SHRINK_TIME:
+						if (match.getTiempoPartida() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getTiempoPartida();
+						}
+						break;
+					case NO_MOVE_TIME:
+						if (match.getSecondsToBegin() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getSecondsToBegin();
+						}
+						break;
+					case ARROW_LOCATION1:
+					case GEM_LOCATION1:
+					case GOAL_LOCATION1:
+					case MAP_LOCATION1:
+						if (match.getLocation1() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
+									+ match.getLocation1().getWorld().getName() + match.getLocation1().getX() + ", "
+									+ match.getLocation1().getY() + ", " + match.getLocation1().getZ();
+						}
+						break;
+					case ARROW_LOCATION2:
+					case GEM_LOCATION2:
+					case GOAL_LOCATION2:
+					case MAP_LOCATION2:
+						if (match.getLocation2() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
+									+ match.getLocation2().getWorld().getName() + match.getLocation2().getX() + ", "
+									+ match.getLocation2().getY() + ", " + match.getLocation2().getZ();
+						}
+						break;
+					case SPAWN_BEAST:
+						if (match.getBeastSpawn() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
+									+ match.getBeastSpawn().getWorld().getName() + match.getBeastSpawn().getX() + ", "
+									+ match.getBeastSpawn().getY() + ", " + match.getBeastSpawn().getZ();
+						}
+						break;
+					case INVENTORY_BEAST:
+						if (match.getInventoryBeast() != null) {
+
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9Inventory completed";
+						}
+						break;
+					case INVENTORY_RUNNERS:
+						if (match.getInventoryRunners() != null) {
+
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9Inventory completed";
+						}
+						break;
+					case INVENTORY_CHESTS:
+						if (match.getInventoryChests() != null) {
+							for (ItemStack i : match.getInventoryChests().getContents()) {
+								info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9" + i.getType() + "x"
+										+ i.getAmount();
+							}
+						}
+						break;
+					case BLOCKS_ALLOWED:
+					case MATERIAL_SPLEEF:
+					case ANOTHER_MATERIAL_SPLEEF:
+						if (match.getDatas() != null && !match.getDatas().isEmpty()) {
+							for (MaterialData s : match.getDatas()) {
+								info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
+										+ s.getItemType().toString() + " : " + s.getData();
+							}
+						}
+						break;
+					case WATER_DROP_SCENES:
+						if (match.getScenes() != null && !match.getScenes().isEmpty()) {
+							for (String s : match.getScenes()) {
+								info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + s;
+							}
+						}
+					default:
+						break;
+
+					}
 				}
 			}
 
@@ -1619,8 +1676,10 @@ public class UtilsRandomEvents {
 			case ARENA_SPAWNS:
 			case ANOTHER_ARENA_SPAWNS:
 				if (match.getSpawns() == null || match.getSpawns().isEmpty()) {
+					if (match.getMinigame() == null || !match.getMinigame().equals(MinigameType.WDROP)) {
 
-					res = Boolean.FALSE;
+						res = Boolean.FALSE;
+					}
 				}
 				break;
 			case SPECTATOR_SPAWNS:
@@ -1866,10 +1925,33 @@ public class UtilsRandomEvents {
 			}
 			break;
 
+		case WDROP:
+			lines = prepareLinesStep(lines, plugin, matchActive, player);
+			lines.add("");
+
+			Map<Player, Integer> mapaOrdenadoStep = sortByValue(matchActive.getStep(), true);
+			for (Entry<Player, Integer> entrada : mapaOrdenadoStep.entrySet()) {
+				lines.add(plugin.getLanguage().getScoreboardPoints().replaceAll("%name%", entrada.getKey().getName())
+						.replaceAll("%points%", "" + (entrada.getValue() + 1)));
+			}
+			break;
 		default:
 			break;
 		}
 		lines.add("");
+		if (lines.size() > 15) {
+			lines = lines.subList(0, 15);
+		}
+		return lines;
+	}
+
+	private static List<String> prepareLinesStep(List<String> lines, RandomEvents plugin, MatchActive matchActive,
+			Player player) {
+
+		lines.add(plugin.getLanguage().getScoreboardStep()
+				.replaceAll("%name%", matchActive.getWaterDrops().get(matchActive.getStep().get(player)).getName())
+				.replaceAll("%max%", "" + matchActive.getWaterDrops().size())
+				.replaceAll("%actual%", "" + (matchActive.getStep().get(player) + 1)));
 
 		return lines;
 	}
@@ -1924,12 +2006,138 @@ public class UtilsRandomEvents {
 
 	private static List<String> prepareLinesDeadAlive(List<String> lines, MatchActive matchActive, RandomEvents plugin,
 			List<String> playersDead) {
-		for (String p : matchActive.getPlayerHandler().getPlayers()) {
+		List<String> players = new ArrayList<String>();
+		players.addAll(matchActive.getPlayerHandler().getPlayers());
+		for (String p : players) {
 			lines.add(plugin.getLanguage().getScoreboardAlive().replaceAll("%name%", p));
 		}
 		for (String p : playersDead) {
 			lines.add(plugin.getLanguage().getScoreboardDeath().replaceAll("%name%", p));
 		}
 		return lines;
+	}
+
+	public static String enviaInfoCreacionWaterDrop(WaterDropStep waterDrop, Player player, RandomEvents plugin) {
+		String info = plugin.getLanguage().getTagPlugin() + " ";
+
+		for (CreacionWaterDrop c : CreacionWaterDrop.values()) {
+			info += Constantes.SALTO_LINEA + "§e§l " + c.getPosition() + " - " + c.toString();
+
+			switch (c) {
+
+			case NAME:
+				if (waterDrop.getName() != null) {
+					info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + waterDrop.getName();
+				}
+
+				break;
+
+			case SPAWN:
+				if (waterDrop.getSpawn() != null) {
+					info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
+							+ waterDrop.getSpawn().getWorld().getName() + waterDrop.getSpawn().getX() + ", "
+							+ waterDrop.getSpawn().getY() + ", " + waterDrop.getSpawn().getZ();
+				}
+				break;
+
+			case GOAL_LOCATION1:
+				if (waterDrop.getGoalLoc1() != null) {
+					info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
+							+ waterDrop.getGoalLoc1().getWorld().getName() + waterDrop.getGoalLoc1().getX() + ", "
+							+ waterDrop.getGoalLoc1().getY() + ", " + waterDrop.getGoalLoc1().getZ();
+				}
+				break;
+
+			case GOAL_LOCATION2:
+				if (waterDrop.getGoalLoc2() != null) {
+					info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
+							+ waterDrop.getGoalLoc2().getWorld().getName() + waterDrop.getGoalLoc2().getX() + ", "
+							+ waterDrop.getGoalLoc2().getY() + ", " + waterDrop.getGoalLoc2().getZ();
+				}
+				break;
+
+			default:
+				break;
+
+			}
+		}
+
+		return info;
+	}
+
+	public static String compruebaWaterDropCorrecto(WaterDropStep waterDrop, RandomEvents plugin) {
+		Boolean res = Boolean.TRUE;
+		for (CreacionWaterDrop c : CreacionWaterDrop.values()) {
+
+			switch (c) {
+			case NAME:
+				if (waterDrop.getName() == null) {
+					res = Boolean.FALSE;
+				}
+
+				break;
+			case SPAWN:
+				if (waterDrop.getSpawn() == null) {
+					res = Boolean.FALSE;
+
+				}
+				break;
+			case GOAL_LOCATION1:
+				if (waterDrop.getGoalLoc1() == null) {
+					res = Boolean.FALSE;
+
+				}
+				break;
+			case GOAL_LOCATION2:
+				if (waterDrop.getGoalLoc2() == null) {
+					res = Boolean.FALSE;
+
+				}
+				break;
+			default:
+				break;
+
+			}
+		}
+		String respuesta = null;
+
+		if (!res) {
+			respuesta = plugin.getLanguage().getLacksInfoCreation();
+		}
+
+		return respuesta;
+	}
+
+	public static List<WaterDropStep> cargarWaterDrops(RandomEvents plugin) {
+		List<WaterDropStep> listaPartidas = new ArrayList<WaterDropStep>();
+		File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//waterdrop");
+		if (!dataFolder.exists()) {
+			dataFolder.mkdir();
+		}
+		for (File file : dataFolder.listFiles()) {
+			BufferedReader br = null;
+			FileReader fr = null;
+			try {
+				fr = new FileReader(file);
+				br = new BufferedReader(fr);
+				WaterDropStep match = UtilidadesJson.fromJSONToWD(plugin, br);
+				if (match != null)
+					listaPartidas.add(match);
+
+			} catch (FileNotFoundException e) {
+				System.out.println(e.getMessage());
+			} finally {
+				try {
+					if (fr != null)
+						fr.close();
+					if (br != null)
+						br.close();
+				} catch (IOException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+
+		}
+		return listaPartidas;
 	}
 }

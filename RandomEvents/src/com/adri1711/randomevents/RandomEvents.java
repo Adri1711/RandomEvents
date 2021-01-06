@@ -42,6 +42,7 @@ import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
 import com.adri1711.randomevents.match.Tournament;
 import com.adri1711.randomevents.match.TournamentActive;
+import com.adri1711.randomevents.match.WaterDropStep;
 import com.adri1711.randomevents.match.schedule.Schedule;
 import com.adri1711.randomevents.match.utils.BannedPlayers;
 import com.adri1711.randomevents.metrics.Metrics;
@@ -76,6 +77,7 @@ public class RandomEvents extends JavaPlugin {
 	private TournamentActive tournamentActive;
 
 	private List<Match> matches;
+	private List<WaterDropStep> waterDrops;
 	private List<Match> matchesAvailable;
 
 	private Tournament tournament;
@@ -83,6 +85,10 @@ public class RandomEvents extends JavaPlugin {
 	private Map<String, Match> playerMatches;
 
 	private Map<String, Integer> playersCreation;
+	
+	private Map<String, WaterDropStep> playerWaterDrop;
+
+	private Map<String, Integer> playersCreationWaterDrop;
 
 	private List<String> editando;
 
@@ -234,6 +240,7 @@ public class RandomEvents extends JavaPlugin {
 	private int statsALLTIME;
 
 	private int statsANVIL_SPLEEF;
+	private int statsWDROP;
 
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
@@ -290,6 +297,7 @@ public class RandomEvents extends JavaPlugin {
 
 			@Override
 			public void run() {
+				setWaterDrops(UtilsRandomEvents.cargarWaterDrops(getPlugin()));
 				setMatches(UtilsRandomEvents.cargarPartidas(getPlugin()));
 				matchesAvailable = new ArrayList<Match>();
 				for (Match match : matches) {
@@ -299,7 +307,7 @@ public class RandomEvents extends JavaPlugin {
 				}
 			}
 
-		}, 400);
+		}, 1200);
 
 	}
 
@@ -308,8 +316,8 @@ public class RandomEvents extends JavaPlugin {
 		if (mysqlEnabled && hikari != null) {
 			hikari.close();
 		}
-		if (matchActive != null && matchActive.getPlaying()) {
-			matchActive.reiniciaValoresPartida();
+		if (matchActive != null) {
+			matchActive.reiniciaValoresPartida(false);
 		}
 
 		getServer().getScheduler().cancelTasks((Plugin) this);
@@ -374,6 +382,7 @@ public class RandomEvents extends JavaPlugin {
 		this.statsSW = getConfig().getInt("statsmenu.SW");
 		this.statsTSW = getConfig().getInt("statsmenu.TSW");
 		this.statsANVIL_SPLEEF = getConfig().getInt("statsmenu.ANVIL_SPLEEF");
+		this.statsWDROP = getConfig().getInt("statsmenu.WDROP");
 
 		this.allowedCmds = (List<String>) getConfig().getStringList("allowedCmds");
 
@@ -426,6 +435,7 @@ public class RandomEvents extends JavaPlugin {
 		this.useScoreboard = getConfig().getBoolean("useScoreboard");
 		this.setProbabilityPowerUp(Integer.valueOf(getConfig().getInt("probabilityPowerUp")));
 
+		this.waterDrops = UtilsRandomEvents.cargarWaterDrops(this);
 		this.matches = UtilsRandomEvents.cargarPartidas(this);
 
 		matchesAvailable = new ArrayList<Match>();
@@ -455,6 +465,8 @@ public class RandomEvents extends JavaPlugin {
 
 		this.playerMatches = new HashMap<String, Match>();
 		this.playersCreation = new HashMap<String, Integer>();
+		this.playerWaterDrop = new HashMap<String, WaterDropStep>();
+		this.playersCreationWaterDrop = new HashMap<String, Integer>();
 		this.playersEntity = new HashMap<String, EntityType>();
 		this.forceEmptyInventoryToJoin = getConfig().getBoolean("forceEmptyInventoryToJoin");
 		this.mysqlEnabled = getConfig().getBoolean("mysql.enabled");
@@ -692,6 +704,22 @@ public class RandomEvents extends JavaPlugin {
 
 	public void setPlayersCreation(Map<String, Integer> playersCreation) {
 		this.playersCreation = playersCreation;
+	}
+
+	public Map<String, WaterDropStep> getPlayerWaterDrop() {
+		return playerWaterDrop;
+	}
+
+	public void setPlayerWaterDrop(Map<String, WaterDropStep> playerWaterDrop) {
+		this.playerWaterDrop = playerWaterDrop;
+	}
+
+	public Map<String, Integer> getPlayersCreationWaterDrop() {
+		return playersCreationWaterDrop;
+	}
+
+	public void setPlayersCreationWaterDrop(Map<String, Integer> playersCreationWaterDrop) {
+		this.playersCreationWaterDrop = playersCreationWaterDrop;
 	}
 
 	public Integer getSecondsTimer() {
@@ -1388,6 +1416,22 @@ public class RandomEvents extends JavaPlugin {
 
 	public void setStatsANVIL_SPLEEF(int statsANVIL_SPLEEF) {
 		this.statsANVIL_SPLEEF = statsANVIL_SPLEEF;
+	}
+
+	public List<WaterDropStep> getWaterDrops() {
+		return waterDrops;
+	}
+
+	public void setWaterDrops(List<WaterDropStep> waterDrops) {
+		this.waterDrops = waterDrops;
+	}
+
+	public int getStatsWDROP() {
+		return statsWDROP;
+	}
+
+	public void setStatsWDROP(int statsWDROP) {
+		this.statsWDROP = statsWDROP;
 	}
 	
 
