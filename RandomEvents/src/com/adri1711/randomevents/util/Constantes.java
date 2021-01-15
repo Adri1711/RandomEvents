@@ -310,6 +310,8 @@ public class Constantes {
 		PVP_DEATH("pvpDeath", "pvp.death", "&c☠ %victim%"),
 
 		PVP_KILL("pvpKill", "pvp.kill", "&a%killer% &4⚔ &c%victim%"),
+		
+		BOW_KILL("bowKill", "pvp.bowkill", "&a%killer% &4⚔ &c%victim%  &e( %distance% blocks )"),
 
 		SCOREBOARD_TITLE("scoreboardTitle", "scoreboard.title", "      &a&lRandomEvents      "),
 

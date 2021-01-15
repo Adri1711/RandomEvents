@@ -85,7 +85,7 @@ public class RandomEvents extends JavaPlugin {
 	private Map<String, Match> playerMatches;
 
 	private Map<String, Integer> playersCreation;
-	
+
 	private Map<String, WaterDropStep> playerWaterDrop;
 
 	private Map<String, Integer> playersCreationWaterDrop;
@@ -193,7 +193,7 @@ public class RandomEvents extends JavaPlugin {
 
 	private boolean advancedSpectatorMode;
 
-	private Material statsFill;
+	private ItemStack statsFill;
 
 	private int statsBR;
 
@@ -242,6 +242,22 @@ public class RandomEvents extends JavaPlugin {
 	private int statsANVIL_SPLEEF;
 	private int statsWDROP;
 
+	private int arrowRainDamage;
+
+	private int tntTagSpeedRunners;
+
+	private int tntTagSpeedHolder;
+
+	private boolean waterKillKnockbackDuel;
+
+	private boolean oitcHealAfterKill;
+
+	private boolean cooldownAfterDeath;
+
+	private boolean forcePlayersToEnter;
+
+	private boolean topKillerHealAfterKill;
+
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
 		loadConfig();
@@ -252,11 +268,6 @@ public class RandomEvents extends JavaPlugin {
 		ItemMeta itemMeta = this.powerUpItem.getItemMeta();
 		itemMeta.setDisplayName("§2§lPowerUP");
 		this.powerUpItem.setItemMeta(itemMeta);
-
-		this.checkpointItem = new ItemStack(XMaterial.BLAZE_ROD.parseMaterial());
-		ItemMeta itemMetaCheck = this.checkpointItem.getItemMeta();
-		itemMetaCheck.setDisplayName("§2§lReturn to checkpoint");
-		this.checkpointItem.setItemMeta(itemMetaCheck);
 
 		inicializaVariables();
 
@@ -357,8 +368,53 @@ public class RandomEvents extends JavaPlugin {
 		this.commandsOnMatchBegin = (List<String>) getConfig().getStringList("commandsOnMatchBegin");
 		this.commandsOnMatchEnd = (List<String>) getConfig().getStringList("commandsOnMatchEnd");
 		this.commandsOnUserLeave = (List<String>) getConfig().getStringList("commandsOnUserLeave");
+		
+		this.forcePlayersToEnter= getConfig().getBoolean("forcePlayersToEnter");
+		this.topKillerHealAfterKill= getConfig().getBoolean("topKillerHealAfterKill");
+		Material mat = null;
+		String statsMenuFill = getConfig().getString("statsmenu.fill");
+		Integer data = null;
+		if (statsMenuFill.contains(":")) {
+			data = Integer.valueOf(statsMenuFill.split(":")[1]);
+			statsMenuFill = statsMenuFill.split(":")[0];
+		}
+		try {
+			mat = Material.valueOf(statsMenuFill);
+		} catch (Exception e) {
+			if (mat == null) {
+				mat = XMaterial.WHITE_STAINED_GLASS_PANE.parseMaterial();
+			}
+		}
 
-		this.statsFill = Material.valueOf(getConfig().getString("statsmenu.fill"));
+		Material checkpointMat = null;
+		try {
+			checkpointMat = Material.valueOf(getConfig().getString("checkpointItem"));
+		} catch (Exception e) {
+			if (checkpointMat == null) {
+				checkpointMat = XMaterial.BLAZE_ROD.parseMaterial();
+			}
+		}
+		this.checkpointItem = new ItemStack(checkpointMat);
+		ItemMeta itemMetaCheck = this.checkpointItem.getItemMeta();
+		itemMetaCheck.setDisplayName("§2§lReturn to checkpoint");
+		this.checkpointItem.setItemMeta(itemMetaCheck);
+
+		this.oitcHealAfterKill = getConfig().getBoolean("oitcHealAfterKill");
+		this.cooldownAfterDeath = getConfig().getBoolean("cooldownAfterDeath");
+		this.tntTagSpeedRunners = getConfig().getInt("tntTagSpeedRunners");
+
+		this.tntTagSpeedHolder = getConfig().getInt("tntTagSpeedHolder");
+		this.arrowRainDamage = getConfig().getInt("arrowRainDamage");
+		this.waterKillKnockbackDuel = getConfig().getBoolean("waterKillKnockbackDuel");
+		this.statsFill = new ItemStack(mat);
+		if (data != null) {
+			statsFill.setDurability(data.shortValue());
+			try {
+				statsFill.getData().setData(data.byteValue());
+			} catch (Throwable e) {
+
+			}
+		}
 		this.statsALLTIME = getConfig().getInt("statsmenu.ALLTIME");
 		this.statsBR = getConfig().getInt("statsmenu.BR");
 		this.statsBRT2 = getConfig().getInt("statsmenu.BRT2");
@@ -1190,6 +1246,14 @@ public class RandomEvents extends JavaPlugin {
 		return checkpointItem;
 	}
 
+	public int getArrowRainDamage() {
+		return arrowRainDamage;
+	}
+
+	public void setArrowRainDamage(int arrowRainDamage) {
+		this.arrowRainDamage = arrowRainDamage;
+	}
+
 	public void setCheckpointItem(ItemStack checkpointItem) {
 		this.checkpointItem = checkpointItem;
 	}
@@ -1226,11 +1290,11 @@ public class RandomEvents extends JavaPlugin {
 		this.advancedSpectatorMode = advancedSpectatorMode;
 	}
 
-	public Material getStatsFill() {
+	public ItemStack getStatsFill() {
 		return statsFill;
 	}
 
-	public void setStatsFill(Material statsFill) {
+	public void setStatsFill(ItemStack statsFill) {
 		this.statsFill = statsFill;
 	}
 
@@ -1433,8 +1497,63 @@ public class RandomEvents extends JavaPlugin {
 	public void setStatsWDROP(int statsWDROP) {
 		this.statsWDROP = statsWDROP;
 	}
+
+	public int getTntTagSpeedRunners() {
+		return tntTagSpeedRunners;
+	}
+
+	public void setTntTagSpeedRunners(int tntTagSpeedRunners) {
+		this.tntTagSpeedRunners = tntTagSpeedRunners;
+	}
+
+	public int getTntTagSpeedHolder() {
+		return tntTagSpeedHolder;
+	}
+
+	public void setTntTagSpeedHolder(int tntTagSpeedHolder) {
+		this.tntTagSpeedHolder = tntTagSpeedHolder;
+	}
+
+	public boolean isWaterKillKnockbackDuel() {
+		return waterKillKnockbackDuel;
+	}
+
+	public void setWaterKillKnockbackDuel(boolean waterKillKnockbackDuel) {
+		this.waterKillKnockbackDuel = waterKillKnockbackDuel;
+	}
+
+	public boolean isOitcHealAfterKill() {
+		return oitcHealAfterKill;
+	}
+
+	public void setOitcHealAfterKill(boolean oitcHealAfterKill) {
+		this.oitcHealAfterKill = oitcHealAfterKill;
+	}
+
+	public boolean isCooldownAfterDeath() {
+		return cooldownAfterDeath;
+	}
+
+	public void setCooldownAfterDeath(boolean cooldownAfterDeath) {
+		this.cooldownAfterDeath = cooldownAfterDeath;
+	}
+
+	public boolean isForcePlayersToEnter() {
+		return forcePlayersToEnter;
+	}
+
+	public void setForcePlayersToEnter(boolean forcePlayersToEnter) {
+		this.forcePlayersToEnter = forcePlayersToEnter;
+	}
+
+	public boolean isTopKillerHealAfterKill() {
+		return topKillerHealAfterKill;
+	}
+
+	public void setTopKillerHealAfterKill(boolean topKillerHealAfterKill) {
+		this.topKillerHealAfterKill = topKillerHealAfterKill;
+	}
 	
 
 	
-
 }

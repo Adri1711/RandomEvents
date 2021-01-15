@@ -415,7 +415,12 @@ public class MatchActive {
 					new Location(getMapHandler().getActualCuboid().getWorld(), 0, 0, 0), Double.MAX_VALUE, player);
 		}
 		updateScoreboards();
+		if (player.getActivePotionEffects() != null) {
+			for (PotionEffect effect : player.getActivePotionEffects()) {
+				player.removePotionEffect(effect.getType());
+			}
 
+		}
 		UtilsRandomEvents.spawnParticles(Particle1711.valueOf(plugin.getParticleDeath()), plugin, lastLocation);
 		if (comprueba)
 			compruebaPartida();
@@ -713,11 +718,24 @@ public class MatchActive {
 		case BOAT_RUN:
 		case HORSE_RUN:
 		case RACE:
-		case ESCAPE_FROM_BEAST:
 		case WDROP:
-			if (getPlayerHandler().getPlayerContador() != null)
+			if (getPlayerHandler().getPlayerContador() != null) {
+				ganadores.add(getPlayerHandler().getPlayerContador());
+			}
+			break;
+		case ESCAPE_FROM_BEAST:
+			if (getPlayerHandler().getPlayerContador() != null
+					&& getPlayerHandler().getPlayers().contains(getPlayerHandler().getPlayerContador().getName()))
 				ganadores.add(getPlayerHandler().getPlayerContador());
 			break;
+		}
+		if (getMobs() != null) {
+			for (Entity m : getMobs()) {
+				if (m != null && m.getPassenger() != null) {
+					m.getPassenger().eject();
+					m.remove();
+				}
+			}
 		}
 
 		String cadenaGanadores = "";
@@ -839,21 +857,25 @@ public class MatchActive {
 
 	public void finalizaPartida(List<Player> ganadores, Boolean abrupto, Boolean cancelled) {
 		if (tournamentObj == null) {
-			if (getMobs() != null) {
-				for (Entity m : getMobs()) {
-					if (m != null && m.getPassenger() != null) {
-						m.getPassenger().eject();
-					}
-				}
-			}
 
 			for (Player p : getPlayerHandler().getPlayersSpectators()) {
 
-				// UtilsRandomEvents.borraInventario(p);
-				//
-				// p.teleport(plugin.getSpawn());
-				//
-				// UtilsRandomEvents.sacaInventario(plugin, p);
+				switch (match.getMinigame()) {
+				case BOAT_RUN:
+				case BATTLE_ROYALE_CABALLO:
+				case HORSE_RUN:
+					List<Entity> entities = p.getNearbyEntities(4., 4., 4.);
+					if (entities != null) {
+						for (Entity e : entities) {
+							if (e != null && (e instanceof Horse || e instanceof Boat)) {
+								e.remove();
+							}
+						}
+					}
+					break;
+				default:
+					break;
+				}
 
 				echaDePartida(p, false, true, true, false, false);
 			}
@@ -937,18 +959,17 @@ public class MatchActive {
 		}
 
 		hazComandosDeFin();
-
+		for (Entity ent : getMobs()) {
+			if (ent != null) {
+				ent.remove();
+			}
+		}
 		List<FastBoard> listaRecorrer = new ArrayList<FastBoard>();
 		listaRecorrer.addAll(getPlayerHandler().getScoreboards().values());
 		for (FastBoard f : listaRecorrer) {
 			Player p = f.getPlayer();
 			borraScoreboard(p);
 
-		}
-		for (Entity ent : getMobs()) {
-			if (ent != null) {
-				ent.remove();
-			}
 		}
 
 		for (Location chest : getMapHandler().getChests()) {
@@ -1134,14 +1155,49 @@ public class MatchActive {
 				iniciaPlayer(p);
 
 			}
-			this.allowDamage = true;
+
+			this.allowDamage = false;
+
+			UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersObj(),
+					plugin.getLanguage().getWarmupEnd().replaceAll("%time%", "" + 5), true);
+
+			Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+				public void run() {
+
+					UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersObj(),
+							plugin.getLanguage().getWarmupEnd().replaceAll("%time%", "3"), true);
+				}
+			}, 20 * (2));
+			Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+				public void run() {
+
+					UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersObj(),
+							plugin.getLanguage().getWarmupEnd().replaceAll("%time%", "2"), true);
+				}
+			}, 20 * (3));
+			Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+				public void run() {
+
+					UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersObj(),
+							plugin.getLanguage().getWarmupEnd().replaceAll("%time%", "1"), true);
+				}
+			}, 20 * (4));
+
+			Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+
+				public void run() {
+					setAllowDamage(true);
+				}
+
+			}, 20 * 5);
+
 			task = new BukkitRunnable() {
 				public void run() {
 
 					UtilsRandomEvents.checkDamageCounter(plugin, getMatchActive());
 				}
 			};
-			task.runTaskTimer(plugin, 0, 20L);
+			task.runTaskTimer(plugin, 100L, 20L);
 
 			break;
 		case TNT_RUN:
@@ -1156,8 +1212,47 @@ public class MatchActive {
 				iniciaPlayer(p);
 
 			}
+			if (plugin.getWarmupTimeTNTRUN() > 2) {
+				Bukkit.getServer().getScheduler().runTaskLater(getPlugin(), new Runnable() {
+					@Override
+					public void run() {
+						UtilsRandomEvents.playSound(getPlayerHandler().getPlayersSpectators(),
+								XSound.ENTITY_PLAYER_LEVELUP);
+						UtilsRandomEvents.mandaMensaje(getPlugin(), getPlayerHandler().getPlayersSpectators(),
+								plugin.getLanguage().getSecondsRemaining3(), true);
+					}
+				}, 20 * plugin.getWarmupTimeTNTRUN() - 60);
+			}
+			if (plugin.getWarmupTimeTNTRUN() > 1) {
+				Bukkit.getServer().getScheduler().runTaskLater(getPlugin(), new Runnable() {
+					@Override
+					public void run() {
+						UtilsRandomEvents.playSound(getPlayerHandler().getPlayersSpectators(),
+								XSound.ENTITY_PLAYER_LEVELUP);
+						UtilsRandomEvents.mandaMensaje(getPlugin(), getPlayerHandler().getPlayersSpectators(),
+								plugin.getLanguage().getSecondsRemaining2(), true);
+					}
+				}, 20 * plugin.getWarmupTimeTNTRUN() - 40);
+			}
+			if (plugin.getWarmupTimeTNTRUN() > 0) {
+				Bukkit.getServer().getScheduler().runTaskLater(getPlugin(), new Runnable() {
+					@Override
+					public void run() {
+						UtilsRandomEvents.playSound(getPlayerHandler().getPlayersSpectators(),
+								XSound.ENTITY_PLAYER_LEVELUP);
+						UtilsRandomEvents.mandaMensaje(getPlugin(), getPlayerHandler().getPlayersSpectators(),
+								plugin.getLanguage().getSecondsRemaining1(), true);
+					}
+				}, 20 * plugin.getWarmupTimeTNTRUN() - 20);
+			}
+
 			task = new BukkitRunnable() {
 				public void run() {
+					if (!activated) {
+						for (Player pl : getPlayerHandler().getPlayersObj()) {
+							UtilsRandomEvents.queueTNT(plugin, plugin.getMatchActive(), pl.getLocation(), 1., true);
+						}
+					}
 					setActivated(true);
 					UtilsRandomEvents.checkBlocksDisappear(plugin, getMatchActive(), new Date());
 				}
@@ -1401,7 +1496,6 @@ public class MatchActive {
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 
-				Boat boat = null;
 				if (getMatch().getEntitySpawns() == null || getMatch().getEntitySpawns().isEmpty()) {
 					Horse horse = (Horse) p.getWorld().spawnEntity(p.getLocation(), EntityType.HORSE); // Spawns
 					// the
@@ -1434,9 +1528,6 @@ public class MatchActive {
 					getPets().put(p.getName(), horse);
 
 				}
-
-				getMobs().add(boat);
-				getPets().put(p.getName(), boat);
 
 			}
 			break;
@@ -1718,7 +1809,16 @@ public class MatchActive {
 	public void bombRandom() {
 		getPlayerHandler().setPlayerContador(
 				getPlayerHandler().getPlayersObj().get(getRandom().nextInt(getPlayerHandler().getPlayersObj().size())));
+
 		ponInventarioMatch(getPlayerHandler().getPlayerContador());
+		removePotionsEffects(getPlayerHandler().getPlayerContador());
+		if (plugin.getTntTagSpeedHolder() > 0) {
+			if (getPlayerHandler().getPlayerContador().hasPotionEffect(PotionEffectType.SPEED)) {
+				getPlayerHandler().getPlayerContador().removePotionEffect(PotionEffectType.SPEED);
+			}
+			getPlayerHandler().getPlayerContador()
+					.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 2000, plugin.getTntTagSpeedHolder() - 1));
+		}
 		UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(), plugin.getLanguage()
 				.getPlayerHasBomb().replace("%player%", getPlayerHandler().getPlayerContador().getName()), true);
 		UtilsRandomEvents.playSound(getPlayerHandler().getPlayerContador(), XSound.ENTITY_VILLAGER_HURT);
@@ -1729,7 +1829,26 @@ public class MatchActive {
 
 		if (getPlaying()) {
 			endDate = Double.valueOf(new Date().getTime() + 1000 * getMatch().getSecondsMobSpawn()).longValue();
+			for (Player p : getPlayerHandler().getPlayersObj()) {
+				if (p.equals(getPlayerHandler().getPlayerContador())) {
+					if (plugin.getTntTagSpeedHolder() > 0) {
+						if (p.hasPotionEffect(PotionEffectType.SPEED)) {
+							p.removePotionEffect(PotionEffectType.SPEED);
+						}
+						p.addPotionEffect(
+								new PotionEffect(PotionEffectType.SPEED, 2000, plugin.getTntTagSpeedHolder() - 1));
+					}
 
+				} else {
+					if (plugin.getTntTagSpeedRunners() > 0) {
+						if (p.hasPotionEffect(PotionEffectType.SPEED)) {
+							p.removePotionEffect(PotionEffectType.SPEED);
+						}
+						p.addPotionEffect(
+								new PotionEffect(PotionEffectType.SPEED, 2000, plugin.getTntTagSpeedRunners() - 1));
+					}
+				}
+			}
 			task2 = new BukkitRunnable() {
 				public void run() {
 					checkTNTTag();
@@ -1752,13 +1871,6 @@ public class MatchActive {
 		if (getPlaying()) {
 			Date now = new Date();
 			long dif = (endDate - now.getTime()) / 1000;
-			for (Player p : getPlayerHandler().getPlayersObj()) {
-				if (p.equals(getPlayerHandler().getPlayerContador())) {
-					p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 120, 2));
-				} else {
-					p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 120, 0));
-				}
-			}
 
 			if (dif <= 0) {
 
@@ -1839,6 +1951,21 @@ public class MatchActive {
 								l.getBlock().setType(XMaterial.ANVIL.parseMaterial());
 							}
 						});
+					}
+					if (getPlayerHandler().getPlayersObj().size() > 1) {
+						if (getRandom().nextInt(5 + 0) < 2) {
+							Location l2 = getPlayerHandler().getPlayersObj()
+									.get(getRandom().nextInt(getPlayerHandler().getPlayersObj().size())).getLocation();
+							l2.setY(getMapHandler().getCuboid().getMaxY());
+							if (l2.getBlock().getType().equals(XMaterial.AIR.parseMaterial())) {
+
+								Bukkit.getServer().getScheduler().runTask((Plugin) getPlugin(), new Runnable() {
+									public void run() {
+										l2.getBlock().setType(XMaterial.ANVIL.parseMaterial());
+									}
+								});
+							}
+						}
 					}
 
 					partidaAnvilSpleef();
@@ -1982,14 +2109,8 @@ public class MatchActive {
 
 		switch (match.getMinigame()) {
 		case GEM_CRAWLER:
-			Location location = p.getLocation();
-
 			dropItems(p);
-
-			Location loc = match.getSpawns().get(getRandom().nextInt(match.getSpawns().size()));
-			UtilsRandomEvents.teleportaPlayer(p, loc, plugin);
-
-			ponInventarioMatch(p);
+			Location location = p.getLocation();
 
 			Integer amount = 0;
 			if (getPuntuacion().containsKey(p.getName())) {
@@ -2010,23 +2131,64 @@ public class MatchActive {
 				}
 				compruebaPartida();
 			}
+			if (plugin.isCooldownAfterDeath()) {
+				p.setGameMode(GameMode.SPECTATOR);
+				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+
+					@Override
+					public void run() {
+						reiniciaGemCrawler(p);
+					}
+
+				}, 40L);
+			} else {
+				reiniciaGemCrawler(p);
+			}
 			break;
 		case WDROP:
 			Integer actual = getStep().get(p);
 			UtilsRandomEvents.teleportaPlayer(p, getWaterDrops().get(actual).getSpawn(), plugin);
 			break;
 		default:
-
 			dropItems(p);
 
-			Location loc2 = match.getSpawns().get(getRandom().nextInt(match.getSpawns().size()));
-			UtilsRandomEvents.teleportaPlayer(p, loc2, plugin);
+			if (plugin.isCooldownAfterDeath()) {
+				p.setGameMode(GameMode.SPECTATOR);
+				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 
-			ponInventarioMatch(p);
+					@Override
+					public void run() {
+						reiniciaDefault(p);
+					}
+
+				}, 40L);
+			} else {
+				reiniciaDefault(p);
+			}
 
 			break;
 		}
 		updateScoreboards();
+
+	}
+
+	private void reiniciaDefault(Player p) {
+		p.setGameMode(GameMode.SURVIVAL);
+
+		Location loc2 = match.getSpawns().get(getRandom().nextInt(match.getSpawns().size()));
+		UtilsRandomEvents.teleportaPlayer(p, loc2, plugin);
+
+		ponInventarioMatch(p);
+
+	}
+
+	private void reiniciaGemCrawler(Player p) {
+		p.setGameMode(GameMode.SURVIVAL);
+
+		Location loc = match.getSpawns().get(getRandom().nextInt(match.getSpawns().size()));
+		UtilsRandomEvents.teleportaPlayer(p, loc, plugin);
+
+		ponInventarioMatch(p);
 
 	}
 
@@ -2110,17 +2272,22 @@ public class MatchActive {
 			p.setFoodLevel(20);
 			p.setFireTicks(0);
 
-			if (p.getActivePotionEffects() != null) {
-				for (PotionEffect effect : p.getActivePotionEffects()) {
-					p.removePotionEffect(effect.getType());
-				}
-
-			}
+			removePotionsEffects(p);
 
 			p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20, 2));
 
 		}
 
+	}
+
+	public void removePotionsEffects(Player p) {
+
+		if (p.getActivePotionEffects() != null) {
+			for (PotionEffect effect : p.getActivePotionEffects()) {
+				p.removePotionEffect(effect.getType());
+			}
+
+		}
 	}
 
 	public void ponInventarioRunner(Player p) {
@@ -2137,12 +2304,7 @@ public class MatchActive {
 			p.setFoodLevel(20);
 			p.setFireTicks(0);
 
-			if (p.getActivePotionEffects() != null) {
-				for (PotionEffect effect : p.getActivePotionEffects()) {
-					p.removePotionEffect(effect.getType());
-				}
-
-			}
+			removePotionsEffects(p);
 
 			// p.addPotionEffect(new
 			// PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20, 2));
@@ -2181,6 +2343,14 @@ public class MatchActive {
 			public void run() {
 				if (plugin.getMatchActive() != null && plugin.getMatchActive().getPassword().equals(getPassword())) {
 					if (!getPlaying()) {
+						if (plugin.isForcePlayersToEnter()) {
+							for (Player p : Bukkit.getOnlinePlayers()) {
+								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())
+										&& !getPlayerHandler().getPlayersObj().contains(p)) {
+									plugin.getComandosExecutor().joinRandomEvent(plugin, p, getPassword());
+								}
+							}
+						}
 						tries++;
 						Boolean playSound = Boolean.FALSE;
 

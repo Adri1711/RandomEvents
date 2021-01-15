@@ -19,6 +19,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
@@ -151,10 +152,15 @@ public class Use implements Listener {
 			}
 //		}
 	}
+	
+	
+	
+	
 
 	@EventHandler
 	public void onPlayerEggThrow(PlayerEggThrowEvent evt) {
 		Player player = evt.getPlayer();
+		
 		if (plugin.getMatchActive() != null
 				&& (plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEGG)
 						|| plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEEF))

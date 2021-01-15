@@ -2,11 +2,13 @@ package com.adri1711.randomevents.util;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -588,10 +590,10 @@ public class UtilsRandomEvents {
 		}
 		for (File file : dataFolder.listFiles()) {
 			BufferedReader br = null;
-			FileReader fr = null;
+			FileInputStream fr = null;
 			try {
-				fr = new FileReader(file);
-				br = new BufferedReader(fr);
+				fr = new FileInputStream(file);
+				br = new BufferedReader(new InputStreamReader(fr, StandardCharsets.UTF_8));
 				Match match = UtilidadesJson.fromJSONToMatch(plugin, br);
 				if (match != null)
 					listaPartidas.add(match);
@@ -957,6 +959,14 @@ public class UtilsRandomEvents {
 				break;
 			}
 		}
+
+		int limit2 = p.getInventory().getArmorContents().length;
+		for (int i = 0; i < limit2; i++) {
+			if (p.getInventory().getArmorContents()[i] != null) {
+				res = false;
+				break;
+			}
+		}
 		return res;
 	}
 
@@ -1242,7 +1252,7 @@ public class UtilsRandomEvents {
 
 		ItemStack[] contents = inv.getContents();
 		int i = 0;
-		ItemStack itemFill = new ItemStack(plugin.getStatsFill());
+		ItemStack itemFill = plugin.getStatsFill();
 		for (ItemStack item : contents) {
 			if (item == null) {
 				inv.setItem(i, itemFill);
@@ -1914,7 +1924,6 @@ public class UtilsRandomEvents {
 			lines.add("");
 		case TOP_KILLER:
 		case OITC:
-		case GEM_CRAWLER:
 			lines = prepareLinesTime(lines, plugin, matchActive);
 			lines.add("");
 
@@ -1925,6 +1934,13 @@ public class UtilsRandomEvents {
 			}
 			break;
 
+		case GEM_CRAWLER:
+			Map<String, Integer> mapaOrdenado3 = sortByValue(matchActive.getPuntuacion(), true);
+			for (Entry<String, Integer> entrada : mapaOrdenado3.entrySet()) {
+				lines.add(plugin.getLanguage().getScoreboardPoints().replaceAll("%name%", entrada.getKey())
+						.replaceAll("%points%", "" + entrada.getValue()));
+			}
+			break;
 		case WDROP:
 			lines = prepareLinesStep(lines, plugin, matchActive, player);
 			lines.add("");
@@ -1990,7 +2006,7 @@ public class UtilsRandomEvents {
 			Player player) {
 		Integer equipo = matchActive.getEquipo(player);
 		if (equipo != null) {
-			List<Player> playersTeam = matchActive.getPlayerHandler().getEquipos().get(equipo);
+			List<Player> playersTeam = new ArrayList<Player>(matchActive.getPlayerHandler().getEquipos().get(equipo));
 			if (playersTeam != null) {
 				playersTeam.remove(player);
 				if (playersTeam.isEmpty()) {

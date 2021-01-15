@@ -10,6 +10,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.util.Constantes;
+import com.google.common.io.Files;
 
 public class LanguageMessages {
 	private File file;
@@ -129,8 +130,7 @@ public class LanguageMessages {
 	private String reload;
 	private String checkpoint;
 	private String forcebegin;
-	
-	
+
 	private String announceFirst;
 	private String announceNext;
 	private String announceFirstTournament;
@@ -150,6 +150,7 @@ public class LanguageMessages {
 
 	private String pvpDeath;
 	private String pvpKill;
+	private String bowKill;
 
 	private String eventDeleted;
 	private String eventDisabled;
@@ -186,6 +187,7 @@ public class LanguageMessages {
 
 	public LanguageMessages(RandomEvents plugin) {
 		this.file = new File(plugin.getDataFolder(), "messages.yml");
+		File fileOld = new File(plugin.getDataFolder(), "messages_backup.yml");
 		this.fileConfig = (FileConfiguration) YamlConfiguration.loadConfiguration(this.file);
 
 		this.plugin = plugin;
@@ -193,23 +195,29 @@ public class LanguageMessages {
 
 			try {
 				this.file.createNewFile();
-				// TODO
-				// this.fileConfig.set("guiLottery", "&2Lottery");
-				fileConfig = setFileConfigDefault(fileConfig);
 
+				fileConfig = setFileConfigDefault(fileConfig);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		} else {
 
 			fileConfig = compruebaFichero(fileConfig);
+			try {
+				if (fileOld.exists()) {
+					fileOld.delete();
+				}
+				Files.copy(file, fileOld);
+			} catch (Exception e) {
+
+			}
 		}
 		for (int i = 0; i < 20; i++) {
 			this.fileConfig.options().copyDefaults(true);
 			saveYamls();
 		}
+
 		recargaVariables(fileConfig);
-		// this.announcement = this.fileConfig.getString("announcement");
 
 	}
 
@@ -1519,8 +1527,13 @@ public class LanguageMessages {
 	public void setMinigameDescriptionWDROP(List<String> minigameDescriptionWDROP) {
 		this.minigameDescriptionWDROP = minigameDescriptionWDROP;
 	}
-	
-	
-	
+
+	public String getBowKill() {
+		return bowKill.replaceAll("&", "§");
+	}
+
+	public void setBowKill(String bowKill) {
+		this.bowKill = bowKill;
+	}
 
 }

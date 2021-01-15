@@ -11,6 +11,9 @@ secondsTimer: 60
 #Seconds to check if the minimum players is fulfilled to begin the match
 secondsCheckPlayers: 15
 
+#Minimum amount of players to begin checking for random events
+minPlayers: 40
+
 # Percentage of probability to spawn a random event each time the timer is fired
 probabilityRandomEvent: 5
 
@@ -127,12 +130,35 @@ tournament:
 #Probability to spawn a power up of resistance in arrow rain games
 probabilityPowerUp: 1
 
-#Minimum amount of players to begin checking for random events
-minPlayers: 40
-
 #Seconds for several minigames to damage all players if they are not attacking each other
 idleTimeForDamage: 10
 
+#Item material for checkpoint item
+checkpointItem: 'BLAZE_ROD'
+
+#Arrow damage in arrow rain minigame
+arrowRainDamage: 10
+
+#Enable this to make a player lose when they fall into water in knockback duel minigames
+waterKillKnockbackDuel: false
+
+#Lvl of the speed for the runners on tnttag
+tntTagSpeedRunners: 3
+
+#Lvl of the speed for the holder of the tnt on tnttag
+tntTagSpeedHolder: 6
+
+#Heal killer after a kill in OITC Minigame
+oitcHealAfterKill: true
+
+#Heal killer after a kill in Top Killer Minigame
+topKillerHealAfterKill: true
+
+#Cooldown before respawning again in minigames with respawn
+cooldownAfterDeath: false
+
+#Force the players to enter the random event when its spawned
+forcePlayersToEnter: false
 
 #Commands that will be done each time a user join a random event, use it in case you need to get the god mode off, to set the gamemode to survival, etc
 commandsOnUserJoin:

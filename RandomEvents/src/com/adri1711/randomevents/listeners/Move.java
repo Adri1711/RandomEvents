@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.match.WaterDropStepActive;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
+import com.adri1711.util.enums.XMaterial;
 import com.adri1711.util.enums.XSound;
 
 public class Move implements Listener {
@@ -23,12 +24,25 @@ public class Move implements Listener {
 	@EventHandler
 	public void onMove(PlayerMoveEvent evt) {
 		Player player = evt.getPlayer();
-		
+
 		if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlaying()
 				&& plugin.getMatchActive().getPlayerHandler().getPlayersObj().contains(player)) {
 			if (plugin.getMatchActive().getAllowMove()) {
 
 				switch (plugin.getMatchActive().getMatch().getMinigame()) {
+				case KNOCKBACK_DUEL:
+					if (plugin.isWaterKillKnockbackDuel()) {
+						if (evt.getTo().getBlock() != null && evt.getTo().getBlock().getType() != null
+								&& (evt.getTo().getBlock().getType() == XMaterial.WATER.parseMaterial()
+										|| evt.getTo().getBlock().getType().toString().equals("STATIONARY_WATER"))) {
+							UtilsRandomEvents.mandaMensaje(plugin,
+									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
+							plugin.getMatchActive().echaDePartida(player, true, true, false);
+							UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+						}
+					}
+					break;
 				case BOAT_RUN:
 				case HORSE_RUN:
 				case RACE:
@@ -46,7 +60,8 @@ public class Move implements Listener {
 											+ plugin.getLanguage().getRaceTournament()
 													.replaceAll("%player%", player.getName())
 													.replaceAll("%players%",
-															"" + plugin.getMatchActive().getPlayerHandler().getPlayersGanadores().size())
+															"" + plugin.getMatchActive().getPlayerHandler()
+																	.getPlayersGanadores().size())
 													.replaceAll("%neededPlayers%",
 															plugin.getMatchActive().getLimitPlayers().toString()));
 								}
@@ -67,10 +82,10 @@ public class Move implements Listener {
 					}
 					break;
 				case WDROP:
-					if(plugin.getMatchActive().getStep().containsKey(player)){
-						Integer step=plugin.getMatchActive().getStep().get(player);
-						WaterDropStepActive wd=plugin.getMatchActive().getWaterDrops().get(step);
-						if(wd.getGoal().contains(player.getLocation())){
+					if (plugin.getMatchActive().getStep().containsKey(player)) {
+						Integer step = plugin.getMatchActive().getStep().get(player);
+						WaterDropStepActive wd = plugin.getMatchActive().getWaterDrops().get(step);
+						if (wd.getGoal().contains(player.getLocation())) {
 							plugin.getMatchActive().avanzaWaterDrop(player);
 						}
 					}
