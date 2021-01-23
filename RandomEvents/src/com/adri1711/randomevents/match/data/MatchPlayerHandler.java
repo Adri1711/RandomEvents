@@ -4,21 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 import org.bukkit.scoreboard.Scoreboard;
 
-import com.adri1711.randomevents.RandomEvents;
-import com.adri1711.randomevents.match.Match;
-import com.adri1711.randomevents.match.MatchActive;
-import com.adri1711.randomevents.match.utils.Cuboid;
 import com.adri1711.util.FastBoard;
-import com.adri1711.util.enums.AMaterials;
 
 public class MatchPlayerHandler {
 

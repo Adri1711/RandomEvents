@@ -23,7 +23,7 @@ import com.adri1711.randomevents.match.enums.MinigameType;
 import com.adri1711.randomevents.match.utils.InventoryPers;
 import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
-import com.adri1711.util.enums.AMaterials;
+import com.adri1711.util.enums.XMaterial;
 
 public class Chat implements Listener {
 
@@ -690,7 +690,7 @@ public class Chat implements Listener {
 					case BLOCKS_ALLOWED:
 						if (message.equals(Constantes.DONE)) {
 							if (player.getItemInHand() != null && player.getItemInHand()
-									.getType() != (plugin.getApi().getMaterial(AMaterials.AIR))) {
+									.getType() != (XMaterial.AIR.parseMaterial())) {
 								match.getDatas().add(player.getItemInHand().getData());
 								plugin.getPlayersCreation().remove(player.getName());
 
@@ -704,7 +704,7 @@ public class Chat implements Listener {
 						if (message.equals(Constantes.DONE)) {
 
 							if (player.getItemInHand() != null && player.getItemInHand()
-									.getType() != (plugin.getApi().getMaterial(AMaterials.AIR))) {
+									.getType() != (XMaterial.AIR.parseMaterial())) {
 								match.getDatas().add(player.getItemInHand().getData());
 								plugin.getPlayersCreation().put(player.getName(),
 										Creacion.ANOTHER_MATERIAL_SPLEEF.getPosition());
@@ -729,7 +729,7 @@ public class Chat implements Listener {
 						if (message.equals(Constantes.DONE)) {
 
 							if (player.getItemInHand() != null && player.getItemInHand()
-									.getType() != (plugin.getApi().getMaterial(AMaterials.AIR))) {
+									.getType() != (XMaterial.AIR.parseMaterial())) {
 								match.getDatas().add(player.getItemInHand().getData());
 								actua = Boolean.FALSE;
 								// actualiza =

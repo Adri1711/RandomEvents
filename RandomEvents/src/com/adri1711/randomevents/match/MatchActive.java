@@ -15,7 +15,6 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Chest;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Boat;
@@ -29,7 +28,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.Scoreboard;
 
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.api.events.ReventBeginEvent;
@@ -44,12 +42,9 @@ import com.adri1711.randomevents.util.FeatherBoardUtils;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.randomevents.util.UtilsSQL;
 import com.adri1711.util.FastBoard;
-import com.adri1711.util.enums.AMaterials;
 import com.adri1711.util.enums.Particle1711;
 import com.adri1711.util.enums.XMaterial;
 import com.adri1711.util.enums.XSound;
-
-import io.netty.util.internal.StringUtil;
 
 public class MatchActive {
 
@@ -154,7 +149,7 @@ public class MatchActive {
 		this.activated = Boolean.FALSE;
 		this.password = "" + random.nextInt(10000);
 		this.firstAnnounce = Boolean.TRUE;
-		this.gema = new ItemStack(plugin.getApi().getMaterial(AMaterials.EMERALD));
+		this.gema = new ItemStack(XMaterial.EMERALD.parseMaterial());
 		this.setForzada(forzada);
 
 		if (getMapHandler().getCuboid() != null) {
@@ -226,7 +221,7 @@ public class MatchActive {
 		this.activated = Boolean.FALSE;
 		this.password = "" + random.nextInt(10000);
 		this.firstAnnounce = Boolean.TRUE;
-		this.gema = new ItemStack(plugin.getApi().getMaterial(AMaterials.EMERALD));
+		this.gema = new ItemStack(XMaterial.EMERALD.parseMaterial());
 		this.waterDrops = new ArrayList<WaterDropStepActive>();
 
 		this.step = new HashMap<Player, Integer>();
@@ -951,7 +946,7 @@ public class MatchActive {
 			entrada.getKey().getBlock().setType(entrada.getValue().getItemType());
 			try {
 				entrada.getKey().getBlock().setData(entrada.getValue().getData());
-			} catch (Exception e) {
+			} catch (Throwable e) {
 
 			}
 
@@ -991,19 +986,7 @@ public class MatchActive {
 		for (Location l : getMapHandler().getBlockPlaced().keySet()) {
 			l.getBlock().setType(XMaterial.AIR.parseMaterial());
 		}
-		// if (match.getMinigame().equals(MinigameType.TNT_RUN)) {
-		// mat = plugin.getApi().getMaterial(AMaterials.TNT);
-		// }
-		// if (mat != null) {
-		// for (Location l : getMapHandler().getBlockDisappear().keySet()) {
-		// getMapHandler().getBlockDisappeared().put(l, null);
-		// }
-		// for (Location l : getMapHandler().getBlockDisappeared().keySet()) {
-		// l.getBlock().setType(mat);
-		// }
-		// } else {
 
-		// }
 		setPlaying(Boolean.FALSE);
 		if (tournamentObj == null && reinicia)
 			plugin.reiniciaPartida(forzada);
@@ -1304,7 +1287,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
-			ItemStack item = new ItemStack(plugin.getApi().getMaterial(AMaterials.STONE_HOE));
+			ItemStack item = new ItemStack(XMaterial.STONE_HOE.parseMaterial());
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 				p.getInventory().setItem(0, item);
@@ -1471,7 +1454,7 @@ public class MatchActive {
 				Horse horse = (Horse) p.getWorld().spawnEntity(p.getLocation(), EntityType.HORSE); // Spawns
 																									// the
 				// horse
-				horse.getInventory().setSaddle(new ItemStack(plugin.getApi().getMaterial(AMaterials.SADDLE), 1)); // Gives
+				horse.getInventory().setSaddle(new ItemStack(XMaterial.SADDLE.parseMaterial(), 1)); // Gives
 				// horse
 				// saddle
 				horse.setTamed(true); // Sets horse to tamed
@@ -1500,7 +1483,7 @@ public class MatchActive {
 					Horse horse = (Horse) p.getWorld().spawnEntity(p.getLocation(), EntityType.HORSE); // Spawns
 					// the
 					// horse
-					horse.getInventory().setSaddle(new ItemStack(plugin.getApi().getMaterial(AMaterials.SADDLE), 1)); // Gives
+					horse.getInventory().setSaddle(new ItemStack(XMaterial.SADDLE.parseMaterial(), 1)); // Gives
 					// horse
 					// saddle
 					horse.setTamed(true); // Sets horse to tamed
@@ -1518,7 +1501,7 @@ public class MatchActive {
 							EntityType.HORSE); // Spawns
 					// the
 					// horse
-					horse.getInventory().setSaddle(new ItemStack(plugin.getApi().getMaterial(AMaterials.SADDLE), 1)); // Gives
+					horse.getInventory().setSaddle(new ItemStack(XMaterial.SADDLE.parseMaterial(), 1)); // Gives
 					// horse
 					// saddle
 					horse.setTamed(true); // Sets horse to tamed
@@ -2118,7 +2101,7 @@ public class MatchActive {
 			}
 
 			if (amount > 0) {
-				ItemStack puntos = new ItemStack(plugin.getApi().getMaterial(AMaterials.EMERALD));
+				ItemStack puntos = new ItemStack(XMaterial.EMERALD.parseMaterial());
 				puntos.setAmount(amount);
 				location.getWorld().dropItem(location, puntos);
 				getPuntuacion().put(p.getName(), 0);
@@ -2338,6 +2321,131 @@ public class MatchActive {
 	}
 
 	public void matchWaitingPlayers() {
+		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
+			public void run() {
+				if (!getPlaying()) {
+					if (plugin.isForcePlayersToEnter()) {
+						for (Player p : Bukkit.getOnlinePlayers()) {
+							if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())
+									&& !getPlayerHandler().getPlayersObj().contains(p)) {
+								plugin.getComandosExecutor().joinRandomEvent(plugin, p, getPassword());
+							}
+						}
+					}
+					tries++;
+					Boolean playSound = Boolean.FALSE;
+
+					if (match.getAmountPlayersMin() <= (getPlayerHandler().getPlayers().size())) {
+						if (!getPlaying()) {
+							Integer startTime = plugin.getSecondsToStartMatch() + 3;
+							String startingMatch = plugin.getLanguage().getStartingMatch().replaceAll("%time%",
+									startTime.toString());
+							for (Player p : Bukkit.getOnlinePlayers()) {
+								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())) {
+
+									p.sendMessage(plugin.getLanguage().getTagPlugin() + startingMatch);
+								}
+							}
+							Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
+
+								@Override
+								public void run() {
+									matchBegin();
+
+								}
+							}, 20 * plugin.getSecondsToStartMatch());
+						}
+					} else {
+						// if (!getPlayerHandler().getPlayers().isEmpty()) {
+						// String waiting = Constantes.WAITING_FOR_PLAYERS;
+						// UtilsRandomEvents
+						// .mandaMensaje(plugin,getPlayerHandler().getPlayersSpectators(),
+						// waiting.replaceAll("%players%", "" +
+						// getPlayerHandler().getPlayers().size())
+						// .replaceAll("%neededPlayers%",
+						// match.getAmountPlayersMin().toString()),
+						// Boolean.TRUE);
+						// }
+						String firstPart = "";
+						String[] totalPart;
+						if (firstAnnounce) {
+							playSound = Boolean.TRUE;
+							totalPart = plugin.getLanguage().getAnnounceFirst().split("%clickhere%");
+							firstAnnounce = Boolean.FALSE;
+						} else {
+							totalPart = plugin.getLanguage().getAnnounceNext().split("%clickhere%");
+
+						}
+						firstPart = totalPart[0];
+						firstPart = StringEscapeUtils.unescapeJava(firstPart.toString());
+						firstPart = firstPart.replaceAll("%event%", match.getName())
+								.replaceAll("%type%", match.getMinigame().getMessage()).replaceAll("\\n", "<jump>")
+								.replaceAll("%neededPlayers%", match.getAmountPlayersMin().toString())
+								.replaceAll("%maxPlayers%", match.getAmountPlayers().toString())
+								.replaceAll("%players%", "" + getPlayerHandler().getPlayers().size());
+
+						List<String> primerasPartes = Arrays.asList(firstPart.split("<jump>"));
+						// System.out.println(primerasPartes);
+
+						firstPart = primerasPartes.get(primerasPartes.size() - 1);
+
+						// primerasPartes.remove(primerasPartes.size() - 1);
+						primerasPartes = primerasPartes.subList(0, primerasPartes.size() - 1);
+
+						String lastPart = totalPart[1];
+						lastPart = StringEscapeUtils.unescapeJava(lastPart.toString());
+
+						lastPart = lastPart.replaceAll("%event%", match.getName())
+								.replaceAll("%type%", match.getMinigame().getMessage()).replaceAll("\\n", "<jump>")
+								.replaceAll("%neededPlayers%", match.getAmountPlayersMin().toString())
+								.replaceAll("%maxPlayers%", match.getAmountPlayers().toString())
+								.replaceAll("%players%", "" + getPlayerHandler().getPlayers().size());
+
+						List<String> ultimasPartes = Arrays.asList(lastPart.split("<jump>"));
+						// System.out.println(ultimasPartes);
+
+						lastPart = ultimasPartes.get(0);
+
+						ultimasPartes = ultimasPartes.subList(1, ultimasPartes.size());
+
+						// ultimasPartes.remove(0);
+
+						for (Player p : Bukkit.getOnlinePlayers()) {
+							if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())) {
+								if (playSound) {
+									UtilsRandomEvents.playSound(p, XSound.ENTITY_VILLAGER_HURT);
+								}
+								for (String pri : primerasPartes) {
+									p.sendMessage(pri);
+								}
+								plugin.getApi().send(p,
+										firstPart.replaceAll("%players%", "" + getPlayerHandler().getPlayers().size())
+												.replaceAll("%neededPlayers%", match.getAmountPlayersMin().toString())
+												.replaceAll("%maxPlayers%", match.getAmountPlayers().toString()),
+										plugin.getLanguage().getClickHere(), new ArrayList<String>(),
+										"/revent join " + password,
+										lastPart.replaceAll("%players%", "" + getPlayerHandler().getPlayers().size())
+												.replaceAll("%neededPlayers%", match.getAmountPlayersMin().toString())
+												.replaceAll("%maxPlayers%", match.getAmountPlayers().toString()));
+								for (String la : ultimasPartes) {
+									p.sendMessage(la);
+								}
+							}
+						}
+						if (tries <= plugin.getNumberOfTriesBeforeCancelling()) {
+							matchWaitingPlayers(true);
+						} else {
+							finalizaPartida(new ArrayList<Player>(), Boolean.FALSE, Boolean.TRUE);
+
+						}
+					}
+				}
+			}
+		}, 5L);
+
+	}
+
+	public void matchWaitingPlayers(Boolean segundo) {
 
 		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 			public void run() {
@@ -2455,7 +2563,7 @@ public class MatchActive {
 								}
 							}
 							if (tries <= plugin.getNumberOfTriesBeforeCancelling()) {
-								matchWaitingPlayers();
+								matchWaitingPlayers(true);
 							} else {
 								finalizaPartida(new ArrayList<Player>(), Boolean.FALSE, Boolean.TRUE);
 

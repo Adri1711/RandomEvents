@@ -61,7 +61,6 @@ import com.adri1711.randomevents.match.utils.BannedPlayers;
 import com.adri1711.randomevents.match.utils.Cuboid;
 import com.adri1711.randomevents.match.utils.InventoryPers;
 import com.adri1711.randomevents.stats.Stats;
-import com.adri1711.util.enums.AMaterials;
 import com.adri1711.util.enums.Particle1711;
 import com.adri1711.util.enums.ParticleDisplay;
 import com.adri1711.util.enums.XMaterial;
@@ -612,6 +611,7 @@ public class UtilsRandomEvents {
 			}
 
 		}
+		Collections.sort(listaPartidas);
 		return listaPartidas;
 	}
 
@@ -963,8 +963,11 @@ public class UtilsRandomEvents {
 		int limit2 = p.getInventory().getArmorContents().length;
 		for (int i = 0; i < limit2; i++) {
 			if (p.getInventory().getArmorContents()[i] != null) {
-				res = false;
-				break;
+				if (p.getInventory().getArmorContents()[i].getType() != null
+						&& p.getInventory().getArmorContents()[i].getType() != XMaterial.AIR.parseMaterial()) {
+					res = false;
+					break;
+				}
 			}
 		}
 		return res;
@@ -1111,14 +1114,14 @@ public class UtilsRandomEvents {
 
 		if (l3.getBlock() != null
 				&& !matchActive.getMapHandler().getBlockDisappear().containsKey(l3.getBlock().getLocation())
-				&& l3.getBlock().getType() == plugin.getApi().getMaterial(AMaterials.TNT)) {
+				&& l3.getBlock().getType() == XMaterial.TNT.parseMaterial()) {
 			Date d = new Date();
 			Long time = d.getTime();
 			time += (long) (300);
 			matchActive.getMapHandler().getBlockDisappear().put(l3.getBlock().getLocation(), time);
 		} else if (l4.getBlock() != null
 				&& !matchActive.getMapHandler().getBlockDisappear().containsKey(l4.getBlock().getLocation())
-				&& l4.getBlock().getType() == plugin.getApi().getMaterial(AMaterials.TNT)) {
+				&& l4.getBlock().getType() == XMaterial.TNT.parseMaterial()) {
 			Date d = new Date();
 			Long time = d.getTime();
 			time += (long) (300);
@@ -1168,7 +1171,7 @@ public class UtilsRandomEvents {
 		for (Location l : blocksToDisappear) {
 			matchActive.getMapHandler().getBlockDisappear().remove(l);
 			matchActive.getMapHandler().getBlockDisappeared().put(l, l.getBlock().getState().getData());
-			l.getBlock().setType(plugin.getApi().getMaterial(AMaterials.AIR));
+			l.getBlock().setType(XMaterial.AIR.parseMaterial());
 
 		}
 
@@ -2155,5 +2158,10 @@ public class UtilsRandomEvents {
 
 		}
 		return listaPartidas;
+	}
+
+	public static Inventory createGUICredits(String name, Map<String, Integer> creditos, RandomEvents plugin) {
+		// TODO FIXME Auto-generated method stub
+		return null;
 	}
 }

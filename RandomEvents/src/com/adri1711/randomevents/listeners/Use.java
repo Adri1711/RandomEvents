@@ -19,12 +19,10 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
-import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.BlockIterator;
@@ -34,7 +32,6 @@ import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.match.enums.MinigameType;
 import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
-import com.adri1711.util.enums.AMaterials;
 import com.adri1711.util.enums.XMaterial;
 import com.adri1711.util.enums.XSound;
 
@@ -51,116 +48,109 @@ public class Use implements Listener {
 	public void onInteract(PlayerInteractEvent evt) {
 		Player player = evt.getPlayer();
 
-//		if (plugin.getMatchActive() != null
-//				&& plugin.getMatchActive().getPlayerHandler().getPlayersSpectators().contains(player)
-//				&& plugin.getMatchActive().getPlaying()
-//				&& (evt.getAction() == Action.RIGHT_CLICK_BLOCK || evt.getAction() == Action.LEFT_CLICK_BLOCK)
-//				&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.ANVIL_SPLEEF)) {
-//
-//			evt.setCancelled(true);
-//
-//		} else {
+		// if (plugin.getMatchActive() != null
+		// &&
+		// plugin.getMatchActive().getPlayerHandler().getPlayersSpectators().contains(player)
+		// && plugin.getMatchActive().getPlaying()
+		// && (evt.getAction() == Action.RIGHT_CLICK_BLOCK || evt.getAction() ==
+		// Action.LEFT_CLICK_BLOCK)
+		// &&
+		// plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.ANVIL_SPLEEF))
+		// {
+		//
+		// evt.setCancelled(true);
+		//
+		// } else {
 
-			if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlaying()
-					&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())) {
+		if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlaying()
+				&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())) {
 
-				if ((evt.getAction() == Action.RIGHT_CLICK_BLOCK || evt.getAction() == Action.LEFT_CLICK_BLOCK)
-						&& evt.getClickedBlock().getType() == XMaterial.CHEST.parseMaterial()) {
-					if (plugin.getMatchActive().getMapHandler().getCuboid() != null && plugin.getMatchActive()
-							.getMapHandler().getCuboid().contains(evt.getClickedBlock().getLocation())) {
-						if (!plugin.getMatchActive().getMapHandler().getChests()
-								.contains(evt.getClickedBlock().getLocation())
-								&& !plugin.getMatchActive().getMapHandler().getBlockPlaced().keySet()
-										.contains(evt.getClickedBlock().getLocation())) {
-							if (evt.getClickedBlock().getState() instanceof Chest) {
-								plugin.getMatchActive().getMapHandler().getChests()
-										.add(evt.getClickedBlock().getLocation());
-								Chest chest = (Chest) evt.getClickedBlock().getState();
-								chest.getBlockInventory().clear();
-								Integer objetos = 0;
-								if (plugin.getMatchActive().getMatch().getInventoryChests() != null
-										&& plugin.getMatchActive().getMatch().getInventoryChests().getContents() != null
-										&& plugin.getMatchActive().getMatch().getInventoryChests()
-												.getContents().length != 0) {
-									objetos = Math.max(plugin.getMinItemOnChests(),
-											plugin.getRandom().nextInt(
-													Math.min(plugin.getMaxItemOnChests(), plugin.getMatchActive()
-															.getMatch().getInventoryChests().getContents().length)));
-								}
-								for (int i = 0; i < objetos; i++) {
-									chest.getBlockInventory()
-											.addItem(plugin.getMatchActive().getMatch().getInventoryChests()
-													.getContents()[plugin.getRandom().nextInt(plugin.getMatchActive()
-															.getMatch().getInventoryChests().getContents().length)]);
-								}
+			if ((evt.getAction() == Action.RIGHT_CLICK_BLOCK || evt.getAction() == Action.LEFT_CLICK_BLOCK)
+					&& evt.getClickedBlock().getType() == XMaterial.CHEST.parseMaterial()) {
+				if (plugin.getMatchActive().getMapHandler().getCuboid() != null && plugin.getMatchActive()
+						.getMapHandler().getCuboid().contains(evt.getClickedBlock().getLocation())) {
+					if (!plugin.getMatchActive().getMapHandler().getChests()
+							.contains(evt.getClickedBlock().getLocation())
+							&& !plugin.getMatchActive().getMapHandler().getBlockPlaced().keySet()
+									.contains(evt.getClickedBlock().getLocation())) {
+						if (evt.getClickedBlock().getState() instanceof Chest) {
+							plugin.getMatchActive().getMapHandler().getChests()
+									.add(evt.getClickedBlock().getLocation());
+							Chest chest = (Chest) evt.getClickedBlock().getState();
+							chest.getBlockInventory().clear();
+							Integer objetos = 0;
+							if (plugin.getMatchActive().getMatch().getInventoryChests() != null
+									&& plugin.getMatchActive().getMatch().getInventoryChests().getContents() != null
+									&& plugin.getMatchActive().getMatch().getInventoryChests()
+											.getContents().length != 0) {
+								objetos = Math.max(plugin.getMinItemOnChests(), plugin.getRandom().nextInt(Math.min(
+										plugin.getMaxItemOnChests(),
+										plugin.getMatchActive().getMatch().getInventoryChests().getContents().length)));
+							}
+							for (int i = 0; i < objetos; i++) {
+								chest.getBlockInventory()
+										.addItem(plugin.getMatchActive().getMatch().getInventoryChests()
+												.getContents()[plugin.getRandom().nextInt(plugin.getMatchActive()
+														.getMatch().getInventoryChests().getContents().length)]);
 							}
 						}
-					}
-				} else if (evt.getAction() == Action.RIGHT_CLICK_AIR || evt.getAction() == Action.RIGHT_CLICK_BLOCK) {
-
-					if (player.getItemInHand() != null
-							&& player.getItemInHand().getType() != plugin.getApi().getMaterial(AMaterials.AIR)) {
-						if (player.getItemInHand().getItemMeta() != null
-								&& player.getItemInHand().getItemMeta().getDisplayName() != null
-								&& player.getItemInHand().getItemMeta().getDisplayName()
-										.equals(plugin.getPowerUpItem().getItemMeta().getDisplayName())) {
-
-							if (player.getItemInHand().getAmount() > 1) {
-								player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
-								player.updateInventory();
-
-							} else {
-								player.getInventory().remove(player.getItemInHand());
-								player.updateInventory();
-							}
-							player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 60, 5));
-							player.sendMessage(
-									plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getNowProtected());
-						} else if (player.getItemInHand().equals(plugin.getCheckpointItem())) {
-							UtilsRandomEvents.teleportaPlayer(player,
-									plugin.getMatchActive().getMapHandler().getCheckpoints().get(player.getName()),
-									plugin);
-							player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 99));
-
-						} else if (player.getItemInHand().getType() == plugin.getApi().getMaterial(AMaterials.STONE_HOE)
-								&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEGG)) {
-							player.launchProjectile(Egg.class);
-
-						} else if ((player.getItemInHand().getType() == plugin.getApi()
-								.getMaterial(AMaterials.WOOD_SPADE)
-								|| player.getItemInHand().getType() == plugin.getApi()
-										.getMaterial(AMaterials.STONE_SPADE)
-								|| player.getItemInHand().getType() == plugin.getApi()
-										.getMaterial(AMaterials.IRON_SPADE)
-								|| player.getItemInHand().getType() == plugin.getApi()
-										.getMaterial(AMaterials.GOLD_SPADE)
-								|| player.getItemInHand().getType() == plugin.getApi()
-										.getMaterial(AMaterials.DIAMOND_SPADE))
-								&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEEF)) {
-							player.launchProjectile(Egg.class);
-						}
-					}
-
-				} else if (evt.getAction().equals(Action.PHYSICAL)) {
-					if (evt.getClickedBlock() != null
-							&& evt.getClickedBlock().getType() == XMaterial.STONE_PRESSURE_PLATE.parseMaterial()) {
-						plugin.getMatchActive().getMapHandler().getCheckpoints().put(player.getName(),
-								player.getLocation());
-
 					}
 				}
+			} else if (evt.getAction() == Action.RIGHT_CLICK_AIR || evt.getAction() == Action.RIGHT_CLICK_BLOCK) {
+
+				if (player.getItemInHand() != null
+						&& player.getItemInHand().getType() != XMaterial.AIR.parseMaterial()) {
+					if (player.getItemInHand().getItemMeta() != null
+							&& player.getItemInHand().getItemMeta().getDisplayName() != null
+							&& player.getItemInHand().getItemMeta().getDisplayName()
+									.equals(plugin.getPowerUpItem().getItemMeta().getDisplayName())) {
+
+						if (player.getItemInHand().getAmount() > 1) {
+							player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
+							player.updateInventory();
+
+						} else {
+							player.getInventory().remove(player.getItemInHand());
+							player.updateInventory();
+						}
+						player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 60, 5));
+						player.sendMessage(
+								plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getNowProtected());
+					} else if (player.getItemInHand().equals(plugin.getCheckpointItem())) {
+						UtilsRandomEvents.teleportaPlayer(player,
+								plugin.getMatchActive().getMapHandler().getCheckpoints().get(player.getName()), plugin);
+						player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 99));
+
+					} else if (player.getItemInHand().getType() == (XMaterial.STONE_HOE.parseMaterial())
+							&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEGG)) {
+						player.launchProjectile(Egg.class);
+
+					} else if ((player.getItemInHand().getType() == (XMaterial.WOODEN_SHOVEL.parseMaterial())
+							|| player.getItemInHand().getType() == (XMaterial.STONE_SHOVEL.parseMaterial())
+							|| player.getItemInHand().getType() == (XMaterial.IRON_SHOVEL.parseMaterial())
+							|| player.getItemInHand().getType() == (XMaterial.GOLDEN_SHOVEL.parseMaterial())
+							|| player.getItemInHand().getType() == (XMaterial.DIAMOND_SHOVEL.parseMaterial()))
+							&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEEF)) {
+						player.launchProjectile(Egg.class);
+					}
+				}
+
+			} else if (evt.getAction().equals(Action.PHYSICAL)) {
+				if (evt.getClickedBlock() != null
+						&& evt.getClickedBlock().getType() == XMaterial.STONE_PRESSURE_PLATE.parseMaterial()) {
+					plugin.getMatchActive().getMapHandler().getCheckpoints().put(player.getName(),
+							player.getLocation());
+
+				}
 			}
-//		}
+		}
+		// }
 	}
-	
-	
-	
-	
 
 	@EventHandler
 	public void onPlayerEggThrow(PlayerEggThrowEvent evt) {
 		Player player = evt.getPlayer();
-		
+
 		if (plugin.getMatchActive() != null
 				&& (plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEGG)
 						|| plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEEF))
@@ -193,7 +183,7 @@ public class Use implements Listener {
 				Block blockBefore = hitBlock;
 				Block nextBlock = b.next();
 
-				while (b.hasNext() && nextBlock.getType() == plugin.getApi().getMaterial(AMaterials.AIR)) {
+				while (b.hasNext() && nextBlock.getType() == XMaterial.AIR.parseMaterial()) {
 					blockBefore = nextBlock;
 					nextBlock = b.next();
 				}
@@ -206,7 +196,7 @@ public class Use implements Listener {
 									.equals(plugin.getMatchActive().getMatch().getMaterial())) {
 						plugin.getMatchActive().getMapHandler().getBlockDisappeared().put(nextBlock.getLocation(),
 								nextBlock.getState().getData().clone());
-						nextBlock.setType(plugin.getApi().getMaterial(AMaterials.AIR));
+						nextBlock.setType(XMaterial.AIR.parseMaterial());
 
 					} else if (plugin.getMatchActive().getMatch().getDatas() != null
 							&& !plugin.getMatchActive().getMatch().getDatas().isEmpty() && nextBlock.getType() != null
@@ -214,7 +204,7 @@ public class Use implements Listener {
 									nextBlock.getState().getData(), plugin.getMatchActive().getMatch())) {
 						plugin.getMatchActive().getMapHandler().getBlockDisappeared().put(nextBlock.getLocation(),
 								nextBlock.getState().getData().clone());
-						nextBlock.setType(plugin.getApi().getMaterial(AMaterials.AIR));
+						nextBlock.setType(XMaterial.AIR.parseMaterial());
 					}
 				}
 			}
@@ -341,7 +331,7 @@ public class Use implements Listener {
 					evt.setCancelled(false);
 					plugin.getMatchActive().getMapHandler().getBlockPlaced().put(evt.getBlock().getLocation(),
 							evt.getBlock().getState().getData().clone());
-					// evt.getBlock().setType(plugin.getApi().getMaterial(AMaterials.AIR));
+					// evt.getBlock().setType(XMaterial.AIR.parseMaterial());
 				} else if (plugin.getMatchActive().getMatch().getDatas() != null
 						&& !plugin.getMatchActive().getMatch().getDatas().isEmpty() && evt.getBlock().getType() != null
 						&& evt.getBlock().getState().getData() != null && UtilsRandomEvents.contieneMaterialData(
@@ -350,7 +340,7 @@ public class Use implements Listener {
 					evt.setCancelled(false);
 					plugin.getMatchActive().getMapHandler().getBlockPlaced().put(evt.getBlock().getLocation(),
 							evt.getBlock().getState().getData().clone());
-					// evt.getBlock().setType(plugin.getApi().getMaterial(AMaterials.AIR));
+					// evt.getBlock().setType(XMaterial.AIR.parseMaterial());
 				} else {
 					evt.setCancelled(true);
 

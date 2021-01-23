@@ -10,7 +10,7 @@ import org.bukkit.material.MaterialData;
 import com.adri1711.randomevents.match.enums.MinigameType;
 import com.adri1711.randomevents.match.utils.InventoryPers;
 
-public class Match {
+public class Match implements Comparable<Match> {
 
 	private String name;
 
@@ -31,7 +31,7 @@ public class Match {
 	private List<Location> spectatorSpawns;
 
 	private Double secondsMobSpawn;
-	 
+
 	private Integer secondsToBegin;
 
 	private Location location1;
@@ -49,7 +49,7 @@ public class Match {
 	private InventoryPers inventoryBeast;
 
 	private InventoryPers inventoryRunners;
-	
+
 	private InventoryPers inventoryChests;
 
 	private Location beastSpawn;
@@ -57,9 +57,9 @@ public class Match {
 	private String material;
 
 	private List<MaterialData> datas;
-	
+
 	private List<String> scenes;
-	
+
 	private Boolean enabled;
 
 	public Match() {
@@ -71,7 +71,7 @@ public class Match {
 		this.spawns = new ArrayList<Location>();
 		this.spectatorSpawns = new ArrayList<Location>();
 		this.datas = new ArrayList<MaterialData>();
-		this.scenes= new ArrayList<String>();
+		this.scenes = new ArrayList<String>();
 	}
 
 	public String getName() {
@@ -250,8 +250,6 @@ public class Match {
 	public void setDatas(List<MaterialData> datas) {
 		this.datas = datas;
 	}
-	
-	
 
 	public InventoryPers getInventoryChests() {
 		return inventoryChests;
@@ -260,8 +258,6 @@ public class Match {
 	public void setInventoryChests(InventoryPers inventoryChests) {
 		this.inventoryChests = inventoryChests;
 	}
-	
-	
 
 	public Integer getSecondsToBegin() {
 		return secondsToBegin;
@@ -270,8 +266,6 @@ public class Match {
 	public void setSecondsToBegin(Integer secondsToBegin) {
 		this.secondsToBegin = secondsToBegin;
 	}
-	
-	 
 
 	public Boolean getEnabled() {
 		return enabled;
@@ -280,7 +274,6 @@ public class Match {
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
 	}
-	
 
 	public List<String> getScenes() {
 		return scenes;
@@ -429,6 +422,12 @@ public class Match {
 		} else if (!tiempoPartida.equals(other.tiempoPartida))
 			return false;
 		return true;
+	}
+
+	@Override
+	public int compareTo(Match match) {
+
+		return Integer.valueOf(minigame.ordinal()).compareTo(Integer.valueOf(match.getMinigame().ordinal()));
 	}
 
 }

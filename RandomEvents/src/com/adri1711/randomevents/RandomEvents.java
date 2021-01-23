@@ -49,7 +49,6 @@ import com.adri1711.randomevents.metrics.Metrics;
 import com.adri1711.randomevents.placeholders.ReventPlaceholder;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.randomevents.util.UtilsSQL;
-import com.adri1711.util.enums.AMaterials;
 import com.adri1711.util.enums.XMaterial;
 
 public class RandomEvents extends JavaPlugin {
@@ -264,7 +263,7 @@ public class RandomEvents extends JavaPlugin {
 		this.editando = new ArrayList<String>();
 		this.comandosExecutor = new ComandosExecutor();
 
-		this.powerUpItem = new ItemStack(getApi().getMaterial(AMaterials.EMERALD));
+		this.powerUpItem = new ItemStack(XMaterial.EMERALD.parseMaterial());
 		ItemMeta itemMeta = this.powerUpItem.getItemMeta();
 		itemMeta.setDisplayName("§2§lPowerUP");
 		this.powerUpItem.setItemMeta(itemMeta);
@@ -368,9 +367,9 @@ public class RandomEvents extends JavaPlugin {
 		this.commandsOnMatchBegin = (List<String>) getConfig().getStringList("commandsOnMatchBegin");
 		this.commandsOnMatchEnd = (List<String>) getConfig().getStringList("commandsOnMatchEnd");
 		this.commandsOnUserLeave = (List<String>) getConfig().getStringList("commandsOnUserLeave");
-		
-		this.forcePlayersToEnter= getConfig().getBoolean("forcePlayersToEnter");
-		this.topKillerHealAfterKill= getConfig().getBoolean("topKillerHealAfterKill");
+
+		this.forcePlayersToEnter = getConfig().getBoolean("forcePlayersToEnter");
+		this.topKillerHealAfterKill = getConfig().getBoolean("topKillerHealAfterKill");
 		Material mat = null;
 		String statsMenuFill = getConfig().getString("statsmenu.fill");
 		Integer data = null;
@@ -1553,7 +1552,5 @@ public class RandomEvents extends JavaPlugin {
 	public void setTopKillerHealAfterKill(boolean topKillerHealAfterKill) {
 		this.topKillerHealAfterKill = topKillerHealAfterKill;
 	}
-	
 
-	
 }
