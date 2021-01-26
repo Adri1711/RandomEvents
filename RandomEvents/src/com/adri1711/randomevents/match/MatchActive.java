@@ -275,6 +275,29 @@ public class MatchActive {
 		}
 	}
 
+	public void uneAPlayerSpec(Player player) {
+		if (!getPlayerHandler().getPlayersSpectators().contains(player)) {
+			if (!plugin.isForceEmptyInventoryToJoin()) {
+				// if (UtilsRandomEvents.checkLeatherItems(player)) {
+				procesoUnirPlayerSpec(player);
+				// } else {
+				// player.sendMessage(plugin.getLanguage().getTagPlugin() +
+				// " "
+				// + plugin.getLanguage().getDisposeLeatherItems());
+				//
+				// }
+			} else {
+				if (UtilsRandomEvents.checkInventoryVacio(player)) {
+					procesoUnirPlayerSpec(player);
+				} else {
+					player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getClearInventory());
+
+				}
+			}
+
+		}
+	}
+
 	private void procesoUnirPlayer(Player player) {
 		if (UtilsRandomEvents.guardaInventario(plugin, player)) {
 			UtilsRandomEvents.borraInventario(player, plugin);
@@ -294,6 +317,45 @@ public class MatchActive {
 
 		}
 
+	}
+
+	private void procesoUnirPlayerSpec(Player player) {
+		Location loc = null;
+		if (plugin.isAdvancedSpectatorMode()) {
+			if (!getPlayerHandler().getPlayersObj().isEmpty()) {
+				loc = getPlayerHandler().getPlayersObj()
+						.get(plugin.getRandom().nextInt(getPlayerHandler().getPlayersObj().size())).getLocation();
+
+			}
+		} else {
+			if (!match.getSpectatorSpawns().isEmpty()) {
+				loc = match.getSpectatorSpawns().get(plugin.getRandom().nextInt(match.getSpectatorSpawns().size()));
+
+			}
+
+		}
+		if (loc != null) {
+			if (UtilsRandomEvents.guardaInventario(plugin, player)) {
+				UtilsRandomEvents.borraInventario(player, plugin);
+				if (UtilsRandomEvents.teleportaPlayer(player, loc, plugin)) {
+
+					hazComandosDeUnion(player);
+
+					getPlayerHandler().getPlayersSpectators().add(player);
+					if (plugin.isAdvancedSpectatorMode()) {
+						player.setGameMode(GameMode.SPECTATOR);
+					}
+					UtilsRandomEvents.playSound(player, XSound.ENTITY_BAT_HURT);
+				} else {
+					UtilsRandomEvents.sacaInventario(plugin, player);
+				}
+
+			} else {
+				player.sendMessage(
+						plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getErrorSavingInventory());
+
+			}
+		}
 	}
 
 	private void hazComandosDeUnion(Player player) {
@@ -753,11 +815,13 @@ public class MatchActive {
 			if (tiempo) {
 				play.sendMessage(plugin.getLanguage().getTagPlugin() + " "
 						+ plugin.getLanguage().getWinnersPoints().replace("%points%", maximo.toString())
+								.replace("%type%", match.getMinigame().getMessage())
 								.replace("%players%", cadenaGanadores).replace("%event%", match.getName()));
 
 			} else {
-				play.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getWinners()
-						.replace("%players%", cadenaGanadores).replace("%event%", match.getName()));
+				play.sendMessage(plugin.getLanguage().getTagPlugin()
+						+ plugin.getLanguage().getWinners().replace("%type%", match.getMinigame().getMessage())
+								.replace("%players%", cadenaGanadores).replace("%event%", match.getName()));
 			}
 		}
 		for (Player g : ganadores) {
@@ -2066,8 +2130,10 @@ public class MatchActive {
 	}
 
 	public void mandaSpectatorPlayer(Player p) {
-		Location loc = match.getSpectatorSpawns().get(getRandom().nextInt(match.getSpectatorSpawns().size()));
-		UtilsRandomEvents.teleportaPlayer(p, loc, plugin);
+		if (!match.getSpectatorSpawns().isEmpty()) {
+			Location loc = match.getSpectatorSpawns().get(getRandom().nextInt(match.getSpectatorSpawns().size()));
+			UtilsRandomEvents.teleportaPlayer(p, loc, plugin);
+		}
 
 	}
 

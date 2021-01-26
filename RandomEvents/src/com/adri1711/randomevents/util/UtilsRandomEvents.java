@@ -1374,6 +1374,44 @@ public class UtilsRandomEvents {
 		return s;
 	}
 
+	public static String calculateTimeHoursPoints(long seconds) {
+		int day = (int) TimeUnit.SECONDS.toDays(seconds);
+		long hours = TimeUnit.SECONDS.toHours(seconds) - TimeUnit.DAYS.toHours(day);
+		long minute = TimeUnit.SECONDS.toMinutes(seconds) - TimeUnit.DAYS.toMinutes(day)
+				- TimeUnit.HOURS.toMinutes(hours);
+		long second = TimeUnit.SECONDS.toSeconds(seconds) - TimeUnit.DAYS.toSeconds(day)
+				- TimeUnit.HOURS.toSeconds(hours) - TimeUnit.MINUTES.toSeconds(minute);
+
+		String s = "";
+		hours = hours + 24 * day;
+
+		if (hours > 9) {
+			s += hours + "";
+		} else if (hours > 0) {
+			s += "0" + hours;
+		} else {
+			s += "00";
+		}
+		s += ":";
+
+		if (minute > 9) {
+			s += minute + "";
+		} else if (minute > 0) {
+			s += "0" + minute;
+		} else {
+			s += "00";
+		}
+		s += ":";
+		if (second > 9) {
+			s += second + "";
+		} else if (second > 0) {
+			s += "0" + second;
+		} else {
+			s += "00";
+		}
+		return s;
+	}
+
 	public static String calculateTimeTwoPoints(long seconds) {
 		long minute = TimeUnit.SECONDS.toMinutes(seconds);
 		long second = TimeUnit.SECONDS.toSeconds(seconds) - TimeUnit.MINUTES.toSeconds(minute);
@@ -2160,8 +2198,109 @@ public class UtilsRandomEvents {
 		return listaPartidas;
 	}
 
-	public static Inventory createGUICredits(String name, Map<String, Integer> creditos, RandomEvents plugin) {
-		// TODO FIXME Auto-generated method stub
-		return null;
+	public static Inventory createGUICredits(Player p, Map<String, Integer> creditos, Integer page,
+			RandomEvents plugin) {
+		Inventory inv = Bukkit.createInventory(null, 45, plugin.getLanguage().getCreditsGuiName());
+		ItemStack nextPage = new ItemStack(XMaterial.OAK_SIGN.parseMaterial());
+		ItemStack backPage = new ItemStack(XMaterial.OAK_SIGN.parseMaterial());
+		ItemMeta nextPageMeta = nextPage.getItemMeta();
+		ItemMeta backPageMeta = backPage.getItemMeta();
+		nextPageMeta.setDisplayName(plugin.getLanguage().getCreditsGuiPage() + " " + (page + 1));
+		backPageMeta.setDisplayName(plugin.getLanguage().getCreditsGuiPage() + " " + (page - 1));
+		nextPage.setItemMeta(nextPageMeta);
+		backPage.setItemMeta(backPageMeta);
+
+		for (int i = page * 36; i < (page + 1) * 36 && i < plugin.getMatchesAvailable().size(); i++) {
+			Match match = plugin.getMatchesAvailable().get(i);
+			ItemStack cabeza = new ItemStack(match.getMinigame().getMaterial());
+			ItemMeta cabezaMeta = cabeza.getItemMeta();
+			cabezaMeta.setDisplayName("§e§l" + match.getName());
+
+			List<String> lore = new ArrayList<String>();
+			if (p.hasPermission(Constantes.PERM_COOLDOWN_BYPASS)) {
+				if (plugin.getMatchActive() != null) {
+					lore.add(plugin.getLanguage().getCreditsEventRunning());
+
+				} else {
+					lore.add(plugin.getLanguage().getCreditsReady());
+
+				}
+			} else if (p.hasPermission(Constantes.PERM_COOLDOWN)) {
+				if (plugin.getMatchActive() != null) {
+					lore.add(plugin.getLanguage().getCreditsEventRunning());
+
+				} else {
+					if (plugin.getCooldowns().containsKey(p.getName())) {
+						if (plugin.getCooldowns().get(p.getName()).before(new Date())) {
+							plugin.getCooldowns().remove(p.getName());
+							lore.add(plugin.getLanguage().getCreditsReady());
+
+						} else {
+							if (plugin.isMysqlEnabled()) {
+
+								Integer credits = creditos.containsKey(match.getName()) ? creditos.get(match.getName())
+										: 0;
+								if (credits != 0) {
+									lore.add(plugin.getLanguage().getCreditsBal().replaceAll("%credits%",
+											"" + (creditos.containsKey(match.getName()) ? creditos.get(match.getName())
+													: 0)));
+								} else {
+									lore.add(plugin.getLanguage().getCreditsCooldown());
+
+								}
+
+							} else {
+								lore.add(plugin.getLanguage().getCreditsCooldown());
+							}
+						}
+
+					} else {
+						lore.add(plugin.getLanguage().getCreditsReady());
+					}
+
+				}
+			} else if (plugin.isMysqlEnabled()) {
+				lore.add(plugin.getLanguage().getCreditsBal().replaceAll("%credits%",
+						"" + (creditos.containsKey(match.getName()) ? creditos.get(match.getName()) : 0)));
+			}
+			cabezaMeta.setLore(lore);
+			cabeza.setItemMeta(cabezaMeta);
+			inv.setItem(i - (page * 36), cabeza);
+		}
+
+		if (page == 0) {
+			inv.setItem(44, nextPage);
+
+		} else if (plugin.getMatchesAvailable().size() > (page * 36)) {
+			inv.setItem(44, nextPage);
+			inv.setItem(36, backPage);
+		} else {
+			inv.setItem(36, backPage);
+		}
+
+		return inv;
+	}
+
+	public static void sendCreditsInfo(Player p, Player playerBal, Map<String, Integer> creditos, RandomEvents plugin) {
+
+		String infoBal = plugin.getLanguage().getTagPlugin() + playerBal.getName() + Constantes.SALTO_LINEA;
+
+		for (Entry<String, Integer> entrada : creditos.entrySet()) {
+			infoBal += ChatColor.YELLOW + entrada.getKey() + " - "
+					+ plugin.getLanguage().getCreditsBal().replaceAll("%credits%", "" + entrada.getValue())
+					+ Constantes.SALTO_LINEA;
+		}
+		p.sendMessage(infoBal);
+	}
+
+	public static Match searchEvent(String name, RandomEvents plugin) {
+		Match m = null;
+		for (Match match : plugin.getMatchesAvailable()) {
+			if (match.getName().equals(name)) {
+				m = match;
+			}
+		}
+		return m;
+
 	}
 }

@@ -53,15 +53,20 @@ public class Chat implements Listener {
 		Player player = event.getPlayer();
 
 		if (plugin.getPlayerWaterDrop().containsKey(player.getName())) {
-
-			checkMessageCreationWaterDrop(event.getMessage(), player,
+			if (plugin.isDebugMode()) {
+				System.out.println("RandomEvents :: Message of creation: " + event.getMessage());
+			}
+			checkMessageCreationWaterDrop(event.getMessage().trim(), player,
 					plugin.getPlayersCreationWaterDrop().get(player.getName()));
 
 			event.setCancelled(Boolean.TRUE);
 
 		} else if (plugin.getPlayerMatches().containsKey(player.getName())) {
+			if (plugin.isDebugMode()) {
+				System.out.println("RandomEvents :: Message of creation: " + event.getMessage());
+			}
 
-			checkMessageCreation(event.getMessage(), player, plugin.getPlayersCreation().get(player.getName()));
+			checkMessageCreation(event.getMessage().trim(), player, plugin.getPlayersCreation().get(player.getName()));
 
 			event.setCancelled(Boolean.TRUE);
 
@@ -243,7 +248,7 @@ public class Chat implements Listener {
 				}
 			} else {
 				// pasado = Boolean.TRUE;
-				actua=Boolean.FALSE;
+				actua = Boolean.FALSE;
 				player.sendMessage(Constantes.SALTO_LINEA);
 				switch (CreacionWaterDrop.getByPosition(position)) {
 
@@ -274,7 +279,6 @@ public class Chat implements Listener {
 				player.sendMessage("§6§l" + plugin.getWaterDrops().indexOf(m) + " - " + m.getName());
 			}
 			player.sendMessage("§6§l" + plugin.getWaterDrops().size() + " - §e§lNew Water Drop");
-
 
 		}
 	}
@@ -689,8 +693,8 @@ public class Chat implements Listener {
 						break;
 					case BLOCKS_ALLOWED:
 						if (message.equals(Constantes.DONE)) {
-							if (player.getItemInHand() != null && player.getItemInHand()
-									.getType() != (XMaterial.AIR.parseMaterial())) {
+							if (player.getItemInHand() != null
+									&& player.getItemInHand().getType() != (XMaterial.AIR.parseMaterial())) {
 								match.getDatas().add(player.getItemInHand().getData());
 								plugin.getPlayersCreation().remove(player.getName());
 
@@ -703,8 +707,8 @@ public class Chat implements Listener {
 					case MATERIAL_SPLEEF:
 						if (message.equals(Constantes.DONE)) {
 
-							if (player.getItemInHand() != null && player.getItemInHand()
-									.getType() != (XMaterial.AIR.parseMaterial())) {
+							if (player.getItemInHand() != null
+									&& player.getItemInHand().getType() != (XMaterial.AIR.parseMaterial())) {
 								match.getDatas().add(player.getItemInHand().getData());
 								plugin.getPlayersCreation().put(player.getName(),
 										Creacion.ANOTHER_MATERIAL_SPLEEF.getPosition());
@@ -728,8 +732,8 @@ public class Chat implements Listener {
 					case ANOTHER_MATERIAL_SPLEEF:
 						if (message.equals(Constantes.DONE)) {
 
-							if (player.getItemInHand() != null && player.getItemInHand()
-									.getType() != (XMaterial.AIR.parseMaterial())) {
+							if (player.getItemInHand() != null
+									&& player.getItemInHand().getType() != (XMaterial.AIR.parseMaterial())) {
 								match.getDatas().add(player.getItemInHand().getData());
 								actua = Boolean.FALSE;
 								// actualiza =

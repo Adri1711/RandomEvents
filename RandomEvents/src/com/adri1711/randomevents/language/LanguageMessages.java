@@ -106,6 +106,7 @@ public class LanguageMessages {
 	private String helpMenu;
 	private String showMenu;
 	private String join;
+	private String spec;
 	private String tjoin;
 	private String leave;
 	private String tleave;
@@ -137,6 +138,7 @@ public class LanguageMessages {
 	private String announceNextTournament;
 
 	private String statsGuiName;
+	private String creditsGuiName;
 
 	private String scoreboardTitle;
 	private String scoreboardPoints;
@@ -161,6 +163,24 @@ public class LanguageMessages {
 	private String disable;
 	private String enable;
 
+	private String creditsAddedOther;
+	private String creditsAdded;
+	private String creditsBal;
+	private String creditsCooldown;
+	private String creditsReady;
+
+	private String giveCreditsSpecific;
+	private String giveCreditsRandom;
+	private String creditsBalOther;
+	private String creditsBalOwn;
+	private String playerOffline;
+	private String eventInvalid;
+	private String creditsEventRunning;
+	
+	private String guiCMD;
+
+	private String creditsGuiPage;
+	
 	private List<String> minigameDescriptionBR;
 	private List<String> minigameDescriptionBRT2;
 	private List<String> minigameDescriptionLJ;
@@ -1479,6 +1499,15 @@ public class LanguageMessages {
 	public void setStatsGuiName(String statsGuiName) {
 		this.statsGuiName = statsGuiName;
 	}
+	
+
+	public String getCreditsGuiName() {
+		return creditsGuiName.replaceAll("&", "§");
+	}
+
+	public void setCreditsGuiName(String creditsGuiName) {
+		this.creditsGuiName = creditsGuiName;
+	}
 
 	public String getAnnounceFirst() {
 		return announceFirst.replaceAll("&", "§");
@@ -1535,5 +1564,128 @@ public class LanguageMessages {
 	public void setBowKill(String bowKill) {
 		this.bowKill = bowKill;
 	}
+
+	public String getGiveCreditsSpecific() {
+		return giveCreditsSpecific.replaceAll("&", "§");
+	}
+
+	public String getGiveCreditsRandom() {
+		return giveCreditsRandom.replaceAll("&", "§");
+	}
+
+	public String getCreditsBalOther() {
+		return creditsBalOther.replaceAll("&", "§");
+	}
+
+	public String getCreditsBalOwn() {
+		return creditsBalOwn.replaceAll("&", "§");
+	}
+
+	public String getPlayerOffline() {
+		return playerOffline.replaceAll("&", "§");
+	}
+
+	public String getEventInvalid() {
+		return eventInvalid.replaceAll("&", "§");
+	}
+
+	public void setGiveCreditsSpecific(String giveCreditsSpecific) {
+		this.giveCreditsSpecific = giveCreditsSpecific;
+	}
+
+	public void setGiveCreditsRandom(String giveCreditsRandom) {
+		this.giveCreditsRandom = giveCreditsRandom;
+	}
+
+	public void setCreditsBalOther(String creditsBalOther) {
+		this.creditsBalOther = creditsBalOther;
+	}
+
+	public void setCreditsBalOwn(String creditsBalOwn) {
+		this.creditsBalOwn = creditsBalOwn;
+	}
+
+	public void setPlayerOffline(String playerOffline) {
+		this.playerOffline = playerOffline;
+	}
+
+	public void setEventInvalid(String eventInvalid) {
+		this.eventInvalid = eventInvalid;
+	}
+
+	public String getCreditsAddedOther() {
+		return creditsAddedOther.replaceAll("&", "§");
+	}
+
+	public String getCreditsAdded() {
+		return creditsAdded.replaceAll("&", "§");
+	}
+
+	public String getCreditsBal() {
+		return creditsBal.replaceAll("&", "§");
+	}
+
+	public String getCreditsCooldown() {
+		return creditsCooldown.replaceAll("&", "§");
+	}
+
+	public String getCreditsReady() {
+		return creditsReady.replaceAll("&", "§");
+	}
+
+	public void setCreditsAddedOther(String creditsAddedOther) {
+		this.creditsAddedOther = creditsAddedOther;
+	}
+
+	public void setCreditsAdded(String creditsAdded) {
+		this.creditsAdded = creditsAdded;
+	}
+
+	public void setCreditsBal(String creditsBal) {
+		this.creditsBal = creditsBal;
+	}
+
+	public void setCreditsCooldown(String creditsCooldown) {
+		this.creditsCooldown = creditsCooldown;
+	}
+
+	public void setCreditsReady(String creditsReady) {
+		this.creditsReady = creditsReady;
+	}
+
+	public String getCreditsEventRunning() {
+		return creditsEventRunning.replaceAll("&", "§");
+	}
+
+	public void setCreditsEventRunning(String creditsEventRunning) {
+		this.creditsEventRunning = creditsEventRunning;
+	}
+
+	public String getGuiCMD() {
+		return guiCMD.replaceAll("&", "§");
+	}
+
+	public void setGuiCMD(String guiCMD) {
+		this.guiCMD = guiCMD;
+	}
+
+	public String getCreditsGuiPage() {
+		return creditsGuiPage.replaceAll("&", "§");
+	}
+
+	public void setCreditsGuiPage(String creditsGuiPage) {
+		this.creditsGuiPage = creditsGuiPage;
+	}
+
+	public String getSpec() {
+		return spec.replaceAll("&", "§");
+	}
+
+	public void setSpec(String spec) {
+		this.spec = spec;
+	}
+	
+	
+	
 
 }

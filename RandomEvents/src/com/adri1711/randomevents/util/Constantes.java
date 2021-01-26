@@ -12,6 +12,9 @@ public class Constantes {
 	public static String CADENA_PLAYER = "%player%";
 	public static String SALTO_LINEA = "\n";
 	public static String TABULACION = "    ";
+	
+	public static String PERM_COOLDOWN="randomevent.gui.cooldown";
+	public static String PERM_COOLDOWN_BYPASS="randomevent.gui.cooldown.bypass";
 
 	public static String INVENTORY_NAME = "§9RandomEvents";
 	public static String INVENTORY_NAME_STATS = "§9RandomEvents Stats";
@@ -44,7 +47,9 @@ public class Constantes {
 		CMD_SHOW_MENU("showMenu", "menu.showMenu", "   &6/revent:\n          &e-> Shows this menu"),
 
 		CMD_JOIN("join", "menu.join", "   &6/revent join:\n          &e-> Join the Random Event"),
-
+		
+		CMD_SPEC("spec", "menu.spec", "   &6/revent spec:\n          &e-> Spectate the Random Event"),
+		
 		CMD_JOIN_TOURNAMENT("tjoin", "menu.tjoin",
 				"   &6/revent tjoin:\n          &e-> Join the Tournament Random Event"),
 
@@ -94,6 +99,19 @@ public class Constantes {
 
 		CMD_BEGIN_SPECIFIC("beginSpecific", "menu.admin.forceSpecific",
 				"   &6/revent begin <number>:\n          &e-> Begins a specific random event"),
+		
+		
+		
+		CMD_GUI("guiCMD",  "menu.guicmd", "   &6/revent gui:\n          &e-> Shows the available events gui"),
+		
+		CMD_GIVE_CREDITS_RANDOM("giveCreditsRandom",  "menu.admin.givecreditsrandom", "   &6/revent givecredits <player> <amount>:\n          &e-> Give credits of a random chosen event to a player"),
+
+		CMD_GIVE_CREDITS_SPECIFIC("giveCreditsSpecific", "menu.admin.givecreditsspecific", "   &6/revent givecredits <reventname> <player> <amount>:\n          &e-> Give credits of the specific event to a player"),
+		
+		CMD_BAL_CREDITS("creditsBalOwn",  "menu.admin.balcreditsown", "   &6/revent credits:\n          &e-> Shows your credits"),
+
+		CMD_BAL_CREDITS_OTHER("creditsBalOther",  "menu.admin.balcreditsother", "   &6/revent credits <player>:\n          &e-> Shows the player credits"),
+		
 
 		CMD_BAN_PLAYER("ban", "menu.admin.ban",
 				"   &6/revent ban <player> <time>:\n          &e-> Ban a player from RandomEvents"),
@@ -332,6 +350,22 @@ public class Constantes {
 		SCOREBOARD_TIME_FORMAT("scoreboardTime", "scoreboard.time", "&b%time%"),
 		
 		STATS_GUI_NAME("statsGuiName", "stats.guiname", "&bRandomEvents_Stats "),
+		
+		CREDITS_GUI_NAME("creditsGuiName", "credits.guiname", "&bRandomEvents_Available"),
+		
+		CREDITS_GUI_PAGE("creditsGuiPage", "credits.guipage", "&6Page"),
+
+		CREDITS_ADDED_OTHER("creditsAddedOther", "credits.addedother", "&6&l%credits% credits for %event% added to %player% "),
+		
+		CREDITS_ADDED("creditsAdded", "credits.addedown", "&6&l%credits% credits for %event% added to your account"),
+		
+		CREDITS_BAL("creditsBal", "credits.balance", "&6&l%credits% credits"),
+		
+		CREDITS_COOLDOWN("creditsCooldown", "credits.cooldown", "&b&lOn cooldown"),
+		
+		CREDITS_EVENT_RUNNING("creditsEventRunning", "credits.eventrunning", "&c&lEvent running!"),
+		
+		CREDITS_READY("creditsReady", "credits.ready", "&a&lReady"),
 
 		EVENT_DELETED("eventDeleted", "comun.eventDeleted", "&c&lThe RandomEvents was deleted!"),
 
@@ -340,6 +374,10 @@ public class Constantes {
 		EVENT_ENABLED("eventEnabled", "comun.eventEnabled", "&6&lThe RandomEvents was enabled!"),
 		
 		EVENT_IS_DISABLED("eventIsDisabled", "comun.eventIsDisabled", "&c&lThe RandomEvents is disabled!"),
+
+		PLAYER_OFFLINE("playerOffline", "comun.playerOffline", "&c&lThe player is offline!"),
+
+		EVENT_INVALID("eventInvalid", "comun.eventInvalid", "&c&lThe RandomEvents is invalid!"),
 
 		MINIGAME_DESC_BR("minigameDescriptionBR", "minigame.description.BR",
 				"&eA fierce battle where just 1 player;&e or team can remain alive."),

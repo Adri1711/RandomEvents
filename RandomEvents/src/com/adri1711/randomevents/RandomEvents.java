@@ -80,6 +80,9 @@ public class RandomEvents extends JavaPlugin {
 	private List<Match> matchesAvailable;
 
 	private Tournament tournament;
+	
+	private Map<String, Date> cooldowns;
+
 
 	private Map<String, Match> playerMatches;
 
@@ -257,11 +260,16 @@ public class RandomEvents extends JavaPlugin {
 
 	private boolean topKillerHealAfterKill;
 
+	private int cooldownUsersBeginEvents;
+
+	private boolean forcePlayersToSpectate;
+
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
 		loadConfig();
 		this.editando = new ArrayList<String>();
 		this.comandosExecutor = new ComandosExecutor();
+		this.cooldowns=new HashMap<String,Date>();
 
 		this.powerUpItem = new ItemStack(XMaterial.EMERALD.parseMaterial());
 		ItemMeta itemMeta = this.powerUpItem.getItemMeta();
@@ -367,8 +375,9 @@ public class RandomEvents extends JavaPlugin {
 		this.commandsOnMatchBegin = (List<String>) getConfig().getStringList("commandsOnMatchBegin");
 		this.commandsOnMatchEnd = (List<String>) getConfig().getStringList("commandsOnMatchEnd");
 		this.commandsOnUserLeave = (List<String>) getConfig().getStringList("commandsOnUserLeave");
-
+		this.cooldownUsersBeginEvents= getConfig().getInt("cooldownUsersBeginEvents");
 		this.forcePlayersToEnter = getConfig().getBoolean("forcePlayersToEnter");
+		this.forcePlayersToSpectate= getConfig().getBoolean("forcePlayersToSpectate");
 		this.topKillerHealAfterKill = getConfig().getBoolean("topKillerHealAfterKill");
 		Material mat = null;
 		String statsMenuFill = getConfig().getString("statsmenu.fill");
@@ -1552,5 +1561,31 @@ public class RandomEvents extends JavaPlugin {
 	public void setTopKillerHealAfterKill(boolean topKillerHealAfterKill) {
 		this.topKillerHealAfterKill = topKillerHealAfterKill;
 	}
+
+	public Map<String, Date> getCooldowns() {
+		return cooldowns;
+	}
+
+	public void setCooldowns(Map<String, Date> cooldowns) {
+		this.cooldowns = cooldowns;
+	}
+
+	public int getCooldownUsersBeginEvents() {
+		return cooldownUsersBeginEvents;
+	}
+
+	public void setCooldownUsersBeginEvents(int cooldownUsersBeginEvents) {
+		this.cooldownUsersBeginEvents = cooldownUsersBeginEvents;
+	}
+
+	public boolean isForcePlayersToSpectate() {
+		return forcePlayersToSpectate;
+	}
+
+	public void setForcePlayersToSpectate(boolean forcePlayersToSpectate) {
+		this.forcePlayersToSpectate = forcePlayersToSpectate;
+	}
+	
+	
 
 }

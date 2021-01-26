@@ -72,6 +72,9 @@ useScoreboard: true
 #Use particles in some minigames
 useParticles: false
 
+#Cooldown for users that doesnt have the cooldown bypass permission for beginning a Random Event without using credits in /revent gui ( On seconds )
+cooldownUsersBeginEvents: 3600
+
 #Allowed configurable particles ->
 #EXPLOSION_NORMAL  || EXPLOSION_LARGE    ||  EXPLOSION_HUGE    ||  FIREWORKS_SPARK
 #WATER_BUBBLE      || WATER_SPLASH       ||  WATER_WAKE        ||  SUSPENDED
@@ -159,6 +162,9 @@ cooldownAfterDeath: false
 
 #Force the players to enter the random event when its spawned
 forcePlayersToEnter: false
+
+#Force the players to enter the random event spectating ( It will works only if forcePlayersToEnter is enabled )
+forcePlayersToSpectate: false
 
 #Commands that will be done each time a user join a random event, use it in case you need to get the god mode off, to set the gamemode to survival, etc
 commandsOnUserJoin:

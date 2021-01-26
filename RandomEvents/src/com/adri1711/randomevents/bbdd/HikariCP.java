@@ -18,6 +18,7 @@ public class HikariCP {
 		hikari.addDataSourceProperty("databaseName", database);
 		hikari.addDataSourceProperty("user", username);
 		hikari.addDataSourceProperty("password", password);
+		hikari.addDataSourceProperty("useSSL", false);
 	}
 
 	public void close() {

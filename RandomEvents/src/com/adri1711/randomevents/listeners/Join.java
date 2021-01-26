@@ -1,5 +1,7 @@
 package com.adri1711.randomevents.listeners;
 
+import java.util.Date;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -18,15 +20,24 @@ public class Join implements Listener {
 		super();
 		this.plugin = plugin;
 	}
-	
+
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent evt) {
 		Player player = evt.getPlayer();
 		UtilsRandomEvents.sacaInventario(plugin, player);
-		
-	}
-	
+		if (plugin.getMatchActive() != null && plugin.isForcePlayersToSpectate()) {
 
+			if (plugin.getMatchActive().getPlaying()) {
+
+				if (!UtilsRandomEvents.checkBanned(player, plugin)) {
+					plugin.getMatchActive().uneAPlayerSpec(player);
+				}
+
+			}
+
+		}
+
+	}
 
 	public RandomEvents getPlugin() {
 		return plugin;
@@ -35,9 +46,5 @@ public class Join implements Listener {
 	public void setPlugin(RandomEvents plugin) {
 		this.plugin = plugin;
 	}
-	
-	
-	
-	
-	
+
 }

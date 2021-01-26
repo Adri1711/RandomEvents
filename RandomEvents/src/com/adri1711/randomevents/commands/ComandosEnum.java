@@ -7,6 +7,8 @@ public enum ComandosEnum {
 
 	CMD_JOIN("join", 2, "randomevent.join", "getJoin", "joinRandomEvent", false, false),
 
+	CMD_SPECTATE("spec", 1, "randomevent.spec", "getSpec", "specRandomEvent", false, false),
+
 	CMD_JOIN_TOURNAMENT("tjoin", 2, "randomevent.tjoin", "getTjoin", "joinTournamentRandomEvent", false, false),
 
 	CMD_LEAVE("leave", 1, "randomevent.leave", "getLeave", "leaveRandomEvent", true, false),
@@ -27,6 +29,8 @@ public enum ComandosEnum {
 			false),
 
 	CMD_MATCHES("matches", 1, "randomevent.admin.matches", "getMenuMatches", "showRandomEvents", true, true),
+	
+	CMD_LIST("list", 1, "randomevent.admin.matches", "getMenuMatches", "showRandomEvents", false, true),
 
 	CMD_NEXT("next", 1, "randomevent.next", "getNext", "nextRandomEvents", true, true),
 
@@ -45,6 +49,16 @@ public enum ComandosEnum {
 			true),
 
 	CMD_BEGIN_SPECIFIC("begin", 2, "randomevent.admin.force", "getBeginSpecific", "forceRandomEvent", true, true),
+	
+	CMD_GUI("gui", 1, "randomevent.gui", "getGuiCMD", "openGUIEvent", true, false),
+
+	CMD_GIVE_CREDITS_RANDOM("givecredits", 3, "randomevent.give.credits", "getGiveCreditsRandom", "giveCredits", true, true),
+
+	CMD_GIVE_CREDITS_SPECIFIC("givecredits", 4, "randomevent.give.credits", "getGiveCreditsSpecific", "giveCredits", true, true),
+	
+	CMD_BAL_CREDITS("credits", 1, "randomevent.bal.credits", "getCreditsBalOwn", "balCredits", true, true),
+
+	CMD_BAL_CREDITS_OTHER("credits", 2, "randomevent.bal.credits.other", "getCreditsBalOther", "balCredits", true, true),
 
 	CMD_BAN_PLAYER("ban", 3, "randomevent.admin.ban", "getBan", "banPlayer", true, true),
 
