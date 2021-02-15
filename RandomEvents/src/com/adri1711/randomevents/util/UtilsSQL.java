@@ -287,42 +287,48 @@ public class UtilsSQL {
 
 	public static void getCreditsGUI(Player p, RandomEvents plugin) {
 		Map<String, Integer> creditos = new HashMap<String, Integer>();
-		String query = "";
-		if (plugin.isMysqlUUIDMode()) {
-			query = Queries.SELECT_ALL_CREDITS_UUID_MODE.replaceAll(Queries.UUID, p.getUniqueId().toString());
+
+		if (plugin.isMysqlEnabled()) {
+			String query = "";
+			if (plugin.isMysqlUUIDMode()) {
+				query = Queries.SELECT_ALL_CREDITS_UUID_MODE.replaceAll(Queries.UUID, p.getUniqueId().toString());
+			} else {
+				query = Queries.SELECT_ALL_CREDITS_NAME_MODE.replaceAll(Queries.NAME, p.getName());
+
+			}
+			new QueryBukkitRunnable(plugin.getHikari().getHikari(), query, new Callback<ResultSet, SQLException>() {
+				@Override
+				public void call(ResultSet resultSet, SQLException thrown) {
+					if (thrown == null) {
+						try {
+							while (resultSet.next()) {
+								if (creditos.containsKey(resultSet.getString("event"))) {
+									creditos.put(resultSet.getString("event"),
+											creditos.get(resultSet.getString("event")) + resultSet.getInt("credits"));
+
+								} else {
+									creditos.put(resultSet.getString("event"), resultSet.getInt("credits"));
+								}
+
+							}
+							Bukkit.getServer().getScheduler().runTask((Plugin) plugin, new Runnable() {
+								public void run() {
+									p.openInventory(UtilsRandomEvents.createGUICredits(p, creditos, 0, plugin));
+								}
+							});
+						} catch (SQLException e) {
+							System.out.println(e);
+						}
+					} else {
+					}
+				}
+			}).runTaskAsynchronously(plugin);
 		} else {
-			query = Queries.SELECT_ALL_CREDITS_NAME_MODE.replaceAll(Queries.NAME, p.getName());
+			p.openInventory(UtilsRandomEvents.createGUICredits(p, creditos, 0, plugin));
 
 		}
-		new QueryBukkitRunnable(plugin.getHikari().getHikari(), query, new Callback<ResultSet, SQLException>() {
-			@Override
-			public void call(ResultSet resultSet, SQLException thrown) {
-				if (thrown == null) {
-					try {
-						while (resultSet.next()) {
-							if (creditos.containsKey(resultSet.getString("event"))) {
-								creditos.put(resultSet.getString("event"),
-										creditos.get(resultSet.getString("event")) + resultSet.getInt("credits"));
-
-							} else {
-								creditos.put(resultSet.getString("event"), resultSet.getInt("credits"));
-							}
-
-						}
-						Bukkit.getServer().getScheduler().runTask((Plugin) plugin, new Runnable() {
-							public void run() {
-								p.openInventory(UtilsRandomEvents.createGUICredits(p, creditos,0, plugin));
-							}
-						});
-					} catch (SQLException e) {
-						System.out.println(e);
-					}
-				} else {
-				}
-			}
-		}).runTaskAsynchronously(plugin);
 	}
-	
+
 	public static void getCreditsText(Player p, Player playerBal, RandomEvents plugin) {
 		Map<String, Integer> creditos = new HashMap<String, Integer>();
 		String query = "";
@@ -349,7 +355,7 @@ public class UtilsSQL {
 						}
 						Bukkit.getServer().getScheduler().runTask((Plugin) plugin, new Runnable() {
 							public void run() {
-								UtilsRandomEvents.sendCreditsInfo(p,playerBal, creditos, plugin);
+								UtilsRandomEvents.sendCreditsInfo(p, playerBal, creditos, plugin);
 							}
 						});
 					} catch (SQLException e) {
@@ -361,11 +367,12 @@ public class UtilsSQL {
 		}).runTaskAsynchronously(plugin);
 	}
 
-	public static void addCredits(Player p, String event,Integer credits, RandomEvents plugin) {
+	public static void addCredits(Player p, String event, Integer credits, RandomEvents plugin) {
 		String query = "";
 		if (plugin.isMysqlEnabled()) {
 			query = Queries.INSERT_UPDATE_ADD_CREDITS.replaceAll(Queries.UUID, p.getUniqueId().toString())
-					.replaceAll(Queries.NAME, p.getName()).replaceAll(Queries.EVENT, event).replaceAll(Queries.CREDITS, ""+credits);
+					.replaceAll(Queries.NAME, p.getName()).replaceAll(Queries.EVENT, event)
+					.replaceAll(Queries.CREDITS, "" + credits);
 
 			new UpdateBukkitRunnable(plugin.getHikari().getHikari(), query, new Callback<Integer, SQLException>() {
 				@Override

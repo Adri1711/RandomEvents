@@ -377,7 +377,14 @@ public class Constantes {
 
 		PLAYER_OFFLINE("playerOffline", "comun.playerOffline", "&c&lThe player is offline!"),
 
+		
 		EVENT_INVALID("eventInvalid", "comun.eventInvalid", "&c&lThe RandomEvents is invalid!"),
+		
+		ITEM_RETURN_CHECKPOINT("itemReturnCheckpoint", "item.returnCheckpoint", "&2&lReturn to checkpoint"),
+		
+		ITEM_HIDE_PLAYER("itemHidePlayer", "item.hidePlayer", "&c&lHide players"),
+		
+		ITEM_SHOW_PLAYER("itemShowPlayer", "item.showPlayer", "&2&lShow players"),
 
 		MINIGAME_DESC_BR("minigameDescriptionBR", "minigame.description.BR",
 				"&eA fierce battle where just 1 player;&e or team can remain alive."),

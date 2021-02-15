@@ -80,9 +80,8 @@ public class RandomEvents extends JavaPlugin {
 	private List<Match> matchesAvailable;
 
 	private Tournament tournament;
-	
-	private Map<String, Date> cooldowns;
 
+	private Map<String, Date> cooldowns;
 
 	private Map<String, Match> playerMatches;
 
@@ -264,12 +263,15 @@ public class RandomEvents extends JavaPlugin {
 
 	private boolean forcePlayersToSpectate;
 
+	private ItemStack vanishItem;
+	private ItemStack endVanishItem;
+
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
 		loadConfig();
 		this.editando = new ArrayList<String>();
 		this.comandosExecutor = new ComandosExecutor();
-		this.cooldowns=new HashMap<String,Date>();
+		this.cooldowns = new HashMap<String, Date>();
 
 		this.powerUpItem = new ItemStack(XMaterial.EMERALD.parseMaterial());
 		ItemMeta itemMeta = this.powerUpItem.getItemMeta();
@@ -344,6 +346,9 @@ public class RandomEvents extends JavaPlugin {
 
 	public void inicializaVariables() {
 		updateConfig();
+
+		this.language = new LanguageMessages(this);
+
 		this.random = new Random();
 
 		this.tournament = new Tournament();
@@ -375,9 +380,9 @@ public class RandomEvents extends JavaPlugin {
 		this.commandsOnMatchBegin = (List<String>) getConfig().getStringList("commandsOnMatchBegin");
 		this.commandsOnMatchEnd = (List<String>) getConfig().getStringList("commandsOnMatchEnd");
 		this.commandsOnUserLeave = (List<String>) getConfig().getStringList("commandsOnUserLeave");
-		this.cooldownUsersBeginEvents= getConfig().getInt("cooldownUsersBeginEvents");
+		this.cooldownUsersBeginEvents = getConfig().getInt("cooldownUsersBeginEvents");
 		this.forcePlayersToEnter = getConfig().getBoolean("forcePlayersToEnter");
-		this.forcePlayersToSpectate= getConfig().getBoolean("forcePlayersToSpectate");
+		this.forcePlayersToSpectate = getConfig().getBoolean("forcePlayersToSpectate");
 		this.topKillerHealAfterKill = getConfig().getBoolean("topKillerHealAfterKill");
 		Material mat = null;
 		String statsMenuFill = getConfig().getString("statsmenu.fill");
@@ -403,9 +408,50 @@ public class RandomEvents extends JavaPlugin {
 			}
 		}
 		this.checkpointItem = new ItemStack(checkpointMat);
+
+		Material matVanish = null;
+		String vanishMaterial = getConfig().getString("vanishItem");
+		Integer dataVanish = null;
+		if (vanishMaterial.contains(":")) {
+			dataVanish = Integer.valueOf(vanishMaterial.split(":")[1]);
+			vanishMaterial = vanishMaterial.split(":")[0];
+		}
+		try {
+			matVanish = Material.valueOf(vanishMaterial);
+		} catch (Exception e) {
+			if (matVanish == null) {
+				matVanish = XMaterial.ENDER_EYE.parseMaterial();
+			}
+		}
 		ItemMeta itemMetaCheck = this.checkpointItem.getItemMeta();
-		itemMetaCheck.setDisplayName("§2§lReturn to checkpoint");
+		itemMetaCheck.setDisplayName(language.getItemReturnCheckpoint());
 		this.checkpointItem.setItemMeta(itemMetaCheck);
+
+		this.vanishItem = new ItemStack(matVanish);
+		if (dataVanish != null) {
+			vanishItem.setDurability(dataVanish.shortValue());
+			try {
+				vanishItem.getData().setData(dataVanish.byteValue());
+			} catch (Throwable e) {
+
+			}
+		}
+		this.endVanishItem = new ItemStack(matVanish);
+		if (dataVanish != null) {
+			endVanishItem.setDurability(dataVanish.shortValue());
+			try {
+				endVanishItem.getData().setData(dataVanish.byteValue());
+			} catch (Throwable e) {
+
+			}
+		}
+		ItemMeta itemVanishItem = this.vanishItem.getItemMeta();
+		itemVanishItem.setDisplayName(language.getItemHidePlayer());
+		this.vanishItem.setItemMeta(itemVanishItem);
+		
+		ItemMeta itemEndVanishMeta = this.endVanishItem.getItemMeta();
+		itemEndVanishMeta.setDisplayName(language.getItemShowPlayer());
+		this.endVanishItem.setItemMeta(itemEndVanishMeta);
 
 		this.oitcHealAfterKill = getConfig().getBoolean("oitcHealAfterKill");
 		this.cooldownAfterDeath = getConfig().getBoolean("cooldownAfterDeath");
@@ -423,6 +469,8 @@ public class RandomEvents extends JavaPlugin {
 
 			}
 		}
+
+		
 		this.statsALLTIME = getConfig().getInt("statsmenu.ALLTIME");
 		this.statsBR = getConfig().getInt("statsmenu.BR");
 		this.statsBRT2 = getConfig().getInt("statsmenu.BRT2");
@@ -541,7 +589,6 @@ public class RandomEvents extends JavaPlugin {
 		this.mysqlPassword = getConfig().getString("mysql.password");
 		this.mysqlPort = getConfig().getInt("mysql.port");
 
-		this.language = new LanguageMessages(this);
 		int pluginId = 8944;
 		Metrics metrics = new Metrics(this, pluginId);
 
@@ -1585,7 +1632,21 @@ public class RandomEvents extends JavaPlugin {
 	public void setForcePlayersToSpectate(boolean forcePlayersToSpectate) {
 		this.forcePlayersToSpectate = forcePlayersToSpectate;
 	}
-	
-	
+
+	public ItemStack getVanishItem() {
+		return vanishItem;
+	}
+
+	public void setVanishItem(ItemStack vanishItem) {
+		this.vanishItem = vanishItem;
+	}
+
+	public ItemStack getEndVanishItem() {
+		return endVanishItem;
+	}
+
+	public void setEndVanishItem(ItemStack endVanishItem) {
+		this.endVanishItem = endVanishItem;
+	}
 
 }

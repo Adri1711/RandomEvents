@@ -176,11 +176,15 @@ public class LanguageMessages {
 	private String playerOffline;
 	private String eventInvalid;
 	private String creditsEventRunning;
-	
+
 	private String guiCMD;
 
 	private String creditsGuiPage;
-	
+
+	private String itemReturnCheckpoint;
+	private String itemHidePlayer;
+	private String itemShowPlayer;
+
 	private List<String> minigameDescriptionBR;
 	private List<String> minigameDescriptionBRT2;
 	private List<String> minigameDescriptionLJ;
@@ -1499,7 +1503,6 @@ public class LanguageMessages {
 	public void setStatsGuiName(String statsGuiName) {
 		this.statsGuiName = statsGuiName;
 	}
-	
 
 	public String getCreditsGuiName() {
 		return creditsGuiName.replaceAll("&", "§");
@@ -1684,8 +1687,29 @@ public class LanguageMessages {
 	public void setSpec(String spec) {
 		this.spec = spec;
 	}
-	
-	
-	
+
+	public String getItemReturnCheckpoint() {
+		return itemReturnCheckpoint.replaceAll("&", "§");
+	}
+
+	public void setItemReturnCheckpoint(String itemReturnCheckpoint) {
+		this.itemReturnCheckpoint = itemReturnCheckpoint;
+	}
+
+	public String getItemHidePlayer() {
+		return itemHidePlayer.replaceAll("&", "§");
+	}
+
+	public void setItemHidePlayer(String itemHidePlayer) {
+		this.itemHidePlayer = itemHidePlayer;
+	}
+
+	public String getItemShowPlayer() {
+		return itemShowPlayer.replaceAll("&", "§");
+	}
+
+	public void setItemShowPlayer(String itemShowPlayer) {
+		this.itemShowPlayer = itemShowPlayer;
+	}
 
 }

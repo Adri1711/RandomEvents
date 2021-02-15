@@ -1,5 +1,6 @@
 package com.adri1711.randomevents.listeners;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
@@ -25,8 +26,9 @@ public class Quit implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerDisconnect(PlayerQuitEvent evt) {
 		Player player = evt.getPlayer();
-		if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayerHandler().getPlayersSpectators().contains(player)) {
-			UtilsRandomEvents.borraInventario(player,plugin);
+		if (plugin.getMatchActive() != null
+				&& plugin.getMatchActive().getPlayerHandler().getPlayersSpectators().contains(player)) {
+			UtilsRandomEvents.borraInventario(player, plugin);
 			plugin.getMatchActive().echaDePartida(player, true, false, true);
 		}
 
@@ -40,11 +42,21 @@ public class Quit implements Listener {
 			if (e.getExited() instanceof Player) {
 				Player p = (Player) e.getExited();
 
-				if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlayerHandler().getPlayersObj().contains(p)) {
+				if (plugin.getMatchActive() != null
+						&& plugin.getMatchActive().getPlayerHandler().getPlayersObj().contains(p)) {
 					switch (plugin.getMatchActive().getMatch().getMinigame()) {
 					case BATTLE_ROYALE_CABALLO:
 
-						e.setCancelled(true);
+						Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+
+							@Override
+							public void run() {
+								if (e.getVehicle().getPassenger() == null)
+									e.getVehicle().setPassenger(e.getExited());
+
+							}
+
+						}, 2);
 						break;
 					default:
 						break;

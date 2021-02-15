@@ -121,6 +121,14 @@ public class Use implements Listener {
 								plugin.getMatchActive().getMapHandler().getCheckpoints().get(player.getName()), plugin);
 						player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 99));
 
+					} else if (player.getItemInHand().equals(plugin.getEndVanishItem())) {
+						UtilsRandomEvents.showPlayers(player,
+								plugin.getMatchActive().getPlayerHandler().getPlayersObj(),plugin);
+
+					} else if (player.getItemInHand().equals(plugin.getVanishItem())) {
+						UtilsRandomEvents.hidePlayers(player,
+								plugin.getMatchActive().getPlayerHandler().getPlayersObj(),plugin);
+
 					} else if (player.getItemInHand().getType() == (XMaterial.STONE_HOE.parseMaterial())
 							&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEGG)) {
 						player.launchProjectile(Egg.class);

@@ -139,6 +139,9 @@ idleTimeForDamage: 10
 #Item material for checkpoint item
 checkpointItem: 'BLAZE_ROD'
 
+#Item material for vanish item
+vanishItem: 'ENDER_EYE'
+
 #Arrow damage in arrow rain minigame
 arrowRainDamage: 10
 

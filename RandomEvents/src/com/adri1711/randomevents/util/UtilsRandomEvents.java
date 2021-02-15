@@ -2303,4 +2303,28 @@ public class UtilsRandomEvents {
 		return m;
 
 	}
+
+	public static void hidePlayers(Player player, List<Player> playersObj, RandomEvents plugin) {
+		for (Player p : playersObj) {
+			if (!p.equals(player)) {
+				player.hidePlayer(p);
+
+			}
+		}
+		player.setItemInHand(plugin.getEndVanishItem());
+		player.updateInventory();
+		plugin.getMatchActive().getPlayerHandler().getPlayersVanish().add(player);
+	}
+
+	public static void showPlayers(Player player, List<Player> playersObj, RandomEvents plugin) {
+		for (Player p : playersObj) {
+			if (!p.equals(player)) {
+				player.showPlayer(p);
+			}
+		}
+		player.setItemInHand(plugin.getVanishItem());
+		player.updateInventory();
+		plugin.getMatchActive().getPlayerHandler().getPlayersVanish().remove(player);
+
+	}
 }

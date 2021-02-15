@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
+import com.adri1711.util.enums.XMaterial;
 
 public class PickUp implements Listener {
 
@@ -28,27 +29,29 @@ public class PickUp implements Listener {
 			switch (plugin.getMatchActive().getMatch().getMinigame()) {
 			case GEM_CRAWLER:
 				Item item = evt.getItem();
+				if (item.getType().equals(XMaterial.EMERALD.parseMaterial())) {
+					if (plugin.getMatchActive().getPuntuacion().containsKey(player.getName())) {
+						plugin.getMatchActive().getPuntuacion().put(player.getName(),
+								plugin.getMatchActive().getPuntuacion().get(player.getName())
+										+ item.getItemStack().getAmount());
 
-				if (plugin.getMatchActive().getPuntuacion().containsKey(player.getName())) {
-					plugin.getMatchActive().getPuntuacion().put(player.getName(),
-							plugin.getMatchActive().getPuntuacion().get(player.getName())
-									+ item.getItemStack().getAmount());
+					} else {
+						plugin.getMatchActive().getPuntuacion().put(player.getName(), item.getItemStack().getAmount());
+					}
 
-				} else {
-					plugin.getMatchActive().getPuntuacion().put(player.getName(), item.getItemStack().getAmount());
+					item.remove();
+					if (plugin.getMatchActive().getPlayerHandler().getPlayerContador() == null) {
+						UtilsRandomEvents.mandaMensaje(plugin,
+								plugin.getMatchActive().getPlayerHandler().getPlayersObj(),
+								plugin.getLanguage().getNowGems()
+										.replace("%player%", player.getName()).replace("%points%", plugin
+												.getMatchActive().getPuntuacion().get(player.getName()).toString()),
+								true);
+						plugin.getMatchActive().compruebaPartida();
+					}
+					plugin.getMatchActive().updateScoreboards();
+					evt.setCancelled(true);
 				}
-
-				item.remove();
-				if (plugin.getMatchActive().getPlayerHandler().getPlayerContador() == null) {
-					UtilsRandomEvents.mandaMensaje(plugin, plugin.getMatchActive().getPlayerHandler().getPlayersObj(),
-							plugin.getLanguage().getNowGems().replace("%player%", player.getName()).replace("%points%",
-									plugin.getMatchActive().getPuntuacion().get(player.getName()).toString()),
-							true);
-					plugin.getMatchActive().compruebaPartida();
-				}
-				plugin.getMatchActive().updateScoreboards();
-				evt.setCancelled(true);
-
 				break;
 			default:
 				break;

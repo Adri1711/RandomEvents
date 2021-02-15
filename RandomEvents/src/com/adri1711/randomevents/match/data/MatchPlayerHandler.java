@@ -22,13 +22,15 @@ public class MatchPlayerHandler {
 
 	private List<Player> playersSpectators;
 
+	private List<Player> playersVanish;
+
 	private Player beast;
 
 	private Player playerContador;
-	
+
 	private Map<String, FastBoard> scoreboards;
 	private Map<String, Scoreboard> oldScoreboards;
-	
+
 	private List<Player> goalPlayers;
 
 	private Map<Integer, List<Player>> equipos;
@@ -40,7 +42,7 @@ public class MatchPlayerHandler {
 		this.playersObj = new ArrayList<Player>();
 		this.playersGanadores = new ArrayList<Player>();
 		this.playersSpectators = new ArrayList<Player>();
-		
+		this.playersVanish = new ArrayList<Player>();
 		this.equipos = new HashMap<Integer, List<Player>>();
 		this.goalPlayers = new ArrayList<Player>();
 		this.scoreboards = new HashMap<String, FastBoard>();
@@ -55,15 +57,14 @@ public class MatchPlayerHandler {
 		this.playersObj = playersGanadores;
 		this.playersGanadores = new ArrayList<Player>();
 		this.playersSpectators = playersSpectators;
-		
+		this.playersVanish = new ArrayList<Player>();
+
 		this.equipos = new HashMap<Integer, List<Player>>();
 
 		this.goalPlayers = new ArrayList<Player>();
 		scoreboards = new HashMap<String, FastBoard>();
 		oldScoreboards = new HashMap<String, Scoreboard>();
 	}
-	
-	
 
 	public List<String> getPlayers() {
 		return players;
@@ -72,7 +73,7 @@ public class MatchPlayerHandler {
 	public void setPlayers(List<String> players) {
 		this.players = players;
 	}
-	
+
 	public List<Player> getPlayersObj() {
 		return playersObj;
 	}
@@ -80,7 +81,7 @@ public class MatchPlayerHandler {
 	public void setPlayersObj(List<Player> playersObj) {
 		this.playersObj = playersObj;
 	}
-	
+
 	public Player getPlayerContador() {
 		return playerContador;
 	}
@@ -96,7 +97,7 @@ public class MatchPlayerHandler {
 	public void setPlayersSpectators(List<Player> playersSpectators) {
 		this.playersSpectators = playersSpectators;
 	}
-	
+
 	public List<Player> getPlayersGanadores() {
 		return playersGanadores;
 	}
@@ -104,7 +105,7 @@ public class MatchPlayerHandler {
 	public void setPlayersGanadores(List<Player> playersGanadores) {
 		this.playersGanadores = playersGanadores;
 	}
-	
+
 	public Player getBeast() {
 		return beast;
 	}
@@ -128,7 +129,7 @@ public class MatchPlayerHandler {
 	public void setEquipos(Map<Integer, List<Player>> equipos) {
 		this.equipos = equipos;
 	}
-	
+
 	public Map<String, FastBoard> getScoreboards() {
 		return scoreboards;
 	}
@@ -152,8 +153,13 @@ public class MatchPlayerHandler {
 	public void setGoalPlayers(List<Player> goalPlayers) {
 		this.goalPlayers = goalPlayers;
 	}
-	
-	
-	
-	
+
+	public List<Player> getPlayersVanish() {
+		return playersVanish;
+	}
+
+	public void setPlayersVanish(List<Player> playersVanish) {
+		this.playersVanish = playersVanish;
+	}
+
 }

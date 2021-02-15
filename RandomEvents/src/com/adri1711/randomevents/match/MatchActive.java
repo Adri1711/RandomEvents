@@ -401,7 +401,6 @@ public class MatchActive {
 	public void echaDePartida(Player player, Boolean comprueba, Boolean sacaInv, Boolean sacaSpectator,
 			Boolean compruebaSpectator, Boolean forzado) {
 		Location lastLocation = player.getLocation();
-
 		dropItems(player, forzado);
 		if (getPlayerHandler().getPlayersSpectators().contains(player)) {
 			if (comprueba) {
@@ -409,6 +408,9 @@ public class MatchActive {
 					UtilsRandomEvents.borraPlayerPorName(getPlayerHandler().getPlayersObj(), player);
 				}
 				getPlayerHandler().getPlayers().remove(player.getName());
+				for(Player p:getPlayerHandler().getPlayersVanish()){
+					p.showPlayer(player);
+				}
 
 			}
 
@@ -1006,6 +1008,29 @@ public class MatchActive {
 			task3.cancel();
 		}
 
+		switch (match.getMinigame()) {
+		case SG:
+		case SW:
+		case TSG:
+		case TSW:
+			Location center = getMapHandler().getCuboid().getCenter();
+			if (center != null) {
+
+				Collection<Entity> entities = center.getWorld().getNearbyEntities(center,
+						center.distance(match.getLocation1()), 5, center.distance(match.getLocation1()));
+				for (Entity e : entities) {
+					if (e != null) {
+						if (!(e instanceof Player)) {
+							e.remove();
+						}
+					}
+				}
+			}
+			break;
+		default:
+			break;
+		}
+
 		for (Entry<Location, MaterialData> entrada : getMapHandler().getBlockDisappeared().entrySet()) {
 			entrada.getKey().getBlock().setType(entrada.getValue().getItemType());
 			try {
@@ -1316,9 +1341,10 @@ public class MatchActive {
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				getStep().put(p, 0);
 				iniciaPlayer(p);
-
+				p.getInventory().addItem(plugin.getVanishItem());
+				p.updateInventory();
 			}
-
+			
 			setActivated(true);
 
 			break;
@@ -1575,7 +1601,8 @@ public class MatchActive {
 					getPets().put(p.getName(), horse);
 
 				}
-
+				p.getInventory().addItem(plugin.getVanishItem());
+				p.updateInventory();
 			}
 			break;
 		case BOAT_RUN:
@@ -1601,7 +1628,8 @@ public class MatchActive {
 
 				getMobs().add(boat);
 				getPets().put(p.getName(), boat);
-
+				p.getInventory().addItem(plugin.getVanishItem());
+				p.updateInventory();
 			}
 			break;
 		case RACE:
@@ -1615,6 +1643,7 @@ public class MatchActive {
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 				p.getInventory().addItem(plugin.getCheckpointItem());
+				p.getInventory().addItem(plugin.getVanishItem());
 				p.updateInventory();
 
 			}
