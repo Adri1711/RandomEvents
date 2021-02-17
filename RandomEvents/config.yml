@@ -5,6 +5,8 @@
 
 debugMode: false
 
+cmdAlias: 'revent'
+
 #Seconds to check if the probability match for a random event
 secondsTimer: 60
 

@@ -117,6 +117,8 @@ public class Use implements Listener {
 						player.sendMessage(
 								plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getNowProtected());
 					} else if (player.getItemInHand().equals(plugin.getCheckpointItem())) {
+						evt.setCancelled(true);
+
 						UtilsRandomEvents.teleportaPlayer(player,
 								plugin.getMatchActive().getMapHandler().getCheckpoints().get(player.getName()), plugin);
 						player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 99));
@@ -124,14 +126,13 @@ public class Use implements Listener {
 					} else if (player.getItemInHand().equals(plugin.getEndVanishItem())) {
 						evt.setCancelled(true);
 						UtilsRandomEvents.showPlayers(player,
-								plugin.getMatchActive().getPlayerHandler().getPlayersObj(),plugin);
+								plugin.getMatchActive().getPlayerHandler().getPlayersObj(), plugin);
 						UtilsRandomEvents.playSound(player, XSound.ENTITY_PLAYER_LEVELUP);
-						
 
 					} else if (player.getItemInHand().equals(plugin.getVanishItem())) {
 						evt.setCancelled(true);
 						UtilsRandomEvents.hidePlayers(player,
-								plugin.getMatchActive().getPlayerHandler().getPlayersObj(),plugin);
+								plugin.getMatchActive().getPlayerHandler().getPlayersObj(), plugin);
 						UtilsRandomEvents.playSound(player, XSound.ENTITY_PLAYER_LEVELUP);
 
 					} else if (player.getItemInHand().getType() == (XMaterial.STONE_HOE.parseMaterial())
@@ -370,7 +371,9 @@ public class Use implements Listener {
 				&& plugin.getMatchActive().getMapHandler().getCuboid().contains(event.getBlock().getLocation())) {
 			if (event.getEntityType().equals(EntityType.FALLING_BLOCK)) {
 				FallingBlock fb = (FallingBlock) event.getEntity();
-				if (fb.getMaterial().equals(XMaterial.ANVIL.parseMaterial())) {
+				if (fb.getMaterial().equals(XMaterial.ANVIL.parseMaterial())
+						|| fb.getMaterial().equals(XMaterial.CHIPPED_ANVIL.parseMaterial())
+						|| fb.getMaterial().equals(XMaterial.DAMAGED_ANVIL.parseMaterial())) {
 					if (event.getBlock().getType().equals(XMaterial.AIR.parseMaterial())) {
 						Location l = event.getBlock().getLocation();
 						Location l2 = l.clone();
@@ -386,7 +389,10 @@ public class Use implements Listener {
 									&& l2.getBlock().getType() != null && l2.getBlock().getState().getData() != null
 									&& (UtilsRandomEvents.contieneMaterialData(l2.getBlock().getState().getData(),
 											plugin.getMatchActive().getMatch())
-											|| l2.getBlock().getType().equals(XMaterial.ANVIL.parseMaterial()))) {
+											|| l2.getBlock().getType().equals(XMaterial.ANVIL.parseMaterial())
+											|| l2.getBlock().getType().equals(XMaterial.CHIPPED_ANVIL.parseMaterial())
+											|| l2.getBlock().getType()
+													.equals(XMaterial.DAMAGED_ANVIL.parseMaterial()))) {
 								plugin.getMatchActive().getMapHandler().getBlockDisappeared()
 										.put(l2.getBlock().getLocation(), l2.getBlock().getState().getData().clone());
 								l2.getBlock().setType(XMaterial.AIR.parseMaterial());

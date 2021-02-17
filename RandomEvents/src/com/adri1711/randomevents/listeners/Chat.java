@@ -37,13 +37,29 @@ public class Chat implements Listener {
 	public void onPlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event) {
 
 		Player p = event.getPlayer();
-		if (plugin.getMatchActive() != null
-				&& plugin.getMatchActive().getPlayerHandler().getPlayersSpectators().contains(p)) {
-			String aliase = event.getMessage().split(" ")[0];
-			aliase = aliase.replaceAll("/", "");
-			if (!plugin.getAllowedCmds().contains(aliase.toLowerCase()) && !p.hasPermission("randomevent.bypass")) {
-				event.setCancelled(true);
-				p.sendMessage(plugin.getLanguage().getCmdNotAllowed());
+		String aliase = event.getMessage().split(" ")[0];
+		aliase = aliase.replaceAll("/", "");
+		String[] fields = event.getMessage().split(" ");
+
+		List<String> campos = new ArrayList<String>();
+		for (int i = 0; i < fields.length; i++) {
+			if (i != 0) {
+				campos.add(fields[i]);
+			}
+		}
+
+		if (aliase.equalsIgnoreCase(plugin.getCmdAlias())) {
+			event.setCancelled(true);
+			plugin.onCommand(event.getPlayer(), null, aliase, campos.toArray(new String[campos.size()]));
+		} else {
+
+			if (plugin.getMatchActive() != null
+					&& plugin.getMatchActive().getPlayerHandler().getPlayersSpectators().contains(p)) {
+
+				if (!plugin.getAllowedCmds().contains(aliase.toLowerCase()) && !p.hasPermission("randomevent.bypass")) {
+					event.setCancelled(true);
+					p.sendMessage(plugin.getLanguage().getCmdNotAllowed());
+				}
 			}
 		}
 	}

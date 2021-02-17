@@ -268,6 +268,10 @@ public class RandomEvents extends JavaPlugin {
 
 	private Double sgAreaDamage;
 
+	private boolean globalCooldown;
+
+	private String cmdAlias;
+
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
 		loadConfig();
@@ -377,6 +381,7 @@ public class RandomEvents extends JavaPlugin {
 		this.idleTimeForDamage = Integer.valueOf(getConfig().getInt("idleTimeForDamage"));
 		this.sgAreaDamage = Double.valueOf(getConfig().getDouble("sgAreaDamage"));
 		
+		this.globalCooldown = getConfig().getBoolean("globalCooldown");
 		this.inventoryManagement = getConfig().getBoolean("inventoryManagement");
 		this.dropItemsAfterDie = getConfig().getBoolean("dropItemsAfterDie");
 		this.advancedSpectatorMode = getConfig().getBoolean("advancedSpectatorMode");
@@ -388,6 +393,8 @@ public class RandomEvents extends JavaPlugin {
 		this.forcePlayersToEnter = getConfig().getBoolean("forcePlayersToEnter");
 		this.forcePlayersToSpectate = getConfig().getBoolean("forcePlayersToSpectate");
 		this.topKillerHealAfterKill = getConfig().getBoolean("topKillerHealAfterKill");
+		this.cmdAlias = getConfig().getString("cmdAlias");
+
 		Material mat = null;
 		String statsMenuFill = getConfig().getString("statsmenu.fill");
 		Integer data = null;
@@ -1660,6 +1667,23 @@ public class RandomEvents extends JavaPlugin {
 	public void setSgAreaDamage(Double sgAreaDamage) {
 		this.sgAreaDamage = sgAreaDamage;
 	}
+
+	public boolean isGlobalCooldown() {
+		return globalCooldown;
+	}
+
+	public void setGlobalCooldown(boolean globalCooldown) {
+		this.globalCooldown = globalCooldown;
+	}
+
+	public String getCmdAlias() {
+		return cmdAlias;
+	}
+
+	public void setCmdAlias(String cmdAlias) {
+		this.cmdAlias = cmdAlias;
+	}
+	
 	
 
 }
