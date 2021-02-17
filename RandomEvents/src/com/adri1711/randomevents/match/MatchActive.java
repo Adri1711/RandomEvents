@@ -408,7 +408,7 @@ public class MatchActive {
 					UtilsRandomEvents.borraPlayerPorName(getPlayerHandler().getPlayersObj(), player);
 				}
 				getPlayerHandler().getPlayers().remove(player.getName());
-				for(Player p:getPlayerHandler().getPlayersVanish()){
+				for (Player p : getPlayerHandler().getPlayersVanish()) {
 					p.showPlayer(player);
 				}
 
@@ -421,6 +421,7 @@ public class MatchActive {
 				}
 			}
 			UtilsRandomEvents.borraInventario(player, plugin);
+			Boolean res = true;
 			if (pets.containsKey(player)) {
 				pets.get(player).remove();
 				pets.remove(player);
@@ -433,7 +434,7 @@ public class MatchActive {
 			}
 			try {
 				if (sacaSpectator || match.getSpectatorSpawns() == null || match.getSpectatorSpawns().isEmpty()) {
-					UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin);
+					res = UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin);
 				} else {
 					Location l = null;
 					Integer i = 0;
@@ -464,7 +465,7 @@ public class MatchActive {
 					&& (sacaSpectator || match.getSpectatorSpawns() == null || match.getSpectatorSpawns().isEmpty())) {
 				hazComandosDeSalir(player);
 				borraScoreboard(player);
-				if (plugin.isInventoryManagement())
+				if (plugin.isInventoryManagement() && res)
 					UtilsRandomEvents.sacaInventario(plugin, player);
 			}
 		}
@@ -501,6 +502,9 @@ public class MatchActive {
 							new Location(getMapHandler().getActualCuboid().getWorld(), 0, 0, 0), Double.MAX_VALUE, p);
 				}
 				getPlayerHandler().getPlayers().remove(p.getName());
+				for (Player pla : getPlayerHandler().getPlayersVanish()) {
+					pla.showPlayer(p);
+				}
 			}
 		}
 		for (Player player : players) {
@@ -1344,7 +1348,7 @@ public class MatchActive {
 				p.getInventory().addItem(plugin.getVanishItem());
 				p.updateInventory();
 			}
-			
+
 			setActivated(true);
 
 			break;
@@ -1743,7 +1747,7 @@ public class MatchActive {
 	protected void checkDamageSG() {
 		for (Player p : getPlayerHandler().getPlayersObj()) {
 			if (!getMapHandler().getActualCuboid().contains(p.getLocation())) {
-				p.damage(0.5);
+				p.damage(plugin.getSgAreaDamage());
 			}
 		}
 	}
@@ -2614,7 +2618,10 @@ public class MatchActive {
 							// primerasPartes.remove(primerasPartes.size() - 1);
 							primerasPartes = primerasPartes.subList(0, primerasPartes.size() - 1);
 
-							String lastPart = totalPart[1];
+							String lastPart = "";
+							if (totalPart.length > 1) {
+								lastPart = totalPart[1];
+							}
 							lastPart = StringEscapeUtils.unescapeJava(lastPart.toString());
 
 							lastPart = lastPart.replaceAll("%event%", match.getName())
@@ -2628,7 +2635,7 @@ public class MatchActive {
 
 							lastPart = ultimasPartes.get(0);
 
-							ultimasPartes = ultimasPartes.subList(1, ultimasPartes.size());
+							ultimasPartes.remove(0);
 
 							// ultimasPartes.remove(0);
 
@@ -2715,9 +2722,11 @@ public class MatchActive {
 	public void updateScoreboards() {
 		if (plugin.isUseScoreboard()) {
 			for (FastBoard fBoard : getPlayerHandler().getScoreboards().values()) {
-
-				fBoard.updateLines(UtilsRandomEvents.prepareLines(plugin, this, fBoard.getPlayer()));
-
+				try {
+					fBoard.updateLines(UtilsRandomEvents.prepareLines(plugin, this, fBoard.getPlayer()));
+				} catch (Throwable e) {
+					System.out.println(e);
+				}
 			}
 		}
 

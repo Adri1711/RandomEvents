@@ -122,12 +122,17 @@ public class Use implements Listener {
 						player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 99));
 
 					} else if (player.getItemInHand().equals(plugin.getEndVanishItem())) {
+						evt.setCancelled(true);
 						UtilsRandomEvents.showPlayers(player,
 								plugin.getMatchActive().getPlayerHandler().getPlayersObj(),plugin);
+						UtilsRandomEvents.playSound(player, XSound.ENTITY_PLAYER_LEVELUP);
+						
 
 					} else if (player.getItemInHand().equals(plugin.getVanishItem())) {
+						evt.setCancelled(true);
 						UtilsRandomEvents.hidePlayers(player,
 								plugin.getMatchActive().getPlayerHandler().getPlayersObj(),plugin);
+						UtilsRandomEvents.playSound(player, XSound.ENTITY_PLAYER_LEVELUP);
 
 					} else if (player.getItemInHand().getType() == (XMaterial.STONE_HOE.parseMaterial())
 							&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEGG)) {

@@ -17,6 +17,7 @@ import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.util.enums.XMaterial;
 import com.adri1711.util.enums.XSound;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
+import com.shampaggon.crackshot.events.WeaponExplodeEvent;
 
 public class WeaponShoot implements Listener {
 
@@ -25,7 +26,7 @@ public class WeaponShoot implements Listener {
 	public WeaponShoot(RandomEvents plugin) {
 		this.plugin = plugin;
 	}
-
+	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void weaponDamage(WeaponDamageEntityEvent ev) // Listens to
 															// EntityDamageEvent
@@ -626,10 +627,10 @@ public class WeaponShoot implements Listener {
 					&& plugin.getMatchActive().getPlayerHandler().getPlayersSpectators().contains(player)) {
 				ev.setCancelled(true);
 			}
-		} else if (ev.getVictim() instanceof Horse && ev.getDamager() instanceof Player)
+		} else if (ev.getVictim() instanceof Horse && ev.getPlayer() instanceof Player)
 
 		{
-			Player player = (Player) ev.getDamager();
+			Player player = (Player) ev.getPlayer();
 			if (plugin.getMatchActive() != null
 					&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())) {
 				plugin.getMatchActive().setDamageCounter(0);

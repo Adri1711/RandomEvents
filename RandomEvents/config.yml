@@ -133,6 +133,9 @@ tournament:
 #Probability to spawn a power up of resistance in arrow rain games
 probabilityPowerUp: 1
 
+#Survival Games Area damage
+sgAreaDamage: 1
+
 #Seconds for several minigames to damage all players if they are not attacking each other
 idleTimeForDamage: 10
 

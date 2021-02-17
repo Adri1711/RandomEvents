@@ -266,6 +266,8 @@ public class RandomEvents extends JavaPlugin {
 	private ItemStack vanishItem;
 	private ItemStack endVanishItem;
 
+	private Double sgAreaDamage;
+
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
 		loadConfig();
@@ -373,6 +375,8 @@ public class RandomEvents extends JavaPlugin {
 
 		this.minPlayers = Integer.valueOf(getConfig().getInt("minPlayers"));
 		this.idleTimeForDamage = Integer.valueOf(getConfig().getInt("idleTimeForDamage"));
+		this.sgAreaDamage = Double.valueOf(getConfig().getDouble("sgAreaDamage"));
+		
 		this.inventoryManagement = getConfig().getBoolean("inventoryManagement");
 		this.dropItemsAfterDie = getConfig().getBoolean("dropItemsAfterDie");
 		this.advancedSpectatorMode = getConfig().getBoolean("advancedSpectatorMode");
@@ -1648,5 +1652,14 @@ public class RandomEvents extends JavaPlugin {
 	public void setEndVanishItem(ItemStack endVanishItem) {
 		this.endVanishItem = endVanishItem;
 	}
+
+	public Double getSgAreaDamage() {
+		return sgAreaDamage;
+	}
+
+	public void setSgAreaDamage(Double sgAreaDamage) {
+		this.sgAreaDamage = sgAreaDamage;
+	}
+	
 
 }

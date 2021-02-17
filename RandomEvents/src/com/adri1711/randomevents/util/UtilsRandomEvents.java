@@ -543,6 +543,7 @@ public class UtilsRandomEvents {
 		if (loc != null) {
 			try {
 				p.teleport(loc);
+
 			} catch (Exception e) {
 				try {
 					Location loc2 = loc.clone();
@@ -556,6 +557,7 @@ public class UtilsRandomEvents {
 							System.out.println("Updated Loc ->" + loc2.toString());
 					}
 					p.teleport(loc2);
+
 				} catch (Exception e2) {
 					try {
 						Location loc2 = loc.clone();
@@ -570,6 +572,7 @@ public class UtilsRandomEvents {
 						}
 
 						p.teleport(loc2);
+
 					} catch (Exception e3) {
 						res = false;
 						System.out.println(e3);
