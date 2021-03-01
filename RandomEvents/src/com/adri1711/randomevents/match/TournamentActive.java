@@ -447,7 +447,7 @@ public class TournamentActive {
 				getPlayersObj().remove(player);
 				UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin);
 
-				player.setHealth(20);
+				player.setHealth(player.getMaxHealth());
 				player.setFoodLevel(20);
 				player.setFireTicks(0);
 			} catch (Exception e) {

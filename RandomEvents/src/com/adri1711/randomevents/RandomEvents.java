@@ -272,6 +272,10 @@ public class RandomEvents extends JavaPlugin {
 
 	private String cmdAlias;
 
+	private boolean needPasswordToJoin;
+
+	private String useEncoding;
+
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
 		loadConfig();
@@ -381,6 +385,7 @@ public class RandomEvents extends JavaPlugin {
 		this.idleTimeForDamage = Integer.valueOf(getConfig().getInt("idleTimeForDamage"));
 		this.sgAreaDamage = Double.valueOf(getConfig().getDouble("sgAreaDamage"));
 		
+		this.needPasswordToJoin = getConfig().getBoolean("needPasswordToJoin");
 		this.globalCooldown = getConfig().getBoolean("globalCooldown");
 		this.inventoryManagement = getConfig().getBoolean("inventoryManagement");
 		this.dropItemsAfterDie = getConfig().getBoolean("dropItemsAfterDie");
@@ -393,6 +398,9 @@ public class RandomEvents extends JavaPlugin {
 		this.forcePlayersToEnter = getConfig().getBoolean("forcePlayersToEnter");
 		this.forcePlayersToSpectate = getConfig().getBoolean("forcePlayersToSpectate");
 		this.topKillerHealAfterKill = getConfig().getBoolean("topKillerHealAfterKill");
+		
+		
+		this.useEncoding = getConfig().getString("useEncoding");
 		this.cmdAlias = getConfig().getString("cmdAlias");
 
 		Material mat = null;
@@ -678,7 +686,7 @@ public class RandomEvents extends JavaPlugin {
 		if (sender instanceof Player) {
 			player = (Player) sender;
 		}
-		if (label.equals(Comandos.COMANDO_ALIASE1) || label.equals(Comandos.COMANDO_ALIASE2)) {
+		if (label.equalsIgnoreCase(Comandos.COMANDO_ALIASE1) || label.equalsIgnoreCase(Comandos.COMANDO_ALIASE2)) {
 			switch (args.length) {
 			case 0:
 				Comandos.muestraMenu(this, player);
@@ -1683,6 +1691,23 @@ public class RandomEvents extends JavaPlugin {
 	public void setCmdAlias(String cmdAlias) {
 		this.cmdAlias = cmdAlias;
 	}
+
+	public boolean isNeedPasswordToJoin() {
+		return needPasswordToJoin;
+	}
+
+	public void setNeedPasswordToJoin(boolean needPasswordToJoin) {
+		this.needPasswordToJoin = needPasswordToJoin;
+	}
+
+	public String getUseEncoding() {
+		return useEncoding;
+	}
+
+	public void setUseEncoding(String useEncoding) {
+		this.useEncoding = useEncoding;
+	}
+	
 	
 	
 

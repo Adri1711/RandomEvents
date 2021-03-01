@@ -13,10 +13,9 @@ public class Cuboid {
 	private double maxZ;
 
 	public Cuboid(Location loc1, Location loc2) {
-		this(loc1.getWorld(), loc1.getX(), loc1.getY(), loc1.getZ(), loc2.getX(), loc2.getY(),
-				loc2.getZ());
+		this(loc1.getWorld(), loc1.getX(), loc1.getY(), loc1.getZ(), loc2.getX(), loc2.getY(), loc2.getZ());
 	}
-	
+
 	public Cuboid(Cuboid cube) {
 		this(cube.getWorld(), cube.getMaxX(), cube.getMaxY(), cube.getMaxZ(), cube.getMinX(), cube.getMinY(),
 				cube.getMinZ());
@@ -78,7 +77,7 @@ public class Cuboid {
 	public boolean overlaps(Cuboid cuboid) {
 		return cuboid.getWorld().equals(world)
 				&& !(cuboid.getMinX() > maxX || cuboid.getMinY() > maxY || cuboid.getMinZ() > maxZ
-						|| minZ > cuboid.getMaxX() || minY > cuboid.getMaxY() || minZ > cuboid.getMaxZ());
+						|| minX > cuboid.getMaxX() || minY > cuboid.getMaxY() || minZ > cuboid.getMaxZ());
 	}
 
 	public void shrink(Double percen) {
@@ -91,11 +90,12 @@ public class Cuboid {
 		minX += difX;
 		minZ += difZ;
 	}
-	
+
 	public void withdraw(Double blocks) {
-		
+
 		maxX -= blocks;
 		maxZ -= blocks;
+
 		minX += blocks;
 		minZ += blocks;
 	}
@@ -127,5 +127,15 @@ public class Cuboid {
 	public String toString() {
 		return "Cuboid[world:" + world.getName() + ", minX:" + minX + ", minY:" + minY + ", minZ:" + minZ + ", maxX:"
 				+ maxX + ", maxY:" + maxY + ", maxZ:" + maxZ + "]";
+	}
+
+	public void square() {
+		Location center = getCenter();
+		Double distance = Math.min(getMaxX() - center.getX(), getMaxZ() - center.getZ());
+		maxX = center.getX() + distance;
+		maxZ = center.getZ() + distance;
+		minX = center.getX() - distance;
+		minZ = center.getZ() - distance;
+
 	}
 }

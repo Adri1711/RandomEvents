@@ -50,7 +50,7 @@ public class Chat implements Listener {
 
 		if (aliase.equalsIgnoreCase(plugin.getCmdAlias())) {
 			event.setCancelled(true);
-			plugin.onCommand(event.getPlayer(), null, aliase, campos.toArray(new String[campos.size()]));
+			plugin.onCommand(event.getPlayer(), null, "revent", campos.toArray(new String[campos.size()]));
 		} else {
 
 			if (plugin.getMatchActive() != null

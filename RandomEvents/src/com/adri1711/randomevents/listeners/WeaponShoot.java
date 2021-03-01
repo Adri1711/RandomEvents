@@ -70,7 +70,7 @@ public class WeaponShoot implements Listener {
 											UtilsRandomEvents.playSound(damager, XSound.ENTITY_PLAYER_LEVELUP);
 											plugin.getMatchActive().echaDePartida(player, true, true, false, true,
 													true);
-											player.setHealth(20);
+											player.setHealth(player.getMaxHealth());
 
 										}
 										break;
@@ -86,7 +86,7 @@ public class WeaponShoot implements Listener {
 										UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
 										UtilsRandomEvents.playSound(damager, XSound.ENTITY_PLAYER_LEVELUP);
 										plugin.getMatchActive().echaDePartida(player, true, true, false);
-										player.setHealth(20);
+										player.setHealth(player.getMaxHealth());
 
 										break;
 									case KNOCKBACK_DUEL:
@@ -125,7 +125,7 @@ public class WeaponShoot implements Listener {
 																.toString()));
 										damager.getInventory().addItem(XMaterial.ARROW.parseItem());
 										if(plugin.isOitcHealAfterKill()){
-											damager.setHealth(20);
+											damager.setHealth(damager.getMaxHealth());
 										}
 										break;
 
@@ -154,7 +154,7 @@ public class WeaponShoot implements Listener {
 																.toString()));
 										
 										if(plugin.isTopKillerHealAfterKill()){
-											damager.setHealth(20);
+											damager.setHealth(damager.getMaxHealth());
 										}
 										
 										break;
@@ -230,7 +230,7 @@ public class WeaponShoot implements Listener {
 												UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
 												UtilsRandomEvents.playSound(damager, XSound.ENTITY_PLAYER_LEVELUP);
 												plugin.getMatchActive().echaDePartida(player, true, true, false);
-												player.setHealth(20);
+												player.setHealth(player.getMaxHealth());
 
 											} else {
 												ev.setCancelled(true);
@@ -372,7 +372,7 @@ public class WeaponShoot implements Listener {
 									UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
 
 									plugin.getMatchActive().echaDePartida(player, true, true, false, true, true);
-									player.setHealth(20);
+									player.setHealth(player.getMaxHealth());
 								}
 
 								break;
@@ -388,7 +388,7 @@ public class WeaponShoot implements Listener {
 										plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()),
 										false);
 								plugin.getMatchActive().echaDePartida(player, true, true, false);
-								player.setHealth(20);
+								player.setHealth(player.getMaxHealth());
 
 								break;
 							case ESCAPE_FROM_BEAST:
@@ -399,7 +399,7 @@ public class WeaponShoot implements Listener {
 										plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()),
 										false);
 								plugin.getMatchActive().echaDePartida(player, true, true, false);
-								player.setHealth(20);
+								player.setHealth(player.getMaxHealth());
 								break;
 							case KNOCKBACK_DUEL:
 							case BOMB_TAG:
@@ -454,7 +454,7 @@ public class WeaponShoot implements Listener {
 																	.toString()));
 											p.getInventory().addItem(XMaterial.ARROW.parseItem());
 											if(plugin.isOitcHealAfterKill()){
-												p.setHealth(20);
+												p.setHealth(p.getMaxHealth());
 											}
 										}
 									} else {
@@ -540,7 +540,7 @@ public class WeaponShoot implements Listener {
 																	.toString()));
 											p.getInventory().addItem(XMaterial.ARROW.parseItem());
 											if(plugin.isOitcHealAfterKill()){
-												p.setHealth(20);
+												p.setHealth(p.getMaxHealth());
 											}
 										}
 									} else {
@@ -605,7 +605,7 @@ public class WeaponShoot implements Listener {
 											plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()),
 											false);
 									plugin.getMatchActive().echaDePartida(player, true, true, false);
-									player.setHealth(20);
+									player.setHealth(player.getMaxHealth());
 								} else {
 									player.damage(plugin.getArrowRainDamage());
 									if (plugin.isHighestPriorityDamageEvents()) {

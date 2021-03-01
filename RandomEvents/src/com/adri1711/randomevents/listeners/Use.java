@@ -144,7 +144,7 @@ public class Use implements Listener {
 							|| player.getItemInHand().getType() == (XMaterial.IRON_SHOVEL.parseMaterial())
 							|| player.getItemInHand().getType() == (XMaterial.GOLDEN_SHOVEL.parseMaterial())
 							|| player.getItemInHand().getType() == (XMaterial.DIAMOND_SHOVEL.parseMaterial()))
-							&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEEF)) {
+							&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEGG)) {
 						player.launchProjectile(Egg.class);
 					}
 				}

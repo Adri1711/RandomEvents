@@ -450,7 +450,7 @@ public class MatchActive {
 						player.setGameMode(GameMode.SPECTATOR);
 					}
 				}
-				player.setHealth(20);
+				player.setHealth(player.getMaxHealth());
 				player.setFoodLevel(20);
 				player.setFireTicks(0);
 			} catch (Exception e) {
@@ -537,7 +537,7 @@ public class MatchActive {
 				}
 
 			}
-			player.setHealth(20);
+			player.setHealth(player.getMaxHealth());
 			player.setFoodLevel(20);
 			player.setFireTicks(0);
 
@@ -1197,11 +1197,15 @@ public class MatchActive {
 			doMoveAndWarmup();
 
 			if (plugin.isShowBorders()) {
+				Double distance = Math.min(
+						(getMapHandler().getActualCuboid().getMaxX() - getMapHandler().getActualCuboid().getMinX())
+								/ 1.,
+						(getMapHandler().getActualCuboid().getMaxZ() - getMapHandler().getActualCuboid().getMinZ())
+								/ 1.);
 				for (Player p : getPlayerHandler().getPlayersObj()) {
+
 					UtilsRandomEvents.setWorldBorder(getPlugin(), getMapHandler().getActualCuboid().getCenter(),
-							(getMapHandler().getActualCuboid().getMaxX() - getMapHandler().getActualCuboid().getMinX())
-									/ 1.,
-							p);
+							distance, p);
 				}
 				partidaSG();
 
@@ -1472,11 +1476,14 @@ public class MatchActive {
 			mandaMensajesEquipo(getPlayerHandler().getEquipos());
 			doMoveAndWarmup();
 			if (plugin.isShowBorders()) {
+				Double distance = Math.min(
+						(getMapHandler().getActualCuboid().getMaxX() - getMapHandler().getActualCuboid().getMinX())
+								/ 1.,
+						(getMapHandler().getActualCuboid().getMaxZ() - getMapHandler().getActualCuboid().getMinZ())
+								/ 1.);
 				for (Player p : getPlayerHandler().getPlayersObj()) {
 					UtilsRandomEvents.setWorldBorder(getPlugin(), getMapHandler().getActualCuboid().getCenter(),
-							(getMapHandler().getActualCuboid().getMaxX() - getMapHandler().getActualCuboid().getMinX())
-									/ 2.,
-							p);
+							distance, p);
 				}
 
 				partidaSG();
@@ -1726,6 +1733,8 @@ public class MatchActive {
 	private void partidaSG() {
 		endDate = new Date().getTime() + 1000 * getTiempoPartida();
 
+		squareMap();
+
 		task = new BukkitRunnable() {
 			public void run() {
 				updateScoreboards();
@@ -1744,11 +1753,26 @@ public class MatchActive {
 
 	}
 
+	private void squareMap() {
+		getMapHandler().getActualCuboid().square();
+
+	}
+
 	protected void checkDamageSG() {
+		List<Player> playersEchar = new ArrayList<Player>();
 		for (Player p : getPlayerHandler().getPlayersObj()) {
 			if (!getMapHandler().getActualCuboid().contains(p.getLocation())) {
-				p.damage(plugin.getSgAreaDamage());
+				if (p.getHealth() <= plugin.getSgAreaDamage()) {
+					playersEchar.add(p);
+				} else {
+					p.damage(plugin.getSgAreaDamage());
+
+				}
 			}
+		}
+		for (Player p : playersEchar) {
+			echaDePartida(p, true, true, false, true, true);
+
 		}
 	}
 
@@ -1789,11 +1813,13 @@ public class MatchActive {
 			public void run() {
 				getMapHandler().getActualCuboid().withdraw(0.5);
 				for (Player p : getPlayerHandler().getPlayersObj()) {
-
-					UtilsRandomEvents.setWorldBorder(getPlugin(), getMapHandler().getActualCuboid().getCenter(),
+					Double distance = Math.min(
 							(getMapHandler().getActualCuboid().getMaxX() - getMapHandler().getActualCuboid().getMinX())
 									/ 1.,
-							p);
+							(getMapHandler().getActualCuboid().getMaxZ() - getMapHandler().getActualCuboid().getMinZ())
+									/ 1.);
+					UtilsRandomEvents.setWorldBorder(getPlugin(), getMapHandler().getActualCuboid().getCenter(),
+							distance, p);
 				}
 				if (cubo.getMaxX() < getMapHandler().getActualCuboid().getMaxX()) {
 
@@ -2350,7 +2376,7 @@ public class MatchActive {
 			}
 			p.setGameMode(GameMode.SURVIVAL);
 			p.updateInventory();
-			p.setHealth(20);
+			p.setHealth(p.getMaxHealth());
 			p.setFoodLevel(20);
 			p.setFireTicks(0);
 
@@ -2382,7 +2408,7 @@ public class MatchActive {
 			p.getInventory().setChestplate(match.getInventoryRunners().getChestplate());
 			p.setGameMode(GameMode.SURVIVAL);
 			p.updateInventory();
-			p.setHealth(20);
+			p.setHealth(p.getMaxHealth());
 			p.setFoodLevel(20);
 			p.setFireTicks(0);
 
@@ -2403,7 +2429,7 @@ public class MatchActive {
 			p.getInventory().setChestplate(match.getInventoryBeast().getChestplate());
 			p.setGameMode(GameMode.SURVIVAL);
 			p.updateInventory();
-			p.setHealth(20);
+			p.setHealth(p.getMaxHealth());
 			p.setFoodLevel(20);
 			p.setFireTicks(0);
 
@@ -2505,7 +2531,8 @@ public class MatchActive {
 
 						lastPart = ultimasPartes.get(0);
 
-						ultimasPartes = ultimasPartes.subList(1, ultimasPartes.size());
+						// ultimasPartes = ultimasPartes.subList(1,
+						// ultimasPartes.size());
 
 						// ultimasPartes.remove(0);
 
@@ -2526,8 +2553,9 @@ public class MatchActive {
 										lastPart.replaceAll("%players%", "" + getPlayerHandler().getPlayers().size())
 												.replaceAll("%neededPlayers%", match.getAmountPlayersMin().toString())
 												.replaceAll("%maxPlayers%", match.getAmountPlayers().toString()));
-								for (String la : ultimasPartes) {
-									p.sendMessage(la);
+								for (int i = 0; i < ultimasPartes.size(); i++) {
+									if (i != 0)
+										p.sendMessage(ultimasPartes.get(i));
 								}
 							}
 						}
@@ -2635,8 +2663,6 @@ public class MatchActive {
 
 							lastPart = ultimasPartes.get(0);
 
-							ultimasPartes.remove(0);
-
 							// ultimasPartes.remove(0);
 
 							for (Player p : Bukkit.getOnlinePlayers()) {
@@ -2659,8 +2685,9 @@ public class MatchActive {
 													.replaceAll("%neededPlayers%",
 															match.getAmountPlayersMin().toString())
 													.replaceAll("%maxPlayers%", match.getAmountPlayers().toString()));
-									for (String la : ultimasPartes) {
-										p.sendMessage(la);
+									for (int i = 0; i < ultimasPartes.size(); i++) {
+										if (i != 0)
+											p.sendMessage(ultimasPartes.get(i));
 									}
 								}
 							}

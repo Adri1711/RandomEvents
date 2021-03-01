@@ -58,6 +58,40 @@ public class ComandosExecutor {
 
 		// UtilsGUI.showGUI(player, plugin);
 	}
+	
+	
+	public void joinRandomEvent(RandomEvents plugin, Player player) {
+		if (plugin.getMatchActive() != null) {
+
+			if (!plugin.getMatchActive().getPlaying()) {
+				if (plugin.getMatchActive().getPlayerHandler().getPlayers().size() < plugin.getMatchActive().getMatch()
+						.getAmountPlayers()) {
+					if (!plugin.isNeedPasswordToJoin()) {
+						if (UtilsRandomEvents.checkBanned(player, plugin)) {
+							player.sendMessage(plugin.getLanguage().getTagPlugin() + " "
+									+ plugin.getLanguage().getYouAreBanned().replaceAll("%time%",
+											UtilsRandomEvents.calculateTime(
+													(plugin.getBannedPlayers().getBannedPlayers().get(player.getName())
+															- (new Date()).getTime()) / 1000)));
+						} else {
+							plugin.getMatchActive().uneAPlayer(player);
+						}
+					} else {
+						player.sendMessage(
+								plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidPassword());
+					}
+				} else {
+					player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getMatchFull());
+
+				}
+			} else {
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getMatchBegun());
+			}
+
+		}
+
+		// UtilsGUI.showGUI(player, plugin);
+	}
 
 	public void specRandomEvent(RandomEvents plugin, Player player) {
 		if (plugin.getMatchActive() != null) {

@@ -5,6 +5,8 @@ import java.util.List;
 
 public enum ComandosEnum {
 
+	CMD_JOIN_SINGLE("join", 1, "randomevent.join", "getJoin", "joinRandomEvent", false, false),
+	
 	CMD_JOIN("join", 2, "randomevent.join", "getJoin", "joinRandomEvent", false, false),
 
 	CMD_SPECTATE("spec", 1, "randomevent.spec", "getSpec", "specRandomEvent", false, false),
