@@ -301,6 +301,10 @@ public class Use implements Listener {
 
 					if (plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEEF)) {
 						evt.getBlock().setType(XMaterial.AIR.parseMaterial());
+						if (plugin.isSnowballSpleef()) {
+							player.getInventory().addItem(XMaterial.SNOWBALL.parseItem());
+							player.updateInventory();
+						}
 
 					} else {
 						evt.getBlock().breakNaturally();

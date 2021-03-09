@@ -19,6 +19,12 @@ public class HikariCP {
 		hikari.addDataSourceProperty("user", username);
 		hikari.addDataSourceProperty("password", password);
 		hikari.addDataSourceProperty("useSSL", false);
+		
+		
+		hikari.setMinimumIdle(0);
+		hikari.setConnectionTimeout(30000);
+		hikari.setIdleTimeout(35000);
+		hikari.setMaxLifetime(45000);
 	}
 
 	public void close() {

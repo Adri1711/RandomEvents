@@ -1923,7 +1923,7 @@ public class MatchActive {
 				getPlayerHandler().getPlayerContador().removePotionEffect(PotionEffectType.SPEED);
 			}
 			getPlayerHandler().getPlayerContador()
-					.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 2000, plugin.getTntTagSpeedHolder() - 1));
+					.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20*plugin.getSpeedDuration(), plugin.getTntTagSpeedHolder() - 1));
 		}
 		UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(), plugin.getLanguage()
 				.getPlayerHasBomb().replace("%player%", getPlayerHandler().getPlayerContador().getName()), true);
@@ -1942,7 +1942,7 @@ public class MatchActive {
 							p.removePotionEffect(PotionEffectType.SPEED);
 						}
 						p.addPotionEffect(
-								new PotionEffect(PotionEffectType.SPEED, 2000, plugin.getTntTagSpeedHolder() - 1));
+								new PotionEffect(PotionEffectType.SPEED, 20*plugin.getSpeedDuration(), plugin.getTntTagSpeedHolder() - 1));
 					}
 
 				} else {
@@ -1951,7 +1951,7 @@ public class MatchActive {
 							p.removePotionEffect(PotionEffectType.SPEED);
 						}
 						p.addPotionEffect(
-								new PotionEffect(PotionEffectType.SPEED, 2000, plugin.getTntTagSpeedRunners() - 1));
+								new PotionEffect(PotionEffectType.SPEED, 20*plugin.getSpeedDuration(), plugin.getTntTagSpeedRunners() - 1));
 					}
 				}
 			}

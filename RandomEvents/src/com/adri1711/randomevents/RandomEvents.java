@@ -276,6 +276,14 @@ public class RandomEvents extends JavaPlugin {
 
 	private String useEncoding;
 
+	private boolean snowballSpleef;
+
+	private boolean waterKillSG;
+
+	private boolean waterKillSW;
+
+	private int speedDuration;
+
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
 		loadConfig();
@@ -349,7 +357,6 @@ public class RandomEvents extends JavaPlugin {
 		if (matchActive != null) {
 			matchActive.reiniciaValoresPartida(false);
 		}
-
 		getServer().getScheduler().cancelTasks((Plugin) this);
 		getLogger().info(" Author adri1711 - desactivado");
 	}
@@ -400,7 +407,11 @@ public class RandomEvents extends JavaPlugin {
 		this.topKillerHealAfterKill = getConfig().getBoolean("topKillerHealAfterKill");
 		
 		
+		
 		this.useEncoding = getConfig().getString("useEncoding");
+		if(useEncoding.equals("UTF_8")){
+			useEncoding="UTF-8";
+		}
 		this.cmdAlias = getConfig().getString("cmdAlias");
 
 		Material mat = null;
@@ -479,6 +490,14 @@ public class RandomEvents extends JavaPlugin {
 		this.tntTagSpeedHolder = getConfig().getInt("tntTagSpeedHolder");
 		this.arrowRainDamage = getConfig().getInt("arrowRainDamage");
 		this.waterKillKnockbackDuel = getConfig().getBoolean("waterKillKnockbackDuel");
+		this.snowballSpleef = getConfig().getBoolean("snowballSpleef");
+		this.waterKillSG = getConfig().getBoolean("waterKillSG");
+		this.waterKillSW = getConfig().getBoolean("waterKillSW");
+		this.speedDuration = getConfig().getInt("speedDuration");
+		
+		
+	
+		
 		this.statsFill = new ItemStack(mat);
 		if (data != null) {
 			statsFill.setDurability(data.shortValue());
@@ -1706,6 +1725,38 @@ public class RandomEvents extends JavaPlugin {
 
 	public void setUseEncoding(String useEncoding) {
 		this.useEncoding = useEncoding;
+	}
+
+	public boolean isSnowballSpleef() {
+		return snowballSpleef;
+	}
+
+	public void setSnowballSpleef(boolean snowballSpleef) {
+		this.snowballSpleef = snowballSpleef;
+	}
+
+	public boolean isWaterKillSG() {
+		return waterKillSG;
+	}
+
+	public void setWaterKillSG(boolean waterKillSG) {
+		this.waterKillSG = waterKillSG;
+	}
+
+	public boolean isWaterKillSW() {
+		return waterKillSW;
+	}
+
+	public void setWaterKillSW(boolean waterKillSW) {
+		this.waterKillSW = waterKillSW;
+	}
+
+	public int getSpeedDuration() {
+		return speedDuration;
+	}
+
+	public void setSpeedDuration(int speedDuration) {
+		this.speedDuration = speedDuration;
 	}
 	
 	

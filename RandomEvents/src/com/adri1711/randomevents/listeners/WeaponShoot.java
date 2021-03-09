@@ -186,14 +186,14 @@ public class WeaponShoot implements Listener {
 												if(player.hasPotionEffect(PotionEffectType.SPEED)){
 													player.removePotionEffect(PotionEffectType.SPEED);
 												}
-												player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 2000,
+												player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20*plugin.getSpeedDuration(),
 														plugin.getTntTagSpeedHolder() - 1));
 											}
 											if (plugin.getTntTagSpeedRunners() > 0){
 												if(damager.hasPotionEffect(PotionEffectType.SPEED)){
 													damager.removePotionEffect(PotionEffectType.SPEED);
 												}
-												damager.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 2000,
+												damager.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20*plugin.getSpeedDuration(),
 														plugin.getTntTagSpeedRunners() - 1));
 											}
 
@@ -317,14 +317,14 @@ public class WeaponShoot implements Listener {
 												if(player.hasPotionEffect(PotionEffectType.SPEED)){
 													player.removePotionEffect(PotionEffectType.SPEED);
 												}
-												player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 2000,
+												player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20*plugin.getSpeedDuration(),
 														plugin.getTntTagSpeedHolder() - 1));
 											}
 											if (plugin.getTntTagSpeedRunners() > 0){
 												if(damager.hasPotionEffect(PotionEffectType.SPEED)){
 													damager.removePotionEffect(PotionEffectType.SPEED);
 												}
-												damager.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 2000,
+												damager.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20*plugin.getSpeedDuration(),
 														plugin.getTntTagSpeedRunners() - 1));
 											}
 

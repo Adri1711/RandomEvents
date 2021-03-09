@@ -5,8 +5,7 @@
 
 debugMode: false
 
-#Options: ISO_8859_1 ; US_ASCII ; UTF_16 ; UTF_16BE ; UTF_16LE ; UTF_8     
-useEncoding: 'UTF_8'
+useEncoding: 'UTF-8'
 
 cmdAlias: 'revent'
 
@@ -156,8 +155,20 @@ vanishItem: 'ENDER_EYE'
 #Arrow damage in arrow rain minigame
 arrowRainDamage: 10
 
+#Enable getting snowballs that will break the floor on spleef
+snowballSpleef: false
+
 #Enable this to make a player lose when they fall into water in knockback duel minigames
 waterKillKnockbackDuel: false
+
+#Enable this to make a player lose when they fall into water in survival games minigames
+waterKillSG: false
+
+#Enable this to make a player lose when they fall into water in skywars minigames
+waterKillSW: false
+
+#Speed duration on seconds for tnttag
+speedDuration: 100
 
 #Lvl of the speed for the runners on tnttag
 tntTagSpeedRunners: 3

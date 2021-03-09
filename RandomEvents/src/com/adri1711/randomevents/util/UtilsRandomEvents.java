@@ -17,7 +17,6 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -116,29 +115,8 @@ public class UtilsRandomEvents {
 
 				OutputStream os = new FileOutputStream(bossFile, true);
 				PrintWriter pw = null;
-				switch (plugin.getUseEncoding()) {
-				case "UTF-8":
-					pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
-					break;
-				case "ISO_8859_1":
-					pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.ISO_8859_1));
-					break;
-				case "US_ASCII":
-					pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.US_ASCII));
-					break;
-				case "UTF_16":
-					pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_16));
-					break;
-				case "UTF_16BE":
-					pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_16BE));
-					break;
-				case "UTF_16LE":
-					pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_16LE));
-					break;
-				default:
-					pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
-					break;
-				}
+
+				pw = new PrintWriter(new OutputStreamWriter(os, Charset.forName(plugin.getUseEncoding())));
 
 				pw.println(json);
 
@@ -183,29 +161,7 @@ public class UtilsRandomEvents {
 
 				OutputStream os = new FileOutputStream(bossFile, true);
 				PrintWriter pw = null;
-				switch (plugin.getUseEncoding()) {
-				case "UTF-8":
-					pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
-					break;
-				case "ISO_8859_1":
-					pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.ISO_8859_1));
-					break;
-				case "US_ASCII":
-					pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.US_ASCII));
-					break;
-				case "UTF_16":
-					pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_16));
-					break;
-				case "UTF_16BE":
-					pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_16BE));
-					break;
-				case "UTF_16LE":
-					pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_16LE));
-					break;
-				default:
-					pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
-					break;
-				}
+				pw = new PrintWriter(new OutputStreamWriter(os, Charset.forName(plugin.getUseEncoding())));
 
 				pw.println(json);
 
@@ -251,7 +207,8 @@ public class UtilsRandomEvents {
 					}
 
 					OutputStream os = new FileOutputStream(bossFile, true);
-					PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
+					PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, Charset.forName(plugin.getUseEncoding())));
+
 
 					pw.println(json);
 
@@ -305,29 +262,7 @@ public class UtilsRandomEvents {
 
 					OutputStream os = new FileOutputStream(bossFile, true);
 					PrintWriter pw = null;
-					switch (plugin.getUseEncoding()) {
-					case "UTF-8":
-						pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
-						break;
-					case "ISO_8859_1":
-						pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.ISO_8859_1));
-						break;
-					case "US_ASCII":
-						pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.US_ASCII));
-						break;
-					case "UTF_16":
-						pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_16));
-						break;
-					case "UTF_16BE":
-						pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_16BE));
-						break;
-					case "UTF_16LE":
-						pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_16LE));
-						break;
-					default:
-						pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
-						break;
-					}
+					pw = new PrintWriter(new OutputStreamWriter(os, Charset.forName(plugin.getUseEncoding())));
 
 					pw.println(json);
 
@@ -665,30 +600,8 @@ public class UtilsRandomEvents {
 			FileInputStream fr = null;
 			try {
 				fr = new FileInputStream(file);
-				Charset sc=StandardCharsets.UTF_8;
-				switch (plugin.getUseEncoding()) {
-				case "UTF-8":
-					sc= StandardCharsets.UTF_8;
-					break;
-				case "ISO_8859_1":
-					sc= StandardCharsets.ISO_8859_1;
-					break;
-				case "US_ASCII":
-					sc= StandardCharsets.US_ASCII;
-					break;
-				case "UTF_16":
-					sc= StandardCharsets.UTF_16;
-					break;
-				case "UTF_16BE":
-					sc= StandardCharsets.UTF_16BE;
-					break;
-				case "UTF_16LE":
-					sc= StandardCharsets.UTF_16LE;
-					break;
-				default:
-					sc= StandardCharsets.UTF_8;
-					break;
-				}
+				Charset sc = Charset.forName(plugin.getUseEncoding());
+
 				br = new BufferedReader(new InputStreamReader(fr, sc));
 				Match match = UtilidadesJson.fromJSONToMatch(plugin, br);
 				if (match != null)
@@ -756,42 +669,7 @@ public class UtilsRandomEvents {
 		return listaPartidas;
 	}
 
-//	public static String readAll(File file) {
-//		String content = "";
-//		try {
-//			Charset sc=StandardCharsets.UTF_8;
-//			switch (plugin.getUseEncoding()) {
-//			case "UTF-8":
-//				sc= StandardCharsets.UTF_8;
-//				break;
-//			case "ISO_8859_1":
-//				sc= StandardCharsets.ISO_8859_1;
-//				break;
-//			case "US_ASCII":
-//				sc= StandardCharsets.US_ASCII;
-//				break;
-//			case "UTF_16":
-//				sc= StandardCharsets.UTF_16;
-//				break;
-//			case "UTF_16BE":
-//				sc= StandardCharsets.UTF_16BE;
-//				break;
-//			case "UTF_16LE":
-//				sc= StandardCharsets.UTF_16LE;
-//				break;
-//			default:
-//				sc= StandardCharsets.UTF_8;
-//				break;
-//			}
-//			List<String> lineas = Files.readLines(file, sc);
-//			for (String linea : lineas) {
-//				content += linea;
-//			}
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		return content;
-//	}
+	
 
 	public static String preparaNombrePartida(MatchActive match) {
 		String resultado = "";
