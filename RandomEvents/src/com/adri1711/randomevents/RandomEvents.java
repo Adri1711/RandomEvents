@@ -38,6 +38,7 @@ import com.adri1711.randomevents.listeners.PickUp;
 import com.adri1711.randomevents.listeners.Quit;
 import com.adri1711.randomevents.listeners.Use;
 import com.adri1711.randomevents.listeners.WeaponShoot;
+import com.adri1711.randomevents.match.Kit;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
 import com.adri1711.randomevents.match.Tournament;
@@ -77,6 +78,7 @@ public class RandomEvents extends JavaPlugin {
 
 	private List<Match> matches;
 	private List<WaterDropStep> waterDrops;
+	private List<Kit> kits;
 	private List<Match> matchesAvailable;
 
 	private Tournament tournament;
@@ -90,6 +92,10 @@ public class RandomEvents extends JavaPlugin {
 	private Map<String, WaterDropStep> playerWaterDrop;
 
 	private Map<String, Integer> playersCreationWaterDrop;
+
+	private Map<String, Kit> playerKit;
+
+	private Map<String, Integer> playersCreationKit;
 
 	private List<String> editando;
 
@@ -284,6 +290,20 @@ public class RandomEvents extends JavaPlugin {
 
 	private int speedDuration;
 
+	private int mysqlMaxLifeTime;
+
+	private double quakeShootCooldown;
+
+	private double quakeJumpCooldown;
+
+	private int quakeShootDistance;
+
+	private boolean quakeGiveDefaultWeapon;
+
+	private int statsQUAKE;
+
+	private int statsPBALL;
+
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
 		loadConfig();
@@ -299,7 +319,8 @@ public class RandomEvents extends JavaPlugin {
 		inicializaVariables();
 
 		if (mysqlEnabled) {
-			hikari = new HikariCP(mysqlHost, mysqlPort.toString(), mysqlDatabase, mysqlUsername, mysqlPassword);
+			hikari = new HikariCP(mysqlHost, mysqlPort.toString(), mysqlDatabase, mysqlUsername, mysqlPassword,
+					mysqlMaxLifeTime);
 			UtilsSQL.checkTables(this);
 		}
 
@@ -336,6 +357,7 @@ public class RandomEvents extends JavaPlugin {
 			@Override
 			public void run() {
 				setWaterDrops(UtilsRandomEvents.cargarWaterDrops(getPlugin()));
+				setKits(UtilsRandomEvents.cargarKits(getPlugin()));
 				setMatches(UtilsRandomEvents.cargarPartidas(getPlugin()));
 				matchesAvailable = new ArrayList<Match>();
 				for (Match match : matches) {
@@ -391,7 +413,7 @@ public class RandomEvents extends JavaPlugin {
 		this.minPlayers = Integer.valueOf(getConfig().getInt("minPlayers"));
 		this.idleTimeForDamage = Integer.valueOf(getConfig().getInt("idleTimeForDamage"));
 		this.sgAreaDamage = Double.valueOf(getConfig().getDouble("sgAreaDamage"));
-		
+
 		this.needPasswordToJoin = getConfig().getBoolean("needPasswordToJoin");
 		this.globalCooldown = getConfig().getBoolean("globalCooldown");
 		this.inventoryManagement = getConfig().getBoolean("inventoryManagement");
@@ -405,12 +427,15 @@ public class RandomEvents extends JavaPlugin {
 		this.forcePlayersToEnter = getConfig().getBoolean("forcePlayersToEnter");
 		this.forcePlayersToSpectate = getConfig().getBoolean("forcePlayersToSpectate");
 		this.topKillerHealAfterKill = getConfig().getBoolean("topKillerHealAfterKill");
-		
-		
-		
+		this.quakeGiveDefaultWeapon= getConfig().getBoolean("quakeGiveDefaultWeapon");
+
+		this.quakeShootCooldown = getConfig().getDouble("quakeShootCooldown");
+		this.quakeJumpCooldown = getConfig().getDouble("quakeJumpCooldown");
+		this.quakeShootDistance = getConfig().getInt("quakeShootDistance");
+
 		this.useEncoding = getConfig().getString("useEncoding");
-		if(useEncoding.equals("UTF_8")){
-			useEncoding="UTF-8";
+		if (useEncoding.equals("UTF_8")) {
+			useEncoding = "UTF-8";
 		}
 		this.cmdAlias = getConfig().getString("cmdAlias");
 
@@ -478,7 +503,7 @@ public class RandomEvents extends JavaPlugin {
 		ItemMeta itemVanishItem = this.vanishItem.getItemMeta();
 		itemVanishItem.setDisplayName(language.getItemHidePlayer());
 		this.vanishItem.setItemMeta(itemVanishItem);
-		
+
 		ItemMeta itemEndVanishMeta = this.endVanishItem.getItemMeta();
 		itemEndVanishMeta.setDisplayName(language.getItemShowPlayer());
 		this.endVanishItem.setItemMeta(itemEndVanishMeta);
@@ -494,10 +519,7 @@ public class RandomEvents extends JavaPlugin {
 		this.waterKillSG = getConfig().getBoolean("waterKillSG");
 		this.waterKillSW = getConfig().getBoolean("waterKillSW");
 		this.speedDuration = getConfig().getInt("speedDuration");
-		
-		
-	
-		
+
 		this.statsFill = new ItemStack(mat);
 		if (data != null) {
 			statsFill.setDurability(data.shortValue());
@@ -508,7 +530,6 @@ public class RandomEvents extends JavaPlugin {
 			}
 		}
 
-		
 		this.statsALLTIME = getConfig().getInt("statsmenu.ALLTIME");
 		this.statsBR = getConfig().getInt("statsmenu.BR");
 		this.statsBRT2 = getConfig().getInt("statsmenu.BRT2");
@@ -533,6 +554,8 @@ public class RandomEvents extends JavaPlugin {
 		this.statsTSW = getConfig().getInt("statsmenu.TSW");
 		this.statsANVIL_SPLEEF = getConfig().getInt("statsmenu.ANVIL_SPLEEF");
 		this.statsWDROP = getConfig().getInt("statsmenu.WDROP");
+		this.statsQUAKE = getConfig().getInt("statsmenu.QUAKE");
+		this.statsPBALL = getConfig().getInt("statsmenu.PBALL");
 
 		this.allowedCmds = (List<String>) getConfig().getStringList("allowedCmds");
 
@@ -586,6 +609,7 @@ public class RandomEvents extends JavaPlugin {
 		this.setProbabilityPowerUp(Integer.valueOf(getConfig().getInt("probabilityPowerUp")));
 
 		this.waterDrops = UtilsRandomEvents.cargarWaterDrops(this);
+		this.kits = UtilsRandomEvents.cargarKits(this);
 		this.matches = UtilsRandomEvents.cargarPartidas(this);
 
 		matchesAvailable = new ArrayList<Match>();
@@ -617,6 +641,10 @@ public class RandomEvents extends JavaPlugin {
 		this.playersCreation = new HashMap<String, Integer>();
 		this.playerWaterDrop = new HashMap<String, WaterDropStep>();
 		this.playersCreationWaterDrop = new HashMap<String, Integer>();
+
+		this.playerKit = new HashMap<String, Kit>();
+		this.playersCreationKit = new HashMap<String, Integer>();
+
 		this.playersEntity = new HashMap<String, EntityType>();
 		this.forceEmptyInventoryToJoin = getConfig().getBoolean("forceEmptyInventoryToJoin");
 		this.mysqlEnabled = getConfig().getBoolean("mysql.enabled");
@@ -626,6 +654,7 @@ public class RandomEvents extends JavaPlugin {
 		this.mysqlUsername = getConfig().getString("mysql.username");
 		this.mysqlPassword = getConfig().getString("mysql.password");
 		this.mysqlPort = getConfig().getInt("mysql.port");
+		this.mysqlMaxLifeTime = getConfig().getInt("mysql.maxLifeTime");
 
 		int pluginId = 8944;
 		Metrics metrics = new Metrics(this, pluginId);
@@ -1758,8 +1787,86 @@ public class RandomEvents extends JavaPlugin {
 	public void setSpeedDuration(int speedDuration) {
 		this.speedDuration = speedDuration;
 	}
-	
-	
-	
 
+	public int getMysqlMaxLifeTime() {
+		return mysqlMaxLifeTime;
+	}
+
+	public void setMysqlMaxLifeTime(int mysqlMaxLifeTime) {
+		this.mysqlMaxLifeTime = mysqlMaxLifeTime;
+	}
+
+	public List<Kit> getKits() {
+		return kits;
+	}
+
+	public void setKits(List<Kit> kits) {
+		this.kits = kits;
+	}
+
+	public Map<String, Kit> getPlayerKit() {
+		return playerKit;
+	}
+
+	public void setPlayerKit(Map<String, Kit> playerKit) {
+		this.playerKit = playerKit;
+	}
+
+	public Map<String, Integer> getPlayersCreationKit() {
+		return playersCreationKit;
+	}
+
+	public void setPlayersCreationKit(Map<String, Integer> playersCreationKit) {
+		this.playersCreationKit = playersCreationKit;
+	}
+
+	public double getQuakeShootCooldown() {
+		return quakeShootCooldown;
+	}
+
+	public void setQuakeShootCooldown(double quakeShootCooldown) {
+		this.quakeShootCooldown = quakeShootCooldown;
+	}
+
+	public double getQuakeJumpCooldown() {
+		return quakeJumpCooldown;
+	}
+
+	public void setQuakeJumpCooldown(double quakeJumpCooldown) {
+		this.quakeJumpCooldown = quakeJumpCooldown;
+	}
+
+	public int getQuakeShootDistance() {
+		return quakeShootDistance;
+	}
+
+	public void setQuakeShootDistance(int quakeShootDistance) {
+		this.quakeShootDistance = quakeShootDistance;
+	}
+
+	public boolean isQuakeGiveDefaultWeapon() {
+		return quakeGiveDefaultWeapon;
+	}
+
+	public void setQuakeGiveDefaultWeapon(boolean quakeGiveDefaultWeapon) {
+		this.quakeGiveDefaultWeapon = quakeGiveDefaultWeapon;
+	}
+
+	public int getStatsQUAKE() {
+		return statsQUAKE;
+	}
+
+	public void setStatsQUAKE(int statsQUAKE) {
+		this.statsQUAKE = statsQUAKE;
+	}
+
+	public int getStatsPBALL() {
+		return statsPBALL;
+	}
+
+	public void setStatsPBALL(int statsPBALL) {
+		this.statsPBALL = statsPBALL;
+	}
+
+	
 }

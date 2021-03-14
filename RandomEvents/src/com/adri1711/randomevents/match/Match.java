@@ -59,8 +59,12 @@ public class Match implements Comparable<Match> {
 	private List<MaterialData> datas;
 
 	private List<String> scenes;
+	
+	private List<String> kits;
 
 	private Boolean enabled;
+	
+	private Integer numberOfTeams;
 
 	public Match() {
 		super();
@@ -72,6 +76,7 @@ public class Match implements Comparable<Match> {
 		this.spectatorSpawns = new ArrayList<Location>();
 		this.datas = new ArrayList<MaterialData>();
 		this.scenes = new ArrayList<String>();
+		this.kits = new ArrayList<String>();
 	}
 
 	public String getName() {
@@ -282,6 +287,16 @@ public class Match implements Comparable<Match> {
 	public void setScenes(List<String> scenes) {
 		this.scenes = scenes;
 	}
+	
+	
+
+	public List<String> getKits() {
+		return kits;
+	}
+
+	public void setKits(List<String> kits) {
+		this.kits = kits;
+	}
 
 	@Override
 	public String toString() {
@@ -429,5 +444,14 @@ public class Match implements Comparable<Match> {
 
 		return Integer.valueOf(minigame.ordinal()).compareTo(Integer.valueOf(match.getMinigame().ordinal()));
 	}
+
+	public Integer getNumberOfTeams() {
+		return numberOfTeams;
+	}
+
+	public void setNumberOfTeams(Integer numberOfTeams) {
+		this.numberOfTeams = numberOfTeams;
+	}
+	
 
 }

@@ -3,6 +3,7 @@ package com.adri1711.randomevents.language;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.configuration.file.FileConfiguration;
@@ -149,6 +150,9 @@ public class LanguageMessages {
 	private String scoreboardBeast;
 	private String scoreboardHolder;
 	private String scoreboardStep;
+	private String scoreboardTeamAlive;
+	private String scoreboardTeamDeath;
+	private String scoreboardTeam;
 
 	private String pvpDeath;
 	private String pvpKill;
@@ -185,6 +189,13 @@ public class LanguageMessages {
 	private String itemHidePlayer;
 	private String itemShowPlayer;
 
+	private String kitItemName;
+	private String kitDefaultName;
+	private String kitGuiName;
+	private String kitChosen;
+
+	private List<String> kitDefaultLore;
+
 	private List<String> minigameDescriptionBR;
 	private List<String> minigameDescriptionBRT2;
 	private List<String> minigameDescriptionLJ;
@@ -208,6 +219,8 @@ public class LanguageMessages {
 	private List<String> minigameDescriptionTSW;
 	private List<String> minigameDescriptionANVIL_SPLEEF;
 	private List<String> minigameDescriptionWDROP;
+	private List<String> minigameDescriptionQUAKE;
+	private List<String> minigameDescriptionPBALL;
 
 	public LanguageMessages(RandomEvents plugin) {
 		this.file = new File(plugin.getDataFolder(), "messages.yml");
@@ -1392,6 +1405,30 @@ public class LanguageMessages {
 		this.scoreboardTeammate = scoreboardTeammate;
 	}
 
+	public String getScoreboardTeamAlive() {
+		return scoreboardTeamAlive.replaceAll("&", "§");
+	}
+
+	public void setScoreboardTeamAlive(String scoreboardTeamAlive) {
+		this.scoreboardTeamAlive = scoreboardTeamAlive;
+	}
+
+	public String getScoreboardTeamDeath() {
+		return scoreboardTeamDeath.replaceAll("&", "§");
+	}
+
+	public void setScoreboardTeamDeath(String scoreboardTeamDeath) {
+		this.scoreboardTeamDeath = scoreboardTeamDeath;
+	}
+
+	public String getScoreboardTeam() {
+		return scoreboardTeam.replaceAll("&", "§");
+	}
+
+	public void setScoreboardTeam(String scoreboardTeam) {
+		this.scoreboardTeam = scoreboardTeam;
+	}
+
 	public String getScoreboardTime() {
 		return scoreboardTime.replaceAll("&", "§");
 	}
@@ -1710,6 +1747,66 @@ public class LanguageMessages {
 
 	public void setItemShowPlayer(String itemShowPlayer) {
 		this.itemShowPlayer = itemShowPlayer;
+	}
+
+	public String getKitItemName() {
+		return kitItemName.replaceAll("&", "§");
+	}
+
+	public void setKitItemName(String kitItemName) {
+		this.kitItemName = kitItemName;
+	}
+
+	public String getKitDefaultName() {
+		return kitDefaultName.replaceAll("&", "§");
+	}
+
+	public void setKitDefaultName(String kitDefaultName) {
+		this.kitDefaultName = kitDefaultName;
+	}
+
+	public List<String> getKitDefaultLore() {
+		List<String> defaultLore = new ArrayList<String>();
+		for (String s : kitDefaultLore) {
+			defaultLore.add(s.replaceAll("&", "§"));
+		}
+		return defaultLore;
+	}
+
+	public void setKitDefaultLore(List<String> kitDefaultLore) {
+		this.kitDefaultLore = kitDefaultLore;
+	}
+
+	public String getKitGuiName() {
+		return kitGuiName.replaceAll("&", "§");
+	}
+
+	public void setKitGuiName(String kitGuiName) {
+		this.kitGuiName = kitGuiName;
+	}
+
+	public String getKitChosen() {
+		return kitChosen.replaceAll("&", "§");
+	}
+
+	public void setKitChosen(String kitChosen) {
+		this.kitChosen = kitChosen;
+	}
+
+	public List<String> getMinigameDescriptionQUAKE() {
+		return minigameDescriptionQUAKE;
+	}
+
+	public void setMinigameDescriptionQUAKE(List<String> minigameDescriptionQUAKE) {
+		this.minigameDescriptionQUAKE = minigameDescriptionQUAKE;
+	}
+
+	public List<String> getMinigameDescriptionPBALL() {
+		return minigameDescriptionPBALL;
+	}
+
+	public void setMinigameDescriptionPBALL(List<String> minigameDescriptionPBALL) {
+		this.minigameDescriptionPBALL = minigameDescriptionPBALL;
 	}
 
 }

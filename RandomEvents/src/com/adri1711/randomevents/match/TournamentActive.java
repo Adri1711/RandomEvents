@@ -125,7 +125,7 @@ public class TournamentActive {
 
 				if (to == 1) {
 
-					if (!m.getMinigame().equals(MinigameType.BATTLE_ROYALE_TEAM_2)
+					if (!m.getMinigame().equals(MinigameType.BATTLE_ROYALE_TEAM_2) && !m.getMinigame().equals(MinigameType.PAINTBALL)
 							&& !m.getMinigame().equals(MinigameType.TOP_KILLER_TEAM_2)
 							&& !m.getMinigame().equals(MinigameType.TSG) && !m.getMinigame().equals(MinigameType.TSW)) {
 						matches.add(m);
@@ -197,7 +197,6 @@ public class TournamentActive {
 											getPlayers(), getPlayersObj(), getPlayersSpectators());
 									plugin.setMatchActive(partida);
 								}
-								System.out.println(entrada);
 							}
 
 							getPartida().matchBegin();

@@ -12,9 +12,9 @@ public class Constantes {
 	public static String CADENA_PLAYER = "%player%";
 	public static String SALTO_LINEA = "\n";
 	public static String TABULACION = "    ";
-	
-	public static String PERM_COOLDOWN="randomevent.gui.cooldown";
-	public static String PERM_COOLDOWN_BYPASS="randomevent.gui.cooldown.bypass";
+
+	public static String PERM_COOLDOWN = "randomevent.gui.cooldown";
+	public static String PERM_COOLDOWN_BYPASS = "randomevent.gui.cooldown.bypass";
 
 	public static String INVENTORY_NAME = "§9RandomEvents";
 	public static String INVENTORY_NAME_STATS = "§9RandomEvents Stats";
@@ -47,9 +47,9 @@ public class Constantes {
 		CMD_SHOW_MENU("showMenu", "menu.showMenu", "   &6/revent:\n          &e-> Shows this menu"),
 
 		CMD_JOIN("join", "menu.join", "   &6/revent join:\n          &e-> Join the Random Event"),
-		
+
 		CMD_SPEC("spec", "menu.spec", "   &6/revent spec:\n          &e-> Spectate the Random Event"),
-		
+
 		CMD_JOIN_TOURNAMENT("tjoin", "menu.tjoin",
 				"   &6/revent tjoin:\n          &e-> Join the Tournament Random Event"),
 
@@ -99,19 +99,20 @@ public class Constantes {
 
 		CMD_BEGIN_SPECIFIC("beginSpecific", "menu.admin.forceSpecific",
 				"   &6/revent begin <number>:\n          &e-> Begins a specific random event"),
-		
-		
-		
-		CMD_GUI("guiCMD",  "menu.guicmd", "   &6/revent gui:\n          &e-> Shows the available events gui"),
-		
-		CMD_GIVE_CREDITS_RANDOM("giveCreditsRandom",  "menu.admin.givecreditsrandom", "   &6/revent givecredits <player> <amount>:\n          &e-> Give credits of a random chosen event to a player"),
 
-		CMD_GIVE_CREDITS_SPECIFIC("giveCreditsSpecific", "menu.admin.givecreditsspecific", "   &6/revent givecredits <reventname> <player> <amount>:\n          &e-> Give credits of the specific event to a player"),
-		
-		CMD_BAL_CREDITS("creditsBalOwn",  "menu.admin.balcreditsown", "   &6/revent credits:\n          &e-> Shows your credits"),
+		CMD_GUI("guiCMD", "menu.guicmd", "   &6/revent gui:\n          &e-> Shows the available events gui"),
 
-		CMD_BAL_CREDITS_OTHER("creditsBalOther",  "menu.admin.balcreditsother", "   &6/revent credits <player>:\n          &e-> Shows the player credits"),
-		
+		CMD_GIVE_CREDITS_RANDOM("giveCreditsRandom", "menu.admin.givecreditsrandom",
+				"   &6/revent givecredits <player> <amount>:\n          &e-> Give credits of a random chosen event to a player"),
+
+		CMD_GIVE_CREDITS_SPECIFIC("giveCreditsSpecific", "menu.admin.givecreditsspecific",
+				"   &6/revent givecredits <reventname> <player> <amount>:\n          &e-> Give credits of the specific event to a player"),
+
+		CMD_BAL_CREDITS("creditsBalOwn", "menu.admin.balcreditsown",
+				"   &6/revent credits:\n          &e-> Shows your credits"),
+
+		CMD_BAL_CREDITS_OTHER("creditsBalOther", "menu.admin.balcreditsother",
+				"   &6/revent credits <player>:\n          &e-> Shows the player credits"),
 
 		CMD_BAN_PLAYER("ban", "menu.admin.ban",
 				"   &6/revent ban <player> <time>:\n          &e-> Ban a player from RandomEvents"),
@@ -121,13 +122,13 @@ public class Constantes {
 
 		CMD_CREATE("create", "menu.admin.create",
 				"   &6/revent create:\n          &e-> Begin the creation of a Random Event"),
-		
+
 		CMD_DELETE("delete", "menu.admin.delete",
 				"   &6/revent delete <number>:\n          &e-> Delete a Random Event"),
-		
+
 		CMD_DISABLE("disable", "menu.admin.disable",
 				"   &6/revent disable <number>:\n          &e-> Disables a Random Event"),
-		
+
 		CMD_ENABLE("enable", "menu.admin.enable",
 				"   &6/revent enable <number>:\n          &e-> Enables a Random Event"),
 
@@ -234,31 +235,49 @@ public class Constantes {
 
 		INVALID_PASSWORD("invalidPassword", "comun.invalidPassword", "&c&lInvalid password for the event"),
 
-		ANNOUNCEMENT_FIRST("announceFirst", "announce.announceFirst", "\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█  &5&lRandom Event\n&f█&8█&f██&8███&f█  &c%type%\n&f█&8█&f████&8█&f█  &8[ &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█  %clickhere% \n&f█&8██████&f█\n&f████████"),
-		
-		ANNOUNCEMENT_NEXT("announceNext", "announce.announceNext", "&6&lRandom Event &e&l>> &c%type% %clickhere% &8[ &a%players%/%neededPlayers% &8] "),
-		
-		ANNOUNCEMENT_FIRST_TOURNAMENT("announceFirstTournament", "announce.announceFirstTournament", "\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█  &5&lTournament Random Event\n&f█&8█&f██&8███&f█  \n&f█&8█&f████&8█&f█  &8[ &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█  %clickhere% \n&f█&8██████&f█\n&f████████"),
-		
-		ANNOUNCEMENT_NEXT_TOURNAMENT("announceNextTournament", "announce.announceNextTournament", "&6&lTournament Random Event &e&l>>  %clickhere% &8[ &a%players%/%neededPlayers% &8] "),
-		
+		ANNOUNCEMENT_FIRST("announceFirst", "announce.announceFirst",
+				"\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█  &5&lRandom Event\n&f█&8█&f██&8███&f█  &c%type%\n&f█&8█&f████&8█&f█  &8[ &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█  %clickhere% \n&f█&8██████&f█\n&f████████"),
+
+		ANNOUNCEMENT_NEXT("announceNext", "announce.announceNext",
+				"&6&lRandom Event &e&l>> &c%type% %clickhere% &8[ &a%players%/%neededPlayers% &8] "),
+
+		ANNOUNCEMENT_FIRST_TOURNAMENT("announceFirstTournament", "announce.announceFirstTournament",
+				"\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█  &5&lTournament Random Event\n&f█&8█&f██&8███&f█  \n&f█&8█&f████&8█&f█  &8[ &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█  %clickhere% \n&f█&8██████&f█\n&f████████"),
+
+		ANNOUNCEMENT_NEXT_TOURNAMENT("announceNextTournament", "announce.announceNextTournament",
+				"&6&lTournament Random Event &e&l>>  %clickhere% &8[ &a%players%/%neededPlayers% &8] "),
+
 		CLICK_HERE("clickHere", "announce.clickHere", "&b[Click here to join]"),
-		
-//		FIRST_ANNOUNCE("firstAnnounce", "announce.firstAnnounce", "\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█  &5&lRandom Event\n&f█&8█&f██&8███&f█  &c%type%\n&f█&8█&f████&8█&f█  &8[ &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█  "),
-//
-//		NEXT_ANNOUNCE("nextAnnounce", "announce.nextAnnounce", "\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█  &5&lRandom Event\n&f█&8█&f██&8███&f█  &c%type%\n&f█&8█&f████&8█&f█  &8[ &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█  "),
-//
-//		FIRST_ANNOUNCE_TOURNAMENT("firstAnnounceTournament", "announce.firstAnnounceTournament",
-//				"\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█  &5&lTournament Random Event\n&f█&8█&f██&8███&f█  &c%type%\n&f█&8█&f████&8█&f█  &8[ &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█  "),
-//
-//		NEXT_ANNOUNCE_TOURNAMENT("nextAnnounceTournament", "announce.nextAnnounceTournament",
-//				"\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█  &5&lTournament Random Event\n&f█&8█&f██&8███&f█  &c%type%\n&f█&8█&f████&8█&f█  &8[ &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█  "),
-//
-//
-//		LAST_PART("lastPart", "announce.lastPart", "\n&f█&8██████&f█\n&f████████"),
-//
-//		LAST_PART_TOURNAMENT("lastPartTournament", "announce.lastPartTournament",
-//				"\n&f█&8██████&f█\n&f████████"),
+
+		// FIRST_ANNOUNCE("firstAnnounce", "announce.firstAnnounce",
+		// "\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█ &5&lRandom
+		// Event\n&f█&8█&f██&8███&f█ &c%type%\n&f█&8█&f████&8█&f█ &8[
+		// &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█ "),
+		//
+		// NEXT_ANNOUNCE("nextAnnounce", "announce.nextAnnounce",
+		// "\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█ &5&lRandom
+		// Event\n&f█&8█&f██&8███&f█ &c%type%\n&f█&8█&f████&8█&f█ &8[
+		// &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█ "),
+		//
+		// FIRST_ANNOUNCE_TOURNAMENT("firstAnnounceTournament",
+		// "announce.firstAnnounceTournament",
+		// "\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█ &5&lTournament Random
+		// Event\n&f█&8█&f██&8███&f█ &c%type%\n&f█&8█&f████&8█&f█ &8[
+		// &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█ "),
+		//
+		// NEXT_ANNOUNCE_TOURNAMENT("nextAnnounceTournament",
+		// "announce.nextAnnounceTournament",
+		// "\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█ &5&lTournament Random
+		// Event\n&f█&8█&f██&8███&f█ &c%type%\n&f█&8█&f████&8█&f█ &8[
+		// &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█ "),
+		//
+		//
+		// LAST_PART("lastPart", "announce.lastPart",
+		// "\n&f█&8██████&f█\n&f████████"),
+		//
+		// LAST_PART_TOURNAMENT("lastPartTournament",
+		// "announce.lastPartTournament",
+		// "\n&f█&8██████&f█\n&f████████"),
 
 		RACE_TOURNAMENT("raceTournament", "announce.raceTournament",
 				"&6&lThe player %player% has reached the goal ( %players% / %neededPlayers% )"),
@@ -328,18 +347,24 @@ public class Constantes {
 		PVP_DEATH("pvpDeath", "pvp.death", "&c☠ %victim%"),
 
 		PVP_KILL("pvpKill", "pvp.kill", "&a%killer% &4⚔ &c%victim%"),
-		
+
 		BOW_KILL("bowKill", "pvp.bowkill", "&a%killer% &4⚔ &c%victim%  &e( %distance% blocks )"),
 
 		SCOREBOARD_TITLE("scoreboardTitle", "scoreboard.title", "      &a&lRandomEvents      "),
 
 		SCOREBOARD_POINTS_FORMAT("scoreboardPoints", "scoreboard.points", "&6%name% - &e%points%"),
-		
+
 		SCOREBOARD_STEP_FORMAT("scoreboardStep", "scoreboard.step", "&6%name% - &e(%actual%/%max%)"),
 
 		SCOREBOARD_ALIVE_FORMAT("scoreboardAlive", "scoreboard.alive", "&a✔ %name%"),
 
 		SCOREBOARD_DEATH_FORMAT("scoreboardDeath", "scoreboard.dead", "&c☠ %name%"),
+
+		SCOREBOARD_TEAM_ALIVE_FORMAT("scoreboardTeamAlive", "scoreboard.team.alive", "&a✔ %team_color%%name%"),
+
+		SCOREBOARD_TEAM_DEATH_FORMAT("scoreboardTeamDeath", "scoreboard.team.dead", "&c☠ %team_color%%name%"),
+
+		SCOREBOARD_TEAM_FORMAT("scoreboardTeam", "scoreboard.teamformat", "&6Team: %team_color%%name%"),
 
 		SCOREBOARD_COMPANION_FORMAT("scoreboardTeammate", "scoreboard.teammate", "&6Mate: &e%name%"),
 
@@ -348,23 +373,24 @@ public class Constantes {
 		SCOREBOARD_HOLDER_FORMAT("scoreboardHolder", "scoreboard.holder", "&6Holder: &e%name%"),
 
 		SCOREBOARD_TIME_FORMAT("scoreboardTime", "scoreboard.time", "&b%time%"),
-		
+
 		STATS_GUI_NAME("statsGuiName", "stats.guiname", "&bRandomEvents_Stats "),
-		
+
 		CREDITS_GUI_NAME("creditsGuiName", "credits.guiname", "&bRandomEvents_Available"),
-		
+
 		CREDITS_GUI_PAGE("creditsGuiPage", "credits.guipage", "&6Page"),
 
-		CREDITS_ADDED_OTHER("creditsAddedOther", "credits.addedother", "&6&l%credits% credits for %event% added to %player% "),
-		
+		CREDITS_ADDED_OTHER("creditsAddedOther", "credits.addedother",
+				"&6&l%credits% credits for %event% added to %player% "),
+
 		CREDITS_ADDED("creditsAdded", "credits.addedown", "&6&l%credits% credits for %event% added to your account"),
-		
+
 		CREDITS_BAL("creditsBal", "credits.balance", "&6&l%credits% credits"),
-		
+
 		CREDITS_COOLDOWN("creditsCooldown", "credits.cooldown", "&b&lOn cooldown"),
-		
+
 		CREDITS_EVENT_RUNNING("creditsEventRunning", "credits.eventrunning", "&c&lEvent running!"),
-		
+
 		CREDITS_READY("creditsReady", "credits.ready", "&a&lReady"),
 
 		EVENT_DELETED("eventDeleted", "comun.eventDeleted", "&c&lThe RandomEvents was deleted!"),
@@ -372,19 +398,28 @@ public class Constantes {
 		EVENT_DISABLED("eventDisabled", "comun.eventDisabled", "&c&lThe RandomEvents was disabled!"),
 
 		EVENT_ENABLED("eventEnabled", "comun.eventEnabled", "&6&lThe RandomEvents was enabled!"),
-		
+
 		EVENT_IS_DISABLED("eventIsDisabled", "comun.eventIsDisabled", "&c&lThe RandomEvents is disabled!"),
 
 		PLAYER_OFFLINE("playerOffline", "comun.playerOffline", "&c&lThe player is offline!"),
 
-		
 		EVENT_INVALID("eventInvalid", "comun.eventInvalid", "&c&lThe RandomEvents is invalid!"),
-		
+
 		ITEM_RETURN_CHECKPOINT("itemReturnCheckpoint", "item.returnCheckpoint", "&2&lReturn to checkpoint"),
-		
+
 		ITEM_HIDE_PLAYER("itemHidePlayer", "item.hidePlayer", "&c&lHide players"),
-		
+
 		ITEM_SHOW_PLAYER("itemShowPlayer", "item.showPlayer", "&2&lShow players"),
+
+		KIT_GUI_NAME("kitGuiName", "kit.guiName", "&6&lKits"),
+
+		KIT_CHOSEN("kitChosen", "kit.chosen", "&6&lYou chosed %kit_name%"),
+
+		KIT_ITEM_NAME("kitItemName", "kit.itemName", "&6&lKits"),
+
+		KIT_DEFAULT_NAME("kitDefaultName", "kit.defaultName", "&6&lKit: %kit_name%"),
+
+		KIT_DEFAULT_LORE("kitDefaultLore", "kit.defaultLore", "&eChoose it!;&eWin with this one!."),
 
 		MINIGAME_DESC_BR("minigameDescriptionBR", "minigame.description.BR",
 				"&eA fierce battle where just 1 player;&e or team can remain alive."),
@@ -425,7 +460,7 @@ public class Constantes {
 
 		MINIGAME_DESC_RACE("minigameDescriptionRACE", "minigame.description.RACE",
 				"&eRun and be the first to reach the goal;&e to get your reward!"),
-		
+
 		MINIGAME_DESC_WDROP("minigameDescriptionWDROP", "minigame.description.WDROP",
 				"&eRun and drop safe!;&e be the first to reach the last goal;&e to get your reward!"),
 
@@ -452,9 +487,15 @@ public class Constantes {
 
 		MINIGAME_DESC_TSW("minigameDescriptionTSW", "minigame.description.TSW",
 				"&eA fierce battle where just 1 player;&e or team can remain alive."),
-		
+
 		MINIGAME_DESC_ANVIL_SPLEEF("minigameDescriptionANVIL_SPLEEF", "minigame.description.ANVIL_SPLEEF",
-				"&eAvoid the anvils coming from the sky if you;&e dont want to lose your head!");
+				"&eAvoid the anvils coming from the sky if you;&e dont want to lose your head!"),
+
+		MINIGAME_DESC_QUAKE("minigameDescriptionQUAKE", "minigame.description.QUAKE",
+				"&eLeft Click to jump, Right click to shoot!;&eShoot your enemies!;&e Get all of them dead!"),
+
+		MINIGAME_DESC_PBALL("minigameDescriptionPBALL", "minigame.description.PBALL",
+				"&eShoot your enemies with the snowballs!;&e Get all of them dead!");
 
 		private String javaField;
 		private String ymlField;

@@ -3,6 +3,8 @@ package com.adri1711.randomevents.commands;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -58,8 +60,7 @@ public class ComandosExecutor {
 
 		// UtilsGUI.showGUI(player, plugin);
 	}
-	
-	
+
 	public void joinRandomEvent(RandomEvents plugin, Player player) {
 		if (plugin.getMatchActive() != null) {
 
@@ -97,18 +98,17 @@ public class ComandosExecutor {
 		if (plugin.getMatchActive() != null) {
 
 			if (plugin.getMatchActive().getPlaying()) {
-				
-					if (UtilsRandomEvents.checkBanned(player, plugin)) {
-						player.sendMessage(plugin.getLanguage().getTagPlugin() + " "
-								+ plugin.getLanguage().getYouAreBanned().replaceAll("%time%",
-										UtilsRandomEvents.calculateTime(
-												(plugin.getBannedPlayers().getBannedPlayers().get(player.getName())
-														- (new Date()).getTime()) / 1000)));
-					} else {
-						plugin.getMatchActive().uneAPlayerSpec(player);
-					}
 
-				
+				if (UtilsRandomEvents.checkBanned(player, plugin)) {
+					player.sendMessage(plugin.getLanguage().getTagPlugin() + " "
+							+ plugin.getLanguage().getYouAreBanned().replaceAll("%time%",
+									UtilsRandomEvents.calculateTime(
+											(plugin.getBannedPlayers().getBannedPlayers().get(player.getName())
+													- (new Date()).getTime()) / 1000)));
+				} else {
+					plugin.getMatchActive().uneAPlayerSpec(player);
+				}
+
 			} else {
 				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getMatchBeginSoon());
 			}
@@ -263,19 +263,35 @@ public class ComandosExecutor {
 	public void nextRandomEvents(RandomEvents plugin, Player player) {
 		if (plugin.getSchedules() != null && !plugin.getSchedules().isEmpty()) {
 			player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getNextEvent());
-			Schedule s = UtilsRandomEvents.nextEvent(plugin.getSchedules(), player, plugin);
+			Map<Schedule, Date> sMap = UtilsRandomEvents.nextEvent(plugin.getSchedules(), player, plugin);
+			Schedule s = null;
+			Date d = null;
+			for (Entry<Schedule, Date> entrada : sMap.entrySet()) {
+				s = entrada.getKey();
+				d = entrada.getValue();
+			}
 			if (s != null) {
 				if (s.getMatchName() == null) {
+					// player.sendMessage(plugin.getLanguage().getNextEventIsRandom()
+					// + " "
+					// + DayWeek.getByValues(s.getDay().toString()) + " "
+					// + (s.getHour() > 10 ? s.getHour() : ("0" + s.getHour()))
+					// + ":"
+					// + (s.getMinute() > 10 ? s.getMinute() : ("0" +
+					// s.getMinute())));
 					player.sendMessage(plugin.getLanguage().getNextEventIsRandom() + " "
-							+ DayWeek.getByValues(s.getDay().toString()) + " "
-							+ (s.getHour() > 10 ? s.getHour() : ("0" + s.getHour())) + ":"
-							+ (s.getMinute() > 10 ? s.getMinute() : ("0" + s.getMinute())));
+							+ UtilsRandomEvents.calculateTime((d.getTime() - new Date().getTime()) / 1000));
 
 				} else {
+					// player.sendMessage(plugin.getLanguage().getNextEventName()
+					// + s.getMatchName() + " "
+					// + DayWeek.getByValues(s.getDay().toString()) + " "
+					// + (s.getHour() > 10 ? s.getHour() : ("0" + s.getHour()))
+					// + ":"
+					// + (s.getMinute() > 10 ? s.getMinute() : ("0" +
+					// s.getMinute())));
 					player.sendMessage(plugin.getLanguage().getNextEventName() + s.getMatchName() + " "
-							+ DayWeek.getByValues(s.getDay().toString()) + " "
-							+ (s.getHour() > 10 ? s.getHour() : ("0" + s.getHour())) + ":"
-							+ (s.getMinute() > 10 ? s.getMinute() : ("0" + s.getMinute())));
+							+ UtilsRandomEvents.calculateTime((d.getTime() - new Date().getTime()) / 1000));
 				}
 			}
 		} else {

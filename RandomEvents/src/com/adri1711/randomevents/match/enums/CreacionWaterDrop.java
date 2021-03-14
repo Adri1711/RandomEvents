@@ -1,7 +1,5 @@
 package com.adri1711.randomevents.match.enums;
 
-import com.adri1711.randomevents.match.Match;
-
 public enum CreacionWaterDrop {
 
 	NAME(0, "§6§lChoose Name"),

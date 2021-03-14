@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -15,9 +16,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
 import com.adri1711.randomevents.RandomEvents;
+import com.adri1711.randomevents.match.Kit;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.WaterDropStep;
 import com.adri1711.randomevents.match.enums.Creacion;
+import com.adri1711.randomevents.match.enums.CreacionKit;
 import com.adri1711.randomevents.match.enums.CreacionWaterDrop;
 import com.adri1711.randomevents.match.enums.MinigameType;
 import com.adri1711.randomevents.match.utils.InventoryPers;
@@ -77,6 +80,16 @@ public class Chat implements Listener {
 
 			event.setCancelled(Boolean.TRUE);
 
+		} else if (plugin.getPlayerKit().containsKey(player.getName())) {
+			if (plugin.isDebugMode()) {
+				System.out.println("RandomEvents :: Message of creation: " + event.getMessage());
+			}
+
+			checkMessageCreationKit(event.getMessage().trim(), player,
+					plugin.getPlayersCreationKit().get(player.getName()));
+
+			event.setCancelled(Boolean.TRUE);
+
 		} else if (plugin.getPlayerMatches().containsKey(player.getName())) {
 			if (plugin.isDebugMode()) {
 				System.out.println("RandomEvents :: Message of creation: " + event.getMessage());
@@ -85,6 +98,233 @@ public class Chat implements Listener {
 			checkMessageCreation(event.getMessage().trim(), player, plugin.getPlayersCreation().get(player.getName()));
 
 			event.setCancelled(Boolean.TRUE);
+
+		}
+	}
+
+	private void checkMessageCreationKit(String message, Player player, Integer position) {
+		Kit kit = plugin.getPlayerKit().get(player.getName());
+		Boolean actualiza = Boolean.TRUE;
+		Boolean actua = Boolean.TRUE;
+		Boolean pasado = Boolean.FALSE;
+		if (kit == null)
+			kit = new Kit();
+
+		CreacionKit c = null;
+		if (position != null) {
+			c = CreacionKit.getByPosition(position);
+		} else {
+			try {
+				position = Integer.valueOf(message);
+				if (CreacionKit.getByPosition(Integer.valueOf(message)) != null) {
+					c = CreacionKit.getByPosition(Integer.valueOf(message));
+					actua = Boolean.FALSE;
+				}
+			} catch (Exception e) {
+			}
+		}
+
+		if (c != null) {
+			if (actua) {
+				try {
+
+					switch (c) {
+					case NAME:
+						kit.setName(UtilsRandomEvents.cambiarMensajeConEtiqueta(message).trim());
+						plugin.getPlayersCreationKit().remove(player.getName());
+
+						break;
+
+					case PERMISSION_OPTIONAL:
+						kit.setPermission(ChatColor.stripColor(message).trim());
+						plugin.getPlayersCreationKit().remove(player.getName());
+
+						break;
+					case ITEM_DESCRIPTIVE:
+						if (message.equals(Constantes.DONE)) {
+							kit.setItem(player.getItemInHand());
+							plugin.getPlayersCreationKit().remove(player.getName());
+						}
+						break;
+					case INVENTORY:
+						if (message.equals(Constantes.DONE)) {
+
+							ItemStack[] contenido = player.getInventory().getContents();
+							List<ItemStack> contenidoList = Arrays.asList(contenido);
+							try {
+								contenidoList.removeAll(Arrays.asList(player.getInventory().getArmorContents()));
+							} catch (Exception e) {
+
+							}
+							ItemStack[] arrayContenido = new ItemStack[contenidoList.size()];
+							arrayContenido = contenidoList.toArray(arrayContenido);
+							InventoryPers inv = new InventoryPers();
+							inv.setContents(arrayContenido);
+							inv.setHelmet(player.getInventory().getHelmet());
+							inv.setBoots(player.getInventory().getBoots());
+							inv.setLeggings(player.getInventory().getLeggings());
+							inv.setChestplate(player.getInventory().getChestplate());
+							kit.setInventory(inv);
+
+							plugin.getPlayersCreationKit().remove(player.getName());
+
+						}
+						break;
+
+					case SAVE:
+
+						if (actua) {
+							try {
+								if (message.toUpperCase().equals("Y")) {
+
+									String s = UtilsRandomEvents.compruebaKitCorrecto(kit, plugin);
+
+									if (s != null) {
+										player.sendMessage(s);
+										actua = Boolean.FALSE;
+									} else {
+
+										UtilsRandomEvents.terminaCreacionKit(plugin, player, null);
+
+										actualiza = Boolean.FALSE;
+									}
+								} else {
+
+									plugin.getPlayersCreationKit().remove(player.getName());
+									actua = Boolean.TRUE;
+
+								}
+
+							} catch (Exception e) {
+								player.sendMessage(plugin.getLanguage().getInvalidInput());
+								player.sendMessage(c.getMessage());
+								actua = Boolean.FALSE;
+
+							}
+						} else {
+							if (plugin.getPlayerKit().keySet().contains(player.getName())) {
+								player.sendMessage(c.getMessage());
+								plugin.getPlayersCreationKit().put(player.getName(), c.getPosition());
+								actua = Boolean.FALSE;
+							} else {
+								String s = UtilsRandomEvents.compruebaKitCorrecto(kit, plugin);
+								if (s != null) {
+									player.sendMessage(s);
+								} else {
+
+									UtilsRandomEvents.terminaCreacionKit(plugin, player, null);
+
+									actualiza = Boolean.FALSE;
+								}
+							}
+
+						}
+
+						break;
+					case CANCEL:
+						if (message.toUpperCase().equals("Y")) {
+
+							plugin.getPlayerKit().remove(player.getName());
+							plugin.getPlayersCreationKit().remove(player.getName());
+
+							actualiza = Boolean.FALSE;
+
+						} else {
+
+							plugin.getPlayersCreationKit().remove(player.getName());
+							actua = Boolean.TRUE;
+
+						}
+
+						break;
+					case DELETE:
+						try {
+							Integer valor = Integer.valueOf(message);
+
+							CreacionKit delete = null;
+
+							try {
+								if (CreacionKit.getByPosition(valor) != null) {
+									delete = CreacionKit.getByPosition(valor);
+									actua = Boolean.FALSE;
+								}
+							} catch (Exception e) {
+							}
+							switch (delete) {
+
+							case NAME:
+								kit.setName(null);
+								break;
+							case PERMISSION_OPTIONAL:
+								kit.setPermission(null);
+								break;
+							case INVENTORY:
+								kit.setInventory(null);
+								break;
+							case ITEM_DESCRIPTIVE:
+								kit.setItem(XMaterial.CHEST.parseItem());
+								break;
+							default:
+								break;
+							}
+							actua = Boolean.TRUE;
+
+							plugin.getPlayersCreationKit().remove(player.getName());
+
+						} catch (Exception e) {
+							player.sendMessage(plugin.getLanguage().getInvalidInput());
+							player.sendMessage(c.getMessage());
+							actua = Boolean.FALSE;
+
+						}
+
+						break;
+					default:
+						break;
+					}
+				} catch (Exception e) {
+					player.sendMessage(plugin.getLanguage().getInvalidInput());
+					switch (CreacionKit.getByPosition(position)) {
+
+					default:
+						player.sendMessage(c.getMessage());
+						break;
+					}
+					actua = Boolean.FALSE;
+				}
+			} else {
+				// pasado = Boolean.TRUE;
+				actua = Boolean.FALSE;
+				player.sendMessage(Constantes.SALTO_LINEA);
+				switch (CreacionKit.getByPosition(position)) {
+
+				default:
+					plugin.getPlayersCreationKit().put(player.getName(), c.getPosition());
+
+					break;
+				}
+			}
+		}
+
+		if (actualiza) {
+			plugin.getPlayerKit().put(player.getName(), kit);
+			plugin.getPlayerKit().put(player.getName(), kit);
+			if (actua) {
+				player.sendMessage(UtilsRandomEvents.enviaInfoCreacionKit(kit, player, plugin));
+			} else {
+				c = CreacionKit.getByPosition(plugin.getPlayersCreationKit().get(player.getName()));
+				if (c != null && !pasado) {
+					player.sendMessage(c.getMessage());
+				}
+			}
+		} else {
+			plugin.getPlayerKit().remove(player.getName());
+			plugin.getPlayersCreationKit().remove(player.getName());
+			player.sendMessage(Creacion.KITS.getMessage());
+			for (Kit m : plugin.getKits()) {
+				player.sendMessage("§6§l" + plugin.getKits().indexOf(m) + " - " + m.getName());
+			}
+			player.sendMessage("§6§l" + plugin.getKits().size() + " - §e§lNew Kit");
 
 		}
 	}
@@ -344,6 +584,16 @@ public class Chat implements Listener {
 						plugin.getPlayersCreation().remove(player.getName());
 
 						break;
+					case NUMBER_OF_TEAMS:
+						Integer number = Integer.valueOf(message.trim());
+						if (number > 1 && number < 9) {
+							match.setNumberOfTeams(number);
+							plugin.getPlayersCreation().remove(player.getName());
+						} else {
+							player.sendMessage(plugin.getLanguage().getInvalidInput());
+						}
+
+						break;
 					case SPAWN_PLAYER:
 						if (message.equals(Constantes.DONE)) {
 							match.setPlayerSpawn(player.getLocation());
@@ -369,6 +619,22 @@ public class Chat implements Listener {
 								} else {
 									plugin.getPlayersCreation().put(player.getName(),
 											Creacion.ANOTHER_ARENA_SPAWNS.getPosition());
+									actua = Boolean.FALSE;
+								}
+							}
+						}
+						break;
+					case TEAM_SPAWNS:
+						if (message.equals(Constantes.DONE)) {
+							if (match.getSpawns().size() != match.getNumberOfTeams()) {
+
+								match.getSpawns().add(player.getLocation());
+								if (match.getSpawns().size() == match.getNumberOfTeams()) {
+									plugin.getPlayersCreation().remove(player.getName());
+
+								} else {
+									plugin.getPlayersCreation().put(player.getName(),
+											Creacion.ANOTHER_TEAM_SPAWNS.getPosition());
 									actua = Boolean.FALSE;
 								}
 							}
@@ -424,6 +690,22 @@ public class Chat implements Listener {
 							}
 						}
 						break;
+
+					case ANOTHER_TEAM_SPAWNS:
+						if (message.equals(Constantes.DONE)) {
+							match.getSpawns().add(player.getLocation());
+							if (match.getSpawns().size() == match.getNumberOfTeams()) {
+								plugin.getPlayersCreation().remove(player.getName());
+
+							} else {
+
+								plugin.getPlayersCreation().put(player.getName(),
+										Creacion.ANOTHER_TEAM_SPAWNS.getPosition());
+								actua = Boolean.FALSE;
+
+							}
+						}
+						break;
 					case SPECTATOR_SPAWNS:
 
 						if (message.equals(Constantes.DONE)) {
@@ -434,54 +716,27 @@ public class Chat implements Listener {
 
 						}
 						break;
-					case INVENTORY:
-						if (message.equals(Constantes.DONE)) {
+					case KITS:
+						try {
+							Integer value = Integer.valueOf(message);
+							if (value.equals(plugin.getKits().size())) {
+								Kit kit = new Kit();
+								plugin.getPlayerKit().put(player.getName(), kit);
+								player.sendMessage(UtilsRandomEvents.enviaInfoCreacionKit(kit, player, plugin));
+								actua = Boolean.FALSE;
+								pasado = Boolean.TRUE;
+							} else if (value < plugin.getKits().size() && value >= 0) {
+								match.getKits().add(plugin.getKits().get(value).getName());
+								plugin.getPlayersCreation().remove(player.getName());
 
-							ItemStack[] contenido = player.getInventory().getContents();
-							List<ItemStack> contenidoList = Arrays.asList(contenido);
-							try {
-								contenidoList.removeAll(Arrays.asList(player.getInventory().getArmorContents()));
-							} catch (Exception e) {
-
-							}
-							ItemStack[] arrayContenido = new ItemStack[contenidoList.size()];
-							arrayContenido = contenidoList.toArray(arrayContenido);
-							InventoryPers inv = new InventoryPers();
-							inv.setContents(arrayContenido);
-							inv.setHelmet(player.getInventory().getHelmet());
-							inv.setBoots(player.getInventory().getBoots());
-							inv.setLeggings(player.getInventory().getLeggings());
-							inv.setChestplate(player.getInventory().getChestplate());
-							match.setInventory(inv);
-
-							// actualiza =
-							// UtilsRandomEvents.pasaACreation(plugin,
-							// player,
-							// position + 1, match);
-
-							try {
-								MinigameType minigame = match.getMinigame();
-								if (minigame != null) {
-
-								} else {
-									player.sendMessage(plugin.getLanguage().getInvalidInput());
-									// actualiza =
-									// UtilsRandomEvents.pasaACreation(plugin,
-									// player,
-									// position, match);
-								}
-							} catch (Exception e) {
+							} else {
 								player.sendMessage(plugin.getLanguage().getInvalidInput());
-								// actualiza =
-								// UtilsRandomEvents.pasaACreation(plugin,
-								// player, position, match);
+
 							}
-
-							plugin.getPlayersCreation().remove(player.getName());
-
-							break;
-
+						} catch (Exception e) {
+							player.sendMessage(plugin.getLanguage().getInvalidInput());
 						}
+
 						break;
 					case INVENTORY_BEAST:
 						if (message.equals(Constantes.DONE)) {
@@ -947,8 +1202,8 @@ public class Chat implements Listener {
 								match.setRewards(new ArrayList<String>());
 
 								break;
-							case INVENTORY:
-								match.setInventory(null);
+							case KITS:
+								match.setKits(new ArrayList<String>());
 								break;
 							case TIMER_MOB_SPAWN:
 							case TIMER_ARROW_SPAWN:
@@ -1035,6 +1290,14 @@ public class Chat implements Listener {
 						player.sendMessage("§6§l" + plugin.getWaterDrops().size() + " - §e§lNew Water Drop");
 
 						break;
+					case KITS:
+						player.sendMessage(c.getMessage(match));
+						for (Kit m : plugin.getKits()) {
+							player.sendMessage("§6§l" + plugin.getKits().indexOf(m) + " - " + m.getName());
+						}
+						player.sendMessage("§6§l" + plugin.getKits().size() + " - §e§lNew Kit");
+
+						break;
 					default:
 						player.sendMessage(c.getMessage(match));
 						break;
@@ -1073,6 +1336,16 @@ public class Chat implements Listener {
 						player.sendMessage("§6§l" + plugin.getWaterDrops().indexOf(m) + " - " + m.getName());
 					}
 					player.sendMessage("§6§l" + plugin.getWaterDrops().size() + " - §e§lNew Water Drop");
+
+					break;
+				case KITS:
+					player.sendMessage(c.getMessage(match));
+					plugin.getPlayersCreation().put(player.getName(), c.getPosition());
+
+					for (Kit m : plugin.getKits()) {
+						player.sendMessage("§6§l" + plugin.getKits().indexOf(m) + " - " + m.getName());
+					}
+					player.sendMessage("§6§l" + plugin.getKits().size() + " - §e§lNew Kit");
 
 					break;
 				default:

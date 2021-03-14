@@ -2,22 +2,26 @@ package com.adri1711.randomevents.listeners;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.adri1711.randomevents.RandomEvents;
+import com.adri1711.randomevents.match.Kit;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
 import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.randomevents.util.UtilsSQL;
 import com.adri1711.util.enums.XMaterial;
+import com.adri1711.util.enums.XSound;
 
 public class GUI implements Listener {
 
@@ -29,6 +33,22 @@ public class GUI implements Listener {
 
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
+
+		if (event.getWhoClicked() instanceof Player) {
+			try {
+				Player p = (Player) event.getWhoClicked();
+				if (event.getCurrentItem() != null) {
+					if (plugin.getMatchActive() != null
+							&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(p.getName())) {
+						if (event.getSlotType() != null && (event.getSlotType() == InventoryType.SlotType.ARMOR)) {
+							event.setCancelled(true);
+						}
+					}
+				}
+			} catch (Throwable e) {
+				System.out.println(e);
+			}
+		}
 
 		if (ChatColor.stripColor(plugin.getApi().getInventoryName(event)) != null
 				&& ChatColor.stripColor(plugin.getApi().getInventoryName(event))
@@ -42,11 +62,19 @@ public class GUI implements Listener {
 				try {
 					Player p = (Player) event.getWhoClicked();
 					if (event.getCurrentItem() != null) {
+						if (plugin.getMatchActive() != null
+								&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(p.getName())) {
+							if (event.getSlotType() != null && (event.getSlotType() == InventoryType.SlotType.ARMOR)) {
+								event.setCancelled(true);
+							}
+						}
+
 						if (event.getCurrentItem().getType() != null
 								&& event.getCurrentItem().getType().equals(XMaterial.OAK_SIGN.parseMaterial())) {
 							String itemName = event.getCurrentItem().getItemMeta().getDisplayName();
 							Integer page = Integer
 									.valueOf(itemName.split(plugin.getLanguage().getCreditsGuiPage())[1].trim());
+							UtilsSQL.getCreditsGUI(p, page, plugin);
 						} else {
 							ItemStack item = event.getCurrentItem();
 							if (item.hasItemMeta()) {
@@ -204,6 +232,48 @@ public class GUI implements Listener {
 											p.closeInventory();
 										}
 									}
+								}
+							}
+						}
+					}
+				} catch (Exception e) {
+					System.out.println(e);
+				}
+			}
+		} else if (ChatColor.stripColor(plugin.getApi().getInventoryName(event)) != null
+				&& ChatColor.stripColor(plugin.getApi().getInventoryName(event))
+						.contains(ChatColor.stripColor(plugin.getLanguage().getKitGuiName()))) {
+			if (event.getWhoClicked() instanceof Player) {
+
+				event.setCancelled(true);
+				try {
+					Player p = (Player) event.getWhoClicked();
+
+					if (event.getCurrentItem() != null) {
+
+						if (event.getCurrentItem().getType() != null
+								&& event.getCurrentItem().getType().equals(XMaterial.OAK_SIGN.parseMaterial())) {
+
+							String itemName = event.getCurrentItem().getItemMeta().getDisplayName();
+							Integer page = Integer
+									.valueOf(itemName.split(plugin.getLanguage().getCreditsGuiPage())[1].trim());
+							UtilsRandomEvents.createGUIKits(p, page, plugin, plugin.getMatchActive());
+						} else {
+
+							ItemStack item = event.getCurrentItem();
+							if (item.hasItemMeta()) {
+
+								List<Kit> kits = UtilsRandomEvents.kitsAvailable(p,
+										plugin.getMatchActive().getMatch().getKits(), plugin);
+								Integer pos = event.getInventory().first(item);
+
+								if (pos < kits.size()) {
+									Kit kit = kits.get(pos);
+									plugin.getMatchActive().getPlayerHandler().getPlayerKits().put(p, kit);
+									p.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage()
+											.getKitChosen().replaceAll("%kit_name%", kit.getName()));
+									p.closeInventory();
+									UtilsRandomEvents.playSound(p, XSound.ENTITY_PLAYER_LEVELUP);
 								}
 							}
 						}

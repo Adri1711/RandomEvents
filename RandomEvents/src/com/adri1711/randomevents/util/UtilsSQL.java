@@ -328,6 +328,49 @@ public class UtilsSQL {
 
 		}
 	}
+	public static void getCreditsGUI(Player p, Integer page, RandomEvents plugin) {
+		Map<String, Integer> creditos = new HashMap<String, Integer>();
+
+		if (plugin.isMysqlEnabled()) {
+			String query = "";
+			if (plugin.isMysqlUUIDMode()) {
+				query = Queries.SELECT_ALL_CREDITS_UUID_MODE.replaceAll(Queries.UUID, p.getUniqueId().toString());
+			} else {
+				query = Queries.SELECT_ALL_CREDITS_NAME_MODE.replaceAll(Queries.NAME, p.getName());
+
+			}
+			new QueryBukkitRunnable(plugin.getHikari().getHikari(), query, new Callback<ResultSet, SQLException>() {
+				@Override
+				public void call(ResultSet resultSet, SQLException thrown) {
+					if (thrown == null) {
+						try {
+							while (resultSet.next()) {
+								if (creditos.containsKey(resultSet.getString("event"))) {
+									creditos.put(resultSet.getString("event"),
+											creditos.get(resultSet.getString("event")) + resultSet.getInt("credits"));
+
+								} else {
+									creditos.put(resultSet.getString("event"), resultSet.getInt("credits"));
+								}
+
+							}
+							Bukkit.getServer().getScheduler().runTask((Plugin) plugin, new Runnable() {
+								public void run() {
+									p.openInventory(UtilsRandomEvents.createGUICredits(p, creditos, page, plugin));
+								}
+							});
+						} catch (SQLException e) {
+							System.out.println(e);
+						}
+					} else {
+					}
+				}
+			}).runTaskAsynchronously(plugin);
+		} else {
+			p.openInventory(UtilsRandomEvents.createGUICredits(p, creditos, page, plugin));
+
+		}
+	}
 
 	public static void getCreditsText(Player p, Player playerBal, RandomEvents plugin) {
 		Map<String, Integer> creditos = new HashMap<String, Integer>();

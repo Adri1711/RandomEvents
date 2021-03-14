@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.logging.log4j.spi.Terminable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -41,6 +43,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -49,12 +52,15 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
 import com.adri1711.randomevents.RandomEvents;
+import com.adri1711.randomevents.match.Kit;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
 import com.adri1711.randomevents.match.WaterDropStep;
 import com.adri1711.randomevents.match.enums.Creacion;
+import com.adri1711.randomevents.match.enums.CreacionKit;
 import com.adri1711.randomevents.match.enums.CreacionWaterDrop;
 import com.adri1711.randomevents.match.enums.MinigameType;
+import com.adri1711.randomevents.match.enums.Petos;
 import com.adri1711.randomevents.match.schedule.DayWeek;
 import com.adri1711.randomevents.match.schedule.Schedule;
 import com.adri1711.randomevents.match.utils.BannedPlayers;
@@ -91,9 +97,13 @@ public class UtilsRandomEvents {
 	}
 
 	//
-
 	public static void terminaCreacionMatch(RandomEvents plugin, Player player) {
-		Match match = plugin.getPlayerMatches().get(player.getName());
+		terminaCreacionMatch(plugin, player, null);
+	}
+
+	public static void terminaCreacionMatch(RandomEvents plugin, Player player, Match match) {
+		if (match == null)
+			match = plugin.getPlayerMatches().get(player.getName());
 		try {
 			String json = UtilidadesJson.fromMatchToJSON(plugin, match);
 			if (json != null) {
@@ -123,17 +133,37 @@ public class UtilsRandomEvents {
 				pw.flush();
 
 				pw.close();
-				plugin.getPlayersCreation().remove(player.getName());
-				plugin.getPlayerMatches().remove(player.getName());
-				plugin.getMatches().add(match);
-				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getEndOfArenaCreation());
+				if (player != null) {
+					plugin.getPlayersCreation().remove(player.getName());
+					plugin.getPlayerMatches().remove(player.getName());
+				}
+
+				Match matchAux = null;
+				for (Match m : plugin.getMatches()) {
+					if (m.getName().equals(match.getName())) {
+						matchAux = m;
+					}
+
+				}
+				if (matchAux == null) {
+					plugin.getMatches().add(match);
+				} else {
+					plugin.getMatches().set(plugin.getMatches().indexOf(matchAux), match);
+				}
+				if (player != null) {
+
+					player.sendMessage(
+							plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getEndOfArenaCreation());
+				}
 			} else {
 				System.out.println("JSON was null.");
-				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
+				if (player != null)
+					player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-			player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 
 		}
 
@@ -183,6 +213,52 @@ public class UtilsRandomEvents {
 
 	}
 
+	public static void terminaCreacionKit(RandomEvents plugin, Player player, Kit kit) {
+		if (kit == null)
+			kit = plugin.getPlayerKit().get(player.getName());
+		try {
+			String json = UtilidadesJson.fromKitToJSON(plugin, kit);
+			if (json != null) {
+				File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//kits");
+				if (!dataFolder.exists()) {
+					dataFolder.mkdir();
+				}
+
+				File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//kits",
+						ChatColor.stripColor(kit.getName().replaceAll("<color>", "§")).replaceAll(" ", "_") + ".json");
+				if (!bossFile.exists()) {
+					bossFile.createNewFile();
+				} else {
+					bossFile.delete();
+					bossFile.createNewFile();
+				}
+
+				OutputStream os = new FileOutputStream(bossFile, true);
+				PrintWriter pw = null;
+				pw = new PrintWriter(new OutputStreamWriter(os, Charset.forName(plugin.getUseEncoding())));
+
+				pw.println(json);
+
+				pw.flush();
+
+				pw.close();
+				plugin.getPlayersCreationKit().remove(player.getName());
+				plugin.getPlayerKit().remove(player.getName());
+				plugin.getKits().add(kit);
+			} else {
+				System.out.println("JSON was null.");
+				if (player != null)
+					player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
+
+		}
+
+	}
+
 	public static void enableMatch(RandomEvents plugin, Match match, Player player) {
 		if (match.getEnabled() != null && !match.getEnabled()) {
 			plugin.getMatches().remove(match);
@@ -207,8 +283,8 @@ public class UtilsRandomEvents {
 					}
 
 					OutputStream os = new FileOutputStream(bossFile, true);
-					PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, Charset.forName(plugin.getUseEncoding())));
-
+					PrintWriter pw = new PrintWriter(
+							new OutputStreamWriter(os, Charset.forName(plugin.getUseEncoding())));
 
 					pw.println(json);
 
@@ -592,6 +668,7 @@ public class UtilsRandomEvents {
 	public static List<Match> cargarPartidas(RandomEvents plugin) {
 		List<Match> listaPartidas = new ArrayList<Match>();
 		File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//events");
+		List<Match> matchToConvert = new ArrayList<Match>();
 		if (!dataFolder.exists()) {
 			dataFolder.mkdir();
 		}
@@ -604,8 +681,14 @@ public class UtilsRandomEvents {
 
 				br = new BufferedReader(new InputStreamReader(fr, sc));
 				Match match = UtilidadesJson.fromJSONToMatch(plugin, br);
-				if (match != null)
+				if (match != null) {
+					if (match.getInventory() != null) {
+						match = UtilsRandomEvents.convertInventoryToKits(plugin, match);
+						matchToConvert.add(match);
+					}
+
 					listaPartidas.add(match);
+				}
 
 			} catch (FileNotFoundException e) {
 				System.out.println(e.getMessage());
@@ -621,8 +704,21 @@ public class UtilsRandomEvents {
 			}
 
 		}
+		for (Match m : matchToConvert) {
+			UtilsRandomEvents.terminaCreacionMatch(plugin, null, m);
+		}
 		Collections.sort(listaPartidas);
 		return listaPartidas;
+	}
+
+	private static Match convertInventoryToKits(RandomEvents plugin, Match match) {
+		Kit kit = new Kit();
+		kit.setName(ChatColor.stripColor(match.getName()));
+		kit.setInventory(match.getInventory());
+		terminaCreacionKit(plugin, null, kit);
+		match.setInventory(null);
+		match.getKits().add(kit.getName());
+		return match;
 	}
 
 	public static Schedule findSchedule(RandomEvents plugin, Integer day, Integer hour, Integer minute) {
@@ -668,8 +764,6 @@ public class UtilsRandomEvents {
 		}
 		return listaPartidas;
 	}
-
-	
 
 	public static String preparaNombrePartida(MatchActive match) {
 		String resultado = "";
@@ -854,6 +948,12 @@ public class UtilsRandomEvents {
 		}
 	}
 
+	public static void playSound(Player player, XSound sonido, float volume, float pitch) {
+		if (sonido != null && player != null) {
+			player.playSound(player.getLocation(), sonido.parseSound(), volume, pitch);
+		}
+	}
+
 	public static String sacaNombrePartida(String displayName) {
 		return displayName.split("\\(")[0].trim();
 	}
@@ -868,6 +968,11 @@ public class UtilsRandomEvents {
 	}
 
 	public static void normalizaColorsWaterDrop(WaterDropStep match) {
+		match.setName(match.getName().replace("<color>", "§"));
+
+	}
+
+	public static void normalizaColorsKit(Kit match) {
 		match.setName(match.getName().replace("<color>", "§"));
 
 	}
@@ -1469,7 +1574,8 @@ public class UtilsRandomEvents {
 
 	}
 
-	public static Schedule nextEvent(List<Schedule> schedules, Player player, RandomEvents plugin) {
+	public static Map<Schedule, Date> nextEvent(List<Schedule> schedules, Player player, RandomEvents plugin) {
+		Map<Schedule, Date> res = new HashMap<Schedule, Date>();
 		Schedule sch = null;
 		Calendar c = Calendar.getInstance();
 		c.setTime(new Date());
@@ -1491,8 +1597,8 @@ public class UtilsRandomEvents {
 						sch = schedule;
 					}
 				}
-
-				c.add(Calendar.DAY_OF_WEEK, 1);
+				if (sch == null)
+					c.add(Calendar.DAY_OF_WEEK, 1);
 				day = c.get(Calendar.DAY_OF_WEEK);
 				hour = 0;
 				minute = 0;
@@ -1500,8 +1606,12 @@ public class UtilsRandomEvents {
 			}
 
 		}
+		c.set(Calendar.HOUR_OF_DAY, sch.getHour());
+		c.set(Calendar.MINUTE, sch.getMinute());
+		c.set(Calendar.SECOND, 0);
+		res.put(sch, c.getTime());
 
-		return sch;
+		return res;
 
 	}
 
@@ -1543,6 +1653,12 @@ public class UtilsRandomEvents {
 									+ match.getAmountPlayersMin();
 						}
 						break;
+
+					case NUMBER_OF_TEAMS:
+						if (match.getNumberOfTeams() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getNumberOfTeams();
+						}
+						break;
 					case SPAWN_PLAYER:
 						if (match.getPlayerSpawn() != null) {
 							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
@@ -1551,7 +1667,9 @@ public class UtilsRandomEvents {
 						}
 						break;
 					case ARENA_SPAWNS:
+					case TEAM_SPAWNS:
 					case ANOTHER_ARENA_SPAWNS:
+					case ANOTHER_TEAM_SPAWNS:
 						if (match.getSpawns() != null && !match.getSpawns().isEmpty()) {
 
 							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9Spawns completed";
@@ -1572,12 +1690,12 @@ public class UtilsRandomEvents {
 						}
 
 						break;
-					case INVENTORY:
-						if (match.getInventory() != null) {
-
-							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9Inventory completed";
+					case KITS:
+						if (match.getKits() != null && !match.getKits().isEmpty()) {
+							for (String s : match.getKits()) {
+								info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + s;
+							}
 						}
-
 						break;
 					case TIMER_MOB_SPAWN:
 					case TIMER_ARROW_SPAWN:
@@ -1678,6 +1796,7 @@ public class UtilsRandomEvents {
 								info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + s;
 							}
 						}
+						break;
 					default:
 						break;
 
@@ -1717,6 +1836,11 @@ public class UtilsRandomEvents {
 					res = Boolean.FALSE;
 				}
 				break;
+			case NUMBER_OF_TEAMS:
+				if (match.getNumberOfTeams() == null) {
+					res = Boolean.FALSE;
+				}
+				break;
 			case SPAWN_PLAYER:
 				if (match.getPlayerSpawn() == null) {
 					res = Boolean.FALSE;
@@ -1725,6 +1849,8 @@ public class UtilsRandomEvents {
 				break;
 			case ARENA_SPAWNS:
 			case ANOTHER_ARENA_SPAWNS:
+			case TEAM_SPAWNS:
+			case ANOTHER_TEAM_SPAWNS:
 				if (match.getSpawns() == null || match.getSpawns().isEmpty()) {
 					if (match.getMinigame() == null || !match.getMinigame().equals(MinigameType.WDROP)) {
 
@@ -1738,12 +1864,10 @@ public class UtilsRandomEvents {
 			case ANOTHER_REWARDS:
 
 				break;
-			case INVENTORY:
-				if (match.getInventory() == null) {
-
+			case KITS:
+				if (match.getKits() == null || match.getKits().isEmpty()) {
 					res = Boolean.FALSE;
 				}
-
 				break;
 			case TIMER_MOB_SPAWN:
 			case TIMER_ARROW_SPAWN:
@@ -1821,6 +1945,11 @@ public class UtilsRandomEvents {
 
 				}
 				break;
+			case WATER_DROP_SCENES:
+				if (match.getScenes() == null || match.getScenes().isEmpty()) {
+					res = Boolean.FALSE;
+				}
+				break;
 			default:
 				break;
 
@@ -1856,6 +1985,7 @@ public class UtilsRandomEvents {
 							plugin.getParticleRate(), plugin.getParticleRateChange(), pa);
 					break;
 				case "CIRCLE":
+
 					XParticle.circle(plugin.getParticleRadius(), plugin.getParticleRate(), pa);
 					break;
 				case "CRESCENT":
@@ -1909,11 +2039,23 @@ public class UtilsRandomEvents {
 
 	public static List<String> prepareLines(RandomEvents plugin, MatchActive matchActive, Player player) {
 		List<String> lines = new ArrayList<String>();
+
 		List<String> playersDead = new ArrayList<String>();
 		playersDead.addAll(matchActive.getPlayerHandler().getPlayersTotal());
 		playersDead.removeAll(matchActive.getPlayerHandler().getPlayers());
+
+		List<Player> playersDeadObj = new ArrayList<Player>();
+		playersDeadObj.addAll(matchActive.getPlayerHandler().getPlayersTotalObj());
+		playersDeadObj.removeAll(matchActive.getPlayerHandler().getPlayersObj());
 		lines.add("");
 		switch (matchActive.getMatch().getMinigame()) {
+		case PAINTBALL:
+
+			lines = prepareLinesTeam(lines, matchActive, plugin, player);
+			lines.add("");
+			lines = prepareLinesDeadAliveTeam(lines, matchActive, plugin, playersDeadObj);
+
+			break;
 		case BATTLE_ROYALE_TEAM_2:
 		case TSW:
 
@@ -1963,6 +2105,7 @@ public class UtilsRandomEvents {
 			lines = prepareLinesTeammate(lines, matchActive, plugin, player);
 			lines.add("");
 		case TOP_KILLER:
+		case QUAKECRAFT:
 		case OITC:
 			lines = prepareLinesTime(lines, plugin, matchActive);
 			lines.add("");
@@ -1998,6 +2141,15 @@ public class UtilsRandomEvents {
 		if (lines.size() > 15) {
 			lines = lines.subList(0, 15);
 		}
+		List<String> linesFormated = new ArrayList<String>();
+		for (String l : lines) {
+			if (l.length() > 30) {
+				linesFormated.add(l.substring(0, 29));
+			} else {
+				linesFormated.add(l);
+			}
+		}
+		lines = linesFormated;
 		return lines;
 	}
 
@@ -2060,6 +2212,20 @@ public class UtilsRandomEvents {
 		return lines;
 	}
 
+	private static List<String> prepareLinesTeam(List<String> lines, MatchActive matchActive, RandomEvents plugin,
+			Player player) {
+		Integer equipo = matchActive.getEquipoCopy(player);
+		if (equipo != null) {
+			Petos peto = Petos.getPeto(equipo);
+			if (peto != null) {
+				lines.add(plugin.getLanguage().getScoreboardTeam().replaceAll("%team_color%", "" + peto.getChatColor())
+						.replaceAll("%name%", peto.getName()));
+			}
+
+		}
+		return lines;
+	}
+
 	private static List<String> prepareLinesDeadAlive(List<String> lines, MatchActive matchActive, RandomEvents plugin,
 			List<String> playersDead) {
 		List<String> players = new ArrayList<String>();
@@ -2069,6 +2235,34 @@ public class UtilsRandomEvents {
 		}
 		for (String p : playersDead) {
 			lines.add(plugin.getLanguage().getScoreboardDeath().replaceAll("%name%", p));
+		}
+		return lines;
+	}
+
+	private static List<String> prepareLinesDeadAliveTeam(List<String> lines, MatchActive matchActive,
+			RandomEvents plugin, List<Player> playersDead) {
+		List<Player> players = new ArrayList<Player>();
+		players.addAll(matchActive.getPlayerHandler().getPlayersObj());
+		for (Player p : players) {
+			Integer equipo = matchActive.getEquipoCopy(p);
+			if (equipo != null) {
+				Petos peto = Petos.getPeto(equipo);
+				if (peto != null) {
+					lines.add(plugin.getLanguage().getScoreboardTeamAlive()
+							.replaceAll("%team_color%", "" + peto.getChatColor()).replaceAll("%name%", p.getName()));
+				}
+			}
+		}
+		for (Player p : playersDead) {
+			Integer equipo = matchActive.getEquipoCopy(p);
+
+			if (equipo != null) {
+				Petos peto = Petos.getPeto(equipo);
+				if (peto != null) {
+					lines.add(plugin.getLanguage().getScoreboardTeamDeath()
+							.replaceAll("%team_color%", "" + peto.getChatColor()).replaceAll("%name%", p.getName()));
+				}
+			}
 		}
 		return lines;
 	}
@@ -2121,6 +2315,48 @@ public class UtilsRandomEvents {
 		return info;
 	}
 
+	public static String enviaInfoCreacionKit(Kit kit, Player player, RandomEvents plugin) {
+		String info = plugin.getLanguage().getTagPlugin() + " ";
+
+		for (CreacionKit c : CreacionKit.values()) {
+			info += Constantes.SALTO_LINEA + "§e§l " + c.getPosition() + " - " + c.toString();
+
+			switch (c) {
+
+			case NAME:
+				if (kit.getName() != null) {
+					info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + kit.getName();
+				}
+
+				break;
+
+			case PERMISSION_OPTIONAL:
+				if (kit.getPermission() != null) {
+					info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + kit.getPermission();
+
+				}
+				break;
+			case INVENTORY:
+				if (kit.getInventory() != null) {
+					info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + "Inventory completed";
+
+				}
+				break;
+			case ITEM_DESCRIPTIVE:
+				if (kit.getItem() != null) {
+					info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + kit.getItem().toString();
+
+				}
+				break;
+			default:
+				break;
+
+			}
+		}
+
+		return info;
+	}
+
 	public static String compruebaWaterDropCorrecto(WaterDropStep waterDrop, RandomEvents plugin) {
 		Boolean res = Boolean.TRUE;
 		for (CreacionWaterDrop c : CreacionWaterDrop.values()) {
@@ -2164,6 +2400,44 @@ public class UtilsRandomEvents {
 		return respuesta;
 	}
 
+	public static String compruebaKitCorrecto(Kit kit, RandomEvents plugin) {
+		Boolean res = Boolean.TRUE;
+		for (CreacionKit c : CreacionKit.values()) {
+
+			switch (c) {
+			case NAME:
+				if (kit.getName() == null) {
+					res = Boolean.FALSE;
+				}
+
+				break;
+			case INVENTORY:
+				if (kit.getInventory() == null) {
+					res = Boolean.FALSE;
+
+				}
+				break;
+			case ITEM_DESCRIPTIVE:
+				if (kit.getItem() == null) {
+					res = Boolean.FALSE;
+
+				}
+				break;
+
+			default:
+				break;
+
+			}
+		}
+		String respuesta = null;
+
+		if (!res) {
+			respuesta = plugin.getLanguage().getLacksInfoCreation();
+		}
+
+		return respuesta;
+	}
+
 	public static List<WaterDropStep> cargarWaterDrops(RandomEvents plugin) {
 		List<WaterDropStep> listaPartidas = new ArrayList<WaterDropStep>();
 		File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//waterdrop");
@@ -2177,6 +2451,39 @@ public class UtilsRandomEvents {
 				fr = new FileReader(file);
 				br = new BufferedReader(fr);
 				WaterDropStep match = UtilidadesJson.fromJSONToWD(plugin, br);
+				if (match != null)
+					listaPartidas.add(match);
+
+			} catch (FileNotFoundException e) {
+				System.out.println(e.getMessage());
+			} finally {
+				try {
+					if (fr != null)
+						fr.close();
+					if (br != null)
+						br.close();
+				} catch (IOException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+
+		}
+		return listaPartidas;
+	}
+
+	public static List<Kit> cargarKits(RandomEvents plugin) {
+		List<Kit> listaPartidas = new ArrayList<Kit>();
+		File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//kits");
+		if (!dataFolder.exists()) {
+			dataFolder.mkdir();
+		}
+		for (File file : dataFolder.listFiles()) {
+			BufferedReader br = null;
+			FileReader fr = null;
+			try {
+				fr = new FileReader(file);
+				br = new BufferedReader(fr);
+				Kit match = UtilidadesJson.fromJSONToKit(plugin, br);
 				if (match != null)
 					listaPartidas.add(match);
 
@@ -2278,6 +2585,77 @@ public class UtilsRandomEvents {
 		}
 
 		return inv;
+	}
+
+	public static Inventory createGUIKits(Player p, Integer page, RandomEvents plugin, MatchActive matchActive) {
+
+		Inventory inv = Bukkit.createInventory(null, 45, plugin.getLanguage().getKitGuiName());
+
+		if (matchActive != null) {
+			Match match = matchActive.getMatch();
+			List<Kit> kitsAvailable = UtilsRandomEvents.kitsAvailable(p, match.getKits(), plugin);
+
+			Integer size = UtilsRandomEvents.sizeGUIKits(kitsAvailable);
+			inv = Bukkit.createInventory(null, size, plugin.getLanguage().getKitGuiName());
+			ItemStack nextPage = new ItemStack(XMaterial.OAK_SIGN.parseMaterial());
+			ItemStack backPage = new ItemStack(XMaterial.OAK_SIGN.parseMaterial());
+			ItemMeta nextPageMeta = nextPage.getItemMeta();
+			ItemMeta backPageMeta = backPage.getItemMeta();
+			nextPageMeta.setDisplayName(plugin.getLanguage().getCreditsGuiPage() + " " + (page + 1));
+			backPageMeta.setDisplayName(plugin.getLanguage().getCreditsGuiPage() + " " + (page - 1));
+			nextPage.setItemMeta(nextPageMeta);
+			backPage.setItemMeta(backPageMeta);
+			for (int i = page * (size - (kitsAvailable.size() > 45 ? 9 : 0)); i < (page + 1)
+					* (size - (kitsAvailable.size() > 45 ? 9 : 0)) && i < kitsAvailable.size(); i++) {
+				Kit kit = kitsAvailable.get(i);
+				ItemStack cabeza = kit.getItem();
+				ItemMeta cabezaMeta = cabeza.getItemMeta();
+				if (cabezaMeta.getDisplayName() == null) {
+					cabezaMeta.setDisplayName(
+							plugin.getLanguage().getKitDefaultName().replaceAll("%kit_name%", kit.getName()));
+				}
+				if (cabezaMeta.getLore() == null || cabezaMeta.getLore().isEmpty()) {
+					cabezaMeta.setLore(plugin.getLanguage().getKitDefaultLore());
+				}
+				cabezaMeta.getItemFlags().add(ItemFlag.HIDE_ATTRIBUTES);
+				cabezaMeta.getItemFlags().add(ItemFlag.HIDE_POTION_EFFECTS);
+				cabezaMeta.getItemFlags().add(ItemFlag.HIDE_ENCHANTS);
+				cabeza.setItemMeta(cabezaMeta);
+				inv.setItem(i - (page * (size - 9)), cabeza);
+			}
+			if (kitsAvailable.size() > 45) {
+				if (page == 0) {
+					inv.setItem((size - 1), nextPage);
+
+				} else if (kitsAvailable.size() > (page * (size - (kitsAvailable.size() > 45 ? 9 : 0)))) {
+					inv.setItem((size - 1), nextPage);
+					inv.setItem((size - 9), backPage);
+				} else {
+					inv.setItem((size - 9), backPage);
+				}
+			}
+		}
+		return inv;
+	}
+
+	private static Integer sizeGUIKits(List<Kit> kitsAvailable) {
+		Integer size = kitsAvailable.size();
+		if (size > 45) {
+			size = 45;
+		} else {
+			size = size + (9 - size % 9);
+		}
+		return size;
+	}
+
+	public static List<Kit> kitsAvailable(Player p, List<String> kits, RandomEvents plugin) {
+		List<Kit> kitsAvailable = new ArrayList<Kit>();
+		for (Kit kit : plugin.getKits()) {
+			if (kits.contains(kit.getName()) && (kit.getPermission() == null || p.hasPermission(kit.getPermission()))) {
+				kitsAvailable.add(kit);
+			}
+		}
+		return kitsAvailable;
 	}
 
 	public static void sendCreditsInfo(Player p, Player playerBal, Map<String, Integer> creditos, RandomEvents plugin) {

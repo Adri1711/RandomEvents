@@ -1,9 +1,15 @@
 package com.adri1711.randomevents.placeholders;
 
+import java.util.Date;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.bukkit.entity.Player;
 
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.match.enums.MinigameType;
+import com.adri1711.randomevents.match.schedule.Schedule;
+import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.randomevents.util.UtilsSQL;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -45,6 +51,7 @@ public class ReventPlaceholder extends PlaceholderExpansion {
 	public String onPlaceholderRequest(Player p, String identifier) {
 		String res = null;
 		if (plugin.isMysqlEnabled()) {
+
 			if (identifier.equals("total_tries")) {
 				Integer callback = UtilsSQL.getAllStatsSync(p, PlaceholderType.TRIES, plugin);
 				if (callback != null) {
@@ -73,6 +80,26 @@ public class ReventPlaceholder extends PlaceholderExpansion {
 						res = callback.toString();
 					}
 				}
+			} else if (identifier.equals("next_event")) {
+
+				if (plugin.getSchedules() != null && !plugin.getSchedules().isEmpty()) {
+					Map<Schedule, Date> sMap = UtilsRandomEvents.nextEvent(plugin.getSchedules(), p, plugin);
+					Schedule s = null;
+					Date d = null;
+					for (Entry<Schedule, Date> entrada : sMap.entrySet()) {
+						s = entrada.getKey();
+						d = entrada.getValue();
+					}
+					if (s != null) {
+						res = "" + (UtilsRandomEvents.calculateTime((d.getTime() - new Date().getTime()) / 1000));
+
+					}
+				} else {
+
+					res = plugin.getLanguage().getNoScheduledEvents();
+
+				}
+
 			}
 		}
 		return res;

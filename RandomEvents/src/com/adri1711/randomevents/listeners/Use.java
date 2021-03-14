@@ -1,13 +1,23 @@
 package com.adri1711.randomevents.listeners;
 
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -32,7 +42,10 @@ import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.match.enums.MinigameType;
 import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
+import com.adri1711.util.enums.Particle1711;
+import com.adri1711.util.enums.ParticleDisplay;
 import com.adri1711.util.enums.XMaterial;
+import com.adri1711.util.enums.XParticle;
 import com.adri1711.util.enums.XSound;
 
 public class Use implements Listener {
@@ -65,7 +78,24 @@ public class Use implements Listener {
 		if (plugin.getMatchActive() != null && plugin.getMatchActive().getPlaying()
 				&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())) {
 
-			if ((evt.getAction() == Action.RIGHT_CLICK_BLOCK || evt.getAction() == Action.LEFT_CLICK_BLOCK)
+			if ((evt.getAction() == Action.LEFT_CLICK_AIR || evt.getAction() == Action.LEFT_CLICK_BLOCK)
+					&& (player.getItemInHand().getType() == (XMaterial.WOODEN_HOE.parseMaterial())
+							|| player.getItemInHand().getType() == (XMaterial.STONE_HOE.parseMaterial())
+							|| player.getItemInHand().getType() == (XMaterial.IRON_HOE.parseMaterial())
+							|| player.getItemInHand().getType() == (XMaterial.GOLDEN_HOE.parseMaterial())
+							|| player.getItemInHand().getType() == (XMaterial.DIAMOND_HOE.parseMaterial()))
+					&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.QUAKECRAFT)
+					&& !plugin.getMatchActive().getCooldownJump().containsKey(player)) {
+
+				Double time = new Date().getTime() + 1000 * plugin.getQuakeJumpCooldown();
+				plugin.getMatchActive().getCooldownJump().put(player, time.longValue());
+
+				Vector v = player.getEyeLocation().getDirection().normalize();
+				v = new Vector(v.getX() * 2.0, v.getY() + 0.5, v.getZ() * 2.0);
+				player.setVelocity(v);
+				UtilsRandomEvents.playSound(player, XSound.ENTITY_ENDERMAN_TELEPORT);
+
+			} else if ((evt.getAction() == Action.RIGHT_CLICK_BLOCK || evt.getAction() == Action.LEFT_CLICK_BLOCK)
 					&& evt.getClickedBlock().getType() == XMaterial.CHEST.parseMaterial()) {
 				if (plugin.getMatchActive().getMapHandler().getCuboid() != null && plugin.getMatchActive()
 						.getMapHandler().getCuboid().contains(evt.getClickedBlock().getLocation())) {
@@ -101,6 +131,12 @@ public class Use implements Listener {
 				if (player.getItemInHand() != null
 						&& player.getItemInHand().getType() != XMaterial.AIR.parseMaterial()) {
 					if (player.getItemInHand().getItemMeta() != null
+							&& player.getItemInHand().getItemMeta().getDisplayName() != null && player.getItemInHand()
+									.getItemMeta().getDisplayName().equals(plugin.getLanguage().getKitItemName())) {
+						evt.setCancelled(true);
+						player.openInventory(
+								UtilsRandomEvents.createGUIKits(player, 0, plugin, plugin.getMatchActive()));
+					} else if (player.getItemInHand().getItemMeta() != null
 							&& player.getItemInHand().getItemMeta().getDisplayName() != null
 							&& player.getItemInHand().getItemMeta().getDisplayName()
 									.equals(plugin.getPowerUpItem().getItemMeta().getDisplayName())) {
@@ -146,6 +182,81 @@ public class Use implements Listener {
 							|| player.getItemInHand().getType() == (XMaterial.DIAMOND_SHOVEL.parseMaterial()))
 							&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEGG)) {
 						player.launchProjectile(Egg.class);
+					} else if ((player.getItemInHand().getType() == (XMaterial.WOODEN_HOE.parseMaterial())
+							|| player.getItemInHand().getType() == (XMaterial.STONE_HOE.parseMaterial())
+							|| player.getItemInHand().getType() == (XMaterial.IRON_HOE.parseMaterial())
+							|| player.getItemInHand().getType() == (XMaterial.GOLDEN_HOE.parseMaterial())
+							|| player.getItemInHand().getType() == (XMaterial.DIAMOND_HOE.parseMaterial()))
+							&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.QUAKECRAFT)
+							&& !plugin.getMatchActive().getCooldownShoot().containsKey(player)) {
+						try {
+							Double time = new Date().getTime() + 1000 * plugin.getQuakeShootCooldown();
+							plugin.getMatchActive().getCooldownShoot().put(player, time.longValue());
+							Boolean hit = Boolean.FALSE;
+							UtilsRandomEvents.playSound(player, XSound.ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR);
+							Location locEnd = player.getLocation();
+							ParticleDisplay pa = ParticleDisplay.display(plugin.getApi(), locEnd,
+									Particle1711.REDSTONE);
+							for (Block loc : player.getLineOfSight((Set<Material>) null,
+									plugin.getQuakeShootDistance())) {
+								if (!hit && (loc == null || loc.getType() == XMaterial.AIR.parseMaterial())) {
+									Collection<Entity> entities = loc.getLocation().getWorld()
+											.getNearbyEntities(loc.getLocation(), 0.5, 0.5, 0.5);
+
+									locEnd = loc.getLocation();
+
+									for (Entity ent : entities) {
+										if (ent != null && ent instanceof Player) {
+											Player hitted = (Player) ent;
+											if (!hitted.getName().equals(player.getName()) && plugin.getMatchActive()
+													.getPlayerHandler().getPlayersObj().contains(hitted)) {
+												hit = Boolean.TRUE;
+
+												Location pLoc = hitted.getLocation();
+												Location playerLoc = player.getLocation();
+												pLoc.setWorld(playerLoc.getWorld());
+												UtilsRandomEvents.mandaMensaje(plugin,
+														plugin.getMatchActive().getPlayerHandler()
+																.getPlayersSpectators(),
+														plugin.getLanguage().getBowKill()
+																.replaceAll("%victim%", hitted.getName())
+																.replaceAll("%distance%",
+																		"" + Double.valueOf(pLoc.distance(playerLoc))
+																				.intValue())
+																.replaceAll("%killer%", player.getName()),
+														false);
+												plugin.getMatchActive().reiniciaPlayer(hitted);
+												UtilsRandomEvents.playSound(hitted, XSound.ENTITY_VILLAGER_DEATH);
+												UtilsRandomEvents.playSound(player, XSound.ENTITY_PLAYER_LEVELUP);
+												if (plugin.getMatchActive().getPuntuacion()
+														.containsKey(player.getName())) {
+													plugin.getMatchActive().getPuntuacion().put(player.getName(),
+															plugin.getMatchActive().getPuntuacion()
+																	.get(player.getName()) + 1);
+
+												} else {
+													plugin.getMatchActive().getPuntuacion().put(player.getName(), 1);
+												}
+
+												player.sendMessage(plugin.getLanguage().getTagPlugin() + " "
+														+ plugin.getLanguage().getNowPoints().replace("%points%",
+																plugin.getMatchActive().getPuntuacion()
+																		.get(player.getName()).toString()));
+
+											}
+										}
+									}
+								} else {
+									hit = Boolean.TRUE;
+								}
+
+							}
+
+							XParticle.line(player.getLocation(), locEnd, 0.5, pa);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				}
 
@@ -155,6 +266,21 @@ public class Use implements Listener {
 					plugin.getMatchActive().getMapHandler().getCheckpoints().put(player.getName(),
 							player.getLocation());
 
+				}
+			}
+		} else if (plugin.getMatchActive() != null && !plugin.getMatchActive().getPlaying()
+				&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())) {
+			if (evt.getAction() == Action.RIGHT_CLICK_AIR || evt.getAction() == Action.RIGHT_CLICK_BLOCK) {
+
+				if (player.getItemInHand() != null
+						&& player.getItemInHand().getType() != XMaterial.AIR.parseMaterial()) {
+					if (player.getItemInHand().getItemMeta() != null
+							&& player.getItemInHand().getItemMeta().getDisplayName() != null && player.getItemInHand()
+									.getItemMeta().getDisplayName().equals(plugin.getLanguage().getKitItemName())) {
+						evt.setCancelled(true);
+						player.openInventory(
+								UtilsRandomEvents.createGUIKits(player, 0, plugin, plugin.getMatchActive()));
+					}
 				}
 			}
 		}
@@ -407,6 +533,32 @@ public class Use implements Listener {
 				}
 			}
 		}
+	}
+
+	int timer, id = 0;
+	Random gen = new Random();
+	private Object[] dataStore = new Object[5];
+
+	public void playFirework(Location loc) throws Exception {
+		Firework fw = (Firework) loc.getWorld().spawn(loc, Firework.class);
+		if (dataStore[0] == null)
+			dataStore[0] = getMethod(loc.getWorld().getClass(), "getHandle");
+		if (dataStore[2] == null)
+			dataStore[2] = getMethod(fw.getClass(), "getHandle");
+		dataStore[3] = ((Method) dataStore[0]).invoke(loc.getWorld(), (Object[]) null);
+		dataStore[4] = ((Method) dataStore[2]).invoke(fw, (Object[]) null);
+		if (dataStore[1] == null)
+			dataStore[1] = getMethod(dataStore[3].getClass(), "addParticle");
+		((Method) dataStore[1]).invoke(dataStore[3], new Object[] { "fireworksSpark", loc.getX(), loc.getY(),
+				loc.getZ(), gen.nextGaussian() * 0.05D, -(loc.getZ() * 1.15D) * 0.5D, gen.nextGaussian() * 0.05D });
+		fw.remove();
+	}
+
+	private Method getMethod(Class<?> cl, String method) {
+		for (Method m : cl.getMethods())
+			if (m.getName().equals(method))
+				return m;
+		return null;
 	}
 
 	public RandomEvents getPlugin() {

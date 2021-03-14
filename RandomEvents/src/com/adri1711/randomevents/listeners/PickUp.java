@@ -29,7 +29,8 @@ public class PickUp implements Listener {
 			switch (plugin.getMatchActive().getMatch().getMinigame()) {
 			case GEM_CRAWLER:
 				Item item = evt.getItem();
-				if (item.getType().equals(XMaterial.EMERALD.parseMaterial())) {
+				
+				if (item.getItemStack().getType().equals(XMaterial.EMERALD.parseMaterial())) {
 					if (plugin.getMatchActive().getPuntuacion().containsKey(player.getName())) {
 						plugin.getMatchActive().getPuntuacion().put(player.getName(),
 								plugin.getMatchActive().getPuntuacion().get(player.getName())

@@ -22,7 +22,7 @@ public enum Creacion {
 
 	ARENA_SPAWNS(5,
 			"§6§lGo to the arena you created and write 'Done' to set each spawn location for the players (%players%/%maxPlayers%)",
-			"ALLMINIGAMES"),
+			"ALLMINIGAMES", "PBALL"),
 
 	ANOTHER_ARENA_SPAWNS(6, "§6§lPut another player spawn, say 'Done' (%players%/%maxPlayers%) ", ""),
 
@@ -34,7 +34,7 @@ public enum Creacion {
 
 	ANOTHER_REWARDS(9, "§6§lPut another reward for the winners or just say 'Done' to begin the next step", ""),
 
-	INVENTORY(10, "§6§lTake the inventory for the players and say 'Done' ", "ALLMINIGAMES"),
+	KITS(10, "§6§lChoose a Kit to add to the match ", "ALLMINIGAMES"),
 
 	TIMER_MOB_SPAWN(11, "§6§lWrite the number of seconds (it can have decimals) to respawn each mob", ""),
 
@@ -44,7 +44,7 @@ public enum Creacion {
 			"§6§lGo to the arena you created and write 'Done' to set the spawn location of the mob, 'New' to choose another mob or 'End' to end the creation of the RandomEvent",
 			""),
 
-	PLAY_TIME(14, "§6§lChoose the play time in seconds", "TKLL,OITC,TKLLT2"),
+	PLAY_TIME(14, "§6§lChoose the play time in seconds", "TKLL,QUAKE,OITC,TKLLT2"),
 
 	ARROW_LOCATION1(15, "§6§lSet the first location of the cuboid of spawn of arrows, say 'Done'", "EARR"),
 
@@ -88,41 +88,63 @@ public enum Creacion {
 			"§6§lGet another block you want to set mineable for spleef on your hand and say 'Done' or say 'Next' to end the spleef materials",
 			""),
 
-	MAP_LOCATION1(32, "§6§lSet the first location of the cuboid of the map, say 'Done'",
-			"SG,TSG,SW,TSW,ANVIL_SPLEEF"),
+	MAP_LOCATION1(32, "§6§lSet the first location of the cuboid of the map, say 'Done'", "SG,TSG,SW,TSW,ANVIL_SPLEEF"),
 
-	MAP_LOCATION2(33, "§6§lSet the second location of the cuboid of the map, say 'Done'",
-			"SG,TSG,SW,TSW,ANVIL_SPLEEF"),
-	
-	INVENTORY_CHESTS(34, "§6§lTake the inventory that will have a probability to appear in chests and say 'Done' to set it or 'Add' to add the items", "SG,TSG,SW,TSW"),
-	
+	MAP_LOCATION2(33, "§6§lSet the second location of the cuboid of the map, say 'Done'", "SG,TSG,SW,TSW,ANVIL_SPLEEF"),
+
+	INVENTORY_CHESTS(34,
+			"§6§lTake the inventory that will have a probability to appear in chests and say 'Done' to set it or 'Add' to add the items",
+			"SG,TSG,SW,TSW"),
+
 	WARMUP_TIME(35, "§6§lChoose the warmup time in seconds", "SG,TSG,SW,TSW"),
 
 	SHRINK_TIME(36, "§6§lChoose to shrink the border in seconds", "SG,TSG"),
 
-	BLOCKS_ALLOWED(37, "§6§lPut in your hand a block allowed to break/place in the map and say 'Done'", "SG,TSG,SW,TSW"),
-	
+	BLOCKS_ALLOWED(37, "§6§lPut in your hand a block allowed to break/place in the map and say 'Done'",
+			"SG,TSG,SW,TSW"),
+
 	NO_MOVE_TIME(38, "§6§lChoose to allow players to move in seconds", "SG,TSG,SW,TSW"),
-	
-	TIMER_ANVIL_SPAWN(39, "§6§lWrite the number of seconds (it can have decimals) to respawn each anvil", "ANVIL_SPLEEF"),
-	
+
+	TIMER_ANVIL_SPAWN(39, "§6§lWrite the number of seconds (it can have decimals) to respawn each anvil",
+			"ANVIL_SPLEEF"),
+
 	WATER_DROP_SCENES(40, "§6§lChoose a scene to add to the event", "WDROP"),
 
-	SAVE(997, "§6§lYou are about to save a Random Event, put 'Y' to confirm or 'N' to continue creating", "ALLMINIGAMES"),
+	NUMBER_OF_TEAMS(41, "§6§lChoose a number of teams between 2 and 8", "PBALL"),
+
+	TEAM_SPAWNS(42,
+			"§6§lGo to the arena you created and write 'Done' to set each spawn location for the team (%players%/%maxTeams%)",
+			"PBALL"),
+
+	ANOTHER_TEAM_SPAWNS(43, "§6§lPut another team spawn, say 'Done' (%players%/%maxTeams%) ", ""),
+
+	SAVE(997, "§6§lYou are about to save a Random Event, put 'Y' to confirm or 'N' to continue creating",
+			"ALLMINIGAMES"),
 
 	DELETE(998, "§6§lChoose the field you want to remove", "ALLMINIGAMES"),
 
-	CANCEL(999, "§6§lYou are about to cancel a Random Event, put 'Y' to confirm or 'N' to continue creating", "ALLMINIGAMES");
+	CANCEL(999, "§6§lYou are about to cancel a Random Event, put 'Y' to confirm or 'N' to continue creating",
+			"ALLMINIGAMES");
 
 	private Integer position;
 	private String message;
 
 	private String allowed;
 
+	private String blacklist;
+
 	private Creacion(Integer position, String message, String allowed) {
 		this.position = position;
 		this.message = message;
 		this.allowed = allowed;
+		this.blacklist = "";
+	}
+
+	private Creacion(Integer position, String message, String allowed, String blacklist) {
+		this.position = position;
+		this.message = message;
+		this.allowed = allowed;
+		this.blacklist = blacklist;
 	}
 
 	public static Creacion getByPosition(Integer position) {
@@ -156,7 +178,8 @@ public enum Creacion {
 		} else {
 			return message.replaceAll("%entities%", "" + m.getEntitySpawns().size())
 					.replaceAll("%players%", "" + m.getSpawns().size())
-					.replaceAll("%maxPlayers%", "" + m.getAmountPlayers());
+					.replaceAll("%maxPlayers%", "" + m.getAmountPlayers())
+					.replaceAll("%maxTeams%", "" + m.getNumberOfTeams());
 		}
 	}
 
@@ -165,7 +188,9 @@ public enum Creacion {
 		for (Creacion c : Creacion.values()) {
 			String[] minijuegos = c.getAllowed().split(",");
 			List<String> list = Arrays.asList(minijuegos);
-			if (m.getMinigame() != null
+			String[] minijuegosBlack = c.getBlacklist().split(",");
+			List<String> blacklist = Arrays.asList(minijuegosBlack);
+			if (m.getMinigame() != null && (!blacklist.contains(m.getMinigame().getCodigo()))
 					&& (list.contains(m.getMinigame().getCodigo()) || list.contains(Constantes.ALL))) {
 				creaciones.add(c);
 			}
@@ -183,6 +208,14 @@ public enum Creacion {
 
 	public void setAllowed(String allowed) {
 		this.allowed = allowed;
+	}
+
+	public String getBlacklist() {
+		return blacklist;
+	}
+
+	public void setBlacklist(String blacklist) {
+		this.blacklist = blacklist;
 	}
 
 }

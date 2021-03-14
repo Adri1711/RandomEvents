@@ -3,6 +3,7 @@ package com.adri1711.randomevents.util;
 import java.io.BufferedReader;
 
 import com.adri1711.randomevents.RandomEvents;
+import com.adri1711.randomevents.match.Kit;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.WaterDropStep;
 import com.adri1711.randomevents.match.schedule.Schedule;
@@ -72,6 +73,38 @@ public class UtilidadesJson {
 		}
 		return match;
 	}
+	
+	public static String fromKitToJSON(RandomEvents plugin, Kit match) {
+		String resultado = null;
+
+		try {
+			resultado = plugin.getApi().toJson(match);
+
+			// JsonSerializerDeserializer<BossMatch> jsonSerializer = new
+			// JsonSerializerDeserializer<BossMatch>();
+			//
+			// resultado = jsonSerializer.serialize(match);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println("Error :: Error at creating Kit");
+		}
+		return resultado;
+
+	}
+
+	public static Kit fromJSONToKit(RandomEvents plugin, BufferedReader br) {
+		Kit match = null;
+		try {
+			match = (Kit) plugin.getApi().fromJson(br, Kit.class);
+			UtilsRandomEvents.normalizaColorsKit(match);
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println("Error :: Error at loading Kit: " + br);
+		}
+		return match;
+	}
+	
 
 	public static String fromScheduleToJSON(RandomEvents plugin, Schedule match) {
 		String resultado = null;

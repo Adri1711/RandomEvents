@@ -6,7 +6,7 @@ public class HikariCP {
 
 	private HikariDataSource hikari;
 
-	public HikariCP(String ip, String port, String database, String username, String password) {
+	public HikariCP(String ip, String port, String database, String username, String password, Integer maxLifeTime) {
 		super();
 
 		hikari = new HikariDataSource();
@@ -24,7 +24,7 @@ public class HikariCP {
 		hikari.setMinimumIdle(0);
 		hikari.setConnectionTimeout(30000);
 		hikari.setIdleTimeout(35000);
-		hikari.setMaxLifetime(45000);
+		hikari.setMaxLifetime(maxLifeTime);
 	}
 
 	public void close() {

@@ -26,7 +26,7 @@ public class WeaponShoot implements Listener {
 	public WeaponShoot(RandomEvents plugin) {
 		this.plugin = plugin;
 	}
-	
+
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void weaponDamage(WeaponDamageEntityEvent ev) // Listens to
 															// EntityDamageEvent
@@ -77,6 +77,7 @@ public class WeaponShoot implements Listener {
 									case BATTLE_ROYALE:
 									case BATTLE_ROYALE_CABALLO:
 									case BATTLE_ROYALE_TEAM_2:
+									case PAINTBALL:
 										UtilsRandomEvents.mandaMensaje(plugin,
 												plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 												plugin.getLanguage().getPvpKill()
@@ -124,7 +125,7 @@ public class WeaponShoot implements Listener {
 														plugin.getMatchActive().getPuntuacion().get(damager.getName())
 																.toString()));
 										damager.getInventory().addItem(XMaterial.ARROW.parseItem());
-										if(plugin.isOitcHealAfterKill()){
+										if (plugin.isOitcHealAfterKill()) {
 											damager.setHealth(damager.getMaxHealth());
 										}
 										break;
@@ -152,11 +153,11 @@ public class WeaponShoot implements Listener {
 												+ plugin.getLanguage().getNowPoints().replace("%points%",
 														plugin.getMatchActive().getPuntuacion().get(damager.getName())
 																.toString()));
-										
-										if(plugin.isTopKillerHealAfterKill()){
+
+										if (plugin.isTopKillerHealAfterKill()) {
 											damager.setHealth(damager.getMaxHealth());
 										}
-										
+
 										break;
 
 									case GEM_CRAWLER:
@@ -180,20 +181,21 @@ public class WeaponShoot implements Listener {
 											UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_HURT);
 											plugin.getMatchActive().ponInventarioMatch(player);
 											plugin.getMatchActive().getPlayerHandler().setPlayerContador(player);
-										
-											
-											if (plugin.getTntTagSpeedHolder() > 0){
-												if(player.hasPotionEffect(PotionEffectType.SPEED)){
+
+											if (plugin.getTntTagSpeedHolder() > 0) {
+												if (player.hasPotionEffect(PotionEffectType.SPEED)) {
 													player.removePotionEffect(PotionEffectType.SPEED);
 												}
-												player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20*plugin.getSpeedDuration(),
+												player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,
+														20 * plugin.getSpeedDuration(),
 														plugin.getTntTagSpeedHolder() - 1));
 											}
-											if (plugin.getTntTagSpeedRunners() > 0){
-												if(damager.hasPotionEffect(PotionEffectType.SPEED)){
+											if (plugin.getTntTagSpeedRunners() > 0) {
+												if (damager.hasPotionEffect(PotionEffectType.SPEED)) {
 													damager.removePotionEffect(PotionEffectType.SPEED);
 												}
-												damager.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20*plugin.getSpeedDuration(),
+												damager.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,
+														20 * plugin.getSpeedDuration(),
 														plugin.getTntTagSpeedRunners() - 1));
 											}
 
@@ -238,6 +240,9 @@ public class WeaponShoot implements Listener {
 										}
 
 										break;
+									case QUAKECRAFT:
+										ev.setCancelled(true);
+										break;
 									default:
 										break;
 									}
@@ -258,6 +263,7 @@ public class WeaponShoot implements Listener {
 									case BATTLE_ROYALE:
 									case BATTLE_ROYALE_CABALLO:
 									case BATTLE_ROYALE_TEAM_2:
+									case PAINTBALL:
 									case TOP_KILLER:
 									case TOP_KILLER_TEAM_2:
 									case OITC:
@@ -313,18 +319,20 @@ public class WeaponShoot implements Listener {
 											UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_HURT);
 											plugin.getMatchActive().ponInventarioMatch(player);
 											plugin.getMatchActive().getPlayerHandler().setPlayerContador(player);
-											if (plugin.getTntTagSpeedHolder() > 0){
-												if(player.hasPotionEffect(PotionEffectType.SPEED)){
+											if (plugin.getTntTagSpeedHolder() > 0) {
+												if (player.hasPotionEffect(PotionEffectType.SPEED)) {
 													player.removePotionEffect(PotionEffectType.SPEED);
 												}
-												player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20*plugin.getSpeedDuration(),
+												player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,
+														20 * plugin.getSpeedDuration(),
 														plugin.getTntTagSpeedHolder() - 1));
 											}
-											if (plugin.getTntTagSpeedRunners() > 0){
-												if(damager.hasPotionEffect(PotionEffectType.SPEED)){
+											if (plugin.getTntTagSpeedRunners() > 0) {
+												if (damager.hasPotionEffect(PotionEffectType.SPEED)) {
 													damager.removePotionEffect(PotionEffectType.SPEED);
 												}
-												damager.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20*plugin.getSpeedDuration(),
+												damager.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,
+														20 * plugin.getSpeedDuration(),
 														plugin.getTntTagSpeedRunners() - 1));
 											}
 
@@ -333,6 +341,9 @@ public class WeaponShoot implements Listener {
 									case BOAT_RUN:
 									case HORSE_RUN:
 									case RACE:
+										ev.setCancelled(true);
+										break;
+									case QUAKECRAFT:
 										ev.setCancelled(true);
 										break;
 
@@ -379,6 +390,7 @@ public class WeaponShoot implements Listener {
 							case BATTLE_ROYALE:
 							case BATTLE_ROYALE_CABALLO:
 							case BATTLE_ROYALE_TEAM_2:
+							case PAINTBALL:
 							case ESCAPE_ARROW:
 							case ANVIL_SPLEEF:
 
@@ -453,7 +465,7 @@ public class WeaponShoot implements Listener {
 															plugin.getMatchActive().getPuntuacion().get(p.getName())
 																	.toString()));
 											p.getInventory().addItem(XMaterial.ARROW.parseItem());
-											if(plugin.isOitcHealAfterKill()){
+											if (plugin.isOitcHealAfterKill()) {
 												p.setHealth(p.getMaxHealth());
 											}
 										}
@@ -478,6 +490,70 @@ public class WeaponShoot implements Listener {
 								break;
 							case TOP_KILLER:
 							case TOP_KILLER_TEAM_2:
+								
+								if (ev.getDamager() instanceof Arrow) {
+									Arrow arrow = (Arrow) ev.getDamager();
+
+									if (arrow.getShooter() != null && arrow.getShooter() instanceof Player) {
+
+										Player damager = (Player) arrow.getShooter();
+
+										if (plugin.getMatchActive().getPlayerHandler().getPlayers().contains(
+												damager.getName()) && !player.getName().equals(damager.getName())) {
+											plugin.getMatchActive().reiniciaPlayer(player);
+											UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+
+											UtilsRandomEvents.playSound(damager, XSound.ENTITY_PLAYER_LEVELUP);
+											if (plugin.getMatchActive().getPuntuacion()
+													.containsKey(damager.getName())) {
+												plugin.getMatchActive().getPuntuacion().put(damager.getName(),
+														plugin.getMatchActive().getPuntuacion().get(damager.getName())
+																+ 1);
+
+											} else {
+												plugin.getMatchActive().getPuntuacion().put(damager.getName(), 1);
+											}
+											UtilsRandomEvents.mandaMensaje(plugin,
+													plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+													plugin.getLanguage().getPvpKill()
+															.replaceAll("%victim%", player.getName())
+															.replaceAll("%killer%", damager.getName()),
+													false);
+											damager.sendMessage(plugin.getLanguage().getTagPlugin() + " "
+													+ plugin.getLanguage().getNowPoints().replace("%points%",
+															plugin.getMatchActive().getPuntuacion()
+																	.get(damager.getName()).toString()));
+											if (plugin.isTopKillerHealAfterKill()) {
+												damager.setHealth(damager.getMaxHealth());
+											}
+										} else {
+											UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+											UtilsRandomEvents.mandaMensaje(plugin,
+													plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+													plugin.getLanguage().getPvpDeath().replaceAll("%victim%",
+															player.getName()),
+													false);
+											plugin.getMatchActive().reiniciaPlayer(player);
+										}
+									} else {
+										UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+										UtilsRandomEvents.mandaMensaje(plugin,
+												plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+												plugin.getLanguage().getPvpDeath().replaceAll("%victim%",
+														player.getName()),
+												false);
+										plugin.getMatchActive().reiniciaPlayer(player);
+									}
+								} else {
+									UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+									UtilsRandomEvents.mandaMensaje(plugin,
+											plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+											plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()),
+											false);
+									plugin.getMatchActive().reiniciaPlayer(player);
+
+								}
+								break;
 							case GEM_CRAWLER:
 								UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
 								UtilsRandomEvents.mandaMensaje(plugin,
@@ -489,6 +565,9 @@ public class WeaponShoot implements Listener {
 							case BOAT_RUN:
 							case HORSE_RUN:
 							case RACE:
+								ev.setCancelled(true);
+								break;
+							case QUAKECRAFT:
 								ev.setCancelled(true);
 								break;
 							default:
@@ -510,7 +589,7 @@ public class WeaponShoot implements Listener {
 
 										if (plugin.getMatchActive().getPlayerHandler().getPlayers()
 												.contains(p.getName()) && !player.getName().equals(p.getName())) {
-											
+
 											Location pLoc = p.getLocation();
 											Location playerLoc = player.getLocation();
 											pLoc.setWorld(playerLoc.getWorld());
@@ -539,7 +618,7 @@ public class WeaponShoot implements Listener {
 															plugin.getMatchActive().getPuntuacion().get(p.getName())
 																	.toString()));
 											p.getInventory().addItem(XMaterial.ARROW.parseItem());
-											if(plugin.isOitcHealAfterKill()){
+											if (plugin.isOitcHealAfterKill()) {
 												p.setHealth(p.getMaxHealth());
 											}
 										}
@@ -570,6 +649,7 @@ public class WeaponShoot implements Listener {
 							case BATTLE_ROYALE:
 							case BATTLE_ROYALE_CABALLO:
 							case BATTLE_ROYALE_TEAM_2:
+							case PAINTBALL:
 							case TOP_KILLER:
 							case TOP_KILLER_TEAM_2:
 							case ANVIL_SPLEEF:
@@ -612,6 +692,9 @@ public class WeaponShoot implements Listener {
 										ev.setCancelled(false);
 									}
 								}
+								break;
+							case QUAKECRAFT:
+								ev.setCancelled(true);
 								break;
 							default:
 								if (plugin.isHighestPriorityDamageEvents()) {
