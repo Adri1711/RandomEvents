@@ -18,7 +18,7 @@ public enum MinigameType {
 	KNOCKBACK_DUEL("KBD", XMaterial.WOODEN_SWORD.parseMaterial(), "Knockback Duel"),
 
 	ESCAPE_ARROW("EARR", XMaterial.ARROW.parseMaterial(), "Arrow Rain"),
-	
+
 	ANVIL_SPLEEF("ANVIL_SPLEEF", XMaterial.ANVIL.parseMaterial(), "Anvil Spleef"),
 
 	GEM_CRAWLER("GEMC", XMaterial.EMERALD.parseMaterial(), "Gem Carrier"),
@@ -48,12 +48,18 @@ public enum MinigameType {
 	SW("SW", XMaterial.DIRT.parseMaterial(), "Skywars"),
 
 	TSW("TSW", XMaterial.STONE.parseMaterial(), "Team Skywars"),
-	
+
 	WDROP("WDROP", XMaterial.WATER_BUCKET.parseMaterial(), "Water Drop"),
 
 	QUAKECRAFT("QUAKE", XMaterial.STONE_HOE.parseMaterial(), "QuakeCraft"),
 
-	PAINTBALL("PBALL", XMaterial.SNOWBALL.parseMaterial(), "Paintball");
+	PAINTBALL("PBALL", XMaterial.SNOWBALL.parseMaterial(), "Paintball"),
+
+	KOTH("KOTH", XMaterial.GOLDEN_HELMET.parseMaterial(), "King of the Hill"),
+
+	FISH_SLAP("FISHSLAP", XMaterial.TROPICAL_FISH.parseMaterial(), "Fish slap"),
+
+	HOEHOEHOE("HOE", XMaterial.WOODEN_HOE.parseMaterial(), "Hoe hoe hoe");
 
 	private String codigo;
 	private Material material;
@@ -72,6 +78,7 @@ public enum MinigameType {
 				creation = w;
 			}
 		}
+
 		return creation;
 	}
 

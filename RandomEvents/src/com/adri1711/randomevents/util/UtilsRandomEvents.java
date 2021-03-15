@@ -1735,6 +1735,7 @@ public class UtilsRandomEvents {
 						break;
 					case ARROW_LOCATION1:
 					case GEM_LOCATION1:
+					case KOTH_LOCATION1:
 					case GOAL_LOCATION1:
 					case MAP_LOCATION1:
 						if (match.getLocation1() != null) {
@@ -1745,6 +1746,7 @@ public class UtilsRandomEvents {
 						break;
 					case ARROW_LOCATION2:
 					case GEM_LOCATION2:
+					case KOTH_LOCATION2:
 					case GOAL_LOCATION2:
 					case MAP_LOCATION2:
 						if (match.getLocation2() != null) {
@@ -1903,6 +1905,7 @@ public class UtilsRandomEvents {
 				break;
 			case ARROW_LOCATION1:
 			case GEM_LOCATION1:
+			case KOTH_LOCATION1:
 			case GOAL_LOCATION1:
 			case MAP_LOCATION1:
 				if (match.getLocation1() == null) {
@@ -1912,6 +1915,7 @@ public class UtilsRandomEvents {
 				break;
 			case ARROW_LOCATION2:
 			case GEM_LOCATION2:
+			case KOTH_LOCATION2:
 			case GOAL_LOCATION2:
 			case MAP_LOCATION2:
 				if (match.getLocation2() == null) {
@@ -2105,6 +2109,7 @@ public class UtilsRandomEvents {
 			lines = prepareLinesTeammate(lines, matchActive, plugin, player);
 			lines.add("");
 		case TOP_KILLER:
+		case FISH_SLAP:
 		case QUAKECRAFT:
 		case OITC:
 			lines = prepareLinesTime(lines, plugin, matchActive);
@@ -2112,6 +2117,54 @@ public class UtilsRandomEvents {
 
 			Map<String, Integer> mapaOrdenado = sortByValue(matchActive.getPuntuacion(), true);
 			for (Entry<String, Integer> entrada : mapaOrdenado.entrySet()) {
+				lines.add(plugin.getLanguage().getScoreboardPoints().replaceAll("%name%", entrada.getKey())
+						.replaceAll("%points%", "" + entrada.getValue()));
+			}
+			break;
+
+		case HOEHOEHOE:
+			lines = prepareLinesTeam(lines, matchActive, plugin, player);
+			lines.add("");
+
+			lines = prepareLinesTime(lines, plugin, matchActive);
+			lines.add("");
+
+			Map<String, Integer> mapaOrdenadoHoe = sortByValue(matchActive.getPuntuacion(), true);
+			for (Entry<String, Integer> entrada : mapaOrdenadoHoe.entrySet()) {
+				String line = plugin.getLanguage().getScoreboardPointsTeam().replaceAll("%name%", entrada.getKey())
+						.replaceAll("%points%", "" + entrada.getValue());
+
+				Player playerAux = getPlayer(matchActive.getPlayerHandler().getPlayersTotalObj(), entrada.getKey());
+				if (playerAux != null) {
+					Integer equipo = matchActive.getEquipoCopy(playerAux);
+					if (equipo != null) {
+						Petos peto = Petos.getPeto(equipo);
+						if (peto != null) {
+							line = line.replaceAll("%team_color%", "" + peto.getChatColor());
+						} else {
+							line = line.replaceAll("%team_color%", "");
+
+						}
+
+					} else {
+						line = line.replaceAll("%team_color%", "");
+
+					}
+				} else {
+					line = line.replaceAll("%team_color%", "");
+				}
+				lines.add(line);
+			}
+			break;
+		case KOTH:
+
+			lines = prepareLinesHolder(lines, matchActive, plugin, player);
+			lines.add("");
+			lines = prepareLinesTime(lines, plugin, matchActive);
+			lines.add("");
+
+			Map<String, Integer> mapaOrdenadoKoth = sortByValue(matchActive.getPuntuacion(), true);
+			for (Entry<String, Integer> entrada : mapaOrdenadoKoth.entrySet()) {
 				lines.add(plugin.getLanguage().getScoreboardPoints().replaceAll("%name%", entrada.getKey())
 						.replaceAll("%points%", "" + entrada.getValue()));
 			}
@@ -2151,6 +2204,16 @@ public class UtilsRandomEvents {
 		}
 		lines = linesFormated;
 		return lines;
+	}
+
+	private static Player getPlayer(List<Player> playersTotalObj, String key) {
+		Player player = null;
+		for (Player p : playersTotalObj) {
+			if (p.getName().equals(key)) {
+				player = p;
+			}
+		}
+		return player;
 	}
 
 	private static List<String> prepareLinesStep(List<String> lines, RandomEvents plugin, MatchActive matchActive,

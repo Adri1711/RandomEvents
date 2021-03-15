@@ -90,6 +90,9 @@ public class Death implements Listener {
 
 								}
 								break;
+							case FISH_SLAP:
+								ev.setCancelled(true);
+								break;
 							case ESCAPE_FROM_BEAST:
 
 								ev.setCancelled(true);
@@ -98,6 +101,7 @@ public class Death implements Listener {
 							case OITC:
 							case TOP_KILLER:
 							case TOP_KILLER_TEAM_2:
+							case KOTH:
 
 								UtilsRandomEvents.mandaMensaje(plugin,
 										plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
@@ -131,6 +135,7 @@ public class Death implements Listener {
 
 								break;
 							case QUAKECRAFT:
+							case HOEHOEHOE:
 								ev.setCancelled(true);
 								break;
 							default:
@@ -165,6 +170,7 @@ public class Death implements Listener {
 									ev.setCancelled(true);
 								}
 								break;
+							case HOEHOEHOE:
 							case QUAKECRAFT:
 								ev.setCancelled(true);
 								break;
@@ -299,6 +305,7 @@ public class Death implements Listener {
 				break;
 			case KNOCKBACK_DUEL:
 			case BOMB_TAG:
+			case FISH_SLAP:
 				if (!plugin.getMatchActive().getAllowDamage()) {
 					ev.setCancelled(true);
 				} else {
@@ -428,6 +435,50 @@ public class Death implements Listener {
 
 				}
 				break;
+			case KOTH:
+				if (ev.getDamager() instanceof Arrow) {
+					Arrow arrow = (Arrow) ev.getDamager();
+
+					if (arrow.getShooter() != null && arrow.getShooter() instanceof Player) {
+
+						Player damager = (Player) arrow.getShooter();
+
+						if (plugin.getMatchActive().getPlayerHandler().getPlayers().contains(damager.getName())
+								&& !player.getName().equals(damager.getName())) {
+							plugin.getMatchActive().reiniciaPlayer(player);
+							UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+
+							UtilsRandomEvents.playSound(damager, XSound.ENTITY_PLAYER_LEVELUP);
+
+							UtilsRandomEvents.mandaMensaje(plugin,
+									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+									plugin.getLanguage().getPvpKill().replaceAll("%victim%", player.getName())
+											.replaceAll("%killer%", damager.getName()),
+									false);
+
+						} else {
+							UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+							UtilsRandomEvents.mandaMensaje(plugin,
+									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
+							plugin.getMatchActive().reiniciaPlayer(player);
+						}
+					} else {
+						UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+						UtilsRandomEvents.mandaMensaje(plugin,
+								plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+								plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
+						plugin.getMatchActive().reiniciaPlayer(player);
+					}
+				} else {
+					UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+					UtilsRandomEvents.mandaMensaje(plugin,
+							plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+							plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
+					plugin.getMatchActive().reiniciaPlayer(player);
+
+				}
+				break;
 			case GEM_CRAWLER:
 
 				UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
@@ -442,6 +493,7 @@ public class Death implements Listener {
 			case RACE:
 				ev.setCancelled(true);
 				break;
+			case HOEHOEHOE:
 			case QUAKECRAFT:
 				ev.setCancelled(true);
 				break;
@@ -527,6 +579,7 @@ public class Death implements Listener {
 			case TOP_KILLER_TEAM_2:
 			case ANVIL_SPLEEF:
 			case ESCAPE_FROM_BEAST:
+			case KOTH:
 				if (plugin.isHighestPriorityDamageEvents()) {
 					ev.setCancelled(false);
 				}
@@ -534,6 +587,7 @@ public class Death implements Listener {
 
 			case KNOCKBACK_DUEL:
 			case BOMB_TAG:
+			case FISH_SLAP:
 				if (!plugin.getMatchActive().getAllowDamage()) {
 					ev.setCancelled(true);
 				} else {
@@ -569,6 +623,7 @@ public class Death implements Listener {
 					}
 				}
 				break;
+			case HOEHOEHOE:
 			case QUAKECRAFT:
 				ev.setCancelled(true);
 				break;
@@ -630,6 +685,7 @@ public class Death implements Listener {
 
 						break;
 					case KNOCKBACK_DUEL:
+					case FISH_SLAP:
 						if (!plugin.getMatchActive().getAllowDamage()) {
 							ev.setCancelled(true);
 						} else {
@@ -702,6 +758,19 @@ public class Death implements Listener {
 						if (plugin.isTopKillerHealAfterKill()) {
 							damager.setHealth(damager.getMaxHealth());
 						}
+						break;
+					case KOTH:
+						plugin.getMatchActive().reiniciaPlayer(player);
+						UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+
+						UtilsRandomEvents.playSound(damager, XSound.ENTITY_PLAYER_LEVELUP);
+
+						UtilsRandomEvents.mandaMensaje(plugin,
+								plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+								plugin.getLanguage().getPvpKill().replaceAll("%victim%", player.getName())
+										.replaceAll("%killer%", damager.getName()),
+								false);
+
 						break;
 
 					case GEM_CRAWLER:
@@ -776,6 +845,7 @@ public class Death implements Listener {
 						}
 
 						break;
+					case HOEHOEHOE:
 					case QUAKECRAFT:
 						ev.setCancelled(true);
 						break;
@@ -803,6 +873,7 @@ public class Death implements Listener {
 					case TOP_KILLER:
 					case TOP_KILLER_TEAM_2:
 					case OITC:
+					case KOTH:
 						if (plugin.isHighestPriorityDamageEvents()) {
 							ev.setCancelled(false);
 						}
@@ -830,6 +901,8 @@ public class Death implements Listener {
 						break;
 					case KNOCKBACK_DUEL:
 					case ESCAPE_ARROW:
+					case FISH_SLAP:
+						
 						if (!plugin.getMatchActive().getAllowDamage()) {
 							ev.setCancelled(true);
 						} else {
@@ -879,6 +952,7 @@ public class Death implements Listener {
 					case RACE:
 						ev.setCancelled(true);
 						break;
+					case HOEHOEHOE:
 					case QUAKECRAFT:
 						ev.setCancelled(true);
 						break;
@@ -952,6 +1026,8 @@ public class Death implements Listener {
 
 						break;
 					case KNOCKBACK_DUEL:
+					case FISH_SLAP:
+					
 						if (!plugin.getMatchActive().getAllowDamage()) {
 							ev.setCancelled(true);
 						} else {
@@ -1026,6 +1102,20 @@ public class Death implements Listener {
 						if (plugin.isTopKillerHealAfterKill()) {
 							damager.setHealth(damager.getMaxHealth());
 						}
+						break;
+					case KOTH:
+						plugin.getMatchActive().reiniciaPlayer(player);
+						UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+
+						UtilsRandomEvents.playSound(damager, XSound.ENTITY_PLAYER_LEVELUP);
+
+						UtilsRandomEvents.mandaMensaje(plugin,
+								plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+								plugin.getLanguage().getBowKill().replaceAll("%distance%", "" + distancia)
+										.replaceAll("%victim%", player.getName())
+										.replaceAll("%killer%", damager.getName()),
+								false);
+
 						break;
 
 					case GEM_CRAWLER:
@@ -1102,6 +1192,7 @@ public class Death implements Listener {
 						}
 
 						break;
+					case HOEHOEHOE:
 					case QUAKECRAFT:
 						ev.setCancelled(true);
 						break;
@@ -1128,6 +1219,7 @@ public class Death implements Listener {
 					case PAINTBALL:
 					case TOP_KILLER:
 					case TOP_KILLER_TEAM_2:
+					case KOTH:
 						if (!plugin.getMatchActive().getAllowDamage()) {
 							ev.setCancelled(true);
 						} else {
@@ -1198,6 +1290,7 @@ public class Death implements Listener {
 						break;
 					case KNOCKBACK_DUEL:
 					case ESCAPE_ARROW:
+					case FISH_SLAP:
 						if (!plugin.getMatchActive().getAllowDamage()) {
 							ev.setCancelled(true);
 						} else {
@@ -1247,6 +1340,7 @@ public class Death implements Listener {
 					case RACE:
 						ev.setCancelled(true);
 						break;
+					case HOEHOEHOE:
 					case QUAKECRAFT:
 						ev.setCancelled(true);
 						break;

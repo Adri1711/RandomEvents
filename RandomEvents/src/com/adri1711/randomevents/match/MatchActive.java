@@ -116,6 +116,8 @@ public class MatchActive {
 
 	private long endDate;
 
+	private long checkDate;
+
 	public MatchActive(Match match, RandomEvents plugin, Boolean forzada) {
 		super();
 		this.mapHandler = new MatchMapDataHandler();
@@ -432,10 +434,10 @@ public class MatchActive {
 					UtilsRandomEvents.borraPlayerPorName(getPlayerHandler().getPlayersObj(), player);
 				}
 				getPlayerHandler().getPlayers().remove(player.getName());
-				for (Player p : getPlayerHandler().getPlayersVanish()) {
-					p.showPlayer(player);
-				}
 
+			}
+			for (Player p : getPlayerHandler().getPlayersVanish()) {
+				p.showPlayer(player);
 			}
 
 			if (compruebaSpectator
@@ -526,12 +528,13 @@ public class MatchActive {
 							new Location(getMapHandler().getActualCuboid().getWorld(), 0, 0, 0), Double.MAX_VALUE, p);
 				}
 				getPlayerHandler().getPlayers().remove(p.getName());
-				for (Player pla : getPlayerHandler().getPlayersVanish()) {
-					pla.showPlayer(p);
-				}
+
 			}
 		}
 		for (Player player : players) {
+			for (Player pla : getPlayerHandler().getPlayersVanish()) {
+				pla.showPlayer(player);
+			}
 			if (compruebaSpectator
 					&& (sacaSpectator || match.getSpectatorSpawns() == null || match.getSpectatorSpawns().isEmpty())) {
 				if (!getPlayerHandler().getPlayersSpectators().remove(player)) {
@@ -835,9 +838,12 @@ public class MatchActive {
 			ganadores.addAll(getPlayerHandler().getPlayersObj());
 			break;
 		case TOP_KILLER:
+		case KOTH:
+		case FISH_SLAP:
 		case QUAKECRAFT:
 		case OITC:
 		case TOP_KILLER_TEAM_2:
+		case HOEHOEHOE:
 			ganadores.addAll(sacaGanadoresPartidaTiempo());
 			break;
 		case GEM_CRAWLER:
@@ -1521,6 +1527,22 @@ public class MatchActive {
 			partidaPorTiempo();
 
 			break;
+		case KOTH:
+		case FISH_SLAP:
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
+			this.allowDamage = true;
+			this.allowMove = true;
+			for (Player p : getPlayerHandler().getPlayersObj()) {
+				iniciaPlayer(p);
+			}
+			partidaPorTiempo();
+
+			break;
+
 		case TOP_KILLER_TEAM_2:
 			for (Player p : getPlayerHandler().getPlayersSpectators()) {
 				if (!getPlayerHandler().getPlayersObj().contains(p)) {
@@ -1620,6 +1642,28 @@ public class MatchActive {
 
 			}
 			mandaMensajesEquipo(getPlayerHandler().getEquipos());
+
+			break;
+		case HOEHOEHOE:
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
+			this.allowDamage = true;
+
+			for (Player p : getPlayerHandler().getPlayersObj()) {
+				Integer indice = getPlayerHandler().getPlayersObj().indexOf(p);
+				sortTeams(p, indice);
+				iniciaPlayerTeam(p);
+				if (plugin.isHoeGiveDefaultWeapon()) {
+					p.getInventory().addItem(XMaterial.STONE_HOE.parseItem());
+					p.updateInventory();
+				}
+
+			}
+			mandaMensajesEquipo(getPlayerHandler().getEquipos());
+			partidaPorTiempo();
 
 			break;
 		case BATTLE_ROYALE_TEAM_2:
@@ -2328,7 +2372,29 @@ public class MatchActive {
 	private void checkTimeMatch() {
 		if (getPlaying()) {
 			Date now = new Date();
+			long nowLong = now.getTime();
 			long dif = (endDate - now.getTime()) / 1000;
+
+			switch (getMatch().getMinigame()) {
+			case FISH_SLAP:
+				List<Player> listaPlayer = new ArrayList<Player>(getPlayerHandler().getPlayersContadores().keySet());
+				for (Player p : listaPlayer) {
+					if (getPlayerHandler().getPlayersContadores().containsKey(p)) {
+						if ((nowLong - getPlayerHandler().getPlayersContadores().get(p)) >= 1000) {
+							if (getPuntuacion().containsKey(p.getName())) {
+								getPuntuacion().put(p.getName(), getPuntuacion().get(p.getName()) + 1);
+							} else {
+								getPuntuacion().put(p.getName(), +1);
+							}
+							getPlayerHandler().getPlayersContadores().put(p,
+									getPlayerHandler().getPlayersContadores().get(p) + 1000);
+						}
+					}
+				}
+				break;
+			default:
+				break;
+			}
 
 			if (dif <= 0) {
 
@@ -2341,6 +2407,9 @@ public class MatchActive {
 					tournamentObj.nextGame(getCopia(jugadores), getCopiaP(getPlayerHandler().getPlayersGanadores()),
 							getCopiaP(getPlayerHandler().getPlayersSpectators()));
 				} else {
+					if (getPlayerHandler().getPlayerContador() != null) {
+						outKoth(getPlayerHandler().getPlayerContador());
+					}
 					daRecompensas(true);
 				}
 				// spawnMobs(bWave.getMobs(), getPlugin());
@@ -2408,6 +2477,7 @@ public class MatchActive {
 			UtilsRandomEvents.teleportaPlayer(p, loc, plugin);
 			break;
 		case PAINTBALL:
+		case HOEHOEHOE:
 			loc = match.getSpawns().get(getEquipo(p));
 			getMapHandler().getCheckpoints().put(p.getName(), loc);
 			UtilsRandomEvents.teleportaPlayer(p, loc, plugin);
@@ -2492,6 +2562,7 @@ public class MatchActive {
 			}
 			break;
 		default:
+			outKoth(p);
 			dropItems(p);
 
 			if (plugin.isCooldownAfterDeath()) {
@@ -2979,8 +3050,11 @@ public class MatchActive {
 			case SW:
 			case TNT_RUN:
 			case TOP_KILLER:
+			case KOTH:
+			case FISH_SLAP:
 			case QUAKECRAFT:
 			case TOP_KILLER_TEAM_2:
+			case HOEHOEHOE:
 			case TSG:
 			case TSW:
 			case WDROP:
@@ -3013,6 +3087,81 @@ public class MatchActive {
 			}
 		}
 
+	}
+
+	public void givePoint(Player p, int point) {
+		if (getPuntuacion().containsKey(p.getName())) {
+			getPuntuacion().put(p.getName(), getPuntuacion().get(p.getName()) + point);
+
+		} else {
+			getPuntuacion().put(p.getName(), point);
+		}
+
+	}
+
+	public void outKoth(Player p) {
+		Long now = new Date().getTime();
+
+		switch (getMatch().getMinigame()) {
+		case KOTH:
+			if (checkDate != -1L) {
+				Long diff = now - checkDate;
+
+				if (diff > 0) {
+					Double difere = diff / 1000.0;
+					if (getPuntuacion().containsKey(p.getName())) {
+						getPuntuacion().put(p.getName(), getPuntuacion().get(p.getName()) + difere.intValue());
+
+					} else {
+						getPuntuacion().put(p.getName(), difere.intValue());
+					}
+				}
+			}
+			getPlayerHandler().setPlayerContador(null);
+			UtilsRandomEvents.playSound(p, XSound.ENTITY_BAT_HURT);
+
+			break;
+
+		case FISH_SLAP:
+			if (getPlayerHandler().getPlayersContadores().containsKey(p)) {
+				Long diff = now - getPlayerHandler().getPlayersContadores().get(p);
+
+				if (diff > 0) {
+					Double difere = diff / 1000.0;
+					if (getPuntuacion().containsKey(p.getName())) {
+						getPuntuacion().put(p.getName(), getPuntuacion().get(p.getName()) + difere.intValue());
+
+					} else {
+						getPuntuacion().put(p.getName(), difere.intValue());
+					}
+				}
+			}
+			getPlayerHandler().getPlayersContadores().remove(p);
+			UtilsRandomEvents.playSound(p, XSound.ENTITY_BAT_HURT);
+
+			break;
+		default:
+			break;
+		}
+	}
+
+	public void inKoth(Player p) {
+		Long now = new Date().getTime();
+
+		switch (getMatch().getMinigame()) {
+		case KOTH:
+			checkDate = now;
+			getPlayerHandler().setPlayerContador(p);
+			UtilsRandomEvents.playSound(p, XSound.ENTITY_PLAYER_LEVELUP);
+			break;
+		case FISH_SLAP:
+			getPlayerHandler().getPlayersContadores().put(p, now);
+			UtilsRandomEvents.playSound(p, XSound.ENTITY_PLAYER_LEVELUP);
+
+			break;
+		default:
+			break;
+		}
 	}
 
 	private void borraScoreboard(Player player) {
@@ -3340,6 +3489,14 @@ public class MatchActive {
 
 	public void setCooldownShoot(Map<Player, Long> cooldownShoot) {
 		this.cooldownShoot = cooldownShoot;
+	}
+
+	public long getCheckDate() {
+		return checkDate;
+	}
+
+	public void setCheckDate(long checkDate) {
+		this.checkDate = checkDate;
 	}
 
 }

@@ -299,10 +299,18 @@ public class RandomEvents extends JavaPlugin {
 	private int quakeShootDistance;
 
 	private boolean quakeGiveDefaultWeapon;
+	private boolean hoeGiveDefaultWeapon;
+	
 
 	private int statsQUAKE;
 
 	private int statsPBALL;
+
+	private int statsKOTH;
+
+	private int statsFISHSLAP;
+
+	private int statsHOE;
 
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
@@ -427,8 +435,9 @@ public class RandomEvents extends JavaPlugin {
 		this.forcePlayersToEnter = getConfig().getBoolean("forcePlayersToEnter");
 		this.forcePlayersToSpectate = getConfig().getBoolean("forcePlayersToSpectate");
 		this.topKillerHealAfterKill = getConfig().getBoolean("topKillerHealAfterKill");
-		this.quakeGiveDefaultWeapon= getConfig().getBoolean("quakeGiveDefaultWeapon");
-
+		this.quakeGiveDefaultWeapon = getConfig().getBoolean("quakeGiveDefaultWeapon");
+		this.hoeGiveDefaultWeapon = getConfig().getBoolean("hoeGiveDefaultWeapon");
+		
 		this.quakeShootCooldown = getConfig().getDouble("quakeShootCooldown");
 		this.quakeJumpCooldown = getConfig().getDouble("quakeJumpCooldown");
 		this.quakeShootDistance = getConfig().getInt("quakeShootDistance");
@@ -556,7 +565,10 @@ public class RandomEvents extends JavaPlugin {
 		this.statsWDROP = getConfig().getInt("statsmenu.WDROP");
 		this.statsQUAKE = getConfig().getInt("statsmenu.QUAKE");
 		this.statsPBALL = getConfig().getInt("statsmenu.PBALL");
-
+		this.statsKOTH = getConfig().getInt("statsmenu.KOTH");
+		this.statsFISHSLAP = getConfig().getInt("statsmenu.FISHSLAP");
+		this.statsHOE = getConfig().getInt("statsmenu.HOE");
+		
 		this.allowedCmds = (List<String>) getConfig().getStringList("allowedCmds");
 
 		this.maxItemOnChests = Integer.valueOf(getConfig().getInt("maxItemOnChests"));
@@ -1851,6 +1863,15 @@ public class RandomEvents extends JavaPlugin {
 	public void setQuakeGiveDefaultWeapon(boolean quakeGiveDefaultWeapon) {
 		this.quakeGiveDefaultWeapon = quakeGiveDefaultWeapon;
 	}
+	
+
+	public boolean isHoeGiveDefaultWeapon() {
+		return hoeGiveDefaultWeapon;
+	}
+
+	public void setHoeGiveDefaultWeapon(boolean hoeGiveDefaultWeapon) {
+		this.hoeGiveDefaultWeapon = hoeGiveDefaultWeapon;
+	}
 
 	public int getStatsQUAKE() {
 		return statsQUAKE;
@@ -1866,6 +1887,30 @@ public class RandomEvents extends JavaPlugin {
 
 	public void setStatsPBALL(int statsPBALL) {
 		this.statsPBALL = statsPBALL;
+	}
+
+	public int getStatsKOTH() {
+		return statsKOTH;
+	}
+
+	public void setStatsKOTH(int statsKOTH) {
+		this.statsKOTH = statsKOTH;
+	}
+
+	public int getStatsFISHSLAP() {
+		return statsFISHSLAP;
+	}
+
+	public void setStatsFISHSLAP(int statsFISHSLAP) {
+		this.statsFISHSLAP = statsFISHSLAP;
+	}
+
+	public int getStatsHOE() {
+		return statsHOE;
+	}
+
+	public void setStatsHOE(int statsHOE) {
+		this.statsHOE = statsHOE;
 	}
 
 	

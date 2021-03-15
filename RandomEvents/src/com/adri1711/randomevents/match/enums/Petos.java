@@ -1,6 +1,7 @@
 package com.adri1711.randomevents.match.enums;
 
 import org.bukkit.Color;
+import org.bukkit.DyeColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
@@ -10,33 +11,45 @@ import net.md_5.bungee.api.ChatColor;
 
 public enum Petos {
 
-	RED(0, Color.RED, ChatColor.RED, "Red"),
+	RED(0, Color.RED, DyeColor.RED, XMaterial.RED_WOOL, ChatColor.RED, "Red"),
 
-	BLUE(1, Color.BLUE, ChatColor.BLUE, "Blue"),
+	BLUE(1, Color.BLUE, DyeColor.BLUE, XMaterial.BLUE_WOOL, ChatColor.BLUE, "Blue"),
 
-	GREEN(2, Color.GREEN, ChatColor.GREEN, "Green"),
+	GREEN(2, Color.GREEN, DyeColor.GREEN, XMaterial.GREEN_WOOL, ChatColor.GREEN, "Green"),
 
-	YELLOW(3, Color.YELLOW, ChatColor.YELLOW, "Yellow"),
+	YELLOW(3, Color.YELLOW, DyeColor.YELLOW, XMaterial.YELLOW_WOOL, ChatColor.YELLOW, "Yellow"),
 
-	GRAY(4, Color.GRAY, ChatColor.GRAY, "GRAY"),
+	GRAY(4, Color.GRAY, DyeColor.GRAY, XMaterial.GRAY_WOOL, ChatColor.GRAY, "GRAY"),
 
-	PURPLE(5, Color.PURPLE, ChatColor.LIGHT_PURPLE, "Purple"),
+	PURPLE(5, Color.PURPLE, DyeColor.PURPLE, XMaterial.PURPLE_WOOL, ChatColor.LIGHT_PURPLE, "Purple"),
 
-	BLACK(6, Color.BLACK, ChatColor.BLACK, "Black"),
+	BLACK(6, Color.BLACK, DyeColor.BLACK, XMaterial.BLACK_WOOL, ChatColor.BLACK, "Black"),
 
-	WHITE(7, Color.WHITE, ChatColor.WHITE, "White");
+	WHITE(7, Color.WHITE, DyeColor.WHITE, XMaterial.WHITE_WOOL, ChatColor.WHITE, "White");
 
 	private Integer team;
 
 	private Color color;
+	private DyeColor dye;
+	private XMaterial wool;
 	private ChatColor chatColor;
 	private String name;
 
-	private Petos(Integer team, Color color, ChatColor chatColor, String name) {
+	private Petos(Integer team, Color color, DyeColor dye, XMaterial wool, ChatColor chatColor, String name) {
 		this.team = team;
 		this.color = color;
+		this.dye = dye;
+		this.wool = wool;
 		this.chatColor = chatColor;
 		this.name = name;
+	}
+
+	public XMaterial getWool() {
+		return wool;
+	}
+
+	public void setWool(XMaterial wool) {
+		this.wool = wool;
 	}
 
 	public Color getColor() {
@@ -69,6 +82,14 @@ public enum Petos {
 
 	public void setTeam(Integer team) {
 		this.team = team;
+	}
+
+	public DyeColor getDye() {
+		return dye;
+	}
+
+	public void setDye(DyeColor dye) {
+		this.dye = dye;
 	}
 
 	public static Petos getPeto(Integer peto) {

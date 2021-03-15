@@ -2,6 +2,7 @@ package com.adri1711.randomevents.match.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,10 +33,15 @@ public class MatchPlayerHandler {
 
 	private Player playerContador;
 
+	private Map<Player, Long> playersContadores;
+
 	private Map<String, FastBoard> scoreboards;
 	private Map<String, Scoreboard> oldScoreboards;
 
 	private List<Player> goalPlayers;
+
+	private Set<Player> paintPlayers;
+
 	private Map<Player, Kit> playerKits;
 
 	private Map<Integer, Set<Player>> equipos;
@@ -53,10 +59,12 @@ public class MatchPlayerHandler {
 		this.playersVanish = new ArrayList<Player>();
 		this.equipos = new HashMap<Integer, Set<Player>>();
 		this.teamsCopy = new HashMap<Integer, Set<Player>>();
+		this.paintPlayers = new HashSet<Player>();
 		this.goalPlayers = new ArrayList<Player>();
 		this.scoreboards = new HashMap<String, FastBoard>();
 		this.oldScoreboards = new HashMap<String, Scoreboard>();
 		this.playerKits = new HashMap<Player, Kit>();
+		this.playersContadores = new HashMap<Player, Long>();
 	}
 
 	public MatchPlayerHandler(List<String> players, List<Player> playersGanadores, List<Player> playersSpectators) {
@@ -69,6 +77,7 @@ public class MatchPlayerHandler {
 		this.playersGanadores = new ArrayList<Player>();
 		this.playersSpectators = playersSpectators;
 		this.playersVanish = new ArrayList<Player>();
+		this.paintPlayers = new HashSet<Player>();
 
 		this.equipos = new HashMap<Integer, Set<Player>>();
 		this.teamsCopy = new HashMap<Integer, Set<Player>>();
@@ -77,6 +86,7 @@ public class MatchPlayerHandler {
 		scoreboards = new HashMap<String, FastBoard>();
 		oldScoreboards = new HashMap<String, Scoreboard>();
 		this.playerKits = new HashMap<Player, Kit>();
+		this.playersContadores = new HashMap<Player, Long>();
 
 	}
 
@@ -199,5 +209,22 @@ public class MatchPlayerHandler {
 	public void setPlayersTotalObj(List<Player> playersTotalObj) {
 		this.playersTotalObj = playersTotalObj;
 	}
+
+	public Map<Player, Long> getPlayersContadores() {
+		return playersContadores;
+	}
+
+	public void setPlayersContadores(Map<Player, Long> playersContadores) {
+		this.playersContadores = playersContadores;
+	}
+
+	public Set<Player> getPaintPlayers() {
+		return paintPlayers;
+	}
+
+	public void setPaintPlayers(Set<Player> paintPlayers) {
+		this.paintPlayers = paintPlayers;
+	}
+	
 
 }

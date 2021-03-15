@@ -159,6 +159,20 @@ public class WeaponShoot implements Listener {
 										}
 
 										break;
+									case KOTH:
+										plugin.getMatchActive().reiniciaPlayer(player);
+										UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+
+										UtilsRandomEvents.playSound(damager, XSound.ENTITY_PLAYER_LEVELUP);
+
+										UtilsRandomEvents.mandaMensaje(plugin,
+												plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+												plugin.getLanguage().getPvpKill()
+														.replaceAll("%victim%", player.getName())
+														.replaceAll("%killer%", damager.getName()),
+												false);
+
+										break;
 
 									case GEM_CRAWLER:
 										UtilsRandomEvents.mandaMensaje(plugin,
@@ -241,6 +255,7 @@ public class WeaponShoot implements Listener {
 
 										break;
 									case QUAKECRAFT:
+									case HOEHOEHOE:
 										ev.setCancelled(true);
 										break;
 									default:
@@ -267,6 +282,7 @@ public class WeaponShoot implements Listener {
 									case TOP_KILLER:
 									case TOP_KILLER_TEAM_2:
 									case OITC:
+									case KOTH:
 										if (plugin.isHighestPriorityDamageEvents()) {
 											ev.setCancelled(false);
 										}
@@ -344,6 +360,7 @@ public class WeaponShoot implements Listener {
 										ev.setCancelled(true);
 										break;
 									case QUAKECRAFT:
+									case HOEHOEHOE:
 										ev.setCancelled(true);
 										break;
 
@@ -490,7 +507,7 @@ public class WeaponShoot implements Listener {
 								break;
 							case TOP_KILLER:
 							case TOP_KILLER_TEAM_2:
-								
+
 								if (ev.getDamager() instanceof Arrow) {
 									Arrow arrow = (Arrow) ev.getDamager();
 
@@ -554,6 +571,57 @@ public class WeaponShoot implements Listener {
 
 								}
 								break;
+							case KOTH:
+
+								if (ev.getDamager() instanceof Arrow) {
+									Arrow arrow = (Arrow) ev.getDamager();
+
+									if (arrow.getShooter() != null && arrow.getShooter() instanceof Player) {
+
+										Player damager = (Player) arrow.getShooter();
+
+										if (plugin.getMatchActive().getPlayerHandler().getPlayers().contains(
+												damager.getName()) && !player.getName().equals(damager.getName())) {
+											plugin.getMatchActive().reiniciaPlayer(player);
+											UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+
+											UtilsRandomEvents.playSound(damager, XSound.ENTITY_PLAYER_LEVELUP);
+
+											UtilsRandomEvents.mandaMensaje(plugin,
+													plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+													plugin.getLanguage().getPvpKill()
+															.replaceAll("%victim%", player.getName())
+															.replaceAll("%killer%", damager.getName()),
+													false);
+
+										} else {
+											UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+											UtilsRandomEvents.mandaMensaje(plugin,
+													plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+													plugin.getLanguage().getPvpDeath().replaceAll("%victim%",
+															player.getName()),
+													false);
+											plugin.getMatchActive().reiniciaPlayer(player);
+										}
+									} else {
+										UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+										UtilsRandomEvents.mandaMensaje(plugin,
+												plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+												plugin.getLanguage().getPvpDeath().replaceAll("%victim%",
+														player.getName()),
+												false);
+										plugin.getMatchActive().reiniciaPlayer(player);
+									}
+								} else {
+									UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+									UtilsRandomEvents.mandaMensaje(plugin,
+											plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+											plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()),
+											false);
+									plugin.getMatchActive().reiniciaPlayer(player);
+
+								}
+								break;
 							case GEM_CRAWLER:
 								UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
 								UtilsRandomEvents.mandaMensaje(plugin,
@@ -567,6 +635,7 @@ public class WeaponShoot implements Listener {
 							case RACE:
 								ev.setCancelled(true);
 								break;
+							case HOEHOEHOE:
 							case QUAKECRAFT:
 								ev.setCancelled(true);
 								break;
@@ -654,6 +723,7 @@ public class WeaponShoot implements Listener {
 							case TOP_KILLER_TEAM_2:
 							case ANVIL_SPLEEF:
 							case ESCAPE_FROM_BEAST:
+							case KOTH:
 								if (plugin.isHighestPriorityDamageEvents()) {
 									ev.setCancelled(false);
 								}
@@ -693,6 +763,7 @@ public class WeaponShoot implements Listener {
 									}
 								}
 								break;
+							case HOEHOEHOE:
 							case QUAKECRAFT:
 								ev.setCancelled(true);
 								break;

@@ -29,7 +29,7 @@ public class ComandosExecutor {
 	}
 
 	public void joinRandomEvent(RandomEvents plugin, Player player, String password) {
-		if (plugin.getMatchActive() != null) {
+		if (plugin.getMatchActive() != null && player.getVehicle() == null && !player.isSleeping()) {
 
 			if (!plugin.getMatchActive().getPlaying()) {
 				if (plugin.getMatchActive().getPlayerHandler().getPlayers().size() < plugin.getMatchActive().getMatch()
@@ -62,7 +62,8 @@ public class ComandosExecutor {
 	}
 
 	public void joinRandomEvent(RandomEvents plugin, Player player) {
-		if (plugin.getMatchActive() != null) {
+
+		if (plugin.getMatchActive() != null && player.getVehicle() == null && !player.isSleeping()) {
 
 			if (!plugin.getMatchActive().getPlaying()) {
 				if (plugin.getMatchActive().getPlayerHandler().getPlayers().size() < plugin.getMatchActive().getMatch()
@@ -119,7 +120,7 @@ public class ComandosExecutor {
 	}
 
 	public void joinTournamentRandomEvent(RandomEvents plugin, Player player, String password) {
-		if (plugin.getTournamentActive() != null) {
+		if (plugin.getTournamentActive() != null && player.getVehicle() == null && !player.isSleeping()) {
 			if (!plugin.getTournamentActive().getPlaying()) {
 
 				if (plugin.getTournamentActive().getPassword().equals(password)) {

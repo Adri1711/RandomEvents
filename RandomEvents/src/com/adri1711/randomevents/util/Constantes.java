@@ -353,6 +353,8 @@ public class Constantes {
 		SCOREBOARD_TITLE("scoreboardTitle", "scoreboard.title", "      &a&lRandomEvents      "),
 
 		SCOREBOARD_POINTS_FORMAT("scoreboardPoints", "scoreboard.points", "&6%name% - &e%points%"),
+		
+		SCOREBOARD_POINTS_TEAM_FORMAT("scoreboardPointsTeam", "scoreboard.pointsteam", "%team_color%%name% - &e%points%"),
 
 		SCOREBOARD_STEP_FORMAT("scoreboardStep", "scoreboard.step", "&6%name% - &e(%actual%/%max%)"),
 
@@ -495,7 +497,16 @@ public class Constantes {
 				"&eLeft Click to jump, Right click to shoot!;&eShoot your enemies!;&e Get all of them dead!"),
 
 		MINIGAME_DESC_PBALL("minigameDescriptionPBALL", "minigame.description.PBALL",
-				"&eShoot your enemies with the snowballs!;&e Get all of them dead!");
+				"&eShoot your enemies with the snowballs!;&e Get all of them dead!"),
+		
+		MINIGAME_DESC_KOTH("minigameDescriptionKOTH", "minigame.description.KOTH",
+				"&eBe the one on the zone to get all the points!;&e Kill all your enemies!"),
+		
+		MINIGAME_DESC_HOE("minigameDescriptionHOE", "minigame.description.HOE",
+				"&ePaint all the floor with your color!;&e Win the colorful match!"),
+		
+		MINIGAME_DESC_FISHSLAP("minigameDescriptionFISHSLAP", "minigame.description.FISHSLAP",
+				"&eStay on the climb and !;&e be aware of the fish slaps!");
 
 		private String javaField;
 		private String ymlField;

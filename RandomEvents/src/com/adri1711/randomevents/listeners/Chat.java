@@ -937,6 +937,7 @@ public class Chat implements Listener {
 						}
 						break;
 					case GEM_LOCATION1:
+					case KOTH_LOCATION1:
 					case GOAL_LOCATION1:
 					case MAP_LOCATION1:
 						if (message.equals(Constantes.DONE)) {
@@ -949,6 +950,7 @@ public class Chat implements Listener {
 						}
 						break;
 					case ARROW_LOCATION2:
+					case KOTH_LOCATION2:
 					case GEM_LOCATION2:
 					case MAP_LOCATION2:
 					case GOAL_LOCATION2:
@@ -1225,12 +1227,14 @@ public class Chat implements Listener {
 								break;
 							case ARROW_LOCATION1:
 							case GEM_LOCATION1:
+							case KOTH_LOCATION1:
 							case GOAL_LOCATION1:
 							case MAP_LOCATION1:
 								match.setLocation1(null);
 								break;
 							case ARROW_LOCATION2:
 							case GEM_LOCATION2:
+							case KOTH_LOCATION2:
 							case GOAL_LOCATION2:
 							case MAP_LOCATION2:
 								match.setLocation2(null);

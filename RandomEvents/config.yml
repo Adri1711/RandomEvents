@@ -176,6 +176,9 @@ tntTagSpeedRunners: 3
 #Lvl of the speed for the holder of the tnt on tnttag
 tntTagSpeedHolder: 6
 
+#Hoehoehoe give default weapon so you dont need to put it in the kit
+hoeGiveDefaultWeapon: true
+
 #Quake give default weapon so you dont need to put it in the kit
 quakeGiveDefaultWeapon: true
 
@@ -263,8 +266,11 @@ statsmenu:
   TSW: 34
   ANVIL_SPLEEF: 38
   WDROP: 39
-  QUAKE: 41
-  PBALL: 42
+  QUAKE: 40
+  PBALL: 41
+  KOTH: 42
+  FISHSLAP: 43
+  HOE: 37
 
 #Enable MySQL to have statistics of the games!
 mysql:

@@ -43,7 +43,7 @@ public class Move implements Listener {
 						}
 					}
 					break;
-					
+
 				case SG:
 				case TSG:
 					if (plugin.isWaterKillSG()) {
@@ -126,6 +126,31 @@ public class Move implements Listener {
 
 						UtilsRandomEvents.queueTNT(plugin, plugin.getMatchActive(), player.getLocation(),
 								from.distance(evt.getTo()), true);
+					}
+					break;
+				case KOTH:
+					if (plugin.getMatchActive().getPlayerHandler().getPlayerContador() == null) {
+						if (plugin.getMatchActive().getMapHandler().getCuboid().contains(player.getLocation())) {
+							plugin.getMatchActive().inKoth(player);
+						}
+					} else if (plugin.getMatchActive().getPlayerHandler().getPlayerContador().getName()
+							.equals(player.getName())) {
+						if (!plugin.getMatchActive().getMapHandler().getCuboid().contains(player.getLocation())) {
+							plugin.getMatchActive().outKoth(player);
+						}
+
+					}
+					break;
+				case FISH_SLAP:
+					if (!plugin.getMatchActive().getPlayerHandler().getPlayersContadores().containsKey(player)) {
+						if (plugin.getMatchActive().getMapHandler().getCuboid().contains(player.getLocation())) {
+							plugin.getMatchActive().inKoth(player);
+						}
+					} else {
+						if (!plugin.getMatchActive().getMapHandler().getCuboid().contains(player.getLocation())) {
+							plugin.getMatchActive().outKoth(player);
+						}
+
 					}
 					break;
 				default:

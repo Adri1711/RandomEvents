@@ -153,6 +153,7 @@ public class LanguageMessages {
 	private String scoreboardTeamAlive;
 	private String scoreboardTeamDeath;
 	private String scoreboardTeam;
+	private String scoreboardPointsTeam;
 
 	private String pvpDeath;
 	private String pvpKill;
@@ -221,6 +222,9 @@ public class LanguageMessages {
 	private List<String> minigameDescriptionWDROP;
 	private List<String> minigameDescriptionQUAKE;
 	private List<String> minigameDescriptionPBALL;
+	private List<String> minigameDescriptionKOTH;
+	private List<String> minigameDescriptionFISHSLAP;
+	private List<String> minigameDescriptionHOE;
 
 	public LanguageMessages(RandomEvents plugin) {
 		this.file = new File(plugin.getDataFolder(), "messages.yml");
@@ -1789,6 +1793,14 @@ public class LanguageMessages {
 		return kitChosen.replaceAll("&", "§");
 	}
 
+	public String getScoreboardPointsTeam() {
+		return scoreboardPointsTeam.replaceAll("&", "§");
+	}
+
+	public void setScoreboardPointsTeam(String scoreboardPointsTeam) {
+		this.scoreboardPointsTeam = scoreboardPointsTeam;
+	}
+
 	public void setKitChosen(String kitChosen) {
 		this.kitChosen = kitChosen;
 	}
@@ -1807,6 +1819,30 @@ public class LanguageMessages {
 
 	public void setMinigameDescriptionPBALL(List<String> minigameDescriptionPBALL) {
 		this.minigameDescriptionPBALL = minigameDescriptionPBALL;
+	}
+
+	public List<String> getMinigameDescriptionKOTH() {
+		return minigameDescriptionKOTH;
+	}
+
+	public void setMinigameDescriptionKOTH(List<String> minigameDescriptionKOTH) {
+		this.minigameDescriptionKOTH = minigameDescriptionKOTH;
+	}
+
+	public List<String> getMinigameDescriptionFISHSLAP() {
+		return minigameDescriptionFISHSLAP;
+	}
+
+	public void setMinigameDescriptionFISHSLAP(List<String> minigameDescriptionFISHSLAP) {
+		this.minigameDescriptionFISHSLAP = minigameDescriptionFISHSLAP;
+	}
+
+	public List<String> getMinigameDescriptionHOE() {
+		return minigameDescriptionHOE;
+	}
+
+	public void setMinigameDescriptionHOE(List<String> minigameDescriptionHOE) {
+		this.minigameDescriptionHOE = minigameDescriptionHOE;
 	}
 
 }

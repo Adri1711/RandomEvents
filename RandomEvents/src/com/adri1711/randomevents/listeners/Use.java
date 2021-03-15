@@ -3,10 +3,10 @@ package com.adri1711.randomevents.listeners;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -33,6 +33,7 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.BlockIterator;
@@ -40,6 +41,7 @@ import org.bukkit.util.Vector;
 
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.match.enums.MinigameType;
+import com.adri1711.randomevents.match.enums.Petos;
 import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.util.enums.Particle1711;
@@ -47,6 +49,8 @@ import com.adri1711.util.enums.ParticleDisplay;
 import com.adri1711.util.enums.XMaterial;
 import com.adri1711.util.enums.XParticle;
 import com.adri1711.util.enums.XSound;
+
+import be.maximvdw.featherboard.M;
 
 public class Use implements Listener {
 
@@ -94,6 +98,38 @@ public class Use implements Listener {
 				v = new Vector(v.getX() * 2.0, v.getY() + 0.5, v.getZ() * 2.0);
 				player.setVelocity(v);
 				UtilsRandomEvents.playSound(player, XSound.ENTITY_ENDERMAN_TELEPORT);
+
+			} else if ((evt.getAction() == Action.RIGHT_CLICK_BLOCK)
+					&& (player.getItemInHand().getType() == (XMaterial.WOODEN_HOE.parseMaterial())
+							|| player.getItemInHand().getType() == (XMaterial.STONE_HOE.parseMaterial())
+							|| player.getItemInHand().getType() == (XMaterial.IRON_HOE.parseMaterial())
+							|| player.getItemInHand().getType() == (XMaterial.GOLDEN_HOE.parseMaterial())
+							|| player.getItemInHand().getType() == (XMaterial.DIAMOND_HOE.parseMaterial()))
+					&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.HOEHOEHOE)) {
+
+				if (plugin.getMatchActive().getMatch().getDatas()
+						.contains(evt.getClickedBlock().getState().getData())) {
+					Integer equipo = plugin.getMatchActive().getEquipoCopy(player);
+					Petos peto = Petos.getPeto(equipo);
+					if (peto != null) {
+						if (getNearbyWoolTeam(evt.getClickedBlock().getLocation(), peto.getWool().parseMaterial(),
+								peto.getDye())
+								|| !plugin.getMatchActive().getPlayerHandler().getPaintPlayers().contains(player)) {
+							plugin.getMatchActive().getPlayerHandler().getPaintPlayers().add(player);
+							plugin.getMatchActive().getMapHandler().getBlockDisappeared().put(
+									evt.getClickedBlock().getLocation(),
+									evt.getClickedBlock().getState().getData().clone());
+							evt.getClickedBlock().setType(peto.getWool().parseMaterial());
+							try {
+								evt.getClickedBlock().setData(peto.getDye().getWoolData());
+							} catch (Throwable e) {
+
+							}
+							plugin.getMatchActive().givePoint(player, 1);
+						}
+
+					}
+				}
 
 			} else if ((evt.getAction() == Action.RIGHT_CLICK_BLOCK || evt.getAction() == Action.LEFT_CLICK_BLOCK)
 					&& evt.getClickedBlock().getType() == XMaterial.CHEST.parseMaterial()) {
@@ -285,6 +321,38 @@ public class Use implements Listener {
 			}
 		}
 		// }
+	}
+
+	private boolean getNearbyWoolTeam(Location loc, Material parseMaterial, DyeColor dye) {
+		Boolean res = false;
+		Location zPlus = loc.clone();
+		zPlus.setZ(zPlus.getZ() + 1);
+		Location zMinus = loc.clone();
+		zMinus.setZ(zMinus.getZ() - 1);
+
+		Location xPlus = loc.clone();
+		xPlus.setX(xPlus.getX() + 1);
+		Location xMinus = loc.clone();
+		xMinus.setX(xMinus.getX() - 1);
+
+		MaterialData data = new MaterialData(parseMaterial);
+		try {
+			data.setData(dye.getWoolData());
+		} catch (Throwable e) {
+
+		}
+
+		if ((zPlus.getBlock() != null && zPlus.getBlock().getType() != null
+				&& zPlus.getBlock().getState().getData().equals(data))
+				|| (zMinus.getBlock() != null && zMinus.getBlock().getType() != null
+						&& zMinus.getBlock().getState().getData().equals(data))
+				|| (xPlus.getBlock() != null && xPlus.getBlock().getType() != null
+						&& xPlus.getBlock().getState().getData().equals(data))
+				|| (xMinus.getBlock() != null && xMinus.getBlock().getType() != null
+						&& xMinus.getBlock().getState().getData().equals(data))) {
+			res = true;
+		}
+		return res;
 	}
 
 	@EventHandler
