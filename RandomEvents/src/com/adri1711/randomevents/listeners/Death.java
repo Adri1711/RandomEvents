@@ -3,6 +3,8 @@ package com.adri1711.randomevents.listeners;
 import org.bukkit.Location;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Boat;
+import org.bukkit.entity.Egg;
+import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
@@ -69,6 +71,7 @@ public class Death implements Listener {
 							case TNT_RUN:
 							case SPLEEF:
 							case ANVIL_SPLEEF:
+							case BOMBARDMENT:
 							case SPLEGG:
 								UtilsRandomEvents.mandaMensaje(plugin,
 										plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
@@ -136,6 +139,7 @@ public class Death implements Listener {
 								break;
 							case QUAKECRAFT:
 							case HOEHOEHOE:
+							case SPLATOON:
 								ev.setCancelled(true);
 								break;
 							default:
@@ -171,6 +175,7 @@ public class Death implements Listener {
 								}
 								break;
 							case HOEHOEHOE:
+							case SPLATOON:
 							case QUAKECRAFT:
 								ev.setCancelled(true);
 								break;
@@ -223,6 +228,19 @@ public class Death implements Listener {
 						} else {
 							checkOtherDamage(player, ev);
 						}
+
+					} else if (ev.getDamager() instanceof Egg) {
+						Egg egg = (Egg) ev.getDamager();
+
+						if (egg.getShooter() != null && egg.getShooter() instanceof Player) {
+							checkEggDamage(player, (Player) egg.getShooter(), ev);
+						} else {
+							checkOtherDamage(player, ev);
+						}
+
+					} else if (ev.getDamager() instanceof Fireball) {
+
+						checkFireballDamage(player, ev);
 
 					} else {
 
@@ -285,6 +303,7 @@ public class Death implements Listener {
 			case PAINTBALL:
 			case ESCAPE_ARROW:
 			case ANVIL_SPLEEF:
+			case BOMBARDMENT:
 
 				UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
 				UtilsRandomEvents.mandaMensaje(plugin,
@@ -494,6 +513,7 @@ public class Death implements Listener {
 				ev.setCancelled(true);
 				break;
 			case HOEHOEHOE:
+			case SPLATOON:
 			case QUAKECRAFT:
 				ev.setCancelled(true);
 				break;
@@ -578,6 +598,7 @@ public class Death implements Listener {
 			case TOP_KILLER:
 			case TOP_KILLER_TEAM_2:
 			case ANVIL_SPLEEF:
+			case BOMBARDMENT:
 			case ESCAPE_FROM_BEAST:
 			case KOTH:
 				if (plugin.isHighestPriorityDamageEvents()) {
@@ -624,6 +645,7 @@ public class Death implements Listener {
 				}
 				break;
 			case HOEHOEHOE:
+			case SPLATOON:
 			case QUAKECRAFT:
 				ev.setCancelled(true);
 				break;
@@ -635,6 +657,57 @@ public class Death implements Listener {
 			}
 
 		}
+	}
+
+	private void checkFireballDamage(Player player, EntityDamageByEntityEvent ev) {
+
+		switch (plugin.getMatchActive().getMatch().getMinigame()) {
+		case BOMBARDMENT:
+			UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+			UtilsRandomEvents.mandaMensaje(plugin, plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+					plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
+			plugin.getMatchActive().echaDePartida(player, true, true, false);
+			player.setHealth(player.getMaxHealth());
+
+			break;
+
+		default:
+			checkOtherDamage(player, ev);
+			break;
+		}
+
+	}
+
+	private void checkEggDamage(Player player, Player damager, EntityDamageByEntityEvent ev) {
+
+		switch (plugin.getMatchActive().getMatch().getMinigame()) {
+		case SPLATOON:
+			if (((player.getHealth() - plugin.getSplatoonEggDamage()) <= 0)) {
+				Location pLoc = damager.getLocation();
+				Location playerLoc = player.getLocation();
+				pLoc.setWorld(playerLoc.getWorld());
+				Integer distancia = Double.valueOf(pLoc.distance(playerLoc)).intValue();
+				plugin.getMatchActive().reiniciaPlayer(player);
+				UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+
+				UtilsRandomEvents.playSound(damager, XSound.ENTITY_PLAYER_LEVELUP);
+
+				UtilsRandomEvents.mandaMensaje(plugin,
+						plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+						plugin.getLanguage().getBowKill().replaceAll("%distance%", "" + distancia)
+								.replaceAll("%victim%", player.getName()).replaceAll("%killer%", damager.getName()),
+						false);
+
+			} else {
+				ev.setDamage(plugin.getSplatoonEggDamage());
+			}
+			break;
+
+		default:
+			checkOtherDamage(player, ev);
+			break;
+		}
+
 	}
 
 	private void checkPlayerDamage(Player player, EntityDamageByEntityEvent ev) {
@@ -702,6 +775,7 @@ public class Death implements Listener {
 						}
 						break;
 					case ANVIL_SPLEEF:
+					case BOMBARDMENT:
 					case TNT_RUN:
 					case WDROP:
 					case SPLEEF:
@@ -846,6 +920,7 @@ public class Death implements Listener {
 
 						break;
 					case HOEHOEHOE:
+					case SPLATOON:
 					case QUAKECRAFT:
 						ev.setCancelled(true);
 						break;
@@ -902,7 +977,7 @@ public class Death implements Listener {
 					case KNOCKBACK_DUEL:
 					case ESCAPE_ARROW:
 					case FISH_SLAP:
-						
+
 						if (!plugin.getMatchActive().getAllowDamage()) {
 							ev.setCancelled(true);
 						} else {
@@ -913,6 +988,7 @@ public class Death implements Listener {
 						}
 						break;
 					case ANVIL_SPLEEF:
+					case BOMBARDMENT:
 					case TNT_RUN:
 					case WDROP:
 					case SPLEEF:
@@ -953,6 +1029,7 @@ public class Death implements Listener {
 						ev.setCancelled(true);
 						break;
 					case HOEHOEHOE:
+					case SPLATOON:
 					case QUAKECRAFT:
 						ev.setCancelled(true);
 						break;
@@ -1027,7 +1104,7 @@ public class Death implements Listener {
 						break;
 					case KNOCKBACK_DUEL:
 					case FISH_SLAP:
-					
+
 						if (!plugin.getMatchActive().getAllowDamage()) {
 							ev.setCancelled(true);
 						} else {
@@ -1044,6 +1121,7 @@ public class Death implements Listener {
 						}
 						break;
 					case ANVIL_SPLEEF:
+					case BOMBARDMENT:
 					case TNT_RUN:
 					case WDROP:
 					case SPLEEF:
@@ -1193,6 +1271,7 @@ public class Death implements Listener {
 
 						break;
 					case HOEHOEHOE:
+					case SPLATOON:
 					case QUAKECRAFT:
 						ev.setCancelled(true);
 						break;
@@ -1301,6 +1380,7 @@ public class Death implements Listener {
 						}
 						break;
 					case ANVIL_SPLEEF:
+					case BOMBARDMENT:
 					case TNT_RUN:
 					case WDROP:
 					case SPLEEF:
@@ -1341,6 +1421,7 @@ public class Death implements Listener {
 						ev.setCancelled(true);
 						break;
 					case HOEHOEHOE:
+					case SPLATOON:
 					case QUAKECRAFT:
 						ev.setCancelled(true);
 						break;

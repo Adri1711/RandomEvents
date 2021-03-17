@@ -140,6 +140,8 @@ public class Constantes {
 		CMD_RELOAD("reload", "menu.admin.reload", "   &6/revent reload:\n          &e-> Reload the plugin"),
 
 		TAG_PLUGIN("tagPlugin", "tagPlugin", "&a&lRandomEvents &f&l>>"),
+		
+		TAG_CHAT_PLUGIN("tagChat", "tagChat", "&f[&eRandomEvents&f]"),
 
 		INVALID_INPUT("invalidInput", "creation.invalidInput", "&c&lInvalid input, try another one"),
 
@@ -353,8 +355,9 @@ public class Constantes {
 		SCOREBOARD_TITLE("scoreboardTitle", "scoreboard.title", "      &a&lRandomEvents      "),
 
 		SCOREBOARD_POINTS_FORMAT("scoreboardPoints", "scoreboard.points", "&6%name% - &e%points%"),
-		
-		SCOREBOARD_POINTS_TEAM_FORMAT("scoreboardPointsTeam", "scoreboard.pointsteam", "%team_color%%name% - &e%points%"),
+
+		SCOREBOARD_POINTS_TEAM_FORMAT("scoreboardPointsTeam", "scoreboard.pointsteam",
+				"%team_color%%name% - &e%points%"),
 
 		SCOREBOARD_STEP_FORMAT("scoreboardStep", "scoreboard.step", "&6%name% - &e(%actual%/%max%)"),
 
@@ -367,6 +370,8 @@ public class Constantes {
 		SCOREBOARD_TEAM_DEATH_FORMAT("scoreboardTeamDeath", "scoreboard.team.dead", "&c☠ %team_color%%name%"),
 
 		SCOREBOARD_TEAM_FORMAT("scoreboardTeam", "scoreboard.teamformat", "&6Team: %team_color%%name%"),
+		
+		SCOREBOARD_TEAM_POINTS("scoreboardTeamPoints", "scoreboard.teampoints", "%team_color%%team_name%: &e%points%"),
 
 		SCOREBOARD_COMPANION_FORMAT("scoreboardTeammate", "scoreboard.teammate", "&6Mate: &e%name%"),
 
@@ -498,15 +503,21 @@ public class Constantes {
 
 		MINIGAME_DESC_PBALL("minigameDescriptionPBALL", "minigame.description.PBALL",
 				"&eShoot your enemies with the snowballs!;&e Get all of them dead!"),
-		
+
 		MINIGAME_DESC_KOTH("minigameDescriptionKOTH", "minigame.description.KOTH",
 				"&eBe the one on the zone to get all the points!;&e Kill all your enemies!"),
-		
+
 		MINIGAME_DESC_HOE("minigameDescriptionHOE", "minigame.description.HOE",
 				"&ePaint all the floor with your color!;&e Win the colorful match!"),
-		
+
 		MINIGAME_DESC_FISHSLAP("minigameDescriptionFISHSLAP", "minigame.description.FISHSLAP",
-				"&eStay on the climb and !;&e be aware of the fish slaps!");
+				"&eStay on the climb and !;&e be aware of the fish slaps!"),
+
+		MINIGAME_DESC_SPLATOON("minigameDescriptionSPLATOON", "minigame.description.SPLATOON",
+				"&ePaint all the field;&e to your color to win the match!"),
+		
+		MINIGAME_DESC_BOMBARDMENT("minigameDescriptionBOMBARDMENT", "minigame.description.BOMBARDMENT",
+				"&eAvoid;&e the fireballs to win the match!");
 
 		private String javaField;
 		private String ymlField;

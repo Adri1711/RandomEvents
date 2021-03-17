@@ -23,6 +23,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 import com.adri1711.api.API1711;
 import com.adri1711.randomevents.bbdd.HikariCP;
@@ -48,6 +50,7 @@ import com.adri1711.randomevents.match.schedule.Schedule;
 import com.adri1711.randomevents.match.utils.BannedPlayers;
 import com.adri1711.randomevents.metrics.Metrics;
 import com.adri1711.randomevents.placeholders.ReventPlaceholder;
+import com.adri1711.randomevents.util.NameTagHook;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.randomevents.util.UtilsSQL;
 import com.adri1711.util.enums.XMaterial;
@@ -299,8 +302,7 @@ public class RandomEvents extends JavaPlugin {
 	private int quakeShootDistance;
 
 	private boolean quakeGiveDefaultWeapon;
-	private boolean hoeGiveDefaultWeapon;
-	
+	private boolean paintGiveDefaultWeapon;
 
 	private int statsQUAKE;
 
@@ -311,6 +313,30 @@ public class RandomEvents extends JavaPlugin {
 	private int statsFISHSLAP;
 
 	private int statsHOE;
+
+	private int splatoonPaint;
+
+	private int splatoonRadius;
+
+	private int statsSPLATOON;
+
+	private int statsBOMBARDMENT;
+
+	private int statsSize;
+
+	private Double bombardmentBombSpeed;
+
+	private Double bombardmentBombDirection;
+
+	private int cooldownAfterDeathSeconds;
+
+	private int splatoonEggDamage;
+
+	private Scoreboard colorBoard;
+
+	private boolean matchPrivateMatch;
+	
+	private NameTagHook nametagHook;
 
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
@@ -346,6 +372,10 @@ public class RandomEvents extends JavaPlugin {
 			System.out.println("[RandomEvents] CrackShot hooked succesfully!");
 
 		}
+		
+		if (getServer().getPluginManager().getPlugin("NametagEdit") != null) {
+			nametagHook=new NameTagHook(this);
+		}
 
 		if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			try {
@@ -373,9 +403,24 @@ public class RandomEvents extends JavaPlugin {
 						matchesAvailable.add(match);
 					}
 				}
+				setSpawn(new Location(Bukkit.getWorld(getConfig().getString("spawn.world")),
+						getConfig().getDouble("spawn.x"), getConfig().getDouble("spawn.y"),
+						getConfig().getDouble("spawn.z"),
+						Double.valueOf(getConfig().getDouble("spawn.yaw")).floatValue(),
+						Double.valueOf(getConfig().getDouble("spawn.pitch")).floatValue()));
+
+				getTournament().setPlayerSpawn(new Location(
+						Bukkit.getWorld(getConfig().getString("tournament.spawn.world")),
+						getConfig().getDouble("tournament.spawn.x"), getConfig().getDouble("tournament.spawn.y"),
+						getConfig().getDouble("tournament.spawn.z"),
+						Double.valueOf(getConfig().getDouble("tournament.spawn.yaw")).floatValue(),
+						Double.valueOf(getConfig().getDouble("tournament.spawn.pitch")).floatValue()));
 			}
 
 		}, 1200);
+		
+		ScoreboardManager manager = Bukkit.getScoreboardManager();
+        colorBoard = manager.getMainScoreboard();
 
 	}
 
@@ -422,6 +467,9 @@ public class RandomEvents extends JavaPlugin {
 		this.idleTimeForDamage = Integer.valueOf(getConfig().getInt("idleTimeForDamage"));
 		this.sgAreaDamage = Double.valueOf(getConfig().getDouble("sgAreaDamage"));
 
+		this.bombardmentBombSpeed = Double.valueOf(getConfig().getDouble("bombardmentBombSpeed"));
+		this.bombardmentBombDirection = Double.valueOf(getConfig().getDouble("bombardmentBombDirection"));
+
 		this.needPasswordToJoin = getConfig().getBoolean("needPasswordToJoin");
 		this.globalCooldown = getConfig().getBoolean("globalCooldown");
 		this.inventoryManagement = getConfig().getBoolean("inventoryManagement");
@@ -436,11 +484,18 @@ public class RandomEvents extends JavaPlugin {
 		this.forcePlayersToSpectate = getConfig().getBoolean("forcePlayersToSpectate");
 		this.topKillerHealAfterKill = getConfig().getBoolean("topKillerHealAfterKill");
 		this.quakeGiveDefaultWeapon = getConfig().getBoolean("quakeGiveDefaultWeapon");
-		this.hoeGiveDefaultWeapon = getConfig().getBoolean("hoeGiveDefaultWeapon");
+		this.paintGiveDefaultWeapon = getConfig().getBoolean("paintGiveDefaultWeapon");
+		this.matchPrivateMatch = getConfig().getBoolean("matchPrivateMatch");
 		
+		
+
 		this.quakeShootCooldown = getConfig().getDouble("quakeShootCooldown");
 		this.quakeJumpCooldown = getConfig().getDouble("quakeJumpCooldown");
 		this.quakeShootDistance = getConfig().getInt("quakeShootDistance");
+		this.splatoonPaint = getConfig().getInt("splatoonPaint");
+		this.splatoonRadius = getConfig().getInt("splatoonRadius");
+		this.cooldownAfterDeathSeconds = getConfig().getInt("cooldownAfterDeathSeconds");
+		this.splatoonEggDamage = getConfig().getInt("splatoonEggDamage");
 
 		this.useEncoding = getConfig().getString("useEncoding");
 		if (useEncoding.equals("UTF_8")) {
@@ -568,7 +623,10 @@ public class RandomEvents extends JavaPlugin {
 		this.statsKOTH = getConfig().getInt("statsmenu.KOTH");
 		this.statsFISHSLAP = getConfig().getInt("statsmenu.FISHSLAP");
 		this.statsHOE = getConfig().getInt("statsmenu.HOE");
-		
+		this.statsSPLATOON = getConfig().getInt("statsmenu.SPLATOON");
+		this.statsBOMBARDMENT = getConfig().getInt("statsmenu.BOMBARDMENT");
+		this.statsSize = getConfig().getInt("statsmenu.size");
+
 		this.allowedCmds = (List<String>) getConfig().getStringList("allowedCmds");
 
 		this.maxItemOnChests = Integer.valueOf(getConfig().getInt("maxItemOnChests"));
@@ -738,7 +796,6 @@ public class RandomEvents extends JavaPlugin {
 	public void doingReload() {
 		loadConfig();
 		inicializaVariables();
-		this.api = new API1711("%%__USER__%%", "RandomEvents");
 	}
 
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -1863,14 +1920,13 @@ public class RandomEvents extends JavaPlugin {
 	public void setQuakeGiveDefaultWeapon(boolean quakeGiveDefaultWeapon) {
 		this.quakeGiveDefaultWeapon = quakeGiveDefaultWeapon;
 	}
-	
 
-	public boolean isHoeGiveDefaultWeapon() {
-		return hoeGiveDefaultWeapon;
+	public boolean isPaintGiveDefaultWeapon() {
+		return paintGiveDefaultWeapon;
 	}
 
-	public void setHoeGiveDefaultWeapon(boolean hoeGiveDefaultWeapon) {
-		this.hoeGiveDefaultWeapon = hoeGiveDefaultWeapon;
+	public void setPaintGiveDefaultWeapon(boolean hoeGiveDefaultWeapon) {
+		this.paintGiveDefaultWeapon = hoeGiveDefaultWeapon;
 	}
 
 	public int getStatsQUAKE() {
@@ -1913,5 +1969,102 @@ public class RandomEvents extends JavaPlugin {
 		this.statsHOE = statsHOE;
 	}
 
+	public int getSplatoonPaint() {
+		return splatoonPaint;
+	}
+
+	public void setSplatoonPaint(int splatoonPaint) {
+		this.splatoonPaint = splatoonPaint;
+	}
+
+	public int getSplatoonRadius() {
+		return splatoonRadius;
+	}
+
+	public void setSplatoonRadius(int splatoonRadius) {
+		this.splatoonRadius = splatoonRadius;
+	}
+
+	public int getStatsSPLATOON() {
+		return statsSPLATOON;
+	}
+
+	public void setStatsSPLATOON(int statsSPLATOON) {
+		this.statsSPLATOON = statsSPLATOON;
+	}
+
+	public int getStatsBOMBARDMENT() {
+		return statsBOMBARDMENT;
+	}
+
+	public void setStatsBOMBARDMENT(int statsBOMBARDMENT) {
+		this.statsBOMBARDMENT = statsBOMBARDMENT;
+	}
+
+	public int getStatsSize() {
+		return statsSize;
+	}
+
+	public void setStatsSize(int statsSize) {
+		this.statsSize = statsSize;
+	}
+
+	public Double getBombardmentBombSpeed() {
+		return bombardmentBombSpeed;
+	}
+
+	public void setBombardmentBombSpeed(Double bombardmentBombSpeed) {
+		this.bombardmentBombSpeed = bombardmentBombSpeed;
+	}
+
+	public Double getBombardmentBombDirection() {
+		return bombardmentBombDirection;
+	}
+
+	public void setBombardmentBombDirection(Double bombardmentBombDirection) {
+		this.bombardmentBombDirection = bombardmentBombDirection;
+	}
+
+	public int getCooldownAfterDeathSeconds() {
+		return cooldownAfterDeathSeconds;
+	}
+
+	public void setCooldownAfterDeathSeconds(int cooldownAfterDeathSeconds) {
+		this.cooldownAfterDeathSeconds = cooldownAfterDeathSeconds;
+	}
+
+	public int getSplatoonEggDamage() {
+		return splatoonEggDamage;
+	}
+
+	public void setSplatoonEggDamage(int splatoonEggDamage) {
+		this.splatoonEggDamage = splatoonEggDamage;
+	}
+
+	public Scoreboard getColorBoard() {
+		return colorBoard;
+	}
+
+	public void setColorBoard(Scoreboard colorBoard) {
+		this.colorBoard = colorBoard;
+	}
+
+	public boolean isMatchPrivateMatch() {
+		return matchPrivateMatch;
+	}
+
+	public void setMatchPrivateMatch(boolean matchPrivateMatch) {
+		this.matchPrivateMatch = matchPrivateMatch;
+	}
+
+	public NameTagHook getNametagHook() {
+		return nametagHook;
+	}
+
+	public void setNametagHook(NameTagHook nametagHook) {
+		this.nametagHook = nametagHook;
+	}
 	
+	
+
 }

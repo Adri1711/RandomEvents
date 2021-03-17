@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -36,7 +38,7 @@ public class Chat implements Listener {
 		this.plugin = plugin;
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onPlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event) {
 
 		Player p = event.getPlayer();
@@ -99,6 +101,20 @@ public class Chat implements Listener {
 
 			event.setCancelled(Boolean.TRUE);
 
+		} else {
+			if (plugin.isMatchPrivateMatch() && plugin.getMatchActive() != null
+					&& plugin.getMatchActive().getPlayerHandler().getPlayersSpectators().contains(player)) {
+				event.getRecipients().clear();
+				event.getRecipients().addAll(plugin.getMatchActive().getPlayerHandler().getPlayersSpectators());
+
+				for (Player pla : Bukkit.getOnlinePlayers()) {
+					if (pla.hasPermission("randomevent.chat.spy")) {
+						event.getRecipients().add(pla);
+					}
+				}
+
+				event.setFormat(plugin.getLanguage().getTagChat() + event.getFormat());
+			}
 		}
 	}
 
@@ -640,6 +656,19 @@ public class Chat implements Listener {
 							}
 						}
 						break;
+					case CANNON_SPAWNS:
+						if (message.equals(Constantes.DONE)) {
+
+							match.getEntitySpawns().add(player.getLocation());
+							actua = Boolean.FALSE;
+
+						} else if (message.equals(Constantes.NEXT)) {
+
+							plugin.getPlayersCreation().remove(player.getName());
+
+						}
+
+						break;
 					case ENTITY_SPAWNS:
 						if (message.equals(Constantes.DONE)) {
 							if (match.getEntitySpawns().size() != match.getAmountPlayers()) {
@@ -654,11 +683,11 @@ public class Chat implements Listener {
 									actua = Boolean.FALSE;
 
 								}
-							} else if (message.equals(Constantes.NEXT)) {
-
-								plugin.getPlayersCreation().remove(player.getName());
-
 							}
+						} else if (message.equals(Constantes.NEXT)) {
+
+							plugin.getPlayersCreation().remove(player.getName());
+
 						}
 						break;
 					case ANOTHER_ENTITY_SPAWNS:
@@ -1361,7 +1390,9 @@ public class Chat implements Listener {
 			}
 		}
 
-		if (actualiza) {
+		if (actualiza)
+
+		{
 			plugin.getPlayerMatches().put(player.getName(), match);
 			plugin.getPlayerMatches().put(player.getName(), match);
 			if (actua) {

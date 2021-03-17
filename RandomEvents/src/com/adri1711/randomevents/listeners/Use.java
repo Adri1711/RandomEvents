@@ -1,8 +1,11 @@
 package com.adri1711.randomevents.listeners;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -40,6 +43,7 @@ import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
 import com.adri1711.randomevents.RandomEvents;
+import com.adri1711.randomevents.match.MatchActive;
 import com.adri1711.randomevents.match.enums.MinigameType;
 import com.adri1711.randomevents.match.enums.Petos;
 import com.adri1711.randomevents.util.Constantes;
@@ -49,8 +53,6 @@ import com.adri1711.util.enums.ParticleDisplay;
 import com.adri1711.util.enums.XMaterial;
 import com.adri1711.util.enums.XParticle;
 import com.adri1711.util.enums.XSound;
-
-import be.maximvdw.featherboard.M;
 
 public class Use implements Listener {
 
@@ -130,6 +132,16 @@ public class Use implements Listener {
 
 					}
 				}
+
+			} else if ((evt.getAction() == Action.RIGHT_CLICK_BLOCK || evt.getAction() == Action.RIGHT_CLICK_AIR)
+					&& (player.getItemInHand().getType() == (XMaterial.WOODEN_HOE.parseMaterial())
+							|| player.getItemInHand().getType() == (XMaterial.STONE_HOE.parseMaterial())
+							|| player.getItemInHand().getType() == (XMaterial.IRON_HOE.parseMaterial())
+							|| player.getItemInHand().getType() == (XMaterial.GOLDEN_HOE.parseMaterial())
+							|| player.getItemInHand().getType() == (XMaterial.DIAMOND_HOE.parseMaterial()))
+					&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLATOON)) {
+
+				player.launchProjectile(Egg.class);
 
 			} else if ((evt.getAction() == Action.RIGHT_CLICK_BLOCK || evt.getAction() == Action.LEFT_CLICK_BLOCK)
 					&& evt.getClickedBlock().getType() == XMaterial.CHEST.parseMaterial()) {
@@ -414,6 +426,104 @@ public class Use implements Listener {
 								nextBlock.getState().getData().clone());
 						nextBlock.setType(XMaterial.AIR.parseMaterial());
 					}
+				}
+			}
+		} else if (entity != null && entity.getShooter() != null && entity.getShooter() instanceof Player
+				&& (plugin.getMatchActive() != null
+						&& (plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLATOON)))) {
+
+			Player p = (Player) entity.getShooter();
+
+			if (plugin.getMatchActive().getPlayerHandler().getPlayers().contains(p.getName())) {
+
+				Location hitLoc = entity.getLocation();
+
+				Vector arrowVector = entity.getVelocity();
+				BlockIterator b = new BlockIterator(hitLoc.getWorld(), hitLoc.toVector(), arrowVector, 0.0D, 3);
+
+				Block hitBlock = event.getEntity().getLocation().getBlock();
+
+				Block blockBefore = hitBlock;
+				Block nextBlock = b.next();
+
+				while (b.hasNext() && nextBlock.getType() == XMaterial.AIR.parseMaterial()) {
+					blockBefore = nextBlock;
+					nextBlock = b.next();
+				}
+
+				BlockFace blockFace = nextBlock.getFace(blockBefore);
+
+				if (blockFace != null) {
+
+					List<Block> blocks = UtilsRandomEvents.getNearbyBlocks(nextBlock.getLocation(),
+							plugin.getSplatoonRadius(), plugin.getMatchActive().getMatch().getDatas(), true, plugin);
+					List<Location> locations = new ArrayList<Location>();
+
+					List<Location> locTeam = new ArrayList<Location>();
+					MatchActive match = plugin.getMatchActive();
+					Integer equipo = match.getEquipo(p);
+					Set<Player> players = match.getPlayerHandler().getEquipos().get(equipo);
+					for (Player pla : players) {
+						if (match.getPlayerHandler().getPaintedLocations().containsKey(pla)) {
+							locTeam.addAll(match.getPlayerHandler().getPaintedLocations().get(pla));
+						}
+					}
+
+					for (Block bl : blocks) {
+						if (!locTeam.contains(bl.getLocation())) {
+							locations.add(bl.getLocation());
+						}
+					}
+
+					Set<Location> locations2 = new HashSet<Location>();
+					if (locations.size() >= plugin.getSplatoonPaint()) {
+						while (locations2.size() < plugin.getSplatoonPaint()) {
+							Integer ra = match.getRandom().nextInt(locations.size());
+
+							locations2.add(locations.get(ra));
+						}
+					} else {
+						locations2.addAll(locations);
+					}
+					locations.clear();
+					locations.addAll(locations2);
+
+					Petos peto = Petos.getPeto(equipo);
+					for (Location loc : locations) {
+						Boolean addDisappear = Boolean.TRUE;
+						if (loc.getBlock().getType().toString().contains("WOOL")) {
+
+							Player painter = null;
+							for (Player paint : match.getPlayerHandler().getPaintedLocations().keySet()) {
+								if (match.getPlayerHandler().getPaintedLocations().get(paint).contains(loc)) {
+									painter = paint;
+								}
+							}
+							if (painter != null) {
+								addDisappear = Boolean.FALSE;
+								match.givePoint(painter, -1);
+								match.getPlayerHandler().getPaintedLocations().get(painter).remove(loc);
+
+							}
+
+						}
+						if (peto != null) {
+							if (addDisappear) {
+								plugin.getMatchActive().getMapHandler().getBlockDisappeared().put(loc,
+										loc.getBlock().getState().getData().clone());
+							}
+							loc.getBlock().setType(peto.getWool().parseMaterial());
+							try {
+								loc.getBlock().setData(peto.getDye().getWoolData());
+							} catch (Throwable e) {
+
+							}
+
+						}
+					}
+					match.addPainted(p, locations);
+					match.givePoint(p, locations.size());
+
 				}
 			}
 		} else if (entity instanceof Arrow) {

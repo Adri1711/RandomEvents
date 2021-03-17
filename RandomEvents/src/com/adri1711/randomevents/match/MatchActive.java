@@ -22,6 +22,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -31,6 +32,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Team;
+import org.bukkit.util.Vector;
 
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.api.events.ReventBeginEvent;
@@ -98,6 +101,7 @@ public class MatchActive {
 	private Integer limitPlayers;
 
 	private Integer tries;
+	private Integer counter;
 
 	private BukkitRunnable task;
 	private BukkitRunnable task2;
@@ -184,6 +188,7 @@ public class MatchActive {
 		}
 		this.cooldownJump = new HashMap<Player, Long>();
 		this.cooldownShoot = new HashMap<Player, Long>();
+		counter = 0;
 
 		matchWaitingPlayers();
 	}
@@ -192,6 +197,8 @@ public class MatchActive {
 			TournamentActive tournamentObj, List<String> players, List<Player> playersGanadores,
 			List<Player> playersSpectators) {
 		super();
+		counter = 0;
+
 		this.mapHandler = new MatchMapDataHandler();
 		this.allowDamage = false;
 		this.allowMove = true;
@@ -428,6 +435,7 @@ public class MatchActive {
 			Boolean compruebaSpectator, Boolean forzado) {
 		Location lastLocation = player.getLocation();
 		dropItems(player, forzado);
+		unregisterTeam(player);
 		if (getPlayerHandler().getPlayersSpectators().contains(player)) {
 			if (comprueba) {
 				if (!getPlayerHandler().getPlayersObj().remove(player)) {
@@ -528,6 +536,7 @@ public class MatchActive {
 							new Location(getMapHandler().getActualCuboid().getWorld(), 0, 0, 0), Double.MAX_VALUE, p);
 				}
 				getPlayerHandler().getPlayers().remove(p.getName());
+				unregisterTeam(p);
 
 			}
 		}
@@ -831,6 +840,7 @@ public class MatchActive {
 		case BATTLE_ROYALE_CABALLO:
 		case ESCAPE_ARROW:
 		case ANVIL_SPLEEF:
+		case BOMBARDMENT:
 		case BOMB_TAG:
 		case TNT_RUN:
 		case SPLEEF:
@@ -844,6 +854,7 @@ public class MatchActive {
 		case OITC:
 		case TOP_KILLER_TEAM_2:
 		case HOEHOEHOE:
+		case SPLATOON:
 			ganadores.addAll(sacaGanadoresPartidaTiempo());
 			break;
 		case GEM_CRAWLER:
@@ -1077,6 +1088,19 @@ public class MatchActive {
 		reiniciaValoresPartida(true);
 	}
 
+	public void unregisterTeam(Player p) {
+		if(plugin.getNametagHook()==null){
+		if (plugin.getColorBoard().getTeam(p.getName()) != null) {
+			plugin.getColorBoard().getTeam(p.getName()).unregister();
+		}
+		}else{
+			System.out.println("Probando");
+			//getPlayerHandler().getPlayersPrefix().put(p, plugin.getNametagHook().getApi().getNametag(p).getPrefix());
+			plugin.getNametagHook().getApi().setPrefix(p, getPlayerHandler().getPlayersPrefix().get(p));
+			
+		}
+	}
+
 	public void reiniciaValoresPartida(Boolean reinicia) {
 		if (task != null) {
 			task.cancel();
@@ -1260,7 +1284,7 @@ public class MatchActive {
 			puntuacion.put(p.getName(), 0);
 
 		}
-
+		Double jumpStrength = null;
 		switch (match.getMinigame()) {
 		case SG:
 			for (Player p : getPlayerHandler().getPlayersSpectators()) {
@@ -1645,6 +1669,7 @@ public class MatchActive {
 
 			break;
 		case HOEHOEHOE:
+		case SPLATOON:
 			for (Player p : getPlayerHandler().getPlayersSpectators()) {
 				if (!getPlayerHandler().getPlayersObj().contains(p)) {
 					mandaSpectatorPlayer(p);
@@ -1656,7 +1681,7 @@ public class MatchActive {
 				Integer indice = getPlayerHandler().getPlayersObj().indexOf(p);
 				sortTeams(p, indice);
 				iniciaPlayerTeam(p);
-				if (plugin.isHoeGiveDefaultWeapon()) {
+				if (plugin.isPaintGiveDefaultWeapon()) {
 					p.getInventory().addItem(XMaterial.STONE_HOE.parseItem());
 					p.updateInventory();
 				}
@@ -1702,12 +1727,18 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 
 				Horse horse = (Horse) p.getWorld().spawnEntity(p.getLocation(), EntityType.HORSE); // Spawns
-																									// the
-				// horse
+
+				if (jumpStrength == null) {
+					jumpStrength = horse.getJumpStrength();
+				} else {
+					horse.setJumpStrength(jumpStrength);
+				}
+
 				horse.getInventory().setSaddle(new ItemStack(XMaterial.SADDLE.parseMaterial(), 1)); // Gives
 				// horse
 				// saddle
@@ -1735,6 +1766,11 @@ public class MatchActive {
 
 				if (getMatch().getEntitySpawns() == null || getMatch().getEntitySpawns().isEmpty()) {
 					Horse horse = (Horse) p.getWorld().spawnEntity(p.getLocation(), EntityType.HORSE); // Spawns
+					if (jumpStrength == null) {
+						jumpStrength = horse.getJumpStrength();
+					} else {
+						horse.setJumpStrength(jumpStrength);
+					}
 					// the
 					// horse
 					horse.getInventory().setSaddle(new ItemStack(XMaterial.SADDLE.parseMaterial(), 1)); // Gives
@@ -1753,6 +1789,11 @@ public class MatchActive {
 					Horse horse = (Horse) p.getWorld().spawnEntity(
 							match.getEntitySpawns().get(getPlayerHandler().getPlayersObj().indexOf(p)),
 							EntityType.HORSE); // Spawns
+					if (jumpStrength == null) {
+						jumpStrength = horse.getJumpStrength();
+					} else {
+						horse.setJumpStrength(jumpStrength);
+					}
 					// the
 					// horse
 					horse.getInventory().setSaddle(new ItemStack(XMaterial.SADDLE.parseMaterial(), 1)); // Gives
@@ -1836,6 +1877,18 @@ public class MatchActive {
 				iniciaPlayer(p);
 			}
 			partidaAnvilSpleef();
+			break;
+		case BOMBARDMENT:
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
+			this.allowDamage = true;
+			for (Player p : getPlayerHandler().getPlayersObj()) {
+				iniciaPlayer(p);
+			}
+			partidaBombardment();
 			break;
 		case GEM_CRAWLER:
 			for (Player p : getPlayerHandler().getPlayersSpectators()) {
@@ -2320,6 +2373,53 @@ public class MatchActive {
 
 	}
 
+	public void partidaBombardment() {
+		if (getPlaying()) {
+			Double timer = 20 * match.getSecondsMobSpawn();
+
+			Bukkit.getServer().getScheduler().runTaskLaterAsynchronously((Plugin) getPlugin(), new Runnable() {
+				public void run() {
+					Double spawns = getCounter().doubleValue() / 4.0;
+					Integer spawnsInt = spawns.intValue() + 1;
+					setCounter(getCounter() + 1);
+					for (int i = 0; i < spawnsInt; i++) {
+
+						Location l = getMatch().getEntitySpawns()
+								.get(getRandom().nextInt(getMatch().getEntitySpawns().size()));
+						Location locPlayer = null;
+						if (getPlayerHandler().getPlayersObj().size() >= 1) {
+							locPlayer = getPlayerHandler().getPlayersObj()
+									.get(getRandom().nextInt(getPlayerHandler().getPlayersObj().size())).getLocation();
+						}
+
+						if (l != null && locPlayer != null) {
+
+							Vector v = new Vector(locPlayer.getX() - l.getX(), locPlayer.getY() - l.getY() - 1,
+									locPlayer.getZ() - l.getZ());
+							Bukkit.getScheduler().runTaskLater(getPlugin(), new Runnable() {
+
+								@Override
+								public void run() {
+
+									Entity ent = l.getWorld().spawnEntity(l, EntityType.FIREBALL);
+									Fireball fireball = (Fireball) ent;
+									plugin.getApi().correctDirectionFireball(fireball, v);
+
+								}
+
+							}, i * 3L);
+
+						}
+
+					}
+					partidaBombardment();
+				}
+
+			}, timer.longValue());
+		}
+
+	}
+
 	public void partidaEscapeArrow() {
 		if (getPlaying()) {
 			Double timer = 20 * match.getSecondsMobSpawn();
@@ -2443,7 +2543,26 @@ public class MatchActive {
 
 		p.getInventory().setChestplate(Petos.getPeto(getEquipo(p)).getPeto());
 		p.updateInventory();
+		crearTeam(p);
 		UtilsSQL.updateTries(p, match.getMinigame(), plugin);
+	}
+
+	private void crearTeam(Player p) {
+		if (plugin.getNametagHook() == null) {
+			if (plugin.getColorBoard().getTeam(p.getName()) != null) {
+				plugin.getColorBoard().getTeam(p.getName()).unregister();
+			}
+
+			Team t = plugin.getColorBoard().registerNewTeam(p.getName());
+
+			t.setPrefix(Petos.getPeto(getEquipo(p)).getChatColor() + "");
+			t.addEntry(p.getName());
+		} else {
+			getPlayerHandler().getPlayersPrefix().put(p, plugin.getNametagHook().getApi().getNametag(p).getPrefix());
+			plugin.getNametagHook().getApi().setPrefix(p, "" + Petos.getPeto(getEquipo(p)).getChatColor() + "");
+			
+		}
+
 	}
 
 	public void iniciaPlayerBeast(Player p) {
@@ -2478,6 +2597,7 @@ public class MatchActive {
 			break;
 		case PAINTBALL:
 		case HOEHOEHOE:
+		case SPLATOON:
 			loc = match.getSpawns().get(getEquipo(p));
 			getMapHandler().getCheckpoints().put(p.getName(), loc);
 			UtilsRandomEvents.teleportaPlayer(p, loc, plugin);
@@ -2526,7 +2646,7 @@ public class MatchActive {
 						reiniciaGemCrawler(p);
 					}
 
-				}, 40L);
+				}, 20L * plugin.getCooldownAfterDeathSeconds());
 			} else {
 				reiniciaGemCrawler(p);
 			}
@@ -2540,6 +2660,7 @@ public class MatchActive {
 			}
 			break;
 		case QUAKECRAFT:
+
 			dropItems(p);
 
 			if (plugin.isCooldownAfterDeath()) {
@@ -2549,17 +2670,51 @@ public class MatchActive {
 					@Override
 					public void run() {
 						reiniciaDefault(p);
+						if (plugin.isQuakeGiveDefaultWeapon()) {
+							p.getInventory().addItem(XMaterial.STONE_HOE.parseItem());
+							p.updateInventory();
+						}
 					}
 
-				}, 40L);
+				}, 20L * plugin.getCooldownAfterDeathSeconds());
 			} else {
 				reiniciaDefault(p);
+				if (plugin.isQuakeGiveDefaultWeapon()) {
+					p.getInventory().addItem(XMaterial.STONE_HOE.parseItem());
+					p.updateInventory();
+				}
 			}
 
-			if (plugin.isQuakeGiveDefaultWeapon()) {
-				p.getInventory().addItem(XMaterial.STONE_HOE.parseItem());
+			break;
+		case SPLATOON:
+			dropItems(p);
+
+			if (plugin.isCooldownAfterDeath()) {
+				p.setGameMode(GameMode.SPECTATOR);
+				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+
+					@Override
+					public void run() {
+						reiniciaDefault(p);
+						p.getInventory().setChestplate(Petos.getPeto(getEquipo(p)).getPeto());
+						if (plugin.isQuakeGiveDefaultWeapon()) {
+							p.getInventory().addItem(XMaterial.STONE_HOE.parseItem());
+
+						}
+						p.updateInventory();
+					}
+
+				}, 20L * plugin.getCooldownAfterDeathSeconds());
+			} else {
+				reiniciaDefault(p);
+				p.getInventory().setChestplate(Petos.getPeto(getEquipo(p)).getPeto());
+				if (plugin.isQuakeGiveDefaultWeapon()) {
+					p.getInventory().addItem(XMaterial.STONE_HOE.parseItem());
+
+				}
 				p.updateInventory();
 			}
+
 			break;
 		default:
 			outKoth(p);
@@ -2574,7 +2729,7 @@ public class MatchActive {
 						reiniciaDefault(p);
 					}
 
-				}, 40L);
+				}, 20L * plugin.getCooldownAfterDeathSeconds());
 			} else {
 				reiniciaDefault(p);
 			}
@@ -3040,6 +3195,7 @@ public class MatchActive {
 			case BOMB_TAG:
 			case ESCAPE_ARROW:
 			case ANVIL_SPLEEF:
+			case BOMBARDMENT:
 			case ESCAPE_FROM_BEAST:
 			case GEM_CRAWLER:
 			case KNOCKBACK_DUEL:
@@ -3055,6 +3211,7 @@ public class MatchActive {
 			case QUAKECRAFT:
 			case TOP_KILLER_TEAM_2:
 			case HOEHOEHOE:
+			case SPLATOON:
 			case TSG:
 			case TSW:
 			case WDROP:
@@ -3089,12 +3246,22 @@ public class MatchActive {
 
 	}
 
-	public void givePoint(Player p, int point) {
+	public void givePoint(Player p, Integer point) {
 		if (getPuntuacion().containsKey(p.getName())) {
 			getPuntuacion().put(p.getName(), getPuntuacion().get(p.getName()) + point);
 
 		} else {
 			getPuntuacion().put(p.getName(), point);
+		}
+
+	}
+
+	public void addPainted(Player p, List<Location> locations) {
+		if (getPlayerHandler().getPaintedLocations().containsKey(p)) {
+			getPlayerHandler().getPaintedLocations().get(p).addAll(locations);
+
+		} else {
+			getPlayerHandler().getPaintedLocations().put(p, new HashSet<Location>(locations));
 		}
 
 	}
@@ -3497,6 +3664,14 @@ public class MatchActive {
 
 	public void setCheckDate(long checkDate) {
 		this.checkDate = checkDate;
+	}
+
+	public Integer getCounter() {
+		return counter;
+	}
+
+	public void setCounter(Integer counter) {
+		this.counter = counter;
 	}
 
 }

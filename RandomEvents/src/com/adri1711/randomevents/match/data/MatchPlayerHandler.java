@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 
@@ -35,12 +36,16 @@ public class MatchPlayerHandler {
 
 	private Map<Player, Long> playersContadores;
 
+	private Map<Player, String> playersPrefix;
+
 	private Map<String, FastBoard> scoreboards;
 	private Map<String, Scoreboard> oldScoreboards;
 
 	private List<Player> goalPlayers;
 
 	private Set<Player> paintPlayers;
+
+	private Map<Player, Set<Location>> paintedLocations;
 
 	private Map<Player, Kit> playerKits;
 
@@ -51,7 +56,7 @@ public class MatchPlayerHandler {
 	public MatchPlayerHandler() {
 		this.players = new ArrayList<String>();
 		this.playersTotal = new ArrayList<String>();
-
+		this.playersPrefix = new HashMap<Player, String>();
 		this.playersObj = new ArrayList<Player>();
 		this.playersTotalObj = new ArrayList<Player>();
 		this.playersGanadores = new ArrayList<Player>();
@@ -65,6 +70,7 @@ public class MatchPlayerHandler {
 		this.oldScoreboards = new HashMap<String, Scoreboard>();
 		this.playerKits = new HashMap<Player, Kit>();
 		this.playersContadores = new HashMap<Player, Long>();
+		this.paintedLocations = new HashMap<Player, Set<Location>>();
 	}
 
 	public MatchPlayerHandler(List<String> players, List<Player> playersGanadores, List<Player> playersSpectators) {
@@ -78,6 +84,7 @@ public class MatchPlayerHandler {
 		this.playersSpectators = playersSpectators;
 		this.playersVanish = new ArrayList<Player>();
 		this.paintPlayers = new HashSet<Player>();
+		this.playersPrefix = new HashMap<Player, String>();
 
 		this.equipos = new HashMap<Integer, Set<Player>>();
 		this.teamsCopy = new HashMap<Integer, Set<Player>>();
@@ -87,6 +94,7 @@ public class MatchPlayerHandler {
 		oldScoreboards = new HashMap<String, Scoreboard>();
 		this.playerKits = new HashMap<Player, Kit>();
 		this.playersContadores = new HashMap<Player, Long>();
+		this.paintedLocations = new HashMap<Player, Set<Location>>();
 
 	}
 
@@ -224,6 +232,22 @@ public class MatchPlayerHandler {
 
 	public void setPaintPlayers(Set<Player> paintPlayers) {
 		this.paintPlayers = paintPlayers;
+	}
+
+	public Map<Player, Set<Location>> getPaintedLocations() {
+		return paintedLocations;
+	}
+
+	public void setPaintedLocations(Map<Player, Set<Location>> paintedLocations) {
+		this.paintedLocations = paintedLocations;
+	}
+
+	public Map<Player, String> getPlayersPrefix() {
+		return playersPrefix;
+	}
+
+	public void setPlayersPrefix(Map<Player, String> playersPrefix) {
+		this.playersPrefix = playersPrefix;
 	}
 	
 

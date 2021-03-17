@@ -19,7 +19,7 @@ public enum Petos {
 
 	YELLOW(3, Color.YELLOW, DyeColor.YELLOW, XMaterial.YELLOW_WOOL, ChatColor.YELLOW, "Yellow"),
 
-	GRAY(4, Color.GRAY, DyeColor.GRAY, XMaterial.GRAY_WOOL, ChatColor.GRAY, "GRAY"),
+	GRAY(4, Color.GRAY, DyeColor.GRAY, XMaterial.GRAY_WOOL, ChatColor.GRAY, "Gray"),
 
 	PURPLE(5, Color.PURPLE, DyeColor.PURPLE, XMaterial.PURPLE_WOOL, ChatColor.LIGHT_PURPLE, "Purple"),
 

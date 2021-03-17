@@ -59,7 +59,13 @@ public enum MinigameType {
 
 	FISH_SLAP("FISHSLAP", XMaterial.TROPICAL_FISH.parseMaterial(), "Fish slap"),
 
-	HOEHOEHOE("HOE", XMaterial.WOODEN_HOE.parseMaterial(), "Hoe hoe hoe");
+	HOEHOEHOE("HOE", XMaterial.WOODEN_HOE.parseMaterial(), "Hoe hoe hoe"),
+
+	SPLATOON("SPLATOON", XMaterial.RED_DYE.parseMaterial(), "Splatoon"),
+
+	BOMBARDMENT("BOMBARDMENT", XMaterial.COAL_BLOCK.parseMaterial(), "Bombardment");
+
+	
 
 	private String codigo;
 	private Material material;
@@ -78,7 +84,6 @@ public enum MinigameType {
 				creation = w;
 			}
 		}
-
 		return creation;
 	}
 

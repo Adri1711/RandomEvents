@@ -31,13 +31,13 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.logging.log4j.spi.Terminable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
@@ -49,6 +49,7 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import com.adri1711.randomevents.RandomEvents;
@@ -1291,7 +1292,8 @@ public class UtilsRandomEvents {
 	}
 
 	public static Inventory createGUI(String name, Stats estadisticas, RandomEvents plugin) {
-		Inventory inv = Bukkit.createInventory(null, 45, plugin.getLanguage().getStatsGuiName() + name);
+		Inventory inv = Bukkit.createInventory(null, plugin.getStatsSize(),
+				plugin.getLanguage().getStatsGuiName() + name);
 		for (MinigameType minigame : MinigameType.values()) {
 			Integer position = -1;
 			try {
@@ -1716,6 +1718,7 @@ public class UtilsRandomEvents {
 						break;
 					case MOB_SPAWN:
 					case ENTITY_SPAWNS:
+					case CANNON_SPAWNS:
 					case ANOTHER_ENTITY_SPAWNS:
 						if (match.getEntitySpawns() != null && !match.getEntitySpawns().isEmpty()) {
 
@@ -1890,6 +1893,7 @@ public class UtilsRandomEvents {
 				break;
 			case MOB_SPAWN:
 			case ENTITY_SPAWNS:
+			case CANNON_SPAWNS:
 			case ANOTHER_ENTITY_SPAWNS:
 				break;
 			case PLAY_TIME:
@@ -2092,6 +2096,7 @@ public class UtilsRandomEvents {
 		case BATTLE_ROYALE_CABALLO:
 		case ESCAPE_ARROW:
 		case ANVIL_SPLEEF:
+		case BOMBARDMENT:
 		case KNOCKBACK_DUEL:
 		case SPLEEF:
 		case SPLEGG:
@@ -2123,12 +2128,14 @@ public class UtilsRandomEvents {
 			break;
 
 		case HOEHOEHOE:
+		case SPLATOON:
 			lines = prepareLinesTeam(lines, matchActive, plugin, player);
 			lines.add("");
 
 			lines = prepareLinesTime(lines, plugin, matchActive);
 			lines.add("");
-
+			List<String> linesPoints = new ArrayList<String>();
+			Map<Petos, Integer> mapaEquipo = new HashMap<Petos, Integer>();
 			Map<String, Integer> mapaOrdenadoHoe = sortByValue(matchActive.getPuntuacion(), true);
 			for (Entry<String, Integer> entrada : mapaOrdenadoHoe.entrySet()) {
 				String line = plugin.getLanguage().getScoreboardPointsTeam().replaceAll("%name%", entrada.getKey())
@@ -2141,6 +2148,13 @@ public class UtilsRandomEvents {
 						Petos peto = Petos.getPeto(equipo);
 						if (peto != null) {
 							line = line.replaceAll("%team_color%", "" + peto.getChatColor());
+
+							if (mapaEquipo.containsKey(peto)) {
+								mapaEquipo.put(peto, mapaEquipo.get(peto) + entrada.getValue());
+							} else {
+								mapaEquipo.put(peto, entrada.getValue());
+							}
+
 						} else {
 							line = line.replaceAll("%team_color%", "");
 
@@ -2153,8 +2167,21 @@ public class UtilsRandomEvents {
 				} else {
 					line = line.replaceAll("%team_color%", "");
 				}
+				linesPoints.add(line);
+			}
+
+			mapaEquipo = sortByValue(mapaEquipo, true);
+
+			for (Entry<Petos, Integer> entrada : mapaEquipo.entrySet()) {
+				String line = plugin.getLanguage().getScoreboardTeamPoints()
+						.replaceAll("%team_name%", entrada.getKey().getName())
+						.replaceAll("%team_color%", "" + entrada.getKey().getChatColor())
+						.replaceAll("%points%", "" + entrada.getValue());
 				lines.add(line);
 			}
+			lines.add("");
+			lines.addAll(linesPoints);
+
 			break;
 		case KOTH:
 
@@ -2766,5 +2793,51 @@ public class UtilsRandomEvents {
 		player.updateInventory();
 		plugin.getMatchActive().getPlayerHandler().getPlayersVanish().remove(player);
 
+	}
+
+	public static List<Block> getNearbyBlocks(Location location, int radius, List<MaterialData> datas, Boolean wool,
+			RandomEvents plugin) {
+		List<Block> blocks = new ArrayList<Block>();
+		for (int x = location.getBlockX() - radius; x <= location.getBlockX() + radius; x++) {
+			for (int y = location.getBlockY() - radius; y <= location.getBlockY() + radius; y++) {
+				for (int z = location.getBlockZ() - radius; z <= location.getBlockZ() + radius; z++) {
+					Location loc = new Location(location.getWorld(), x, y, z);
+					if (datas == null || (loc.getBlock() != null && loc.getBlock().getType() != null
+							&& (datas.contains(loc.getBlock().getState().getData())
+									|| (wool && loc.getBlock().getType().toString().toUpperCase().contains("WOOL"))))) {
+
+						blocks.add(loc.getBlock());
+					}
+				}
+			}
+		}
+		return blocks;
+	}
+
+	public static void reloadNameTag(Player p, RandomEvents plugin) {
+		System.out.println("Prueba");
+		if (plugin.getNametagHook() != null) {
+			System.out.println("Prueba1");
+			System.out.println(plugin.getNametagHook().getApi().getNametag(p).getPrefix());
+
+			System.out.println(plugin.getNametagHook().getApi().getNametag(p).getSuffix());
+
+			System.out.println(plugin.getNametagHook().getApi().getFakeTeam(p).getName());
+
+			System.out.println(plugin.getNametagHook().getApi().getFakeTeam(p).getPrefix());
+
+			System.out.println(plugin.getNametagHook().getApi().getFakeTeam(p).getSuffix());
+
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					plugin.getNametagHook().getApi().
+					plugin.getNametagHook().getApi().reloadNametag(p);
+					plugin.getNametagHook().getApi().applyTagToPlayer(p, false);
+					plugin.getNametagHook().getApi().
+				}
+			}.runTaskLaterAsynchronously(plugin, 20L);
+
+		}
 	}
 }

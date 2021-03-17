@@ -176,8 +176,8 @@ tntTagSpeedRunners: 3
 #Lvl of the speed for the holder of the tnt on tnttag
 tntTagSpeedHolder: 6
 
-#Hoehoehoe give default weapon so you dont need to put it in the kit
-hoeGiveDefaultWeapon: true
+#Paint games give default weapon so you dont need to put it in the kit
+paintGiveDefaultWeapon: true
 
 #Quake give default weapon so you dont need to put it in the kit
 quakeGiveDefaultWeapon: true
@@ -191,6 +191,12 @@ quakeShootCooldown: 1.5
 #Cooldown to make a jump on quake
 quakeJumpCooldown: 2.5
 
+#Number of blocks that are paint in the radius
+splatoonPaint: 10
+
+#Radios of blocks that are going to be painted on splatoon
+splatoonRadius: 2
+
 #Heal killer after a kill in OITC Minigame
 oitcHealAfterKill: true
 
@@ -199,6 +205,15 @@ topKillerHealAfterKill: true
 
 #Cooldown before respawning again in minigames with respawn
 cooldownAfterDeath: false
+
+#Cooldown before respawning again in minigames with respawn
+cooldownAfterDeathSeconds: 4
+
+#Splatoon Egg Damage
+splatoonEggDamage: 5
+
+#Activate private chat 
+matchPrivateMatch: false
 
 #Force the players to enter the random event when its spawned
 forcePlayersToEnter: false
@@ -242,6 +257,7 @@ spawn:
 #Use -1 to hide a stat in the GUI
 statsmenu:
   fill: 'STAINED_GLASS_PANE'
+  size: 54
   ALLTIME: 4
   BR: 10
   BRT2: 11
@@ -271,6 +287,8 @@ statsmenu:
   KOTH: 42
   FISHSLAP: 43
   HOE: 37
+  SPLATOON: 44
+  BOMBARDMENT: 49
 
 #Enable MySQL to have statistics of the games!
 mysql:

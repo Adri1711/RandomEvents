@@ -18,6 +18,7 @@ public class LanguageMessages {
 	private FileConfiguration fileConfig;
 	private RandomEvents plugin;
 
+	private String tagChat;
 	private String invalidInput;
 	private String error;
 	private String invalidCmd;
@@ -154,6 +155,7 @@ public class LanguageMessages {
 	private String scoreboardTeamDeath;
 	private String scoreboardTeam;
 	private String scoreboardPointsTeam;
+	private String scoreboardTeamPoints;
 
 	private String pvpDeath;
 	private String pvpKill;
@@ -225,6 +227,8 @@ public class LanguageMessages {
 	private List<String> minigameDescriptionKOTH;
 	private List<String> minigameDescriptionFISHSLAP;
 	private List<String> minigameDescriptionHOE;
+	private List<String> minigameDescriptionSPLATOON;
+	private List<String> minigameDescriptionBOMBARDMENT;
 
 	public LanguageMessages(RandomEvents plugin) {
 		this.file = new File(plugin.getDataFolder(), "messages.yml");
@@ -1737,6 +1741,14 @@ public class LanguageMessages {
 		this.itemReturnCheckpoint = itemReturnCheckpoint;
 	}
 
+	public String getScoreboardTeamPoints() {
+		return scoreboardTeamPoints.replaceAll("&", "§");
+	}
+
+	public void setScoreboardTeamPoints(String scoreboardTeamPoints) {
+		this.scoreboardTeamPoints = scoreboardTeamPoints;
+	}
+
 	public String getItemHidePlayer() {
 		return itemHidePlayer.replaceAll("&", "§");
 	}
@@ -1797,6 +1809,14 @@ public class LanguageMessages {
 		return scoreboardPointsTeam.replaceAll("&", "§");
 	}
 
+	public String getTagChat() {
+		return tagChat.replaceAll("&", "§");
+	}
+
+	public void setTagChat(String tagChat) {
+		this.tagChat = tagChat;
+	}
+
 	public void setScoreboardPointsTeam(String scoreboardPointsTeam) {
 		this.scoreboardPointsTeam = scoreboardPointsTeam;
 	}
@@ -1843,6 +1863,22 @@ public class LanguageMessages {
 
 	public void setMinigameDescriptionHOE(List<String> minigameDescriptionHOE) {
 		this.minigameDescriptionHOE = minigameDescriptionHOE;
+	}
+
+	public List<String> getMinigameDescriptionSPLATOON() {
+		return minigameDescriptionSPLATOON;
+	}
+
+	public void setMinigameDescriptionSPLATOON(List<String> minigameDescriptionSPLATOON) {
+		this.minigameDescriptionSPLATOON = minigameDescriptionSPLATOON;
+	}
+
+	public List<String> getMinigameDescriptionBOMBARDMENT() {
+		return minigameDescriptionBOMBARDMENT;
+	}
+
+	public void setMinigameDescriptionBOMBARDMENT(List<String> minigameDescriptionBOMBARDMENT) {
+		this.minigameDescriptionBOMBARDMENT = minigameDescriptionBOMBARDMENT;
 	}
 
 }

@@ -96,6 +96,7 @@ public class WeaponShoot implements Listener {
 										ev.setDamage(0);
 										break;
 									case ANVIL_SPLEEF:
+									case BOMBARDMENT:
 									case TNT_RUN:
 									case WDROP:
 									case SPLEEF:
@@ -256,6 +257,7 @@ public class WeaponShoot implements Listener {
 										break;
 									case QUAKECRAFT:
 									case HOEHOEHOE:
+									case SPLATOON:
 										ev.setCancelled(true);
 										break;
 									default:
@@ -317,6 +319,7 @@ public class WeaponShoot implements Listener {
 										}
 										break;
 									case ANVIL_SPLEEF:
+									case BOMBARDMENT:
 									case TNT_RUN:
 									case WDROP:
 									case SPLEEF:
@@ -361,6 +364,7 @@ public class WeaponShoot implements Listener {
 										break;
 									case QUAKECRAFT:
 									case HOEHOEHOE:
+									case SPLATOON:
 										ev.setCancelled(true);
 										break;
 
@@ -410,6 +414,7 @@ public class WeaponShoot implements Listener {
 							case PAINTBALL:
 							case ESCAPE_ARROW:
 							case ANVIL_SPLEEF:
+							case BOMBARDMENT:
 
 								UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
 								UtilsRandomEvents.mandaMensaje(plugin,
@@ -636,6 +641,7 @@ public class WeaponShoot implements Listener {
 								ev.setCancelled(true);
 								break;
 							case HOEHOEHOE:
+							case SPLATOON:
 							case QUAKECRAFT:
 								ev.setCancelled(true);
 								break;
@@ -722,6 +728,7 @@ public class WeaponShoot implements Listener {
 							case TOP_KILLER:
 							case TOP_KILLER_TEAM_2:
 							case ANVIL_SPLEEF:
+							case BOMBARDMENT:
 							case ESCAPE_FROM_BEAST:
 							case KOTH:
 								if (plugin.isHighestPriorityDamageEvents()) {
@@ -764,6 +771,7 @@ public class WeaponShoot implements Listener {
 								}
 								break;
 							case HOEHOEHOE:
+							case SPLATOON:
 							case QUAKECRAFT:
 								ev.setCancelled(true);
 								break;
