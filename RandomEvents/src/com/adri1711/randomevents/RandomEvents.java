@@ -389,16 +389,6 @@ public class RandomEvents extends JavaPlugin {
 			nametagHook = new NameTagHook(this);
 		}
 
-		if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
-			try {
-				new ReventPlaceholder(this).register();
-				System.out.println("[RandomEvents] PlaceholderAPI hooked succesfully!");
-
-			} catch (Exception e) {
-				System.out.println("[RandomEvents] PlaceholderAPI hook failed!");
-			}
-		}
-
 		getLogger().info(" Author adri1711- activado");
 		comienzaTemporizador();
 
@@ -754,6 +744,20 @@ public class RandomEvents extends JavaPlugin {
 
 		int pluginId = 8944;
 		Metrics metrics = new Metrics(this, pluginId);
+
+		try {
+			if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+				try {
+					new ReventPlaceholder(this).register();
+					System.out.println("[RandomEvents] PlaceholderAPI hooked succesfully!");
+
+				} catch (Exception e) {
+					System.out.println("[RandomEvents] PlaceholderAPI hook failed!");
+				}
+			}
+		} catch (Throwable e) {
+
+		}
 
 	}
 
