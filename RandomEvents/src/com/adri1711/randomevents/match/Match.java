@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
 import com.adri1711.randomevents.match.enums.MinigameType;
@@ -65,6 +66,8 @@ public class Match implements Comparable<Match> {
 	private Boolean enabled;
 	
 	private Integer numberOfTeams;
+	
+	private ItemStack head;
 
 	public Match() {
 		super();
@@ -452,6 +455,16 @@ public class Match implements Comparable<Match> {
 	public void setNumberOfTeams(Integer numberOfTeams) {
 		this.numberOfTeams = numberOfTeams;
 	}
+
+	public ItemStack getHead() {
+		return head;
+	}
+
+	public void setHead(ItemStack head) {
+		this.head = head;
+	}
+
+	
 	
 
 }

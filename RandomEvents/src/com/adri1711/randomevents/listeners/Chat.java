@@ -767,6 +767,19 @@ public class Chat implements Listener {
 						}
 
 						break;
+					case TNT_TAG_HEAD:
+						if (message.equals(Constantes.DONE)) {
+
+							match.setHead(player.getItemInHand());
+
+							plugin.getPlayersCreation().remove(player.getName());
+
+							// actualiza =
+							// UtilsRandomEvents.pasaACreation(plugin,
+							// player, position + 1, match);
+						}
+						break;
+						
 					case INVENTORY_BEAST:
 						if (message.equals(Constantes.DONE)) {
 
@@ -1273,6 +1286,9 @@ public class Chat implements Listener {
 								break;
 							case INVENTORY_BEAST:
 								match.setInventoryBeast(null);
+								break;
+							case TNT_TAG_HEAD:
+								match.setHead(null);
 								break;
 							case INVENTORY_RUNNERS:
 								match.setInventoryRunners(null);

@@ -335,8 +335,20 @@ public class RandomEvents extends JavaPlugin {
 	private Scoreboard colorBoard;
 
 	private boolean matchPrivateMatch;
-	
+
 	private NameTagHook nametagHook;
+
+	private boolean equilibrateTeams;
+
+	private boolean forceNonEmptyTeams;
+
+	private ItemStack kitsItem;
+
+	private ItemStack teamItem;
+
+	private int minNumberOfTriesBeforeBeginning;
+
+	private List<String> commandsOnEventFire;
 
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
@@ -372,9 +384,9 @@ public class RandomEvents extends JavaPlugin {
 			System.out.println("[RandomEvents] CrackShot hooked succesfully!");
 
 		}
-		
+
 		if (getServer().getPluginManager().getPlugin("NametagEdit") != null) {
-			nametagHook=new NameTagHook(this);
+			nametagHook = new NameTagHook(this);
 		}
 
 		if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
@@ -418,9 +430,9 @@ public class RandomEvents extends JavaPlugin {
 			}
 
 		}, 1200);
-		
+
 		ScoreboardManager manager = Bukkit.getScoreboardManager();
-        colorBoard = manager.getMainScoreboard();
+		colorBoard = manager.getMainScoreboard();
 
 	}
 
@@ -475,6 +487,8 @@ public class RandomEvents extends JavaPlugin {
 		this.inventoryManagement = getConfig().getBoolean("inventoryManagement");
 		this.dropItemsAfterDie = getConfig().getBoolean("dropItemsAfterDie");
 		this.advancedSpectatorMode = getConfig().getBoolean("advancedSpectatorMode");
+
+		this.commandsOnEventFire = (List<String>) getConfig().getStringList("commandsOnEventFire");
 		this.commandsOnUserJoin = (List<String>) getConfig().getStringList("commandsOnUserJoin");
 		this.commandsOnMatchBegin = (List<String>) getConfig().getStringList("commandsOnMatchBegin");
 		this.commandsOnMatchEnd = (List<String>) getConfig().getStringList("commandsOnMatchEnd");
@@ -486,12 +500,14 @@ public class RandomEvents extends JavaPlugin {
 		this.quakeGiveDefaultWeapon = getConfig().getBoolean("quakeGiveDefaultWeapon");
 		this.paintGiveDefaultWeapon = getConfig().getBoolean("paintGiveDefaultWeapon");
 		this.matchPrivateMatch = getConfig().getBoolean("matchPrivateMatch");
-		
-		
+
+		this.equilibrateTeams = getConfig().getBoolean("equilibrateTeams");
+		this.forceNonEmptyTeams = getConfig().getBoolean("forceNonEmptyTeams");
 
 		this.quakeShootCooldown = getConfig().getDouble("quakeShootCooldown");
 		this.quakeJumpCooldown = getConfig().getDouble("quakeJumpCooldown");
 		this.quakeShootDistance = getConfig().getInt("quakeShootDistance");
+		this.minNumberOfTriesBeforeBeginning = getConfig().getInt("minNumberOfTriesBeforeBeginning");
 		this.splatoonPaint = getConfig().getInt("splatoonPaint");
 		this.splatoonRadius = getConfig().getInt("splatoonRadius");
 		this.cooldownAfterDeathSeconds = getConfig().getInt("cooldownAfterDeathSeconds");
@@ -725,6 +741,16 @@ public class RandomEvents extends JavaPlugin {
 		this.mysqlPassword = getConfig().getString("mysql.password");
 		this.mysqlPort = getConfig().getInt("mysql.port");
 		this.mysqlMaxLifeTime = getConfig().getInt("mysql.maxLifeTime");
+
+		kitsItem = XMaterial.CHEST.parseItem();
+		ItemMeta kitsMeta = kitsItem.getItemMeta();
+		kitsMeta.setDisplayName(getLanguage().getKitItemName());
+		kitsItem.setItemMeta(kitsMeta);
+
+		teamItem = XMaterial.WHITE_TERRACOTTA.parseItem();
+		ItemMeta teamMeta = teamItem.getItemMeta();
+		teamMeta.setDisplayName(getLanguage().getTeamItemName());
+		teamItem.setItemMeta(teamMeta);
 
 		int pluginId = 8944;
 		Metrics metrics = new Metrics(this, pluginId);
@@ -2064,7 +2090,53 @@ public class RandomEvents extends JavaPlugin {
 	public void setNametagHook(NameTagHook nametagHook) {
 		this.nametagHook = nametagHook;
 	}
-	
-	
+
+	public boolean isEquilibrateTeams() {
+		return equilibrateTeams;
+	}
+
+	public void setEquilibrateTeams(boolean equilibrateTeams) {
+		this.equilibrateTeams = equilibrateTeams;
+	}
+
+	public boolean isForceNonEmptyTeams() {
+		return forceNonEmptyTeams;
+	}
+
+	public void setForceNonEmptyTeams(boolean forceNonEmptyTeams) {
+		this.forceNonEmptyTeams = forceNonEmptyTeams;
+	}
+
+	public ItemStack getKitsItem() {
+		return kitsItem;
+	}
+
+	public void setKitsItem(ItemStack kitsItem) {
+		this.kitsItem = kitsItem;
+	}
+
+	public ItemStack getTeamItem() {
+		return teamItem;
+	}
+
+	public void setTeamItem(ItemStack teamItem) {
+		this.teamItem = teamItem;
+	}
+
+	public int getMinNumberOfTriesBeforeBeginning() {
+		return minNumberOfTriesBeforeBeginning;
+	}
+
+	public void setMinNumberOfTriesBeforeBeginning(int minNumberOfTriesBeforeBeginning) {
+		this.minNumberOfTriesBeforeBeginning = minNumberOfTriesBeforeBeginning;
+	}
+
+	public List<String> getCommandsOnEventFire() {
+		return commandsOnEventFire;
+	}
+
+	public void setCommandsOnEventFire(List<String> commandsOnEventFire) {
+		this.commandsOnEventFire = commandsOnEventFire;
+	}
 
 }

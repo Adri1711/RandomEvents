@@ -471,6 +471,16 @@ public class UtilsRandomEvents {
 				inventario.setLeggings(player.getInventory().getLeggings());
 				inventario.setChestplate(player.getInventory().getChestplate());
 
+				try {
+					Method method = player.getInventory().getClass().getDeclaredMethod("getItemInOffHand");
+					Object item = method.invoke(player.getInventory());
+					if (item != null && item instanceof ItemStack) {
+						ItemStack itemS = (ItemStack) item;
+						inventario.setItemOffHand(itemS);
+					}
+				} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+						| InvocationTargetException e) {
+				}
 				if (plugin.getUseLastLocation()) {
 					inventario.setLastLocation(player.getLocation());
 				}
@@ -486,9 +496,9 @@ public class UtilsRandomEvents {
 					if (!bossFile.exists()) {
 						bossFile.createNewFile();
 
-						FileWriter fw = new FileWriter(bossFile, true);
-
-						PrintWriter pw = new PrintWriter(fw);
+						OutputStream os = new FileOutputStream(bossFile, true);
+						PrintWriter pw = null;
+						pw = new PrintWriter(new OutputStreamWriter(os, Charset.forName(plugin.getUseEncoding())));
 
 						pw.println(json);
 
@@ -540,10 +550,13 @@ public class UtilsRandomEvents {
 			InventoryPers inventario = null;
 			if (bossFile.exists()) {
 				BufferedReader br = null;
-				FileReader fr = null;
+				FileInputStream fr = null;
 				try {
-					fr = new FileReader(bossFile);
-					br = new BufferedReader(fr);
+					fr = new FileInputStream(bossFile);
+					Charset sc = Charset.forName(plugin.getUseEncoding());
+
+					br = new BufferedReader(new InputStreamReader(fr, sc));
+
 					try {
 
 						inventario = UtilidadesJson.fromJSONToInventory(plugin, br);
@@ -594,6 +607,16 @@ public class UtilsRandomEvents {
 						player.getInventory().setLeggings(inventario.getLeggings());
 						player.getInventory().setBoots(inventario.getBoots());
 						player.getInventory().setChestplate(inventario.getChestplate());
+
+						try {
+							Method method = player.getInventory().getClass().getDeclaredMethod("setItemInOffHand",
+									ItemStack.class);
+							method.invoke(player.getInventory(), inventario.getItemOffHand());
+
+						} catch (NoSuchMethodException | SecurityException | IllegalAccessException
+								| IllegalArgumentException | InvocationTargetException e) {
+
+						}
 
 						player.updateInventory();
 
@@ -1771,6 +1794,12 @@ public class UtilsRandomEvents {
 							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9Inventory completed";
 						}
 						break;
+					case TNT_TAG_HEAD:
+						if (match.getHead() != null) {
+
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9Head set";
+						}
+						break;
 					case INVENTORY_RUNNERS:
 						if (match.getInventoryRunners() != null) {
 
@@ -1939,6 +1968,7 @@ public class UtilsRandomEvents {
 					res = Boolean.FALSE;
 				}
 				break;
+
 			case INVENTORY_RUNNERS:
 				if (match.getInventoryRunners() == null) {
 
@@ -2728,6 +2758,44 @@ public class UtilsRandomEvents {
 		return inv;
 	}
 
+	public static Inventory createGUITeams(Player p, Integer page, RandomEvents plugin, MatchActive matchActive) {
+
+		Inventory inv = Bukkit.createInventory(null, 9, plugin.getLanguage().getTeamGuiName());
+
+		if (matchActive != null) {
+			Match match = matchActive.getMatch();
+
+			for (int i = 0; i < match.getNumberOfTeams(); i++) {
+				Petos peto = Petos.getPeto(i);
+				ItemStack cabeza = peto.getClayItem();
+				ItemMeta cabezaMeta = cabeza.getItemMeta();
+
+				cabezaMeta.setDisplayName(peto.getChatColor() + peto.getName());
+				List<String> lore = new ArrayList<String>();
+
+				List<Player> players = new ArrayList<Player>();
+
+				if (matchActive.getPlayerHandler().getEquipos().containsKey(i)) {
+					players.addAll(matchActive.getPlayerHandler().getEquipos().get(i));
+				}
+
+				for (Player pla : players) {
+					lore.add(ChatColor.YELLOW + "" + ChatColor.BOLD + pla.getName());
+				}
+
+				cabezaMeta.setLore(lore);
+
+				cabezaMeta.getItemFlags().add(ItemFlag.HIDE_ATTRIBUTES);
+				cabezaMeta.getItemFlags().add(ItemFlag.HIDE_POTION_EFFECTS);
+				cabezaMeta.getItemFlags().add(ItemFlag.HIDE_ENCHANTS);
+				cabeza.setItemMeta(cabezaMeta);
+				inv.setItem(i, cabeza);
+			}
+
+		}
+		return inv;
+	}
+
 	private static Integer sizeGUIKits(List<Kit> kitsAvailable) {
 		Integer size = kitsAvailable.size();
 		if (size > 45) {
@@ -2814,30 +2882,48 @@ public class UtilsRandomEvents {
 		return blocks;
 	}
 
-	public static void reloadNameTag(Player p, RandomEvents plugin) {
-		System.out.println("Prueba");
-		if (plugin.getNametagHook() != null) {
-			System.out.println("Prueba1");
-			System.out.println(plugin.getNametagHook().getApi().getNametag(p).getPrefix());
-
-			System.out.println(plugin.getNametagHook().getApi().getNametag(p).getSuffix());
-
-			System.out.println(plugin.getNametagHook().getApi().getFakeTeam(p).getName());
-
-			System.out.println(plugin.getNametagHook().getApi().getFakeTeam(p).getPrefix());
-
-			System.out.println(plugin.getNametagHook().getApi().getFakeTeam(p).getSuffix());
-
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					plugin.getNametagHook().getApi().
-					plugin.getNametagHook().getApi().reloadNametag(p);
-					plugin.getNametagHook().getApi().applyTagToPlayer(p, false);
-					plugin.getNametagHook().getApi().
+	public static Integer getTeamLessPlayers(RandomEvents plugin, MatchActive matchActive,
+			Map<Integer, Set<Player>> teams, Integer numberOfTeams) {
+		List<Integer> teamsToSee = new ArrayList<Integer>();
+		if ((plugin.isEquilibrateTeams() && plugin.isForceNonEmptyTeams()) || matchActive.teamsWithPlayers() < 2) {
+			for (int i = 0; i < numberOfTeams; i++) {
+				teamsToSee.add(i);
+			}
+		} else {
+			teamsToSee.addAll(teams.keySet());
+		}
+		Integer max = 9999;
+		Integer res = 0;
+		for (Integer team : teamsToSee) {
+			if (!teams.containsKey(team)) {
+				if (max > 0) {
+					res = team;
+					max = 0;
 				}
-			}.runTaskLaterAsynchronously(plugin, 20L);
+			} else {
+				if (max > teams.get(team).size()) {
+					max = teams.get(team).size();
+					res = team;
+				}
+			}
+		}
+		return res;
+	}
+
+	public static Integer getTeamMorePlayers(RandomEvents plugin, Map<Integer, Set<Player>> teams) {
+
+		Integer max = 0;
+		Integer res = 0;
+		for (Integer team : teams.keySet()) {
+
+			if (max < teams.get(team).size()) {
+				max = teams.get(team).size();
+				res = team;
+			}
 
 		}
+		return res;
+
 	}
+
 }

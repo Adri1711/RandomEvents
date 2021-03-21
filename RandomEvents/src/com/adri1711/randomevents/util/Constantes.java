@@ -419,10 +419,14 @@ public class Constantes {
 		ITEM_SHOW_PLAYER("itemShowPlayer", "item.showPlayer", "&2&lShow players"),
 
 		KIT_GUI_NAME("kitGuiName", "kit.guiName", "&6&lKits"),
+		
+		TEAM_GUI_NAME("teamGuiName", "team.guiName", "&6&lTeams"),
 
 		KIT_CHOSEN("kitChosen", "kit.chosen", "&6&lYou chosed %kit_name%"),
 
 		KIT_ITEM_NAME("kitItemName", "kit.itemName", "&6&lKits"),
+		
+		TEAM_ITEM_NAME("teamItemName", "team.itemName", "&6&lTeam"),
 
 		KIT_DEFAULT_NAME("kitDefaultName", "kit.defaultName", "&6&lKit: %kit_name%"),
 

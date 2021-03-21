@@ -20,6 +20,7 @@ public class InventoryPers {
 	private ItemStack leggings;
 	private ItemStack boots;
 
+	private ItemStack itemOffHand;
 	private Location lastLocation;
 
 	public InventoryPers() {
@@ -87,7 +88,7 @@ public class InventoryPers {
 		return totalExp;
 	}
 
-	public void setTotalExp(float  f) {
+	public void setTotalExp(float f) {
 		this.totalExp = f;
 	}
 
@@ -99,10 +100,20 @@ public class InventoryPers {
 		this.level = level;
 	}
 
+	public ItemStack getItemOffHand() {
+		return itemOffHand;
+	}
+
+	public void setItemOffHand(ItemStack itemOffHand) {
+		this.itemOffHand = itemOffHand;
+	}
+
 	@Override
 	public String toString() {
-		return "InventoryPers [contents=" + Arrays.toString(contents) + ", helmet=" + helmet + ", chestplate="
-				+ chestplate + ", leggings=" + leggings + ", boots=" + boots + ", lastLocation=" + lastLocation + "]";
+		return "InventoryPers [gamemode=" + gamemode + ", contents=" + Arrays.toString(contents) + ", totalExp="
+				+ totalExp + ", level=" + level + ", helmet=" + helmet + ", chestplate=" + chestplate + ", leggings="
+				+ leggings + ", boots=" + boots + ", itemOffHand=" + itemOffHand + ", lastLocation=" + lastLocation
+				+ "]";
 	}
 
 	@Override
@@ -112,9 +123,13 @@ public class InventoryPers {
 		result = prime * result + ((boots == null) ? 0 : boots.hashCode());
 		result = prime * result + ((chestplate == null) ? 0 : chestplate.hashCode());
 		result = prime * result + Arrays.hashCode(contents);
+		result = prime * result + ((gamemode == null) ? 0 : gamemode.hashCode());
 		result = prime * result + ((helmet == null) ? 0 : helmet.hashCode());
+		result = prime * result + ((itemOffHand == null) ? 0 : itemOffHand.hashCode());
 		result = prime * result + ((lastLocation == null) ? 0 : lastLocation.hashCode());
 		result = prime * result + ((leggings == null) ? 0 : leggings.hashCode());
+		result = prime * result + level;
+		result = prime * result + Float.floatToIntBits(totalExp);
 		return result;
 	}
 
@@ -139,10 +154,20 @@ public class InventoryPers {
 			return false;
 		if (!Arrays.equals(contents, other.contents))
 			return false;
+		if (gamemode == null) {
+			if (other.gamemode != null)
+				return false;
+		} else if (!gamemode.equals(other.gamemode))
+			return false;
 		if (helmet == null) {
 			if (other.helmet != null)
 				return false;
 		} else if (!helmet.equals(other.helmet))
+			return false;
+		if (itemOffHand == null) {
+			if (other.itemOffHand != null)
+				return false;
+		} else if (!itemOffHand.equals(other.itemOffHand))
 			return false;
 		if (lastLocation == null) {
 			if (other.lastLocation != null)
@@ -153,6 +178,10 @@ public class InventoryPers {
 			if (other.leggings != null)
 				return false;
 		} else if (!leggings.equals(other.leggings))
+			return false;
+		if (level != other.level)
+			return false;
+		if (Float.floatToIntBits(totalExp) != Float.floatToIntBits(other.totalExp))
 			return false;
 		return true;
 	}

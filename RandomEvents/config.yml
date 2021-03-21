@@ -18,6 +18,9 @@ secondsCheckPlayers: 15
 #Minimum amount of players to begin checking for random events
 minPlayers: 40
 
+#Minimum time to begin the match if the min players are already inside
+minNumberOfTriesBeforeBeginning: 0
+
 # Percentage of probability to spawn a random event each time the timer is fired
 probabilityRandomEvent: 5
 
@@ -220,6 +223,15 @@ forcePlayersToEnter: false
 
 #Force the players to enter the random event spectating ( It will works only if forcePlayersToEnter is enabled )
 forcePlayersToSpectate: false
+
+#Equilibrate teams
+equilibrateTeams: true
+
+#Force non empty teams. Only works if  equilibrateTeams is enabled
+forceNonEmptyTeams: true
+
+#Commands that will be done each time a RandomEvent is fired
+commandsOnEventFire: []
 
 #Commands that will be done each time a user join a random event, use it in case you need to get the god mode off, to set the gamemode to survival, etc
 commandsOnUserJoin:

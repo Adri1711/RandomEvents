@@ -36,7 +36,7 @@ public class MatchPlayerHandler {
 
 	private Map<Player, Long> playersContadores;
 
-	private Map<Player, String> playersPrefix;
+	private Map<String, String> playersPrefix;
 
 	private Map<String, FastBoard> scoreboards;
 	private Map<String, Scoreboard> oldScoreboards;
@@ -56,7 +56,7 @@ public class MatchPlayerHandler {
 	public MatchPlayerHandler() {
 		this.players = new ArrayList<String>();
 		this.playersTotal = new ArrayList<String>();
-		this.playersPrefix = new HashMap<Player, String>();
+		this.playersPrefix = new HashMap<String, String>();
 		this.playersObj = new ArrayList<Player>();
 		this.playersTotalObj = new ArrayList<Player>();
 		this.playersGanadores = new ArrayList<Player>();
@@ -84,7 +84,7 @@ public class MatchPlayerHandler {
 		this.playersSpectators = playersSpectators;
 		this.playersVanish = new ArrayList<Player>();
 		this.paintPlayers = new HashSet<Player>();
-		this.playersPrefix = new HashMap<Player, String>();
+		this.playersPrefix = new HashMap<String, String>();
 
 		this.equipos = new HashMap<Integer, Set<Player>>();
 		this.teamsCopy = new HashMap<Integer, Set<Player>>();
@@ -242,11 +242,11 @@ public class MatchPlayerHandler {
 		this.paintedLocations = paintedLocations;
 	}
 
-	public Map<Player, String> getPlayersPrefix() {
+	public Map<String, String> getPlayersPrefix() {
 		return playersPrefix;
 	}
 
-	public void setPlayersPrefix(Map<Player, String> playersPrefix) {
+	public void setPlayersPrefix(Map<String, String> playersPrefix) {
 		this.playersPrefix = playersPrefix;
 	}
 	

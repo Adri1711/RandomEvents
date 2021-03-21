@@ -5,6 +5,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.match.WaterDropStepActive;
@@ -19,6 +21,19 @@ public class Move implements Listener {
 	public Move(RandomEvents plugin) {
 		super();
 		this.plugin = plugin;
+	}
+
+	@EventHandler
+	public void onTp(PlayerTeleportEvent evt) {
+		if (evt.getCause() == TeleportCause.SPECTATE) {
+			if (evt.getPlayer() != null) {
+				Player p = evt.getPlayer();
+				if (plugin.getMatchActive() != null
+						&& plugin.getMatchActive().getPlayerHandler().getPlayersSpectators().contains(p)) {
+					evt.setCancelled(true);
+				}
+			}
+		}
 	}
 
 	@EventHandler

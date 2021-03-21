@@ -141,6 +141,7 @@ public class LanguageMessages {
 
 	private String statsGuiName;
 	private String creditsGuiName;
+	private String teamGuiName;
 
 	private String scoreboardTitle;
 	private String scoreboardPoints;
@@ -185,6 +186,8 @@ public class LanguageMessages {
 	private String creditsEventRunning;
 
 	private String guiCMD;
+
+	private String teamItemName;
 
 	private String creditsGuiPage;
 
@@ -1879,6 +1882,22 @@ public class LanguageMessages {
 
 	public void setMinigameDescriptionBOMBARDMENT(List<String> minigameDescriptionBOMBARDMENT) {
 		this.minigameDescriptionBOMBARDMENT = minigameDescriptionBOMBARDMENT;
+	}
+
+	public String getTeamItemName() {
+		return teamItemName.replaceAll("&", "§");
+	}
+
+	public void setTeamItemName(String teamItemName) {
+		this.teamItemName = teamItemName;
+	}
+
+	public String getTeamGuiName() {
+		return teamGuiName.replaceAll("&", "§");
+	}
+
+	public void setTeamGuiName(String teamGuiName) {
+		this.teamGuiName = teamGuiName;
 	}
 
 }

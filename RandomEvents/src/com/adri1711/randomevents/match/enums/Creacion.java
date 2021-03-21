@@ -125,6 +125,10 @@ public enum Creacion {
 	CANNON_SPAWNS(46,
 			"§6§lGo to the arena you created and write 'Done' to set each spawn location for cannons or 'Next' to stop. ",
 			"BOMBARDMENT"),
+	
+	TNT_TAG_HEAD(47,
+			"§6§lTake the item to put in the head and say 'Done'. ",
+			"BOMB"),
 
 	SAVE(997, "§6§lYou are about to save a Random Event, put 'Y' to confirm or 'N' to continue creating",
 			"ALLMINIGAMES"),

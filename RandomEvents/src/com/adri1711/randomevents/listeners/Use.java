@@ -10,6 +10,7 @@ import java.util.Random;
 import java.util.Set;
 
 import org.bukkit.DyeColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -34,6 +35,7 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.MaterialData;
@@ -256,8 +258,10 @@ public class Use implements Listener {
 									for (Entity ent : entities) {
 										if (ent != null && ent instanceof Player) {
 											Player hitted = (Player) ent;
-											if (!hitted.getName().equals(player.getName()) && plugin.getMatchActive()
-													.getPlayerHandler().getPlayersObj().contains(hitted)) {
+											if (!hitted.getName().equals(player.getName())
+													&& plugin.getMatchActive().getPlayerHandler().getPlayersObj()
+															.contains(hitted)
+													&& hitted.getGameMode() != GameMode.SPECTATOR) {
 												hit = Boolean.TRUE;
 
 												Location pLoc = hitted.getLocation();
@@ -328,6 +332,12 @@ public class Use implements Listener {
 						evt.setCancelled(true);
 						player.openInventory(
 								UtilsRandomEvents.createGUIKits(player, 0, plugin, plugin.getMatchActive()));
+					} else if (player.getItemInHand().getItemMeta() != null
+							&& player.getItemInHand().getItemMeta().getDisplayName() != null && player.getItemInHand()
+									.getItemMeta().getDisplayName().equals(plugin.getLanguage().getTeamItemName())) {
+						evt.setCancelled(true);
+						player.openInventory(
+								UtilsRandomEvents.createGUITeams(player, 0, plugin, plugin.getMatchActive()));
 					}
 				}
 			}
@@ -622,6 +632,11 @@ public class Use implements Listener {
 							evt.getBlock().getState().getData().clone());
 					if (plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEEF)) {
 						evt.getBlock().setType(XMaterial.AIR.parseMaterial());
+						
+						if (plugin.isSnowballSpleef()) {
+							player.getInventory().addItem(XMaterial.SNOWBALL.parseItem());
+							player.updateInventory();
+						}
 
 					} else {
 						evt.getBlock().breakNaturally();
@@ -668,6 +683,16 @@ public class Use implements Listener {
 
 				}
 			}
+		}
+	}
+
+	@EventHandler
+	public void onPlayerDrop(PlayerDropItemEvent evt) {
+		Player player = evt.getPlayer();
+		if (plugin.getMatchActive() != null
+				&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())
+				&& !plugin.getMatchActive().getPlaying()) {
+			evt.setCancelled(true);
 		}
 	}
 

@@ -122,6 +122,8 @@ public class MatchActive {
 
 	private long checkDate;
 
+	private Boolean teams;
+
 	public MatchActive(Match match, RandomEvents plugin, Boolean forzada) {
 		super();
 		this.mapHandler = new MatchMapDataHandler();
@@ -189,6 +191,13 @@ public class MatchActive {
 		this.cooldownJump = new HashMap<Player, Long>();
 		this.cooldownShoot = new HashMap<Player, Long>();
 		counter = 0;
+		teams = Boolean.FALSE;
+
+		for (String cmd : plugin.getCommandsOnEventFire()) {
+
+			Bukkit.dispatchCommand((CommandSender) Bukkit.getConsoleSender(), cmd);
+
+		}
 
 		matchWaitingPlayers();
 	}
@@ -263,7 +272,7 @@ public class MatchActive {
 		}
 		this.cooldownJump = new HashMap<Player, Long>();
 		this.cooldownShoot = new HashMap<Player, Long>();
-
+		teams = Boolean.FALSE;
 		tries = 0;
 
 	}
@@ -332,15 +341,19 @@ public class MatchActive {
 				UtilsRandomEvents.playSound(player, XSound.ENTITY_BAT_HURT);
 				List<Kit> kits = UtilsRandomEvents.kitsAvailable(player, match.getKits(), plugin);
 				if (kits.size() > 1) {
-					ItemStack kitsItem = XMaterial.CHEST.parseItem();
-					ItemMeta kitsMeta = kitsItem.getItemMeta();
-					kitsMeta.setDisplayName(plugin.getLanguage().getKitItemName());
-					kitsItem.setItemMeta(kitsMeta);
-					player.getInventory().addItem(kitsItem);
+
+					player.getInventory().addItem(plugin.getKitsItem());
 					player.updateInventory();
 				} else if (kits.size() == 1) {
 					getPlayerHandler().getPlayerKits().put(player, kits.get(0));
 				}
+
+				if (match.getNumberOfTeams() != null && match.getNumberOfTeams() > 1) {
+
+					player.getInventory().addItem(plugin.getTeamItem());
+					player.updateInventory();
+				}
+
 			} else {
 				UtilsRandomEvents.sacaInventario(plugin, player);
 			}
@@ -710,7 +723,7 @@ public class MatchActive {
 		}
 	}
 
-	private int teamsWithPlayers() {
+	public int teamsWithPlayers() {
 		Integer i = 0;
 		for (Entry<Integer, Set<Player>> entrada : getPlayerHandler().getEquipos().entrySet()) {
 			if (entrada.getValue() != null && !entrada.getValue().isEmpty()) {
@@ -1089,15 +1102,17 @@ public class MatchActive {
 	}
 
 	public void unregisterTeam(Player p) {
-		if(plugin.getNametagHook()==null){
-		if (plugin.getColorBoard().getTeam(p.getName()) != null) {
-			plugin.getColorBoard().getTeam(p.getName()).unregister();
-		}
-		}else{
-			System.out.println("Probando");
-			//getPlayerHandler().getPlayersPrefix().put(p, plugin.getNametagHook().getApi().getNametag(p).getPrefix());
-			plugin.getNametagHook().getApi().setPrefix(p, getPlayerHandler().getPlayersPrefix().get(p));
-			
+		if (teams) {
+			if (plugin.getNametagHook() == null) {
+				if (plugin.getColorBoard().getTeam(p.getName()) != null) {
+					plugin.getColorBoard().getTeam(p.getName()).unregister();
+				}
+			} else {
+				// getPlayerHandler().getPlayersPrefix().put(p,
+				// plugin.getNametagHook().getApi().getNametag(p).getPrefix());
+				plugin.getNametagHook().getApi().setPrefix(p, getPlayerHandler().getPlayersPrefix().get(p.getName()));
+
+			}
 		}
 	}
 
@@ -1658,10 +1673,13 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
-
 			for (Player p : getPlayerHandler().getPlayersObj()) {
-				Integer indice = getPlayerHandler().getPlayersObj().indexOf(p);
-				sortTeams(p, indice);
+				sortTeams(p);
+			}
+
+			equilibrateTeams();
+			for (Player p : getPlayerHandler().getPlayersObj()) {
+
 				iniciaPlayerTeam(p);
 
 			}
@@ -1678,8 +1696,12 @@ public class MatchActive {
 			this.allowDamage = true;
 
 			for (Player p : getPlayerHandler().getPlayersObj()) {
-				Integer indice = getPlayerHandler().getPlayersObj().indexOf(p);
-				sortTeams(p, indice);
+				sortTeams(p);
+			}
+			equilibrateTeams();
+
+			for (Player p : getPlayerHandler().getPlayersObj()) {
+
 				iniciaPlayerTeam(p);
 				if (plugin.isPaintGiveDefaultWeapon()) {
 					p.getInventory().addItem(XMaterial.STONE_HOE.parseItem());
@@ -1949,18 +1971,61 @@ public class MatchActive {
 		}
 	}
 
-	private void sortTeams(Player p, Integer indice) {
-		Integer team = indice % getMatch().getNumberOfTeams();
-		if (!getPlayerHandler().getEquipos().containsKey(team)) {
-			Set<Player> players = new HashSet<Player>();
-			players.add(p);
-			getPlayerHandler().getEquipos().put(team, players);
-			getPlayerHandler().getTeamsCopy().put(team, players);
-		} else {
-			getPlayerHandler().getEquipos().get(team).add(p);
-			getPlayerHandler().getTeamsCopy().get(team).add(p);
-		}
+	private void sortTeams(Player p) {
 
+		Integer equipo = getEquipo(p);
+		if (equipo == null) {
+			Integer team = UtilsRandomEvents.getTeamLessPlayers(plugin, this, getPlayerHandler().getEquipos(),
+					getMatch().getNumberOfTeams());
+			if (!getPlayerHandler().getEquipos().containsKey(team)) {
+				Set<Player> players = new HashSet<Player>();
+				players.add(p);
+				getPlayerHandler().getEquipos().put(team, players);
+				getPlayerHandler().getTeamsCopy().put(team, players);
+			} else {
+				getPlayerHandler().getEquipos().get(team).add(p);
+				getPlayerHandler().getTeamsCopy().get(team).add(p);
+			}
+		}
+	}
+
+	private void equilibrateTeams() {
+		if (plugin.isEquilibrateTeams() || (teamsWithPlayers() < 2)) {
+			Integer numberOfTeams = getMatch().getNumberOfTeams();
+			Integer minTeam = UtilsRandomEvents.getTeamLessPlayers(plugin, this, getPlayerHandler().getEquipos(),
+					numberOfTeams);
+			Integer maxTeam = UtilsRandomEvents.getTeamMorePlayers(plugin, getPlayerHandler().getEquipos());
+			Integer min = getPlayerHandler().getEquipos().containsKey(minTeam)
+					? getPlayerHandler().getEquipos().get(minTeam).size() : 0;
+			Integer max = getPlayerHandler().getEquipos().containsKey(maxTeam)
+					? getPlayerHandler().getEquipos().get(maxTeam).size() : 0;
+
+			while ((max - min) > 1) {
+				Player fuera = null;
+				for (Player p : getPlayerHandler().getEquipos().get(maxTeam)) {
+					fuera = p;
+				}
+				if (fuera != null) {
+					getPlayerHandler().getEquipos().get(maxTeam).remove(fuera);
+					if (getPlayerHandler().getEquipos().containsKey(minTeam)) {
+						getPlayerHandler().getEquipos().get(minTeam).add(fuera);
+					} else {
+						getPlayerHandler().getEquipos().put(minTeam, new HashSet<Player>());
+						getPlayerHandler().getEquipos().get(minTeam).add(fuera);
+
+					}
+
+				}
+
+				minTeam = UtilsRandomEvents.getTeamLessPlayers(plugin, this, getPlayerHandler().getEquipos(),
+						numberOfTeams);
+				maxTeam = UtilsRandomEvents.getTeamMorePlayers(plugin, getPlayerHandler().getEquipos());
+				min = getPlayerHandler().getEquipos().containsKey(minTeam)
+						? getPlayerHandler().getEquipos().get(minTeam).size() : 0;
+				max = getPlayerHandler().getEquipos().containsKey(maxTeam)
+						? getPlayerHandler().getEquipos().get(maxTeam).size() : 0;
+			}
+		}
 	}
 
 	private void checkCooldowns() {
@@ -2548,6 +2613,7 @@ public class MatchActive {
 	}
 
 	private void crearTeam(Player p) {
+		teams = Boolean.TRUE;
 		if (plugin.getNametagHook() == null) {
 			if (plugin.getColorBoard().getTeam(p.getName()) != null) {
 				plugin.getColorBoard().getTeam(p.getName()).unregister();
@@ -2558,9 +2624,10 @@ public class MatchActive {
 			t.setPrefix(Petos.getPeto(getEquipo(p)).getChatColor() + "");
 			t.addEntry(p.getName());
 		} else {
-			getPlayerHandler().getPlayersPrefix().put(p, plugin.getNametagHook().getApi().getNametag(p).getPrefix());
+			getPlayerHandler().getPlayersPrefix().put(p.getName(),
+					plugin.getNametagHook().getApi().getNametag(p).getPrefix());
 			plugin.getNametagHook().getApi().setPrefix(p, "" + Petos.getPeto(getEquipo(p)).getChatColor() + "");
-			
+
 		}
 
 	}
@@ -2638,12 +2705,16 @@ public class MatchActive {
 				compruebaPartida();
 			}
 			if (plugin.isCooldownAfterDeath()) {
+				p.getInventory().clear();
+				p.updateInventory();
 				p.setGameMode(GameMode.SPECTATOR);
 				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 
 					@Override
 					public void run() {
-						reiniciaGemCrawler(p);
+						if (getPlayerHandler().getPlayersObj().contains(p) && getPlaying()) {
+							reiniciaGemCrawler(p);
+						}
 					}
 
 				}, 20L * plugin.getCooldownAfterDeathSeconds());
@@ -2664,15 +2735,20 @@ public class MatchActive {
 			dropItems(p);
 
 			if (plugin.isCooldownAfterDeath()) {
+				p.getInventory().clear();
+				p.updateInventory();
 				p.setGameMode(GameMode.SPECTATOR);
 				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 
 					@Override
 					public void run() {
-						reiniciaDefault(p);
-						if (plugin.isQuakeGiveDefaultWeapon()) {
-							p.getInventory().addItem(XMaterial.STONE_HOE.parseItem());
-							p.updateInventory();
+						if (getPlayerHandler().getPlayersObj().contains(p) && getPlaying()) {
+
+							reiniciaDefault(p);
+							if (plugin.isQuakeGiveDefaultWeapon()) {
+								p.getInventory().addItem(XMaterial.STONE_HOE.parseItem());
+								p.updateInventory();
+							}
 						}
 					}
 
@@ -2690,24 +2766,31 @@ public class MatchActive {
 			dropItems(p);
 
 			if (plugin.isCooldownAfterDeath()) {
+				p.getInventory().clear();
+				p.updateInventory();
 				p.setGameMode(GameMode.SPECTATOR);
 				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 
 					@Override
 					public void run() {
-						reiniciaDefault(p);
-						p.getInventory().setChestplate(Petos.getPeto(getEquipo(p)).getPeto());
-						if (plugin.isQuakeGiveDefaultWeapon()) {
-							p.getInventory().addItem(XMaterial.STONE_HOE.parseItem());
+						if (getPlayerHandler().getPlayersObj().contains(p) && getPlaying()) {
 
+							reiniciaDefault(p);
+							if (getEquipo(p) != null)
+								p.getInventory().setChestplate(Petos.getPeto(getEquipo(p)).getPeto());
+							if (plugin.isQuakeGiveDefaultWeapon()) {
+								p.getInventory().addItem(XMaterial.STONE_HOE.parseItem());
+
+							}
+							p.updateInventory();
 						}
-						p.updateInventory();
 					}
 
 				}, 20L * plugin.getCooldownAfterDeathSeconds());
 			} else {
 				reiniciaDefault(p);
-				p.getInventory().setChestplate(Petos.getPeto(getEquipo(p)).getPeto());
+				if (getEquipo(p) != null)
+					p.getInventory().setChestplate(Petos.getPeto(getEquipo(p)).getPeto());
 				if (plugin.isQuakeGiveDefaultWeapon()) {
 					p.getInventory().addItem(XMaterial.STONE_HOE.parseItem());
 
@@ -2721,12 +2804,17 @@ public class MatchActive {
 			dropItems(p);
 
 			if (plugin.isCooldownAfterDeath()) {
+				p.getInventory().clear();
+				p.updateInventory();
 				p.setGameMode(GameMode.SPECTATOR);
 				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 
 					@Override
 					public void run() {
-						reiniciaDefault(p);
+						if (getPlayerHandler().getPlayersObj().contains(p) && getPlaying()) {
+
+							reiniciaDefault(p);
+						}
 					}
 
 				}, 20L * plugin.getCooldownAfterDeathSeconds());
@@ -2851,7 +2939,12 @@ public class MatchActive {
 				p.getInventory().setBoots(inventory.getBoots());
 				p.getInventory().setChestplate(inventory.getChestplate());
 				if (match.getMinigame().equals(MinigameType.BOMB_TAG)) {
-					p.getInventory().setHelmet(XMaterial.TNT.parseItem());
+					if (match.getHead() != null) {
+						p.getInventory().setHelmet(match.getHead());
+
+					} else {
+						p.getInventory().setHelmet(XMaterial.TNT.parseItem());
+					}
 				}
 			}
 			p.setGameMode(GameMode.SURVIVAL);
@@ -2940,7 +3033,8 @@ public class MatchActive {
 					tries++;
 					Boolean playSound = Boolean.FALSE;
 
-					if (match.getAmountPlayersMin() <= (getPlayerHandler().getPlayers().size())) {
+					if (tries > plugin.getMinNumberOfTriesBeforeBeginning()
+							&& match.getAmountPlayersMin() <= (getPlayerHandler().getPlayers().size())) {
 						if (!getPlaying()) {
 							Integer startTime = plugin.getSecondsToStartMatch() + 3;
 							String startingMatch = plugin.getLanguage().getStartingMatch().replaceAll("%time%",
@@ -3069,7 +3163,8 @@ public class MatchActive {
 						tries++;
 						Boolean playSound = Boolean.FALSE;
 
-						if (match.getAmountPlayersMin() <= (getPlayerHandler().getPlayers().size())) {
+						if (tries > plugin.getMinNumberOfTriesBeforeBeginning()
+								&& match.getAmountPlayersMin() <= (getPlayerHandler().getPlayers().size())) {
 							if (!getPlaying()) {
 								Integer startTime = plugin.getSecondsToStartMatch() + 3;
 								String startingMatch = plugin.getLanguage().getStartingMatch().replaceAll("%time%",
@@ -3378,6 +3473,34 @@ public class MatchActive {
 			UtilsRandomEvents.playSound(player, XSound.ENTITY_PLAYER_LEVELUP);
 			updateScoreboards();
 		}
+	}
+
+	public void updateTeamItem(Player p) {
+		ItemStack teamItem = null;
+		for (ItemStack item : p.getInventory().getContents()) {
+			if (item != null && item.hasItemMeta() && item.getItemMeta().getDisplayName() != null
+					&& item.getItemMeta().getDisplayName().equals(plugin.getLanguage().getTeamItemName())) {
+				teamItem = item;
+			}
+		}
+		if (teamItem != null) {
+			Integer pos = p.getInventory().first(teamItem);
+			if (pos >= 0) {
+				Petos peto = Petos.getPeto(getEquipo(p));
+				if (peto != null) {
+					teamItem.setType(peto.getClay().parseMaterial());
+					try {
+						teamItem.setDurability(peto.getDye().getWoolData());
+						teamItem.getData().setData(peto.getDye().getWoolData());
+					} catch (Throwable e) {
+
+					}
+				}
+				p.getInventory().setItem(pos, teamItem);
+				p.updateInventory();
+			}
+		}
+
 	}
 
 	// GETTERS Y SETTERS
