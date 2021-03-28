@@ -66,6 +66,7 @@ public class WeaponShoot implements Listener {
 															.replaceAll("%victim%", player.getName())
 															.replaceAll("%killer%", damager.getName()),
 													false);
+											UtilsRandomEvents.doCommandsKill(damager,plugin);
 											UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
 											UtilsRandomEvents.playSound(damager, XSound.ENTITY_PLAYER_LEVELUP);
 											plugin.getMatchActive().echaDePartida(player, true, true, false, true,
@@ -84,6 +85,7 @@ public class WeaponShoot implements Listener {
 														.replaceAll("%victim%", player.getName())
 														.replaceAll("%killer%", damager.getName()),
 												false);
+										UtilsRandomEvents.doCommandsKill(damager,plugin);
 										UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
 										UtilsRandomEvents.playSound(damager, XSound.ENTITY_PLAYER_LEVELUP);
 										plugin.getMatchActive().echaDePartida(player, true, true, false);
@@ -121,6 +123,7 @@ public class WeaponShoot implements Listener {
 														.replaceAll("%victim%", player.getName())
 														.replaceAll("%killer%", damager.getName()),
 												false);
+										UtilsRandomEvents.doCommandsKill(damager,plugin);
 										damager.sendMessage(plugin.getLanguage().getTagPlugin() + " "
 												+ plugin.getLanguage().getNowPoints().replace("%points%",
 														plugin.getMatchActive().getPuntuacion().get(damager.getName())
@@ -150,6 +153,7 @@ public class WeaponShoot implements Listener {
 														.replaceAll("%victim%", player.getName())
 														.replaceAll("%killer%", damager.getName()),
 												false);
+										UtilsRandomEvents.doCommandsKill(damager,plugin);
 										damager.sendMessage(plugin.getLanguage().getTagPlugin() + " "
 												+ plugin.getLanguage().getNowPoints().replace("%points%",
 														plugin.getMatchActive().getPuntuacion().get(damager.getName())
@@ -172,6 +176,7 @@ public class WeaponShoot implements Listener {
 														.replaceAll("%victim%", player.getName())
 														.replaceAll("%killer%", damager.getName()),
 												false);
+										UtilsRandomEvents.doCommandsKill(damager,plugin);
 
 										break;
 
@@ -182,6 +187,7 @@ public class WeaponShoot implements Listener {
 														.replaceAll("%victim%", player.getName())
 														.replaceAll("%killer%", damager.getName()),
 												false);
+										UtilsRandomEvents.doCommandsKill(damager,plugin);
 										UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
 
 										UtilsRandomEvents.playSound(damager, XSound.ENTITY_PLAYER_LEVELUP);
@@ -244,6 +250,7 @@ public class WeaponShoot implements Listener {
 																.replaceAll("%victim%", player.getName())
 																.replaceAll("%killer%", damager.getName()),
 														false);
+												UtilsRandomEvents.doCommandsKill(damager,plugin);
 												UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
 												UtilsRandomEvents.playSound(damager, XSound.ENTITY_PLAYER_LEVELUP);
 												plugin.getMatchActive().echaDePartida(player, true, true, false);
@@ -471,7 +478,7 @@ public class WeaponShoot implements Listener {
 																			.intValue())
 															.replaceAll("%killer%", p.getName()),
 													false);
-
+											UtilsRandomEvents.doCommandsKill(p,plugin);
 											UtilsRandomEvents.playSound(p, XSound.ENTITY_PLAYER_LEVELUP);
 											plugin.getMatchActive().reiniciaPlayer(player);
 											if (plugin.getMatchActive().getPuntuacion().containsKey(p.getName())) {
@@ -541,6 +548,7 @@ public class WeaponShoot implements Listener {
 															.replaceAll("%victim%", player.getName())
 															.replaceAll("%killer%", damager.getName()),
 													false);
+											UtilsRandomEvents.doCommandsKill(damager,plugin);
 											damager.sendMessage(plugin.getLanguage().getTagPlugin() + " "
 													+ plugin.getLanguage().getNowPoints().replace("%points%",
 															plugin.getMatchActive().getPuntuacion()
@@ -598,6 +606,7 @@ public class WeaponShoot implements Listener {
 															.replaceAll("%victim%", player.getName())
 															.replaceAll("%killer%", damager.getName()),
 													false);
+											UtilsRandomEvents.doCommandsKill(damager,plugin);
 
 										} else {
 											UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
@@ -677,6 +686,7 @@ public class WeaponShoot implements Listener {
 																			.intValue())
 															.replaceAll("%killer%", p.getName()),
 													false);
+											UtilsRandomEvents.doCommandsKill(p,plugin);
 											plugin.getMatchActive().reiniciaPlayer(player);
 											UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
 											UtilsRandomEvents.playSound(p, XSound.ENTITY_PLAYER_LEVELUP);

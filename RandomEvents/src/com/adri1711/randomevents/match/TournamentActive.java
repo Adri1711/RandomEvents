@@ -166,7 +166,7 @@ public class TournamentActive {
 
 			UtilsRandomEvents.borraInventario(player, plugin);
 
-			UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin);
+			UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin,true);
 
 			if (!muerto) {
 				UtilsRandomEvents.sacaInventario(plugin, player);
@@ -444,7 +444,7 @@ public class TournamentActive {
 				playersSpectators.remove(player);
 				getPlayers().remove(player.getName());
 				getPlayersObj().remove(player);
-				UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin);
+				UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin,true);
 
 				player.setHealth(player.getMaxHealth());
 				player.setFoodLevel(20);

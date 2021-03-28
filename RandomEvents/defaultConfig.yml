@@ -170,6 +170,15 @@ waterKillSG: false
 #Enable this to make a player lose when they fall into water in skywars minigames
 waterKillSW: false
 
+#Enable this to make a player lose when they fall into water in bombardment minigames
+waterKillBombardment: false
+
+#Disable the multiple winners when they have the same points
+disableMultipleWinners: false
+
+#Offset of Y coord on bombardment, if you see your bombs on the minigame go higher than the foots of your player put this to -1 or -2
+offSetYBombardment: 0
+
 #Speed duration on seconds for tnttag
 speedDuration: 100
 
@@ -232,6 +241,9 @@ forceNonEmptyTeams: true
 
 #Commands that will be done each time a RandomEvent is fired
 commandsOnEventFire: []
+
+#Commands that will be done each time a player kill another one in certain Random Events
+commandsOnKill: []
 
 #Commands that will be done each time a user join a random event, use it in case you need to get the god mode off, to set the gamemode to survival, etc
 commandsOnUserJoin:

@@ -77,7 +77,7 @@ public class Chat implements Listener {
 			if (plugin.isDebugMode()) {
 				System.out.println("RandomEvents :: Message of creation: " + event.getMessage());
 			}
-			checkMessageCreationWaterDrop(event.getMessage().trim(), player,
+			checkMessageCreationWaterDrop(ChatColor.stripColor(event.getMessage().trim()), player,
 					plugin.getPlayersCreationWaterDrop().get(player.getName()));
 
 			event.setCancelled(Boolean.TRUE);
@@ -87,7 +87,7 @@ public class Chat implements Listener {
 				System.out.println("RandomEvents :: Message of creation: " + event.getMessage());
 			}
 
-			checkMessageCreationKit(event.getMessage().trim(), player,
+			checkMessageCreationKit(ChatColor.stripColor(event.getMessage().trim()), player,
 					plugin.getPlayersCreationKit().get(player.getName()));
 
 			event.setCancelled(Boolean.TRUE);
@@ -97,7 +97,8 @@ public class Chat implements Listener {
 				System.out.println("RandomEvents :: Message of creation: " + event.getMessage());
 			}
 
-			checkMessageCreation(event.getMessage().trim(), player, plugin.getPlayersCreation().get(player.getName()));
+			checkMessageCreation(ChatColor.stripColor(event.getMessage().trim()), player,
+					plugin.getPlayersCreation().get(player.getName()));
 
 			event.setCancelled(Boolean.TRUE);
 
@@ -336,11 +337,13 @@ public class Chat implements Listener {
 		} else {
 			plugin.getPlayerKit().remove(player.getName());
 			plugin.getPlayersCreationKit().remove(player.getName());
-			player.sendMessage(Creacion.KITS.getMessage());
-			for (Kit m : plugin.getKits()) {
-				player.sendMessage("§6§l" + plugin.getKits().indexOf(m) + " - " + m.getName());
+			if (plugin.getPlayerMatches().containsKey(player.getName())) {
+				player.sendMessage(Creacion.KITS.getMessage());
+				for (Kit m : plugin.getKits()) {
+					player.sendMessage("§6§l" + plugin.getKits().indexOf(m) + " - " + m.getName());
+				}
+				player.sendMessage("§6§l" + plugin.getKits().size() + " - §e§lNew Kit");
 			}
-			player.sendMessage("§6§l" + plugin.getKits().size() + " - §e§lNew Kit");
 
 		}
 	}
@@ -779,7 +782,7 @@ public class Chat implements Listener {
 							// player, position + 1, match);
 						}
 						break;
-						
+
 					case INVENTORY_BEAST:
 						if (message.equals(Constantes.DONE)) {
 

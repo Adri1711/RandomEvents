@@ -30,9 +30,13 @@ public enum ComandosEnum {
 	CMD_SPAWNSET_TOURNAMENT("tspawnset", 1, "randomevent.admin.tspawnset", "getTspawnset", "tournamentSpawnSet", true,
 			false),
 
-	CMD_MATCHES("matches", 1, "randomevent.admin.matches", "getMenuMatches", "showRandomEvents", true, true),
+	CMD_MATCHES("matches", 1, "randomevent.admin.matches", "getMenuMatches", "showRandomEvents", false, true),
 	
-	CMD_LIST("list", 1, "randomevent.admin.matches", "getMenuMatches", "showRandomEvents", false, true),
+	CMD_LIST("list", 1, "randomevent.admin.matches", "getMenuMatches", "showRandomEvents", true, true),
+	
+	CMD_KITS("kits", 1, "randomevent.kits", "getKitsCmd", "showKits", true, true),
+	
+	CMD_KITS_EDIT("kitedit", 2, "randomevent.kits.edit", "getKitsEditCmd", "editKit", true, true),
 
 	CMD_NEXT("next", 1, "randomevent.next", "getNext", "nextRandomEvents", true, true),
 
@@ -63,6 +67,8 @@ public enum ComandosEnum {
 	CMD_BAL_CREDITS_OTHER("credits", 2, "randomevent.bal.credits.other", "getCreditsBalOther", "balCredits", true, true),
 
 	CMD_BAN_PLAYER("ban", 3, "randomevent.admin.ban", "getBan", "banPlayer", true, true),
+	
+	CMD_BAN_PLAYER_REASON("ban", 4, "randomevent.admin.ban", "getBan", "banPlayer", false, true),
 
 	CMD_UNBAN_PLAYER("unban", 2, "randomevent.admin.unban", "getUnban", "unbanPlayer", true, true),
 

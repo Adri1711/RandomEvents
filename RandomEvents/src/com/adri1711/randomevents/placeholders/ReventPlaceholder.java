@@ -80,28 +80,52 @@ public class ReventPlaceholder extends PlaceholderExpansion {
 						res = callback.toString();
 					}
 				}
-			} else if (identifier.equals("next_event")) {
-
-				if (plugin.getSchedules() != null && !plugin.getSchedules().isEmpty()) {
-					Map<Schedule, Date> sMap = UtilsRandomEvents.nextEvent(plugin.getSchedules(), p, plugin);
-					Schedule s = null;
-					Date d = null;
-					for (Entry<Schedule, Date> entrada : sMap.entrySet()) {
-						s = entrada.getKey();
-						d = entrada.getValue();
-					}
-					if (s != null) {
-						res = "" + (UtilsRandomEvents.calculateTime((d.getTime() - new Date().getTime()) / 1000));
-
-					}
-				} else {
-
-					res = plugin.getLanguage().getNoScheduledEvents();
-
-				}
-
 			}
 		}
+
+		if (identifier.equals("next_event")) {
+
+			if (plugin.getSchedules() != null && !plugin.getSchedules().isEmpty()) {
+				Map<Schedule, Date> sMap = UtilsRandomEvents.nextEvent(plugin.getSchedules(), p, plugin);
+				Schedule s = null;
+				Date d = null;
+				for (Entry<Schedule, Date> entrada : sMap.entrySet()) {
+					s = entrada.getKey();
+					d = entrada.getValue();
+				}
+				if (s != null) {
+					res = "" + (UtilsRandomEvents.calculateTime((d.getTime() - new Date().getTime()) / 1000));
+
+				}
+			} else {
+
+				res = plugin.getLanguage().getNoScheduledEvents();
+
+			}
+
+		} else if (identifier.equals("next_event_detailed")) {
+
+			if (plugin.getSchedules() != null && !plugin.getSchedules().isEmpty()) {
+				Map<Schedule, Date> sMap = UtilsRandomEvents.nextEvent(plugin.getSchedules(), p, plugin);
+				Schedule s = null;
+				Date d = null;
+				for (Entry<Schedule, Date> entrada : sMap.entrySet()) {
+					s = entrada.getKey();
+					d = entrada.getValue();
+				}
+				if (s != null) {
+					res = (s.getMatchName() != null ? (s.getMatchName() + ":") : "Random:")
+							+ (UtilsRandomEvents.calculateTime((d.getTime() - new Date().getTime()) / 1000));
+
+				}
+			} else {
+
+				res = plugin.getLanguage().getNoScheduledEvents();
+
+			}
+
+		}
+
 		return res;
 	}
 

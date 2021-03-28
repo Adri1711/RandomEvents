@@ -74,7 +74,13 @@ public class Constantes {
 
 		CMD_MATCHES("menuMatches", "menu.admin.matches",
 				"   &6/revent matches:\n          &e-> Show all Random Events available"),
-
+		
+		CMD_KITS("kitsCmd", "menu.kits.list",
+				"   &6/revent kits:\n          &e-> Show all Kits available"),
+		
+		CMD_KITS_EDIT("kitsEditCmd", "menu.kits.edit",
+				"   &6/revent kitedit <id>:\n          &e-> Edit a kit"),
+		
 		CMD_CHECKPOINT("checkpoint", "menu.checkpoint",
 				"   &6/revent checkpoint:\n          &e-> Makes the user go back to the checkpoint"),
 
@@ -193,6 +199,9 @@ public class Constantes {
 
 		END_OF_ARENA_CREATION("endOfArenaCreation", "creation.endOfArenaCreation",
 				"&6&lYou successfully created a RandomEvents!"),
+		
+		END_OF_KIT_CREATION("endOfKitCreation", "creation.endOfKitCreation",
+				"&6&lYou successfully edited a Kit!"),
 
 		END_OF_SCHEDULE_CREATION("endOfScheduleCreation", "creation.endOfScheduleCreation",
 				"&6&lYou successfully created a Schedule!"),

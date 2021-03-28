@@ -59,6 +59,20 @@ public class Move implements Listener {
 					}
 					break;
 
+				case BOMBARDMENT:
+					if (plugin.isWaterKillBombardment()) {
+						if (evt.getTo().getBlock() != null && evt.getTo().getBlock().getType() != null
+								&& (evt.getTo().getBlock().getType() == XMaterial.WATER.parseMaterial()
+										|| evt.getTo().getBlock().getType().toString().equals("STATIONARY_WATER"))) {
+							UtilsRandomEvents.mandaMensaje(plugin,
+									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
+							plugin.getMatchActive().echaDePartida(player, true, true, false);
+							UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+						}
+					}
+					break;
+
 				case SG:
 				case TSG:
 					if (plugin.isWaterKillSG()) {

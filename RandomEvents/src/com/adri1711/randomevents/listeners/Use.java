@@ -277,6 +277,7 @@ public class Use implements Listener {
 																				.intValue())
 																.replaceAll("%killer%", player.getName()),
 														false);
+												UtilsRandomEvents.doCommandsKill(player,plugin);
 												plugin.getMatchActive().reiniciaPlayer(hitted);
 												UtilsRandomEvents.playSound(hitted, XSound.ENTITY_VILLAGER_DEATH);
 												UtilsRandomEvents.playSound(player, XSound.ENTITY_PLAYER_LEVELUP);

@@ -105,7 +105,8 @@ public class RandomEvents extends JavaPlugin {
 	private Map<String, EntityType> playersEntity;
 
 	private List<String> commandsOnUserJoin;
-
+	private List<String> commandsOnKill;
+	
 	private List<String> commandsOnMatchBegin;
 
 	private Boolean forzado = Boolean.FALSE;
@@ -350,6 +351,12 @@ public class RandomEvents extends JavaPlugin {
 
 	private List<String> commandsOnEventFire;
 
+	private boolean waterKillBombardment;
+
+	private int offSetYBombardment;
+
+	private boolean disableMultipleWinners;
+
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
 		loadConfig();
@@ -480,6 +487,8 @@ public class RandomEvents extends JavaPlugin {
 
 		this.commandsOnEventFire = (List<String>) getConfig().getStringList("commandsOnEventFire");
 		this.commandsOnUserJoin = (List<String>) getConfig().getStringList("commandsOnUserJoin");
+		this.commandsOnKill = (List<String>) getConfig().getStringList("commandsOnKill");
+		
 		this.commandsOnMatchBegin = (List<String>) getConfig().getStringList("commandsOnMatchBegin");
 		this.commandsOnMatchEnd = (List<String>) getConfig().getStringList("commandsOnMatchEnd");
 		this.commandsOnUserLeave = (List<String>) getConfig().getStringList("commandsOnUserLeave");
@@ -490,6 +499,9 @@ public class RandomEvents extends JavaPlugin {
 		this.quakeGiveDefaultWeapon = getConfig().getBoolean("quakeGiveDefaultWeapon");
 		this.paintGiveDefaultWeapon = getConfig().getBoolean("paintGiveDefaultWeapon");
 		this.matchPrivateMatch = getConfig().getBoolean("matchPrivateMatch");
+		this.waterKillBombardment = getConfig().getBoolean("waterKillBombardment");
+		this.disableMultipleWinners = getConfig().getBoolean("disableMultipleWinners");
+		this.offSetYBombardment = getConfig().getInt("offSetYBombardment");
 
 		this.equilibrateTeams = getConfig().getBoolean("equilibrateTeams");
 		this.forceNonEmptyTeams = getConfig().getBoolean("forceNonEmptyTeams");
@@ -2142,5 +2154,38 @@ public class RandomEvents extends JavaPlugin {
 	public void setCommandsOnEventFire(List<String> commandsOnEventFire) {
 		this.commandsOnEventFire = commandsOnEventFire;
 	}
+
+	public boolean isWaterKillBombardment() {
+		return waterKillBombardment;
+	}
+
+	public void setWaterKillBombardment(boolean waterKillBombardment) {
+		this.waterKillBombardment = waterKillBombardment;
+	}
+
+	public int getOffSetYBombardment() {
+		return offSetYBombardment;
+	}
+
+	public void setOffSetYBombardment(int offSetYBombardment) {
+		this.offSetYBombardment = offSetYBombardment;
+	}
+
+	public boolean isDisableMultipleWinners() {
+		return disableMultipleWinners;
+	}
+
+	public void setDisableMultipleWinners(boolean disableMultipleWinners) {
+		this.disableMultipleWinners = disableMultipleWinners;
+	}
+
+	public List<String> getCommandsOnKill() {
+		return commandsOnKill;
+	}
+
+	public void setCommandsOnKill(List<String> commandsOnKill) {
+		this.commandsOnKill = commandsOnKill;
+	}
+	
 
 }

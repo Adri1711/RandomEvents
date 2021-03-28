@@ -38,6 +38,7 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
@@ -245,7 +246,28 @@ public class UtilsRandomEvents {
 				pw.close();
 				plugin.getPlayersCreationKit().remove(player.getName());
 				plugin.getPlayerKit().remove(player.getName());
-				plugin.getKits().add(kit);
+
+				Kit kitAux = null;
+				for (Kit m : plugin.getKits()) {
+					if (m.getName().equals(kit.getName())) {
+						kitAux = m;
+					}
+
+				}
+				if (kitAux == null) {
+					plugin.getKits().add(kit);
+				} else {
+					if (plugin.getMatches().indexOf(kitAux) != -1) {
+						plugin.getKits().set(plugin.getMatches().indexOf(kitAux), kit);
+					} else {
+						plugin.getKits().add(kit);
+					}
+				}
+				if (player != null) {
+
+					player.sendMessage(
+							plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getEndOfKitCreation());
+				}
 			} else {
 				System.out.println("JSON was null.");
 				if (player != null)
@@ -644,44 +666,50 @@ public class UtilsRandomEvents {
 	}
 
 	public static Boolean teleportaPlayer(Player p, Location loc, RandomEvents plugin) {
+		return teleportaPlayer(p, loc, plugin, false);
+	}
+
+	public static Boolean teleportaPlayer(Player p, Location loc, RandomEvents plugin, Boolean comprueba) {
 		Boolean res = true;
-		if (loc != null) {
-			try {
-				p.teleport(loc);
-
-			} catch (Exception e) {
+		if (!comprueba || !plugin.getUseLastLocation()) {
+			if (loc != null) {
 				try {
-					Location loc2 = loc.clone();
-					if (loc2 != null) {
-						if (plugin.isDebugMode())
-							System.out.println("Initial Loc ->" + loc2.toString());
-					}
-					loc2.setWorld(Bukkit.getWorld(loc2.getWorld().getUID()));
-					if (loc2 != null) {
-						if (plugin.isDebugMode())
-							System.out.println("Updated Loc ->" + loc2.toString());
-					}
-					p.teleport(loc2);
+					p.teleport(loc);
 
-				} catch (Exception e2) {
+				} catch (Exception e) {
 					try {
 						Location loc2 = loc.clone();
 						if (loc2 != null) {
 							if (plugin.isDebugMode())
 								System.out.println("Initial Loc ->" + loc2.toString());
 						}
-						loc2.setWorld(Bukkit.getWorld(loc2.getWorld().getName()));
+						loc2.setWorld(Bukkit.getWorld(loc2.getWorld().getUID()));
 						if (loc2 != null) {
 							if (plugin.isDebugMode())
 								System.out.println("Updated Loc ->" + loc2.toString());
 						}
-
 						p.teleport(loc2);
 
-					} catch (Exception e3) {
-						res = false;
-						System.out.println(e3);
+					} catch (Exception e2) {
+						try {
+							Location loc2 = loc.clone();
+							if (loc2 != null) {
+								if (plugin.isDebugMode())
+									System.out.println("Initial Loc ->" + loc2.toString());
+							}
+							loc2.setWorld(Bukkit.getWorld(loc2.getWorld().getName()));
+							if (loc2 != null) {
+								if (plugin.isDebugMode())
+									System.out.println("Updated Loc ->" + loc2.toString());
+							}
 
+							p.teleport(loc2);
+
+						} catch (Exception e3) {
+							res = false;
+							System.out.println(e3);
+
+						}
 					}
 				}
 			}
@@ -2728,7 +2756,7 @@ public class UtilsRandomEvents {
 			for (int i = page * (size - (kitsAvailable.size() > 45 ? 9 : 0)); i < (page + 1)
 					* (size - (kitsAvailable.size() > 45 ? 9 : 0)) && i < kitsAvailable.size(); i++) {
 				Kit kit = kitsAvailable.get(i);
-				ItemStack cabeza = kit.getItem();
+				ItemStack cabeza = kit.getItem().clone();
 				ItemMeta cabezaMeta = cabeza.getItemMeta();
 				if (cabezaMeta.getDisplayName() == null) {
 					cabezaMeta.setDisplayName(
@@ -2923,6 +2951,36 @@ public class UtilsRandomEvents {
 
 		}
 		return res;
+
+	}
+
+	public static void doCommandsKill(Player p, RandomEvents plugin) {
+		for (String cmd : plugin.getCommandsOnKill()) {
+
+			Boolean ejecutaComando = Boolean.TRUE;
+			String[] trozosComandos = cmd.split(" ");
+
+			if (trozosComandos[0].trim().equals(Constantes.PROBABILITY_CMD)) {
+				Integer probabilidad = Integer.valueOf(trozosComandos[1]);
+				Integer aleatorio = plugin.getRandom().nextInt(100);
+
+				if (aleatorio > probabilidad) {
+					ejecutaComando = Boolean.FALSE;
+				}
+				String nuevoCmd = "";
+				if (trozosComandos.length > 2) {
+					for (int i = 2; i < trozosComandos.length; i++) {
+						nuevoCmd += trozosComandos[i] + " ";
+					}
+					cmd = nuevoCmd.substring(0, nuevoCmd.length() - 1);
+				}
+			}
+			if (ejecutaComando) {
+				Bukkit.dispatchCommand((CommandSender) Bukkit.getConsoleSender(),
+						cmd.replaceAll("%player%", p.getName()));
+			}
+
+		}
 
 	}
 

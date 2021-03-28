@@ -481,7 +481,7 @@ public class MatchActive {
 			}
 			try {
 				if (sacaSpectator || match.getSpectatorSpawns() == null || match.getSpectatorSpawns().isEmpty()) {
-					res = UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin);
+					res = UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin, true);
 				} else {
 					Location l = null;
 					Integer i = 0;
@@ -576,7 +576,7 @@ public class MatchActive {
 				}
 			}
 			if (sacaSpectator || match.getSpectatorSpawns() == null || match.getSpectatorSpawns().isEmpty()) {
-				UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin);
+				UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin, true);
 			} else {
 				UtilsRandomEvents.teleportaPlayer(player,
 						match.getSpectatorSpawns().get(getRandom().nextInt(match.getSpectatorSpawns().size())), plugin);
@@ -815,7 +815,7 @@ public class MatchActive {
 
 			UtilsRandomEvents.borraInventario(player, plugin);
 
-			UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin);
+			UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin, true);
 
 			if (!muerto) {
 				UtilsRandomEvents.sacaInventario(plugin, player);
@@ -967,7 +967,9 @@ public class MatchActive {
 			} else {
 				for (Player p : getPlayerHandler().getPlayersObj()) {
 					if (puntuacion.containsKey(p.getName()) && puntuacion.get(p.getName()).equals(maximo)) {
-						winners.add(p);
+						if (!plugin.isDisableMultipleWinners() || winners.isEmpty()) {
+							winners.add(p);
+						}
 					}
 				}
 			}
@@ -994,7 +996,9 @@ public class MatchActive {
 
 				for (Integer equipo : puntuacionesEquipo.keySet()) {
 					if (puntuacionesEquipo.get(equipo) == maximo) {
-						winners.addAll(getPlayerHandler().getEquipos().get(equipo));
+						if (!plugin.isDisableMultipleWinners() || winners.isEmpty()) {
+							winners.addAll(getPlayerHandler().getEquipos().get(equipo));
+						}
 					}
 				}
 			}
@@ -2459,7 +2463,8 @@ public class MatchActive {
 
 						if (l != null && locPlayer != null) {
 
-							Vector v = new Vector(locPlayer.getX() - l.getX(), locPlayer.getY() - l.getY() - 1,
+							Vector v = new Vector(locPlayer.getX() - l.getX(),
+									locPlayer.getY() - l.getY() - 1 + plugin.getOffSetYBombardment(),
 									locPlayer.getZ() - l.getZ());
 							Bukkit.getScheduler().runTaskLater(getPlugin(), new Runnable() {
 
@@ -3369,7 +3374,8 @@ public class MatchActive {
 			if (checkDate != -1L) {
 				Long diff = now - checkDate;
 
-				if (diff > 0) {
+				if (diff >= 1000) {
+					diff=diff- (diff%1000);
 					Double difere = diff / 1000.0;
 					if (getPuntuacion().containsKey(p.getName())) {
 						getPuntuacion().put(p.getName(), getPuntuacion().get(p.getName()) + difere.intValue());
@@ -3388,7 +3394,8 @@ public class MatchActive {
 			if (getPlayerHandler().getPlayersContadores().containsKey(p)) {
 				Long diff = now - getPlayerHandler().getPlayersContadores().get(p);
 
-				if (diff > 0) {
+				if (diff >= 1000) {
+					diff=diff- (diff%1000);
 					Double difere = diff / 1000.0;
 					if (getPuntuacion().containsKey(p.getName())) {
 						getPuntuacion().put(p.getName(), getPuntuacion().get(p.getName()) + difere.intValue());

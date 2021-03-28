@@ -12,6 +12,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import com.adri1711.randomevents.RandomEvents;
+import com.adri1711.randomevents.match.Kit;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
 import com.adri1711.randomevents.match.TournamentActive;
@@ -180,6 +181,40 @@ public class ComandosExecutor {
 
 	}
 
+	public void banPlayer(RandomEvents plugin, Player player, String namePlayer, String time, String reason) {
+		try {
+			Calendar c = Calendar.getInstance();
+			c.setTime(new Date());
+			time = time.toLowerCase();
+			if (time.contains("d")) {
+				c.add(Calendar.DAY_OF_YEAR, Integer.valueOf(time.split("d")[0]));
+			} else if (time.contains("h")) {
+				c.add(Calendar.HOUR_OF_DAY, Integer.valueOf(time.split("h")[0]));
+
+			} else if (time.contains("m")) {
+				c.add(Calendar.MINUTE, Integer.valueOf(time.split("m")[0]));
+
+			} else if (time.contains("s")) {
+				c.add(Calendar.SECOND, Integer.valueOf(time.split("s")[0]));
+
+			} else {
+				c.add(Calendar.SECOND, Integer.valueOf(time));
+			}
+			plugin.getBannedPlayers().getBannedPlayers().put(namePlayer, c.getTime().getTime());
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + " "
+						+ plugin.getLanguage().getBanPlayer().replaceAll("%time%",
+								UtilsRandomEvents
+										.calculateTime((c.getTime().getTime() - (new Date()).getTime()) / 1000))
+						+ ". Reason: " + reason);
+		} catch (Exception e) {
+
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());
+		}
+
+	}
+
 	public void unbanPlayer(RandomEvents plugin, Player player, String namePlayer) {
 		try {
 			if (plugin.getBannedPlayers().getBannedPlayers().containsKey(namePlayer)) {
@@ -256,6 +291,19 @@ public class ComandosExecutor {
 			} else {
 				System.out.println(plugin.getMatches().indexOf(m) + " - " + m.getMinigame().getMessage() + " -> "
 						+ m.getName().replaceAll(" ", "_"));
+			}
+		}
+
+	}
+
+	public void showKits(RandomEvents plugin, Player player) {
+		player.sendMessage(plugin.getLanguage().getTagPlugin() + "§e§lKits");
+		for (Kit m : plugin.getKits()) {
+			if (player != null) {
+
+				player.sendMessage("§6§l" + plugin.getKits().indexOf(m) + " - " + m.getName());
+			} else {
+				System.out.println(plugin.getKits().indexOf(m) + " - " + m.getName());
 			}
 		}
 
@@ -390,6 +438,19 @@ public class ComandosExecutor {
 			plugin.getPlayerMatches().put(player.getName(), m);
 			plugin.getEditando().add(player.getName());
 			player.sendMessage(UtilsRandomEvents.enviaInfoCreacion(m, player, plugin));
+		} catch (Exception e) {
+			player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());
+
+		}
+
+	}
+
+	public void editKit(RandomEvents plugin, Player player, String number) {
+		try {
+
+			Kit m = plugin.getKits().get(Integer.valueOf(number));
+			plugin.getPlayerKit().put(player.getName(), m);
+			player.sendMessage(UtilsRandomEvents.enviaInfoCreacionKit(m, player, plugin));
 		} catch (Exception e) {
 			player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());
 

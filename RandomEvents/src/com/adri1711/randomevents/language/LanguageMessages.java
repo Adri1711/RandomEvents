@@ -24,6 +24,7 @@ public class LanguageMessages {
 	private String invalidCmd;
 	private String noPermission;
 	private String endOfArenaCreation;
+	private String endOfKitCreation;
 	private String cancelOfArenaCreation;
 	private String pluginReload;
 	private String matchFull;
@@ -133,6 +134,8 @@ public class LanguageMessages {
 	private String reload;
 	private String checkpoint;
 	private String forcebegin;
+	private String kitsCmd;
+	private String kitsEditCmd;
 
 	private String announceFirst;
 	private String announceNext;
@@ -410,6 +413,14 @@ public class LanguageMessages {
 
 	public void setNoPermission(String noPermission) {
 		this.noPermission = noPermission;
+	}
+
+	public String getEndOfKitCreation() {
+		return endOfKitCreation.replaceAll("&", "§");
+	}
+
+	public void setEndOfKitCreation(String endOfKitCreation) {
+		this.endOfKitCreation = endOfKitCreation;
 	}
 
 	public String getEndOfArenaCreation() {
@@ -1486,6 +1497,22 @@ public class LanguageMessages {
 
 	public void setForcebegin(String forcebegin) {
 		this.forcebegin = forcebegin;
+	}
+
+	public String getKitsCmd() {
+		return kitsCmd.replaceAll("&", "§");
+	}
+
+	public void setKitsCmd(String kitsCmd) {
+		this.kitsCmd = kitsCmd;
+	}
+
+	public String getKitsEditCmd() {
+		return kitsEditCmd.replaceAll("&", "§");
+	}
+
+	public void setKitsEditCmd(String kitsEditCmd) {
+		this.kitsEditCmd = kitsEditCmd;
 	}
 
 	public String getEventDeleted() {
