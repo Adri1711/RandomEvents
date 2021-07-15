@@ -16,7 +16,7 @@ secondsTimer: 60
 secondsCheckPlayers: 15
 
 #Minimum amount of players to begin checking for random events
-minPlayers: 40
+minPlayers: 0
 
 #Minimum time to begin the match if the min players are already inside
 minNumberOfTriesBeforeBeginning: 0
@@ -48,6 +48,10 @@ inventoryManagement: true
 
 #Drops items after dying in a minigame
 dropItemsAfterDie: false
+
+#Random disguise players to avoid teams (NEEDS LIBSDISGUISES TO WORK)
+randomDisguisePlayers: false
+skinDisguisePlayers: 'Dinnerbone'
 
 #Number of gems to win in gem crawler minigame
 numberOfGems: 10

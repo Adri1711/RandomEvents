@@ -641,6 +641,8 @@ public class Chat implements Listener {
 									actua = Boolean.FALSE;
 								}
 							}
+						} else if (message.equals(Constantes.NEXT)) {
+							plugin.getPlayersCreation().remove(player.getName());
 						}
 						break;
 					case TEAM_SPAWNS:
@@ -720,6 +722,8 @@ public class Chat implements Listener {
 								actua = Boolean.FALSE;
 
 							}
+						} else if (message.equals(Constantes.NEXT)) {
+							plugin.getPlayersCreation().remove(player.getName());
 						}
 						break;
 
@@ -1013,7 +1017,13 @@ public class Chat implements Listener {
 						if (message.equals(Constantes.DONE)) {
 							if (player.getItemInHand() != null
 									&& player.getItemInHand().getType() != (XMaterial.AIR.parseMaterial())) {
-								match.getDatas().add(player.getItemInHand().getData());
+								try {
+									MaterialData mat = new MaterialData(player.getItemInHand().getType(),
+											player.getItemInHand().getData().getData());
+									match.getDatas().add(mat);
+								} catch (Throwable eb) {
+									match.getDatas().add(player.getItemInHand().getData());
+								}
 								plugin.getPlayersCreation().remove(player.getName());
 
 							} else {
@@ -1326,7 +1336,7 @@ public class Chat implements Listener {
 					switch (Creacion.getByPosition(position)) {
 					case MINIGAME_TYPE:
 						for (MinigameType m : MinigameType.values()) {
-							player.sendMessage("§6§l" + m.ordinal() + " - " + m.getMessage());
+							player.sendMessage("§6§l" + m.ordinal() + " - " + m.getMessage(plugin));
 						}
 						break;
 					case MOB_NAME:
@@ -1363,7 +1373,7 @@ public class Chat implements Listener {
 				case MINIGAME_TYPE:
 					if (!plugin.getEditando().contains(player.getName())) {
 						for (MinigameType m : MinigameType.values()) {
-							player.sendMessage("§6§l" + m.ordinal() + " - " + m.getMessage());
+							player.sendMessage("§6§l" + m.ordinal() + " - " + m.getMessage(plugin));
 						}
 						plugin.getPlayersCreation().put(player.getName(), c.getPosition());
 					}

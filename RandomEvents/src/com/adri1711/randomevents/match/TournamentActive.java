@@ -260,7 +260,7 @@ public class TournamentActive {
 												.replaceAll("%maxPlayers%", tournament.getMaxPlayers().toString())
 												.replaceAll("%players%", "" + getPlayers().size()),
 										plugin.getLanguage().getClickHere(), new ArrayList<String>(),
-										"/revent join " + password,
+										"/revent tjoin " + password,
 										lastPart.replaceAll("\\n", "<jump>")
 												.replaceAll("%neededPlayers%", tournament.getMinPlayers().toString())
 												.replaceAll("%maxPlayers%", tournament.getMaxPlayers().toString())

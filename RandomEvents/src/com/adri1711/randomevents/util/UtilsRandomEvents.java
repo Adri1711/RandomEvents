@@ -37,6 +37,7 @@ import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -1435,10 +1436,26 @@ public class UtilsRandomEvents {
 		return tamanyo;
 	}
 
-	public static boolean contieneMaterialData(MaterialData data, Match match) {
+	public static boolean contieneMaterialData(Block block, Match match) {
 		Boolean res = false;
+		// TODO
+		// if (plugin.getMatchActive().getMatch().getDatas()
+		// .contains(evt.getBlock().getState().getData())) {
+		//
+		// }
+
 		for (MaterialData matDat : match.getDatas()) {
-			if (matDat.getItemType() == data.getItemType() && matDat.getData() == data.getData()) {
+			Material mat = null;
+			byte data = block.getState().getData().getData();
+			if (block.getState().getData().getItemType().toString().contains("_LOG")) {
+				data = Byte.valueOf("" + data % 4);
+			}
+			if (matDat.getItemType().toString().contains("LEGACY_")) {
+				mat = block.getState().getData().getItemType();
+			} else {
+				mat = block.getType();
+			}
+			if (matDat.getItemType() == mat && matDat.getData() == data) {
 				res = true;
 			}
 		}
@@ -1520,7 +1537,7 @@ public class UtilsRandomEvents {
 			s += day + "d ";
 		}
 		if (hours > 0) {
-			s += day + "h ";
+			s += hours + "h ";
 		}
 		if (minute > 0) {
 			s += minute + "m ";
@@ -2758,10 +2775,11 @@ public class UtilsRandomEvents {
 				Kit kit = kitsAvailable.get(i);
 				ItemStack cabeza = kit.getItem().clone();
 				ItemMeta cabezaMeta = cabeza.getItemMeta();
-				if (cabezaMeta.getDisplayName() == null) {
+				if (cabezaMeta.getDisplayName() == null || cabezaMeta.getDisplayName().isEmpty()) {
 					cabezaMeta.setDisplayName(
 							plugin.getLanguage().getKitDefaultName().replaceAll("%kit_name%", kit.getName()));
 				}
+				// System.out.println(cabezaMeta.getDisplayName());
 				if (cabezaMeta.getLore() == null || cabezaMeta.getLore().isEmpty()) {
 					cabezaMeta.setLore(plugin.getLanguage().getKitDefaultLore());
 				}

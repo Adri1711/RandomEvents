@@ -1,7 +1,11 @@
 package com.adri1711.randomevents.match.enums;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import org.bukkit.Material;
 
+import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.util.enums.XMaterial;
 
 public enum MinigameType {
@@ -97,6 +101,18 @@ public enum MinigameType {
 
 	public String getMessage() {
 		return message;
+	}
+	
+	public String getMessage(RandomEvents plugin){
+		String menu="";
+		try {
+			Method method = plugin.getLanguage().getClass().getDeclaredMethod(message);
+			menu += method.invoke(plugin.getLanguage());
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException
+				| IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return menu;
 	}
 
 	public void setMessage(String message) {

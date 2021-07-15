@@ -47,6 +47,8 @@ import com.adri1711.randomevents.match.utils.Cuboid;
 import com.adri1711.randomevents.match.utils.InventoryPers;
 import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.FeatherBoardUtils;
+import com.adri1711.randomevents.util.NameTag;
+import com.adri1711.randomevents.util.UtilsDisguises;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.randomevents.util.UtilsSQL;
 import com.adri1711.util.FastBoard;
@@ -65,6 +67,8 @@ public class MatchActive {
 	private MatchMapDataHandler mapHandler;
 
 	private String password;
+
+	private Boolean canBreak;
 
 	private List<Entity> mobs;
 
@@ -162,6 +166,7 @@ public class MatchActive {
 			getMapHandler().setCuboid(new Cuboid(match.getLocation1(), match.getLocation2()));
 		this.limitPlayers = 1;
 		this.playing = Boolean.FALSE;
+		this.canBreak = Boolean.FALSE;
 		this.activated = Boolean.FALSE;
 		this.password = "" + random.nextInt(10000);
 		this.firstAnnounce = Boolean.TRUE;
@@ -246,6 +251,7 @@ public class MatchActive {
 			break;
 		}
 		this.playing = Boolean.FALSE;
+		this.canBreak = Boolean.FALSE;
 		this.activated = Boolean.FALSE;
 		this.password = "" + random.nextInt(10000);
 		this.firstAnnounce = Boolean.TRUE;
@@ -449,6 +455,9 @@ public class MatchActive {
 		Location lastLocation = player.getLocation();
 		dropItems(player, forzado);
 		unregisterTeam(player);
+		if (plugin.isRandomDisguisePlayers()) {
+			UtilsDisguises.undisguisePlayer(player, plugin);
+		}
 		if (getPlayerHandler().getPlayersSpectators().contains(player)) {
 			if (comprueba) {
 				if (!getPlayerHandler().getPlayersObj().remove(player)) {
@@ -536,6 +545,7 @@ public class MatchActive {
 
 	public void echaDePartida(List<Player> players, Boolean comprueba, Boolean sacaInv, Boolean sacaSpectator,
 			Boolean compruebaSpectator) {
+
 		if (comprueba) {
 			if (!getPlayerHandler().getPlayersObj().remove(players)) {
 				for (Player p : players) {
@@ -554,6 +564,10 @@ public class MatchActive {
 			}
 		}
 		for (Player player : players) {
+			if (plugin.isRandomDisguisePlayers()) {
+
+				UtilsDisguises.undisguisePlayer(player, plugin);
+			}
 			for (Player pla : getPlayerHandler().getPlayersVanish()) {
 				pla.showPlayer(player);
 			}
@@ -1033,7 +1047,7 @@ public class MatchActive {
 				case BOAT_RUN:
 				case BATTLE_ROYALE_CABALLO:
 				case HORSE_RUN:
-					List<Entity> entities = p.getNearbyEntities(4., 4., 4.);
+					List<Entity> entities = p.getNearbyEntities(6., 6., 6.);
 					if (entities != null) {
 						for (Entity e : entities) {
 							if (e != null && (e instanceof Horse || e instanceof Boat)) {
@@ -1156,14 +1170,7 @@ public class MatchActive {
 		}
 
 		for (Entry<Location, MaterialData> entrada : getMapHandler().getBlockDisappeared().entrySet()) {
-			entrada.getKey().getBlock().setType(entrada.getValue().getItemType());
-			try {
-				entrada.getKey().getBlock().setData(entrada.getValue().getData());
-			} catch (Throwable e) {
-
-			}
-
-			entrada.getKey().getBlock().getState().setData(entrada.getValue());
+			plugin.getApi().convertBlock(entrada.getKey(), entrada.getValue());
 		}
 
 		hazComandosDeFin();
@@ -1218,11 +1225,16 @@ public class MatchActive {
 			System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventBeginEvent.");
 		}
 		cuentaAtras(Boolean.TRUE);
-
+		if (plugin.isRandomDisguisePlayers()) {
+			for (Player p : getPlayerHandler().getPlayersObj()) {
+				UtilsDisguises.disguisePlayer(p, plugin);
+			}
+		}
 	}
 
 	private void mandaDescripcion() {
 		List<String> desc = getField("minigameDescription" + match.getMinigame().getCodigo());
+
 		for (Player p : getPlayerHandler().getPlayersSpectators()) {
 			for (String d : desc) {
 				p.sendMessage(d.replaceAll("&", "§"));
@@ -1237,7 +1249,9 @@ public class MatchActive {
 		List<String> res = new ArrayList<String>();
 		try {
 			method = plugin.getLanguage().getClass().getMethod(getComandoGet(javaField));
+
 			res = (List<String>) method.invoke(plugin.getLanguage());
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1257,7 +1271,7 @@ public class MatchActive {
 
 		UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
 				plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getEventAnnounce()
-						.replace("%event%", match.getName()).replace("%type%", match.getMinigame().getMessage()),
+						.replace("%event%", match.getName()).replace("%type%", match.getMinigame().getMessage(plugin)),
 				Boolean.FALSE);
 
 		UtilsRandomEvents.playSound(getPlayerHandler().getPlayersSpectators(), XSound.ENTITY_PLAYER_LEVELUP);
@@ -1973,6 +1987,8 @@ public class MatchActive {
 			listaPlayers.addAll(entrada.getValue());
 			getPlayerHandler().getEquipos().put(entrada.getKey(), listaPlayers);
 		}
+
+		setCanBreak(true);
 	}
 
 	private void sortTeams(Player p) {
@@ -2675,12 +2691,21 @@ public class MatchActive {
 			UtilsRandomEvents.teleportaPlayer(p, loc, plugin);
 			break;
 		default:
-			loc = match.getSpawns().get(getPlayerHandler().getPlayersObj().indexOf(p));
+			loc = getSpawnPoint(getPlayerHandler().getPlayersObj().indexOf(p));
+//			loc = match.getSpawns().get(getPlayerHandler().getPlayersObj().indexOf(p));
 			getMapHandler().getCheckpoints().put(p.getName(), loc);
 			UtilsRandomEvents.teleportaPlayer(p, loc, plugin);
 			break;
 		}
 
+	}
+
+	private Location getSpawnPoint(int index) {
+		while (index >= match.getSpawns().size()) {
+			index -= match.getSpawns().size();
+		}
+
+		return match.getSpawns().get(index);
 	}
 
 	public void reiniciaPlayer(Player p) {
@@ -3375,7 +3400,7 @@ public class MatchActive {
 				Long diff = now - checkDate;
 
 				if (diff >= 1000) {
-					diff=diff- (diff%1000);
+					diff = diff - (diff % 1000);
 					Double difere = diff / 1000.0;
 					if (getPuntuacion().containsKey(p.getName())) {
 						getPuntuacion().put(p.getName(), getPuntuacion().get(p.getName()) + difere.intValue());
@@ -3395,7 +3420,7 @@ public class MatchActive {
 				Long diff = now - getPlayerHandler().getPlayersContadores().get(p);
 
 				if (diff >= 1000) {
-					diff=diff- (diff%1000);
+					diff = diff - (diff % 1000);
 					Double difere = diff / 1000.0;
 					if (getPuntuacion().containsKey(p.getName())) {
 						getPuntuacion().put(p.getName(), getPuntuacion().get(p.getName()) + difere.intValue());
@@ -3802,6 +3827,14 @@ public class MatchActive {
 
 	public void setCounter(Integer counter) {
 		this.counter = counter;
+	}
+
+	public Boolean getCanBreak() {
+		return canBreak;
+	}
+
+	public void setCanBreak(Boolean canBreak) {
+		this.canBreak = canBreak;
 	}
 
 }

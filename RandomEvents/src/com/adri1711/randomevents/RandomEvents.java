@@ -106,7 +106,7 @@ public class RandomEvents extends JavaPlugin {
 
 	private List<String> commandsOnUserJoin;
 	private List<String> commandsOnKill;
-	
+
 	private List<String> commandsOnMatchBegin;
 
 	private Boolean forzado = Boolean.FALSE;
@@ -357,6 +357,12 @@ public class RandomEvents extends JavaPlugin {
 
 	private boolean disableMultipleWinners;
 
+	private boolean randomDisguisePlayers;
+
+	private Boolean isLibsDisguises;
+
+	private String skinDisguisePlayers;
+
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
 		loadConfig();
@@ -391,9 +397,19 @@ public class RandomEvents extends JavaPlugin {
 			System.out.println("[RandomEvents] CrackShot hooked succesfully!");
 
 		}
+		if (getServer().getPluginManager().getPlugin("LibsDisguises") != null) {
+			isLibsDisguises=Boolean.TRUE;
+			System.out.println("[RandomEvents] LibsDisguises hooked succesfully!");
+
+		}else{
+			isLibsDisguises=Boolean.FALSE;
+
+		}
 
 		if (getServer().getPluginManager().getPlugin("NametagEdit") != null) {
 			nametagHook = new NameTagHook(this);
+			System.out.println("[RandomEvents] NameTagEdit hooked succesfully!");
+
 		}
 
 		getLogger().info(" Author adri1711- activado");
@@ -488,7 +504,7 @@ public class RandomEvents extends JavaPlugin {
 		this.commandsOnEventFire = (List<String>) getConfig().getStringList("commandsOnEventFire");
 		this.commandsOnUserJoin = (List<String>) getConfig().getStringList("commandsOnUserJoin");
 		this.commandsOnKill = (List<String>) getConfig().getStringList("commandsOnKill");
-		
+
 		this.commandsOnMatchBegin = (List<String>) getConfig().getStringList("commandsOnMatchBegin");
 		this.commandsOnMatchEnd = (List<String>) getConfig().getStringList("commandsOnMatchEnd");
 		this.commandsOnUserLeave = (List<String>) getConfig().getStringList("commandsOnUserLeave");
@@ -502,6 +518,8 @@ public class RandomEvents extends JavaPlugin {
 		this.waterKillBombardment = getConfig().getBoolean("waterKillBombardment");
 		this.disableMultipleWinners = getConfig().getBoolean("disableMultipleWinners");
 		this.offSetYBombardment = getConfig().getInt("offSetYBombardment");
+		
+		this.skinDisguisePlayers=getConfig().getString("skinDisguisePlayers");
 
 		this.equilibrateTeams = getConfig().getBoolean("equilibrateTeams");
 		this.forceNonEmptyTeams = getConfig().getBoolean("forceNonEmptyTeams");
@@ -689,6 +707,7 @@ public class RandomEvents extends JavaPlugin {
 
 		this.debugMode = getConfig().getBoolean("debugMode");
 
+		this.randomDisguisePlayers = getConfig().getBoolean("randomDisguisePlayers");
 		this.useLastLocation = getConfig().getBoolean("useLastLocation");
 		this.optionalTitles = getConfig().getBoolean("optionalTitles");
 		this.showBorders = getConfig().getBoolean("showBorders");
@@ -2186,6 +2205,29 @@ public class RandomEvents extends JavaPlugin {
 	public void setCommandsOnKill(List<String> commandsOnKill) {
 		this.commandsOnKill = commandsOnKill;
 	}
-	
+
+	public boolean isRandomDisguisePlayers() {
+		return randomDisguisePlayers;
+	}
+
+	public void setRandomDisguisePlayers(boolean randomDisguisePlayers) {
+		this.randomDisguisePlayers = randomDisguisePlayers;
+	}
+
+	public Boolean getIsLibsDisguises() {
+		return isLibsDisguises;
+	}
+
+	public void setIsLibsDisguises(Boolean isLibsDisguises) {
+		this.isLibsDisguises = isLibsDisguises;
+	}
+
+	public String getSkinDisguisePlayers() {
+		return skinDisguisePlayers;
+	}
+
+	public void setSkinDisguisePlayers(String skinDisguisePlayers) {
+		this.skinDisguisePlayers = skinDisguisePlayers;
+	}
 
 }

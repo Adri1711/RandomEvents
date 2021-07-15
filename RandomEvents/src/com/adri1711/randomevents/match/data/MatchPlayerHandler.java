@@ -76,10 +76,11 @@ public class MatchPlayerHandler {
 	public MatchPlayerHandler(List<String> players, List<Player> playersGanadores, List<Player> playersSpectators) {
 		this.players = players;
 		this.playersTotal = new ArrayList<String>();
+		this.playersObj=new ArrayList<Player>();
 		playersTotal.addAll(players);
 		this.playersTotalObj = new ArrayList<Player>();
-		playersTotalObj.addAll(playersObj);
 		this.playersObj = playersGanadores;
+		playersTotalObj.addAll(playersObj);
 		this.playersGanadores = new ArrayList<Player>();
 		this.playersSpectators = playersSpectators;
 		this.playersVanish = new ArrayList<Player>();

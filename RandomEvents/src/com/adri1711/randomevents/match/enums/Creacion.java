@@ -21,7 +21,7 @@ public enum Creacion {
 			"ALLMINIGAMES"),
 
 	ARENA_SPAWNS(5,
-			"§6§lGo to the arena you created and write 'Done' to set each spawn location for the players (%players%/%maxPlayers%)",
+			"§6§lGo to the arena you created and write 'Done' to set each spawn location for the players (%players%/%maxPlayers%) or 'Next' to end the spawns",
 			"ALLMINIGAMES", "PBALL,HOE,SPLATOON"),
 
 	ANOTHER_ARENA_SPAWNS(6, "§6§lPut another player spawn, say 'Done' (%players%/%maxPlayers%) ", ""),

@@ -11,6 +11,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.util.Constantes;
+import com.adri1711.randomevents.util.Constantes.Messages;
 import com.google.common.io.Files;
 
 public class LanguageMessages {
@@ -275,12 +276,28 @@ public class LanguageMessages {
 	private void recargaVariables(FileConfiguration fileConfig) {
 		for (Constantes.Messages m : Constantes.Messages.values()) {
 			try {
+
 				if (!m.getMessageDefault().contains(";")) {
 					Method method = this.getClass().getMethod(getComandoSet(m.getJavaField()), String.class);
 					method.invoke(this, fileConfig.getString(m.getYmlField()));
 				} else {
 					Method method = this.getClass().getMethod(getComandoSet(m.getJavaField()), List.class);
-					method.invoke(this, fileConfig.getStringList(m.getYmlField()));
+					try {
+						if (fileConfig.getStringList(m.getYmlField()) == null
+								|| fileConfig.getStringList(m.getYmlField()).isEmpty()) {
+							String[] cadena = fileConfig.getString(m.getYmlField()).split(";");
+							List<String> listaString = new ArrayList<String>();
+							for (String s : cadena) {
+								listaString.add(s);
+							}
+							method.invoke(this, listaString);
+						} else {
+							method.invoke(this, fileConfig.getStringList(m.getYmlField()));
+
+						}
+					} catch (Throwable e) {
+						method.invoke(this, fileConfig.getStringList(m.getYmlField()));
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

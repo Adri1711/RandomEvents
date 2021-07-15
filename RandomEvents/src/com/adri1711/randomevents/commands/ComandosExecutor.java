@@ -169,10 +169,14 @@ public class ComandosExecutor {
 				c.add(Calendar.SECOND, Integer.valueOf(time));
 			}
 			plugin.getBannedPlayers().getBannedPlayers().put(namePlayer, c.getTime().getTime());
-			if (player != null)
-				player.sendMessage(plugin.getLanguage().getTagPlugin() + " "
-						+ plugin.getLanguage().getBanPlayer().replaceAll("%time%", UtilsRandomEvents
-								.calculateTime((c.getTime().getTime() - (new Date()).getTime()) / 1000)));
+			for (Player pla : Bukkit.getOnlinePlayers()) {
+				pla.sendMessage(plugin.getLanguage().getTagPlugin() + " "
+						+ plugin.getLanguage().getBanPlayer()
+								.replaceAll("%time%",
+										UtilsRandomEvents
+												.calculateTime((c.getTime().getTime() - (new Date()).getTime()) / 1000))
+								.replaceAll("%player%", namePlayer));
+			}
 		} catch (Exception e) {
 
 			if (player != null)
@@ -189,7 +193,7 @@ public class ComandosExecutor {
 			if (time.contains("d")) {
 				c.add(Calendar.DAY_OF_YEAR, Integer.valueOf(time.split("d")[0]));
 			} else if (time.contains("h")) {
-				c.add(Calendar.HOUR_OF_DAY, Integer.valueOf(time.split("h")[0]));
+				c.add(Calendar.HOUR, Integer.valueOf(time.split("h")[0]));
 
 			} else if (time.contains("m")) {
 				c.add(Calendar.MINUTE, Integer.valueOf(time.split("m")[0]));
@@ -201,12 +205,15 @@ public class ComandosExecutor {
 				c.add(Calendar.SECOND, Integer.valueOf(time));
 			}
 			plugin.getBannedPlayers().getBannedPlayers().put(namePlayer, c.getTime().getTime());
-			if (player != null)
-				player.sendMessage(plugin.getLanguage().getTagPlugin() + " "
-						+ plugin.getLanguage().getBanPlayer().replaceAll("%time%",
-								UtilsRandomEvents
-										.calculateTime((c.getTime().getTime() - (new Date()).getTime()) / 1000))
+			for (Player pla : Bukkit.getOnlinePlayers()) {
+				pla.sendMessage(plugin.getLanguage().getTagPlugin() + " "
+						+ plugin.getLanguage().getBanPlayer()
+								.replaceAll("%time%",
+										UtilsRandomEvents
+												.calculateTime((c.getTime().getTime() - (new Date()).getTime()) / 1000))
+								.replaceAll("%player%", namePlayer)
 						+ ". Reason: " + reason);
+			}
 		} catch (Exception e) {
 
 			if (player != null)
@@ -219,8 +226,9 @@ public class ComandosExecutor {
 		try {
 			if (plugin.getBannedPlayers().getBannedPlayers().containsKey(namePlayer)) {
 				plugin.getBannedPlayers().getBannedPlayers().remove(namePlayer);
-				if (player != null)
-					player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getUnbanPlayer());
+				for (Player pla : Bukkit.getOnlinePlayers()) {
+					pla.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getUnbanPlayer().replaceAll("%player%",namePlayer));
+				}
 			} else {
 				if (player != null)
 					player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getPlayerNotBanned());
@@ -286,10 +294,10 @@ public class ComandosExecutor {
 			if (player != null) {
 
 				player.sendMessage(((m.getEnabled() == null || m.getEnabled()) ? "§6" : "§c") + "§l"
-						+ plugin.getMatches().indexOf(m) + " - " + m.getMinigame().getMessage() + " -> "
+						+ plugin.getMatches().indexOf(m) + " - " + m.getMinigame().getMessage(plugin) + " -> "
 						+ m.getName().replaceAll(" ", "_"));
 			} else {
-				System.out.println(plugin.getMatches().indexOf(m) + " - " + m.getMinigame().getMessage() + " -> "
+				System.out.println(plugin.getMatches().indexOf(m) + " - " + m.getMinigame().getMessage(plugin) + " -> "
 						+ m.getName().replaceAll(" ", "_"));
 			}
 		}

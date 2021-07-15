@@ -157,9 +157,9 @@ public class Constantes {
 
 		YOU_ARE_BANNED("youAreBanned", "comun.youAreBanned", "&c&lYou are banned from RandomEvents until %time%"),
 
-		BAN_PLAYER("banPlayer", "comun.banPlayer", "&c&lPlayer banned until %time%"),
+		BAN_PLAYER("banPlayer", "comun.banPlayer", "&c&lPlayer %player% banned until %time%"),
 
-		UNBAN_PLAYER("unbanPlayer", "comun.unbanPlayer", "&c&lPlayer unbanned from RandomEvents"),
+		UNBAN_PLAYER("unbanPlayer", "comun.unbanPlayer", "&c&lPlayer %player% unbanned from RandomEvents"),
 
 		PLAYER_NOT_BANNED("playerNotBanned", "comun.playerNotBanned", "&c&lPlayer is not banned from RandomEvents"),
 
