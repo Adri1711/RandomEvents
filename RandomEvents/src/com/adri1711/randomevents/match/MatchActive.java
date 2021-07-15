@@ -935,12 +935,12 @@ public class MatchActive {
 			if (tiempo) {
 				play.sendMessage(plugin.getLanguage().getTagPlugin() + " "
 						+ plugin.getLanguage().getWinnersPoints().replace("%points%", maximo.toString())
-								.replace("%type%", match.getMinigame().getMessage())
+								.replace("%type%", match.getMinigame().getMessage(plugin))
 								.replace("%players%", cadenaGanadores).replace("%event%", match.getName()));
 
 			} else {
 				play.sendMessage(plugin.getLanguage().getTagPlugin()
-						+ plugin.getLanguage().getWinners().replace("%type%", match.getMinigame().getMessage())
+						+ plugin.getLanguage().getWinners().replace("%type%", match.getMinigame().getMessage(plugin))
 								.replace("%players%", cadenaGanadores).replace("%event%", match.getName()));
 			}
 		}
@@ -1095,14 +1095,14 @@ public class MatchActive {
 				List<Player> playersOnline = new ArrayList<Player>();
 				playersOnline.addAll(Bukkit.getOnlinePlayers());
 				UtilsRandomEvents.mandaMensaje(plugin, playersOnline, plugin.getLanguage().getEventCancelled()
-						.replaceAll("%event%", match.getName()).replaceAll("%type%", match.getMinigame().getMessage()),
+						.replaceAll("%event%", match.getName()).replaceAll("%type%", match.getMinigame().getMessage(plugin)),
 						true);
 
 			} else if (abrupto) {
 				List<Player> playersOnline = new ArrayList<Player>();
 				playersOnline.addAll(Bukkit.getOnlinePlayers());
 				UtilsRandomEvents.mandaMensaje(plugin, playersOnline, plugin.getLanguage().getEventStopped()
-						.replaceAll("%event%", match.getName()).replaceAll("%type%", match.getMinigame().getMessage()),
+						.replaceAll("%event%", match.getName()).replaceAll("%type%", match.getMinigame().getMessage(plugin)),
 						true);
 
 			}
@@ -3108,7 +3108,7 @@ public class MatchActive {
 						firstPart = totalPart[0];
 						firstPart = StringEscapeUtils.unescapeJava(firstPart.toString());
 						firstPart = firstPart.replaceAll("%event%", match.getName())
-								.replaceAll("%type%", match.getMinigame().getMessage()).replaceAll("\\n", "<jump>")
+								.replaceAll("%type%", match.getMinigame().getMessage(plugin)).replaceAll("\\n", "<jump>")
 								.replaceAll("%neededPlayers%", match.getAmountPlayersMin().toString())
 								.replaceAll("%maxPlayers%", match.getAmountPlayers().toString())
 								.replaceAll("%players%", "" + getPlayerHandler().getPlayers().size());
@@ -3125,7 +3125,7 @@ public class MatchActive {
 						lastPart = StringEscapeUtils.unescapeJava(lastPart.toString());
 
 						lastPart = lastPart.replaceAll("%event%", match.getName())
-								.replaceAll("%type%", match.getMinigame().getMessage()).replaceAll("\\n", "<jump>")
+								.replaceAll("%type%", match.getMinigame().getMessage(plugin)).replaceAll("\\n", "<jump>")
 								.replaceAll("%neededPlayers%", match.getAmountPlayersMin().toString())
 								.replaceAll("%maxPlayers%", match.getAmountPlayers().toString())
 								.replaceAll("%players%", "" + getPlayerHandler().getPlayers().size());
@@ -3238,7 +3238,7 @@ public class MatchActive {
 							firstPart = totalPart[0];
 							firstPart = StringEscapeUtils.unescapeJava(firstPart.toString());
 							firstPart = firstPart.replaceAll("%event%", match.getName())
-									.replaceAll("%type%", match.getMinigame().getMessage()).replaceAll("\\n", "<jump>")
+									.replaceAll("%type%", match.getMinigame().getMessage(plugin)).replaceAll("\\n", "<jump>")
 									.replaceAll("%neededPlayers%", match.getAmountPlayersMin().toString())
 									.replaceAll("%maxPlayers%", match.getAmountPlayers().toString())
 									.replaceAll("%players%", "" + getPlayerHandler().getPlayers().size());
@@ -3258,7 +3258,7 @@ public class MatchActive {
 							lastPart = StringEscapeUtils.unescapeJava(lastPart.toString());
 
 							lastPart = lastPart.replaceAll("%event%", match.getName())
-									.replaceAll("%type%", match.getMinigame().getMessage()).replaceAll("\\n", "<jump>")
+									.replaceAll("%type%", match.getMinigame().getMessage(plugin)).replaceAll("\\n", "<jump>")
 									.replaceAll("%neededPlayers%", match.getAmountPlayersMin().toString())
 									.replaceAll("%maxPlayers%", match.getAmountPlayers().toString())
 									.replaceAll("%players%", "" + getPlayerHandler().getPlayers().size());

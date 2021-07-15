@@ -209,5 +209,36 @@ public class Comandos {
 		}
 
 	}
+	
+	public static void ejecutaComandoInfinitoArgumentos(RandomEvents plugin, Player player, String[] args) {
+		try {
+
+			ComandosEnum comando = ComandosEnum.getByAliaseAndSize(args[0], 9999);
+			if (comando != null) {
+				if ((player == null && comando.getCanConsole())
+						|| (player != null && player.hasPermission(comando.getPermission()))) {
+
+					Method method = plugin.getComandosExecutor().getClass().getMethod(comando.getMetodo(),
+							RandomEvents.class, Player.class, String[].class);
+					method.invoke(plugin.getComandosExecutor(), plugin, player, args);
+				} else {
+					if (player != null)
+						player.sendMessage(
+								plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getNoPermission());
+
+				}
+			} else {
+				if (player != null)
+					player.sendMessage(
+							plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidCmd());
+			}
+
+		} catch (Throwable e) {
+			System.out.println(e);
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
+		}
+
+	}
 
 }

@@ -9,65 +9,65 @@ import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.util.enums.XMaterial;
 
 public enum MinigameType {
-	BATTLE_ROYALE("BR", XMaterial.STONE_SWORD.parseMaterial(), "Battle Royale"),
+	BATTLE_ROYALE("BR", XMaterial.STONE_SWORD.parseMaterial(), "getNameBattleRoyale"),
 
-	BATTLE_ROYALE_TEAM_2("BRT2", XMaterial.STONE_SWORD.parseMaterial(), "Team Battle Royale"),
+	BATTLE_ROYALE_TEAM_2("BRT2", XMaterial.STONE_SWORD.parseMaterial(), "getNameTeamBattleRoyale"),
 
-	BATTLE_ROYALE_CABALLO("LJ", XMaterial.IRON_HORSE_ARMOR.parseMaterial(), "Knights Battle"),
+	BATTLE_ROYALE_CABALLO("LJ", XMaterial.IRON_HORSE_ARMOR.parseMaterial(), "getNameKnightsBattle"),
 
-	TOP_KILLER("TKLL", XMaterial.IRON_SWORD.parseMaterial(), "Top Killer"),
+	TOP_KILLER("TKLL", XMaterial.IRON_SWORD.parseMaterial(), "getNameTopKiller"),
 
-	TOP_KILLER_TEAM_2("TKLLT2", XMaterial.IRON_SWORD.parseMaterial(), "Team Top Killer"),
+	TOP_KILLER_TEAM_2("TKLLT2", XMaterial.IRON_SWORD.parseMaterial(), "getNameTeamTopKiller"),
 
-	KNOCKBACK_DUEL("KBD", XMaterial.WOODEN_SWORD.parseMaterial(), "Knockback Duel"),
+	KNOCKBACK_DUEL("KBD", XMaterial.WOODEN_SWORD.parseMaterial(), "getNameKnockbackDuel"),
 
-	ESCAPE_ARROW("EARR", XMaterial.ARROW.parseMaterial(), "Arrow Rain"),
+	ESCAPE_ARROW("EARR", XMaterial.ARROW.parseMaterial(), "getNameArrowRain"),
 
-	ANVIL_SPLEEF("ANVIL_SPLEEF", XMaterial.ANVIL.parseMaterial(), "Anvil Spleef"),
+	ANVIL_SPLEEF("ANVIL_SPLEEF", XMaterial.ANVIL.parseMaterial(), "getNameAnvilSpleef"),
 
-	GEM_CRAWLER("GEMC", XMaterial.EMERALD.parseMaterial(), "Gem Carrier"),
+	GEM_CRAWLER("GEMC", XMaterial.EMERALD.parseMaterial(), "getNameGemCarrier"),
 
-	BOMB_TAG("BOMB", XMaterial.TNT.parseMaterial(), "TNT Tag"),
+	BOMB_TAG("BOMB", XMaterial.TNT.parseMaterial(), "getNameTNTTag"),
 
-	BOAT_RUN("BOAT_RUN", XMaterial.OAK_BOAT.parseMaterial(), "Boat Race"),
+	BOAT_RUN("BOAT_RUN", XMaterial.OAK_BOAT.parseMaterial(), "getNameBoatRace"),
 
-	HORSE_RUN("HORSE_RUN", XMaterial.IRON_HORSE_ARMOR.parseMaterial(), "Horse Race"),
+	HORSE_RUN("HORSE_RUN", XMaterial.IRON_HORSE_ARMOR.parseMaterial(), "getNameHorseRace"),
 
-	ESCAPE_FROM_BEAST("ESCAPE_FROM_BEAST", XMaterial.SKELETON_SKULL.parseMaterial(), "Escape from the beast"),
+	ESCAPE_FROM_BEAST("ESCAPE_FROM_BEAST", XMaterial.SKELETON_SKULL.parseMaterial(), "getNameEscapeBeast"),
 
-	RACE("RACE", XMaterial.IRON_BOOTS.parseMaterial(), "Race"),
+	RACE("RACE", XMaterial.IRON_BOOTS.parseMaterial(), "getNameRace"),
 
-	TNT_RUN("TNTRUN", XMaterial.TNT.parseMaterial(), "TNT Run"),
+	TNT_RUN("TNTRUN", XMaterial.TNT.parseMaterial(), "getNameTNTRun"),
 
-	SPLEEF("SPLEEF", XMaterial.IRON_SHOVEL.parseMaterial(), "Spleef"),
+	SPLEEF("SPLEEF", XMaterial.IRON_SHOVEL.parseMaterial(), "getNameSpleef"),
 
-	SPLEGG("SPLEGG", XMaterial.EGG.parseMaterial(), "Splegg"),
+	SPLEGG("SPLEGG", XMaterial.EGG.parseMaterial(), "getNameSplegg"),
 
-	OITC("OITC", XMaterial.BOW.parseMaterial(), "One in the chamber"),
+	OITC("OITC", XMaterial.BOW.parseMaterial(), "getNameOITC"),
 
-	SG("SG", XMaterial.BEEF.parseMaterial(), "Survival Games"),
+	SG("SG", XMaterial.BEEF.parseMaterial(), "getNameSurvivalGames"),
 
-	TSG("TSG", XMaterial.COOKED_BEEF.parseMaterial(), "Team Survival Games"),
+	TSG("TSG", XMaterial.COOKED_BEEF.parseMaterial(), "getNameTeamSurvivalGames"),
 
-	SW("SW", XMaterial.DIRT.parseMaterial(), "Skywars"),
+	SW("SW", XMaterial.DIRT.parseMaterial(), "getNameSkywars"),
 
-	TSW("TSW", XMaterial.STONE.parseMaterial(), "Team Skywars"),
+	TSW("TSW", XMaterial.STONE.parseMaterial(), "getNameTeamSkywars"),
 
-	WDROP("WDROP", XMaterial.WATER_BUCKET.parseMaterial(), "Water Drop"),
+	WDROP("WDROP", XMaterial.WATER_BUCKET.parseMaterial(), "getNameWaterDrop"),
 
-	QUAKECRAFT("QUAKE", XMaterial.STONE_HOE.parseMaterial(), "QuakeCraft"),
+	QUAKECRAFT("QUAKE", XMaterial.STONE_HOE.parseMaterial(), "getNameQuakeCraft"),
 
-	PAINTBALL("PBALL", XMaterial.SNOWBALL.parseMaterial(), "Paintball"),
+	PAINTBALL("PBALL", XMaterial.SNOWBALL.parseMaterial(), "getNamePaintball"),
 
-	KOTH("KOTH", XMaterial.GOLDEN_HELMET.parseMaterial(), "King of the Hill"),
+	KOTH("KOTH", XMaterial.GOLDEN_HELMET.parseMaterial(), "getNameKingHill"),
 
-	FISH_SLAP("FISHSLAP", XMaterial.TROPICAL_FISH.parseMaterial(), "Fish slap"),
+	FISH_SLAP("FISHSLAP", XMaterial.TROPICAL_FISH.parseMaterial(), "getNameFishSlap"),
 
-	HOEHOEHOE("HOE", XMaterial.WOODEN_HOE.parseMaterial(), "Hoe hoe hoe"),
+	HOEHOEHOE("HOE", XMaterial.WOODEN_HOE.parseMaterial(), "getNameHoehoehoe"),
 
-	SPLATOON("SPLATOON", XMaterial.RED_DYE.parseMaterial(), "Splatoon"),
+	SPLATOON("SPLATOON", XMaterial.RED_DYE.parseMaterial(), "getNameSplatoon"),
 
-	BOMBARDMENT("BOMBARDMENT", XMaterial.COAL_BLOCK.parseMaterial(), "Bombardment");
+	BOMBARDMENT("BOMBARDMENT", XMaterial.COAL_BLOCK.parseMaterial(), "getNameBombardment");
 
 	
 
@@ -99,9 +99,6 @@ public enum MinigameType {
 		this.codigo = codigo;
 	}
 
-	public String getMessage() {
-		return message;
-	}
 	
 	public String getMessage(RandomEvents plugin){
 		String menu="";
@@ -117,6 +114,10 @@ public enum MinigameType {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+	
+	public String getMessage() {
+		return message;
 	}
 
 	public Material getMaterial() {

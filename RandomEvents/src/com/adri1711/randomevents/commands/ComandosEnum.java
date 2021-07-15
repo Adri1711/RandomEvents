@@ -69,6 +69,9 @@ public enum ComandosEnum {
 	CMD_BAN_PLAYER("ban", 3, "randomevent.admin.ban", "getBan", "banPlayer", true, true),
 	
 	CMD_BAN_PLAYER_REASON("ban", 4, "randomevent.admin.ban", "getBan", "banPlayer", false, true),
+	
+	CMD_BAN_PLAYER_REASON_INFINITE("ban", 9999, "randomevent.admin.ban", "getBan", "banPlayer", false, true),
+
 
 	CMD_UNBAN_PLAYER("unban", 2, "randomevent.admin.unban", "getUnban", "unbanPlayer", true, true),
 

@@ -440,7 +440,68 @@ public class Constantes {
 		KIT_DEFAULT_NAME("kitDefaultName", "kit.defaultName", "&6&lKit: %kit_name%"),
 
 		KIT_DEFAULT_LORE("kitDefaultLore", "kit.defaultLore", "&eChoose it!;&eWin with this one!."),
+		
+		
+		NAME_BATTLEROYALE("nameBattleRoyale", "minigameName.BattleRoyale","Battle Royale"),
 
+		NAME_TEAMBATTLEROYALE("nameTeamBattleRoyale", "minigameName.DuoBattleRoyale","Duo Battle Royale"),
+
+		NAME_KNIGHTSBATTLE("nameKnightsBattle", "minigameName.KnightsBattle","Knights Battle"),
+
+		NAME_TOPKILLER("nameTopKiller", "minigameName.TopKiller","Top Killer"),
+
+		NAME_TEAMTOPKILLER("nameTeamTopKiller", "minigameName.DuoTopKiller","Duo Top Killer"),
+
+		NAME_KNOCKBACKDUEL("nameKnockbackDuel", "minigameName.KnockbackDuel","Knockback Duel"),
+
+		NAME_ARROWRAIN("nameArrowRain", "minigameName.ArrowRain","Arrow Rain"),
+
+		NAME_ANVILSPLEEF("nameAnvilSpleef", "minigameName.AnvilSpleef","Anvil Spleef"),
+
+		NAME_GEMCARRIER("nameGemCarrier", "minigameName.GemCarrier","Gem Carrier"),
+
+		NAME_TNTTAG("nameTNTTag", "minigameName.TNTTag","TNT Tag"),
+
+		NAME_BOATRACE("nameBoatRace", "minigameName.BoatRace","Boat Race"),
+
+		NAME_HORSERACE("nameHorseRace", "minigameName.HorseRace","Horse Race"),
+
+		NAME_ESCAPEBEAST("nameEscapeBeast", "minigameName.EscapeBeast","Escape from the Beast"),
+
+		NAME_RACE("nameRace", "minigameName.Race","Race"),
+
+		NAME_TNTRUN("nameTNTRun", "minigameName.TNTRun","TNT Run"),
+
+		NAME_SPLEEF("nameSpleef", "minigameName.Spleef","Spleef"),
+
+		NAME_SPLEGG("nameSplegg", "minigameName.Splegg","Splegg"),
+
+		NAME_OITC("nameOITC", "minigameName.OITC","One in the Chamber"),
+
+		NAME_SURVIVALGAMES("nameSurvivalGames", "minigameName.SurvivalGames","Survival Games"),
+
+		NAME_TEAMSURVIVALGAMES("nameTeamSurvivalGames", "minigameName.DuoSurvivalGames","Duo Survival Games"),
+
+		NAME_SKYWARS("nameSkywars", "minigameName.Skywars","Skywars"),
+
+		NAME_TEAMSKYWARS("nameTeamSkywars", "minigameName.DuoSkywars","Duo Skywars"),
+
+		NAME_WATERDROP("nameWaterDrop", "minigameName.WaterDrop","Dropper"),
+
+		NAME_QUAKECRAFT("nameQuakeCraft", "minigameName.QuakeCraft","Quake Craft"),
+
+		NAME_PAINTBALL("namePaintball", "minigameName.Paintball","Paintball"),
+
+		NAME_KINGHILL("nameKingHill", "minigameName.KingHill","King of the Hill"),
+
+		NAME_FISHSLAP("nameFishSlap", "minigameName.FishSlap","Fish Slap"),
+
+		NAME_HOEHOEHOE("nameHoehoehoe", "minigameName.Hoehoehoe","Hoe hoe hoe"),
+
+		NAME_SPLATOON("nameSplatoon", "minigameName.Splatoon","Splatoon"),
+
+		NAME_BOMBARDMENT("nameBombardment", "minigameName.Bombardment","Bombardment"),
+		
 		MINIGAME_DESC_BR("minigameDescriptionBR", "minigame.description.BR",
 				"&eA fierce battle where just 1 player;&e or team can remain alive."),
 

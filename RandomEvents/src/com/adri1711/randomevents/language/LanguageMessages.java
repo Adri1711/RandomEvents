@@ -204,6 +204,37 @@ public class LanguageMessages {
 	private String kitGuiName;
 	private String kitChosen;
 
+	private String nameBattleRoyale;
+	private String nameTeamBattleRoyale;
+	private String nameKnightsBattle;
+	private String nameTopKiller;
+	private String nameTeamTopKiller;
+	private String nameKnockbackDuel;
+	private String nameArrowRain;
+	private String nameAnvilSpleef;
+	private String nameGemCarrier;
+	private String nameTNTTag;
+	private String nameBoatRace;
+	private String nameHorseRace;
+	private String nameEscapeBeast;
+	private String nameRace;
+	private String nameTNTRun;
+	private String nameSpleef;
+	private String nameSplegg;
+	private String nameOITC;
+	private String nameSurvivalGames;
+	private String nameTeamSurvivalGames;
+	private String nameSkywars;
+	private String nameTeamSkywars;
+	private String nameWaterDrop;
+	private String nameQuakeCraft;
+	private String namePaintball;
+	private String nameKingHill;
+	private String nameFishSlap;
+	private String nameHoehoehoe;
+	private String nameSplatoon;
+	private String nameBombardment;
+
 	private List<String> kitDefaultLore;
 
 	private List<String> minigameDescriptionBR;
@@ -1944,4 +1975,246 @@ public class LanguageMessages {
 		this.teamGuiName = teamGuiName;
 	}
 
+	public String getNameBattleRoyale() {
+		return nameBattleRoyale.replaceAll("&", "§");
+	}
+
+	public String getNameTeamBattleRoyale() {
+		return nameTeamBattleRoyale.replaceAll("&", "§");
+	}
+
+	public String getNameKnightsBattle() {
+		return nameKnightsBattle.replaceAll("&", "§");
+	}
+
+	public String getNameTopKiller() {
+		return nameTopKiller.replaceAll("&", "§");
+	}
+
+	public String getNameTeamTopKiller() {
+		return nameTeamTopKiller.replaceAll("&", "§");
+	}
+
+	public String getNameKnockbackDuel() {
+		return nameKnockbackDuel.replaceAll("&", "§");
+	}
+
+	public String getNameArrowRain() {
+		return nameArrowRain.replaceAll("&", "§");
+	}
+
+	public String getNameAnvilSpleef() {
+		return nameAnvilSpleef.replaceAll("&", "§");
+	}
+
+	public String getNameGemCarrier() {
+		return nameGemCarrier.replaceAll("&", "§");
+	}
+
+	public String getNameTNTTag() {
+		return nameTNTTag.replaceAll("&", "§");
+	}
+
+	public String getNameBoatRace() {
+		return nameBoatRace.replaceAll("&", "§");
+	}
+
+	public String getNameHorseRace() {
+		return nameHorseRace.replaceAll("&", "§");
+	}
+
+	public String getNameEscapeBeast() {
+		return nameEscapeBeast.replaceAll("&", "§");
+	}
+
+	public String getNameRace() {
+		return nameRace.replaceAll("&", "§");
+	}
+
+	public String getNameTNTRun() {
+		return nameTNTRun.replaceAll("&", "§");
+	}
+
+	public String getNameSpleef() {
+		return nameSpleef.replaceAll("&", "§");
+	}
+
+	public String getNameSplegg() {
+		return nameSplegg.replaceAll("&", "§");
+	}
+
+	public String getNameOITC() {
+		return nameOITC.replaceAll("&", "§");
+	}
+
+	public String getNameSurvivalGames() {
+		return nameSurvivalGames.replaceAll("&", "§");
+	}
+
+	public String getNameTeamSurvivalGames() {
+		return nameTeamSurvivalGames.replaceAll("&", "§");
+	}
+
+	public String getNameSkywars() {
+		return nameSkywars.replaceAll("&", "§");
+	}
+
+	public String getNameTeamSkywars() {
+		return nameTeamSkywars.replaceAll("&", "§");
+	}
+
+	public String getNameWaterDrop() {
+		return nameWaterDrop.replaceAll("&", "§");
+	}
+
+	public String getNameQuakeCraft() {
+		return nameQuakeCraft.replaceAll("&", "§");
+	}
+
+	public String getNamePaintball() {
+		return namePaintball.replaceAll("&", "§");
+	}
+
+	public String getNameKingHill() {
+		return nameKingHill.replaceAll("&", "§");
+	}
+
+	public String getNameFishSlap() {
+		return nameFishSlap.replaceAll("&", "§");
+	}
+
+	public String getNameHoehoehoe() {
+		return nameHoehoehoe.replaceAll("&", "§");
+	}
+
+	public String getNameSplatoon() {
+		return nameSplatoon.replaceAll("&", "§");
+	}
+
+	public String getNameBombardment() {
+		return nameBombardment.replaceAll("&", "§");
+	}
+
+	public void setNameBattleRoyale(String nameBattleRoyale) {
+		this.nameBattleRoyale = nameBattleRoyale;
+	}
+
+	public void setNameTeamBattleRoyale(String nameTeamBattleRoyale) {
+		this.nameTeamBattleRoyale = nameTeamBattleRoyale;
+	}
+
+	public void setNameKnightsBattle(String nameKnightsBattle) {
+		this.nameKnightsBattle = nameKnightsBattle;
+	}
+
+	public void setNameTopKiller(String nameTopKiller) {
+		this.nameTopKiller = nameTopKiller;
+	}
+
+	public void setNameTeamTopKiller(String nameTeamTopKiller) {
+		this.nameTeamTopKiller = nameTeamTopKiller;
+	}
+
+	public void setNameKnockbackDuel(String nameKnockbackDuel) {
+		this.nameKnockbackDuel = nameKnockbackDuel;
+	}
+
+	public void setNameArrowRain(String nameArrowRain) {
+		this.nameArrowRain = nameArrowRain;
+	}
+
+	public void setNameAnvilSpleef(String nameAnvilSpleef) {
+		this.nameAnvilSpleef = nameAnvilSpleef;
+	}
+
+	public void setNameGemCarrier(String nameGemCarrier) {
+		this.nameGemCarrier = nameGemCarrier;
+	}
+
+	public void setNameTNTTag(String nameTNTTag) {
+		this.nameTNTTag = nameTNTTag;
+	}
+
+	public void setNameBoatRace(String nameBoatRace) {
+		this.nameBoatRace = nameBoatRace;
+	}
+
+	public void setNameHorseRace(String nameHorseRace) {
+		this.nameHorseRace = nameHorseRace;
+	}
+
+	public void setNameEscapeBeast(String nameEscapeBeast) {
+		this.nameEscapeBeast = nameEscapeBeast;
+	}
+
+	public void setNameRace(String nameRace) {
+		this.nameRace = nameRace;
+	}
+
+	public void setNameTNTRun(String nameTNTRun) {
+		this.nameTNTRun = nameTNTRun;
+	}
+
+	public void setNameSpleef(String nameSpleef) {
+		this.nameSpleef = nameSpleef;
+	}
+
+	public void setNameSplegg(String nameSplegg) {
+		this.nameSplegg = nameSplegg;
+	}
+
+	public void setNameOITC(String nameOITC) {
+		this.nameOITC = nameOITC;
+	}
+
+	public void setNameSurvivalGames(String nameSurvivalGames) {
+		this.nameSurvivalGames = nameSurvivalGames;
+	}
+
+	public void setNameTeamSurvivalGames(String nameTeamSurvivalGames) {
+		this.nameTeamSurvivalGames = nameTeamSurvivalGames;
+	}
+
+	public void setNameSkywars(String nameSkywars) {
+		this.nameSkywars = nameSkywars;
+	}
+
+	public void setNameTeamSkywars(String nameTeamSkywars) {
+		this.nameTeamSkywars = nameTeamSkywars;
+	}
+
+	public void setNameWaterDrop(String nameWaterDrop) {
+		this.nameWaterDrop = nameWaterDrop;
+	}
+
+	public void setNameQuakeCraft(String nameQuakeCraft) {
+		this.nameQuakeCraft = nameQuakeCraft;
+	}
+
+	public void setNamePaintball(String namePaintball) {
+		this.namePaintball = namePaintball;
+	}
+
+	public void setNameKingHill(String nameKingHill) {
+		this.nameKingHill = nameKingHill;
+	}
+
+	public void setNameFishSlap(String nameFishSlap) {
+		this.nameFishSlap = nameFishSlap;
+	}
+
+	public void setNameHoehoehoe(String nameHoehoehoe) {
+		this.nameHoehoehoe = nameHoehoehoe;
+	}
+
+	public void setNameSplatoon(String nameSplatoon) {
+		this.nameSplatoon = nameSplatoon;
+	}
+
+	public void setNameBombardment(String nameBombardment) {
+		this.nameBombardment = nameBombardment;
+	}
+	
+
+	
 }

@@ -222,12 +222,30 @@ public class ComandosExecutor {
 
 	}
 
+	public void banPlayer(RandomEvents plugin, Player player, String[] args) {
+		String namePlayer = args[1];
+		String time = args[2];
+		String reason = "";
+		int i = 0;
+		for (String s : args) {
+			if (i > 2) {
+				if (s != null)
+					reason += s + " ";
+			}
+			i++;
+		}
+		reason = reason.substring(0, reason.length() - 1);
+		banPlayer(plugin, player, namePlayer, time, reason);
+
+	}
+
 	public void unbanPlayer(RandomEvents plugin, Player player, String namePlayer) {
 		try {
 			if (plugin.getBannedPlayers().getBannedPlayers().containsKey(namePlayer)) {
 				plugin.getBannedPlayers().getBannedPlayers().remove(namePlayer);
 				for (Player pla : Bukkit.getOnlinePlayers()) {
-					pla.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getUnbanPlayer().replaceAll("%player%",namePlayer));
+					pla.sendMessage(plugin.getLanguage().getTagPlugin()
+							+ plugin.getLanguage().getUnbanPlayer().replaceAll("%player%", namePlayer));
 				}
 			} else {
 				if (player != null)

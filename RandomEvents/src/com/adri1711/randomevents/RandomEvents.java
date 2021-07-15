@@ -885,11 +885,13 @@ public class RandomEvents extends JavaPlugin {
 				Comandos.ejecutaComandoCincoArgumentos(this, player, args);
 				break;
 			default:
-				if (player != null) {
-					player.sendMessage(getLanguage().getTagPlugin() + language.getInvalidCmd());
-				} else {
-					System.out.println(getLanguage().getTagPlugin() + language.getInvalidCmd());
-				}
+				Comandos.ejecutaComandoInfinitoArgumentos(this, player, args);
+
+//				if (player != null) {
+//					player.sendMessage(getLanguage().getTagPlugin() + language.getInvalidCmd());
+//				} else {
+//					System.out.println(getLanguage().getTagPlugin() + language.getInvalidCmd());
+//				}
 				break;
 
 			}

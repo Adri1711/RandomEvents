@@ -1360,7 +1360,7 @@ public class UtilsRandomEvents {
 
 				ItemStack item = new ItemStack(minigame.getMaterial());
 				ItemMeta itemMeta = item.getItemMeta();
-				itemMeta.setDisplayName("§6§l" + minigame.getMessage());
+				itemMeta.setDisplayName("§6§l" + minigame.getMessage(plugin));
 				List<String> lore = new ArrayList<String>();
 				Integer wins = estadisticas.getWins(minigame.getCodigo());
 				Integer tries = estadisticas.getTries(minigame.getCodigo());
