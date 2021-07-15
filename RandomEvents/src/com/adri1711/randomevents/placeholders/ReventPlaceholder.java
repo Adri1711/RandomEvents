@@ -50,7 +50,7 @@ public class ReventPlaceholder extends PlaceholderExpansion {
 
 	public String onPlaceholderRequest(Player p, String identifier) {
 		String res = null;
-		if (plugin.isMysqlEnabled()) {
+		if (plugin.getReventConfig().isMysqlEnabled()) {
 
 			if (identifier.equals("total_tries")) {
 				Integer callback = UtilsSQL.getAllStatsSync(p, PlaceholderType.TRIES, plugin);

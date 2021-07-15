@@ -25,7 +25,7 @@ public class Join implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent evt) {
 		Player player = evt.getPlayer();
 		UtilsRandomEvents.sacaInventario(plugin, player);
-		if (plugin.getMatchActive() != null && plugin.isForcePlayersToSpectate()) {
+		if (plugin.getMatchActive() != null && plugin.getReventConfig().isForcePlayersToSpectate()) {
 
 			if (plugin.getMatchActive().getPlaying()) {
 

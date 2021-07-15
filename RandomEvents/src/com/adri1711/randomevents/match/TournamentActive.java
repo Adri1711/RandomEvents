@@ -249,7 +249,7 @@ public class TournamentActive {
 						for (Player p : Bukkit.getOnlinePlayers()) {
 							if (p.hasPermission(ComandosEnum.CMD_JOIN_TOURNAMENT.getPermission())) {
 								if (playSound) {
-									UtilsRandomEvents.playSound(p, XSound.ENTITY_VILLAGER_HURT);
+									UtilsRandomEvents.playSound(plugin,p, XSound.ENTITY_VILLAGER_HURT);
 								}
 								for (String pri : primerasPartes) {
 									p.sendMessage(pri);
@@ -271,7 +271,7 @@ public class TournamentActive {
 							}
 						}
 
-						if (tries <= plugin.getNumberOfTriesBeforeCancelling()) {
+						if (tries <= plugin.getReventConfig().getNumberOfTriesBeforeCancelling()) {
 							matchWaitingPlayers();
 						} else {
 							finalizaPartida(new ArrayList<Player>(), playersSpectators, Boolean.FALSE, Boolean.TRUE);
@@ -342,7 +342,7 @@ public class TournamentActive {
 	public void daRecompensas(List<Player> ganadores, List<Player> playersSpectators) {
 		if (getPlaying()) {
 			setPlaying(Boolean.FALSE);
-			UtilsRandomEvents.playSound(playersSpectators, XSound.ENTITY_ENDER_DRAGON_DEATH);
+			UtilsRandomEvents.playSound(plugin,playersSpectators, XSound.ENTITY_ENDER_DRAGON_DEATH);
 
 			String cadenaGanadores = "";
 			if (ganadores.size() == 1) {
@@ -452,7 +452,7 @@ public class TournamentActive {
 			} catch (Exception e) {
 				if (player != null) {
 					System.out.println("[RandomEvents] The player " + player.getName() + " failed on teleport");
-					if (plugin.isDebugMode()) {
+					if (plugin.getReventConfig().isDebugMode()) {
 						System.out.println("RandomEvents::DebugMode:: " + e);
 					}
 				}
@@ -469,7 +469,7 @@ public class TournamentActive {
 		if (!getPlayers().contains(player.getName())) {
 
 			if (getPlayers().size() < tournament.getMaxPlayers()) {
-				if (!plugin.isForceEmptyInventoryToJoin()) {
+				if (!plugin.getReventConfig().isForceEmptyInventoryToJoin()) {
 
 					if (UtilsRandomEvents.checkLeatherItems(player)) {
 						procesoUnirPlayer(player);
@@ -508,7 +508,7 @@ public class TournamentActive {
 				getPlayersObj().add(player);
 				getPlayersSpectators().add(player);
 
-				UtilsRandomEvents.playSound(player, XSound.ENTITY_BAT_HURT);
+				UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_BAT_HURT);
 			} else {
 				UtilsRandomEvents.sacaInventario(plugin, player);
 
@@ -522,7 +522,7 @@ public class TournamentActive {
 	}
 
 	private void hazComandosDeUnion(Player player) {
-		for (String cmd : plugin.getCommandsOnUserJoin()) {
+		for (String cmd : plugin.getReventConfig().getCommandsOnUserJoin()) {
 
 			Bukkit.dispatchCommand((CommandSender) Bukkit.getConsoleSender(),
 					cmd.replaceAll("%player%", player.getName()));

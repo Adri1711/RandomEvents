@@ -45,8 +45,8 @@ public class Move implements Listener {
 			if (plugin.getMatchActive().getAllowMove()) {
 
 				switch (plugin.getMatchActive().getMatch().getMinigame()) {
-				case KNOCKBACK_DUEL:
-					if (plugin.isWaterKillKnockbackDuel()) {
+				case SPLEEF:
+					if (plugin.getReventConfig().isWaterKillSpleef()) {
 						if (evt.getTo().getBlock() != null && evt.getTo().getBlock().getType() != null
 								&& (evt.getTo().getBlock().getType() == XMaterial.WATER.parseMaterial()
 										|| evt.getTo().getBlock().getType().toString().equals("STATIONARY_WATER"))) {
@@ -54,13 +54,52 @@ public class Move implements Listener {
 									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
 							plugin.getMatchActive().echaDePartida(player, true, true, false);
-							UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+							UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_VILLAGER_DEATH);
+						}
+					}
+					break;
+				case SPLEGG:
+					if (plugin.getReventConfig().isWaterKillSplegg()) {
+						if (evt.getTo().getBlock() != null && evt.getTo().getBlock().getType() != null
+								&& (evt.getTo().getBlock().getType() == XMaterial.WATER.parseMaterial()
+										|| evt.getTo().getBlock().getType().toString().equals("STATIONARY_WATER"))) {
+							UtilsRandomEvents.mandaMensaje(plugin,
+									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
+							plugin.getMatchActive().echaDePartida(player, true, true, false);
+							UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_VILLAGER_DEATH);
+						}
+					}
+					break;
+				case ANVIL_SPLEEF:
+					if (plugin.getReventConfig().isWaterKillAnvilSpleef()) {
+						if (evt.getTo().getBlock() != null && evt.getTo().getBlock().getType() != null
+								&& (evt.getTo().getBlock().getType() == XMaterial.WATER.parseMaterial()
+										|| evt.getTo().getBlock().getType().toString().equals("STATIONARY_WATER"))) {
+							UtilsRandomEvents.mandaMensaje(plugin,
+									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
+							plugin.getMatchActive().echaDePartida(player, true, true, false);
+							UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_VILLAGER_DEATH);
+						}
+					}
+					break;
+				case KNOCKBACK_DUEL:
+					if (plugin.getReventConfig().isWaterKillKnockbackDuel()) {
+						if (evt.getTo().getBlock() != null && evt.getTo().getBlock().getType() != null
+								&& (evt.getTo().getBlock().getType() == XMaterial.WATER.parseMaterial()
+										|| evt.getTo().getBlock().getType().toString().equals("STATIONARY_WATER"))) {
+							UtilsRandomEvents.mandaMensaje(plugin,
+									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
+							plugin.getMatchActive().echaDePartida(player, true, true, false);
+							UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_VILLAGER_DEATH);
 						}
 					}
 					break;
 
 				case BOMBARDMENT:
-					if (plugin.isWaterKillBombardment()) {
+					if (plugin.getReventConfig().isWaterKillBombardment()) {
 						if (evt.getTo().getBlock() != null && evt.getTo().getBlock().getType() != null
 								&& (evt.getTo().getBlock().getType() == XMaterial.WATER.parseMaterial()
 										|| evt.getTo().getBlock().getType().toString().equals("STATIONARY_WATER"))) {
@@ -68,14 +107,14 @@ public class Move implements Listener {
 									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
 							plugin.getMatchActive().echaDePartida(player, true, true, false);
-							UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+							UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_VILLAGER_DEATH);
 						}
 					}
 					break;
 
 				case SG:
 				case TSG:
-					if (plugin.isWaterKillSG()) {
+					if (plugin.getReventConfig().isWaterKillSG()) {
 						if (evt.getTo().getBlock() != null && evt.getTo().getBlock().getType() != null
 								&& (evt.getTo().getBlock().getType() == XMaterial.WATER.parseMaterial()
 										|| evt.getTo().getBlock().getType().toString().equals("STATIONARY_WATER"))) {
@@ -83,13 +122,13 @@ public class Move implements Listener {
 									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
 							plugin.getMatchActive().echaDePartida(player, true, true, false);
-							UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+							UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_VILLAGER_DEATH);
 						}
 					}
 					break;
 				case SW:
 				case TSW:
-					if (plugin.isWaterKillSW()) {
+					if (plugin.getReventConfig().isWaterKillSW()) {
 						if (evt.getTo().getBlock() != null && evt.getTo().getBlock().getType() != null
 								&& (evt.getTo().getBlock().getType() == XMaterial.WATER.parseMaterial()
 										|| evt.getTo().getBlock().getType().toString().equals("STATIONARY_WATER"))) {
@@ -97,7 +136,7 @@ public class Move implements Listener {
 									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
 							plugin.getMatchActive().echaDePartida(player, true, true, false);
-							UtilsRandomEvents.playSound(player, XSound.ENTITY_VILLAGER_DEATH);
+							UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_VILLAGER_DEATH);
 						}
 					}
 					break;
@@ -135,7 +174,7 @@ public class Move implements Listener {
 						if (!plugin.getMatchActive().getPlayerHandler().getGoalPlayers().contains(player)) {
 							plugin.getMatchActive().getPlayerHandler().getGoalPlayers().add(player);
 							plugin.getMatchActive().ponInventarioRunner(player);
-							UtilsRandomEvents.playSound(player, XSound.ENTITY_PLAYER_LEVELUP);
+							UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_PLAYER_LEVELUP);
 						}
 					}
 					break;
@@ -155,6 +194,17 @@ public class Move implements Listener {
 
 						UtilsRandomEvents.queueTNT(plugin, plugin.getMatchActive(), player.getLocation(),
 								from.distance(evt.getTo()), true);
+					}
+					if (plugin.getReventConfig().isWaterKillTNTRun()) {
+						if (evt.getTo().getBlock() != null && evt.getTo().getBlock().getType() != null
+								&& (evt.getTo().getBlock().getType() == XMaterial.WATER.parseMaterial()
+										|| evt.getTo().getBlock().getType().toString().equals("STATIONARY_WATER"))) {
+							UtilsRandomEvents.mandaMensaje(plugin,
+									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
+							plugin.getMatchActive().echaDePartida(player, true, true, false);
+							UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_VILLAGER_DEATH);
+						}
 					}
 					break;
 				case KOTH:

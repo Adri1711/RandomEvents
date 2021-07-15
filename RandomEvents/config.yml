@@ -1,8 +1,14 @@
 #################################################################
 #						RandomEvents							#
 #						Configuration							#
+# Wiki: https://github.com/Adri1711/RandomEventsWiki/wiki   	#
+# Discord: https://discord.gg/rcXhBn68mQ                        #
 #################################################################
 
+
+#################################################################
+#						  GENERAL   							#
+#################################################################
 debugMode: false
 
 useEncoding: 'UTF-8'
@@ -33,14 +39,23 @@ useLastLocation: false
 #Number of annoucements the random event will do before being cancelled for lack of players
 numberOfTriesBeforeCancelling: 10
 
-#If true you will only be able to join by clicking on the alert, if false you can do /revent join to join an event
+#If true you will only be able to join by clicking on the alert, if false you can do /revent join to join an event (NORMALLY USED FOR BEDROCK PLAYERS)
 needPasswordToJoin: true
 
-#Advanced spectator mode
+#Advanced spectator mode, it puts the users to GAMEMODE Spectator instead of just teleporting them on Survival GAMEMODE
 advancedSpectatorMode: false
 
 #Force Empty Inventory to Join the RandomEvents
 forceEmptyInventoryToJoin: false
+
+#Activate private chat 
+matchPrivateMatch: false
+
+#Force the players to enter the random event when its spawned
+forcePlayersToEnter: false
+
+#Force the players to enter the random event spectating ( It will works only if forcePlayersToEnter is enabled )
+forcePlayersToSpectate: false
 
 #CAUTION. IT IS HIGHLY RECOMMENDED to let it true. If false, the plugin will not manage the items so players will join with own items and can lose them there.
 #Some minigames might not work if its set to false (Splegg, TNT Tag...) as they need special items to work
@@ -49,21 +64,12 @@ inventoryManagement: true
 #Drops items after dying in a minigame
 dropItemsAfterDie: false
 
+#Seconds to begin the match when the min players are fulfilled (minimum 3 seconds)
+secondsToStartMatch: 5
+
 #Random disguise players to avoid teams (NEEDS LIBSDISGUISES TO WORK)
 randomDisguisePlayers: false
 skinDisguisePlayers: 'Dinnerbone'
-
-#Number of gems to win in gem crawler minigame
-numberOfGems: 10
-
-#Number of seconds you have to save the gems to win in gem crawler minigame
-numberOfSecondsWithGems: 10
-
-#Seconds to begin TNT_RUN so TNT will begin to disappear
-warmupTimeTNTRUN: 5
-
-#Seconds to begin the match when the min players are fulfilled (minimum 3 seconds)
-secondsToStartMatch: 5
 
 #Highest priority level of events. Enable this to bypass damage protection of faction plugins for example.
 highestPriorityDamageEvents: false
@@ -71,11 +77,42 @@ highestPriorityDamageEvents: false
 #Optional titles for some messages such as the seconds remaining to begin a match, turn this to true if you want to see titles instead of messages in chat.
 optionalTitles: false
 
-#Maximum items in chests on Survival Games or Skywars minigames
-maxItemOnChests: 10
+#Cooldown for users that doesnt have the cooldown bypass permission for beginning a Random Event without using credits in /revent gui ( On seconds )
+cooldownUsersBeginEvents: 3600
 
-#Minimum items in chests on Survival Games or Skywars minigames
-minItemOnChests: 3
+#Commands that will be done each time a RandomEvent is fired
+commandsOnEventFire: []
+
+#Commands that will be done each time a player kill another one in certain Random Events
+commandsOnKill: []
+
+#Commands that will be done each time a user join a random event, use it in case you need to get the god mode off, to set the gamemode to survival, etc
+commandsOnUserJoin:
+    - 'psa %player%'
+
+#Commands that will be done each time a user leave a random event, use it in case you need to get the god mode off, to set the gamemode to survival, etc
+commandsOnUserLeave:
+    - 'psa %player%'
+
+#Commands that will be done when the match begin for all players, use it in case you need to get the god mode off, to set the gamemode to survival, etc
+commandsOnMatchBegin:
+    - 'god %player% off'
+
+#Commands that will be done when the match ends
+commandsOnMatchEnd:
+    - 'broadcast %event% has ended'
+
+#Allowed cmds in matchs. (DONT USE CAPS HERE)
+allowedCmds:
+    - msg
+    - ac
+    - revent
+    - randomevent
+
+
+#################################################################
+#					 SOME MINIGAMES SETUP       				#
+#################################################################
 
 #Show world border in some minigames
 showBorders: false
@@ -86,8 +123,186 @@ useScoreboard: true
 #Use particles in some minigames
 useParticles: false
 
-#Cooldown for users that doesnt have the cooldown bypass permission for beginning a Random Event without using credits in /revent gui ( On seconds )
-cooldownUsersBeginEvents: 3600
+#Seconds for several minigames to damage all players if they are not attacking each other
+idleTimeForDamage: 10
+
+#Disable the multiple winners when they have the same points
+disableMultipleWinners: false
+
+#Paint games give default weapon so you dont need to put it in the kit
+paintGiveDefaultWeapon: true
+
+#Cooldown before respawning again in minigames with respawn
+cooldownAfterDeath: false
+
+#Cooldown before respawning again in minigames with respawn
+cooldownAfterDeathSeconds: 4
+
+#Equilibrate teams
+equilibrateTeams: true
+
+#Force non empty teams. Only works if  equilibrateTeams is enabled
+forceNonEmptyTeams: true
+
+
+#################################################################
+#					    KNOCKBACK DUEL 		    				#
+#################################################################
+
+#Enable this to make a player lose when they fall into water in knockback duel minigames
+waterKillKnockbackDuel: false
+
+
+#################################################################
+#					      TOP KILLER  		    				#
+#################################################################
+
+#Heal killer after a kill in Top Killer Minigame
+topKillerHealAfterKill: true
+
+#################################################################
+#					      ARROW RAIN 		    				#
+#################################################################
+
+#Probability to spawn a power up of resistance in arrow rain games
+probabilityPowerUp: 1
+
+#Arrow damage in arrow rain minigame
+arrowRainDamage: 10
+
+#################################################################
+#						  GEM CRAWLER  							#
+#################################################################
+
+#Number of gems to win in gem crawler minigame
+numberOfGems: 10
+
+#Number of seconds you have to save the gems to win in gem crawler minigame
+numberOfSecondsWithGems: 10
+
+#################################################################
+#						  TNT RUN   							#
+#################################################################
+
+#Seconds to begin TNT_RUN so TNT will begin to disappear
+warmupTimeTNTRUN: 5
+
+#################################################################
+#						  TNT TAG   							#
+#################################################################
+
+#Speed duration on seconds for tnttag
+speedDuration: 100
+
+#Lvl of the speed for the runners on tnttag
+tntTagSpeedRunners: 3
+
+#Lvl of the speed for the holder of the tnt on tnttag
+tntTagSpeedHolder: 6
+
+#################################################################
+#						  SKYWARS   							#
+#################################################################
+
+#Maximum items in chests on Survival Games or Skywars minigames
+maxItemOnChests: 10
+
+#Minimum items in chests on Survival Games or Skywars minigames
+minItemOnChests: 3
+
+#Enable this to make a player lose when they fall into water in skywars minigames
+waterKillSW: false
+
+#################################################################
+#					  SURVIVAL GAMES		    				#
+#################################################################
+
+#Survival Games Area damage
+sgAreaDamage: 1
+
+#Enable this to make a player lose when they fall into water in survival games minigames
+waterKillSG: false
+
+#################################################################
+#					       OITC		    		        		#
+#################################################################
+
+#Heal killer after a kill in OITC Minigame
+oitcHealAfterKill: true
+
+#################################################################
+#					       RACE		    	  	    	    	#
+#################################################################
+
+#Item material for checkpoint item
+checkpointItem: 'BLAZE_ROD'
+
+#Item material for vanish item
+vanishItem: 'ENDER_EYE'
+
+#################################################################
+#					     QUAKECRAFT    	  	        	    	#
+#################################################################
+
+#Quake give default weapon so you dont need to put it in the kit
+quakeGiveDefaultWeapon: true
+
+#Quake shoot distance
+quakeShootDistance: 50
+
+#Cooldown to make a shoot on quake
+quakeShootCooldown: 1.5
+
+#Cooldown to make a jump on quake
+quakeJumpCooldown: 2.5
+
+#################################################################
+#					     PAINTBALL		    	  	    		#
+#################################################################
+
+#With infinite snowballs enabled you will just need 1 snowball on inventory
+infiniteSnowballs: true
+
+#Snowball damage, normally a damage > 20 is instantkill
+snowballsDamage: 40
+
+#################################################################
+#					      SPLEEF		    	  	    		#
+#################################################################
+
+#Enable getting snowballs that will break the floor on spleef
+snowballSpleef: false
+
+#################################################################
+#					      SPLEGG		    	  	    		#
+#################################################################
+
+#################################################################
+#					    BOMBARDMENT		    	  	    		#
+#################################################################
+
+#Enable this to make a player lose when they fall into water in bombardment minigames
+waterKillBombardment: false
+
+#Offset of Y coord on bombardment, if you see your bombs on the minigame go higher than the foots of your player put this to -1 or -2
+offSetYBombardment: 0
+
+#################################################################
+#					     SPLATOON		    	  	    		#
+#################################################################
+
+#Number of blocks that are paint in the radius
+splatoonPaint: 10
+
+#Radios of blocks that are going to be painted on splatoon
+splatoonRadius: 2
+
+#Splatoon Egg Damage
+splatoonEggDamage: 5
+
+#################################################################
+#				    PARTICLES SETTINGS		    				#
+#################################################################
 
 #Allowed configurable particles ->
 #EXPLOSION_NORMAL  || EXPLOSION_LARGE    ||  EXPLOSION_HUGE    ||  FIREWORKS_SPARK
@@ -130,6 +345,9 @@ particle:
   height: 1.0
   extension: 4.0
 
+#################################################################
+#					   TOURNAMENT CONFIG   	    				#
+#################################################################
 tournament:
   spawn:
     world: world
@@ -144,135 +362,9 @@ tournament:
   rewards:
       - 'eco give %player% 10000'
 
-#Probability to spawn a power up of resistance in arrow rain games
-probabilityPowerUp: 1
-
-#Survival Games Area damage
-sgAreaDamage: 1
-
-#Seconds for several minigames to damage all players if they are not attacking each other
-idleTimeForDamage: 10
-
-#Item material for checkpoint item
-checkpointItem: 'BLAZE_ROD'
-
-#Item material for vanish item
-vanishItem: 'ENDER_EYE'
-
-#Arrow damage in arrow rain minigame
-arrowRainDamage: 10
-
-#Enable getting snowballs that will break the floor on spleef
-snowballSpleef: false
-
-#Enable this to make a player lose when they fall into water in knockback duel minigames
-waterKillKnockbackDuel: false
-
-#Enable this to make a player lose when they fall into water in survival games minigames
-waterKillSG: false
-
-#Enable this to make a player lose when they fall into water in skywars minigames
-waterKillSW: false
-
-#Enable this to make a player lose when they fall into water in bombardment minigames
-waterKillBombardment: false
-
-#Disable the multiple winners when they have the same points
-disableMultipleWinners: false
-
-#Offset of Y coord on bombardment, if you see your bombs on the minigame go higher than the foots of your player put this to -1 or -2
-offSetYBombardment: 0
-
-#Speed duration on seconds for tnttag
-speedDuration: 100
-
-#Lvl of the speed for the runners on tnttag
-tntTagSpeedRunners: 3
-
-#Lvl of the speed for the holder of the tnt on tnttag
-tntTagSpeedHolder: 6
-
-#Paint games give default weapon so you dont need to put it in the kit
-paintGiveDefaultWeapon: true
-
-#Quake give default weapon so you dont need to put it in the kit
-quakeGiveDefaultWeapon: true
-
-#Quake shoot distance
-quakeShootDistance: 50
-
-#Cooldown to make a shoot on quake
-quakeShootCooldown: 1.5
-
-#Cooldown to make a jump on quake
-quakeJumpCooldown: 2.5
-
-#Number of blocks that are paint in the radius
-splatoonPaint: 10
-
-#Radios of blocks that are going to be painted on splatoon
-splatoonRadius: 2
-
-#Heal killer after a kill in OITC Minigame
-oitcHealAfterKill: true
-
-#Heal killer after a kill in Top Killer Minigame
-topKillerHealAfterKill: true
-
-#Cooldown before respawning again in minigames with respawn
-cooldownAfterDeath: false
-
-#Cooldown before respawning again in minigames with respawn
-cooldownAfterDeathSeconds: 4
-
-#Splatoon Egg Damage
-splatoonEggDamage: 5
-
-#Activate private chat 
-matchPrivateMatch: false
-
-#Force the players to enter the random event when its spawned
-forcePlayersToEnter: false
-
-#Force the players to enter the random event spectating ( It will works only if forcePlayersToEnter is enabled )
-forcePlayersToSpectate: false
-
-#Equilibrate teams
-equilibrateTeams: true
-
-#Force non empty teams. Only works if  equilibrateTeams is enabled
-forceNonEmptyTeams: true
-
-#Commands that will be done each time a RandomEvent is fired
-commandsOnEventFire: []
-
-#Commands that will be done each time a player kill another one in certain Random Events
-commandsOnKill: []
-
-#Commands that will be done each time a user join a random event, use it in case you need to get the god mode off, to set the gamemode to survival, etc
-commandsOnUserJoin:
-- 'psa %player%'
-
-#Commands that will be done each time a user leave a random event, use it in case you need to get the god mode off, to set the gamemode to survival, etc
-commandsOnUserLeave:
-- 'psa %player%'
-
-#Commands that will be done when the match begin for all players, use it in case you need to get the god mode off, to set the gamemode to survival, etc
-commandsOnMatchBegin:
-- 'god %player% off'
-
-#Commands that will be done when the match ends
-commandsOnMatchEnd:
-- 'broadcast %event% has ended'
-
-#Allowed cmds in matchs. (DONT USE CAPS HERE)
-allowedCmds:
-- msg
-- ac
-- revent
-- randomevent
-
-
+#################################################################
+#					   SPAWN CONFIG (/revent spawnset)			#
+#################################################################
 #Spawn where the player will be teleported after minigame ends
 spawn:
   world: world
@@ -282,6 +374,9 @@ spawn:
   pitch: 0.0
   yaw: 0.0
   
+#################################################################
+#					   STATS GUI CONFIG   	    				#
+#################################################################
 #Use -1 to hide a stat in the GUI
 statsmenu:
   fill: 'STAINED_GLASS_PANE'
@@ -318,6 +413,9 @@ statsmenu:
   SPLATOON: 44
   BOMBARDMENT: 49
 
+#################################################################
+#					     MYSQL CONFIG   	    				#
+#################################################################
 #Enable MySQL to have statistics of the games!
 mysql:
   enabled: false

@@ -18,7 +18,6 @@ import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.match.Kit;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
-import com.adri1711.randomevents.match.enums.MinigameType;
 import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.randomevents.util.UtilsSQL;
@@ -140,13 +139,13 @@ public class GUI implements Listener {
 												p.closeInventory();
 												Calendar c = Calendar.getInstance();
 												c.setTime(new Date());
-												c.add(Calendar.SECOND, plugin.getCooldownUsersBeginEvents());
+												c.add(Calendar.SECOND, plugin.getReventConfig().getCooldownUsersBeginEvents());
 												plugin.getCooldowns().put(p.getName(), c.getTime());
 
 											}
 
 										} else {
-											if (plugin.isMysqlEnabled()) {
+											if (plugin.getReventConfig().isMysqlEnabled()) {
 												String credits = itemMeta.getLore().get(0);
 												if (credits.equals(plugin.getLanguage().getCreditsCooldown())) {
 													Date now = new Date();
@@ -213,13 +212,13 @@ public class GUI implements Listener {
 											p.closeInventory();
 											Calendar c = Calendar.getInstance();
 											c.setTime(new Date());
-											c.add(Calendar.SECOND, plugin.getCooldownUsersBeginEvents());
+											c.add(Calendar.SECOND, plugin.getReventConfig().getCooldownUsersBeginEvents());
 											plugin.getCooldowns().put(p.getName(), c.getTime());
 										}
 									}
 
 								}
-							} else if (plugin.isMysqlEnabled()) {
+							} else if (plugin.getReventConfig().isMysqlEnabled()) {
 								String credits = itemMeta.getLore().get(0);
 								String languageCredits = plugin.getLanguage().getCreditsBal();
 								languageCredits = ChatColor.stripColor(languageCredits);
@@ -301,7 +300,7 @@ public class GUI implements Listener {
 								p.sendMessage(plugin.getLanguage().getTagPlugin()
 										+ plugin.getLanguage().getKitChosen().replaceAll("%kit_name%", kit.getName()));
 								p.closeInventory();
-								UtilsRandomEvents.playSound(p, XSound.ENTITY_PLAYER_LEVELUP);
+								UtilsRandomEvents.playSound(plugin,p, XSound.ENTITY_PLAYER_LEVELUP);
 							}
 						}
 					}
@@ -348,7 +347,7 @@ public class GUI implements Listener {
 							}
 
 							p.closeInventory();
-							UtilsRandomEvents.playSound(p, XSound.ENTITY_PLAYER_LEVELUP);
+							UtilsRandomEvents.playSound(plugin,p, XSound.ENTITY_PLAYER_LEVELUP);
 							plugin.getMatchActive().updateTeamItem(p);
 
 						}

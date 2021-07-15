@@ -129,7 +129,8 @@ public class UtilsRandomEvents {
 				OutputStream os = new FileOutputStream(bossFile, true);
 				PrintWriter pw = null;
 
-				pw = new PrintWriter(new OutputStreamWriter(os, Charset.forName(plugin.getUseEncoding())));
+				pw = new PrintWriter(
+						new OutputStreamWriter(os, Charset.forName(plugin.getReventConfig().getUseEncoding())));
 
 				pw.println(json);
 
@@ -194,7 +195,8 @@ public class UtilsRandomEvents {
 
 				OutputStream os = new FileOutputStream(bossFile, true);
 				PrintWriter pw = null;
-				pw = new PrintWriter(new OutputStreamWriter(os, Charset.forName(plugin.getUseEncoding())));
+				pw = new PrintWriter(
+						new OutputStreamWriter(os, Charset.forName(plugin.getReventConfig().getUseEncoding())));
 
 				pw.println(json);
 
@@ -238,7 +240,8 @@ public class UtilsRandomEvents {
 
 				OutputStream os = new FileOutputStream(bossFile, true);
 				PrintWriter pw = null;
-				pw = new PrintWriter(new OutputStreamWriter(os, Charset.forName(plugin.getUseEncoding())));
+				pw = new PrintWriter(
+						new OutputStreamWriter(os, Charset.forName(plugin.getReventConfig().getUseEncoding())));
 
 				pw.println(json);
 
@@ -308,7 +311,7 @@ public class UtilsRandomEvents {
 
 					OutputStream os = new FileOutputStream(bossFile, true);
 					PrintWriter pw = new PrintWriter(
-							new OutputStreamWriter(os, Charset.forName(plugin.getUseEncoding())));
+							new OutputStreamWriter(os, Charset.forName(plugin.getReventConfig().getUseEncoding())));
 
 					pw.println(json);
 
@@ -362,7 +365,8 @@ public class UtilsRandomEvents {
 
 					OutputStream os = new FileOutputStream(bossFile, true);
 					PrintWriter pw = null;
-					pw = new PrintWriter(new OutputStreamWriter(os, Charset.forName(plugin.getUseEncoding())));
+					pw = new PrintWriter(
+							new OutputStreamWriter(os, Charset.forName(plugin.getReventConfig().getUseEncoding())));
 
 					pw.println(json);
 
@@ -460,7 +464,7 @@ public class UtilsRandomEvents {
 
 	public static Boolean guardaInventario(RandomEvents plugin, Player player) {
 		Boolean exitoso = Boolean.TRUE;
-		if (plugin.isInventoryManagement()) {
+		if (plugin.getReventConfig().isInventoryManagement()) {
 
 			File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories",
 					player.getName() + ".json");
@@ -504,7 +508,7 @@ public class UtilsRandomEvents {
 				} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 						| InvocationTargetException e) {
 				}
-				if (plugin.getUseLastLocation()) {
+				if (plugin.getReventConfig().getUseLastLocation()) {
 					inventario.setLastLocation(player.getLocation());
 				}
 
@@ -521,7 +525,8 @@ public class UtilsRandomEvents {
 
 						OutputStream os = new FileOutputStream(bossFile, true);
 						PrintWriter pw = null;
-						pw = new PrintWriter(new OutputStreamWriter(os, Charset.forName(plugin.getUseEncoding())));
+						pw = new PrintWriter(
+								new OutputStreamWriter(os, Charset.forName(plugin.getReventConfig().getUseEncoding())));
 
 						pw.println(json);
 
@@ -556,7 +561,7 @@ public class UtilsRandomEvents {
 	}
 
 	public static void sacaInventario(RandomEvents plugin, Player player) {
-		if (plugin.isInventoryManagement()) {
+		if (plugin.getReventConfig().isInventoryManagement()) {
 
 			File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories");
 			File dataFolderOld = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventoriesold");
@@ -576,7 +581,7 @@ public class UtilsRandomEvents {
 				FileInputStream fr = null;
 				try {
 					fr = new FileInputStream(bossFile);
-					Charset sc = Charset.forName(plugin.getUseEncoding());
+					Charset sc = Charset.forName(plugin.getReventConfig().getUseEncoding());
 
 					br = new BufferedReader(new InputStreamReader(fr, sc));
 
@@ -608,7 +613,7 @@ public class UtilsRandomEvents {
 					if (inventario != null) {
 						UtilsRandomEvents.borraInventario(player, plugin);
 
-						if (plugin.getUseLastLocation()) {
+						if (plugin.getReventConfig().getUseLastLocation()) {
 							if (inventario.getLastLocation() != null) {
 								teleportaPlayer(player, inventario.getLastLocation(), plugin);
 							}
@@ -672,7 +677,7 @@ public class UtilsRandomEvents {
 
 	public static Boolean teleportaPlayer(Player p, Location loc, RandomEvents plugin, Boolean comprueba) {
 		Boolean res = true;
-		if (!comprueba || !plugin.getUseLastLocation()) {
+		if (!comprueba || !plugin.getReventConfig().getUseLastLocation()) {
 			if (loc != null) {
 				try {
 					p.teleport(loc);
@@ -681,12 +686,12 @@ public class UtilsRandomEvents {
 					try {
 						Location loc2 = loc.clone();
 						if (loc2 != null) {
-							if (plugin.isDebugMode())
+							if (plugin.getReventConfig().isDebugMode())
 								System.out.println("Initial Loc ->" + loc2.toString());
 						}
 						loc2.setWorld(Bukkit.getWorld(loc2.getWorld().getUID()));
 						if (loc2 != null) {
-							if (plugin.isDebugMode())
+							if (plugin.getReventConfig().isDebugMode())
 								System.out.println("Updated Loc ->" + loc2.toString());
 						}
 						p.teleport(loc2);
@@ -695,12 +700,12 @@ public class UtilsRandomEvents {
 						try {
 							Location loc2 = loc.clone();
 							if (loc2 != null) {
-								if (plugin.isDebugMode())
+								if (plugin.getReventConfig().isDebugMode())
 									System.out.println("Initial Loc ->" + loc2.toString());
 							}
 							loc2.setWorld(Bukkit.getWorld(loc2.getWorld().getName()));
 							if (loc2 != null) {
-								if (plugin.isDebugMode())
+								if (plugin.getReventConfig().isDebugMode())
 									System.out.println("Updated Loc ->" + loc2.toString());
 							}
 
@@ -730,7 +735,7 @@ public class UtilsRandomEvents {
 			FileInputStream fr = null;
 			try {
 				fr = new FileInputStream(file);
-				Charset sc = Charset.forName(plugin.getUseEncoding());
+				Charset sc = Charset.forName(plugin.getReventConfig().getUseEncoding());
 
 				br = new BufferedReader(new InputStreamReader(fr, sc));
 				Match match = UtilidadesJson.fromJSONToMatch(plugin, br);
@@ -861,7 +866,7 @@ public class UtilsRandomEvents {
 			message = plugin.getLanguage().getTagPlugin() + message;
 		}
 		for (Player p : players) {
-			if (plugin.isOptionalTitles()) {
+			if (plugin.getReventConfig().isOptionalTitles()) {
 				plugin.getApi().usaTitle(p, "", message);
 			} else {
 				p.sendMessage(message);
@@ -987,23 +992,29 @@ public class UtilsRandomEvents {
 		return res;
 	}
 
-	public static void playSound(List<Player> player, XSound sonido) {
-		if (sonido != null) {
-			for (Player p : player) {
-				playSound(p, sonido);
+	public static void playSound(RandomEvents plugin, List<Player> player, XSound sonido) {
+		if (!plugin.getReventConfig().isDeactivateSounds()) {
+			if (sonido != null) {
+				for (Player p : player) {
+					playSound(plugin, p, sonido);
+				}
 			}
 		}
 	}
 
-	public static void playSound(Player player, XSound sonido) {
-		if (sonido != null && player != null) {
-			player.playSound(player.getLocation(), sonido.parseSound(), 10.0F, 1.0F);
+	public static void playSound(RandomEvents plugin, Player player, XSound sonido) {
+		if (!plugin.getReventConfig().isDeactivateSounds()) {
+			if (sonido != null && player != null) {
+				player.playSound(player.getLocation(), sonido.parseSound(), 10.0F, 1.0F);
+			}
 		}
 	}
 
-	public static void playSound(Player player, XSound sonido, float volume, float pitch) {
-		if (sonido != null && player != null) {
-			player.playSound(player.getLocation(), sonido.parseSound(), volume, pitch);
+	public static void playSound(RandomEvents plugin, Player player, XSound sonido, float volume, float pitch) {
+		if (!plugin.getReventConfig().isDeactivateSounds()) {
+			if (sonido != null && player != null) {
+				player.playSound(player.getLocation(), sonido.parseSound(), volume, pitch);
+			}
 		}
 	}
 
@@ -1071,7 +1082,7 @@ public class UtilsRandomEvents {
 	}
 
 	public static void borraInventario(Player player, RandomEvents plugin) {
-		if (plugin.isInventoryManagement()) {
+		if (plugin.getReventConfig().isInventoryManagement()) {
 			player.getInventory().clear();
 			player.getInventory().setHelmet(null);
 			player.getInventory().setLeggings(null);
@@ -1170,7 +1181,7 @@ public class UtilsRandomEvents {
 
 	public static void spawnPowerUp(Location l, RandomEvents plugin) {
 
-		l.getWorld().dropItem(l, plugin.getPowerUpItem());
+		l.getWorld().dropItem(l, plugin.getReventConfig().getPowerUpItem());
 
 	}
 
@@ -1344,7 +1355,7 @@ public class UtilsRandomEvents {
 	}
 
 	public static Inventory createGUI(String name, Stats estadisticas, RandomEvents plugin) {
-		Inventory inv = Bukkit.createInventory(null, plugin.getStatsSize(),
+		Inventory inv = Bukkit.createInventory(null, plugin.getReventConfig().getStatsSize(),
 				plugin.getLanguage().getStatsGuiName() + name);
 		for (MinigameType minigame : MinigameType.values()) {
 			Integer position = -1;
@@ -1371,6 +1382,11 @@ public class UtilsRandomEvents {
 				lore.add(plugin.getLanguage().getStatsTries() + tries);
 				lore.add(plugin.getLanguage().getStatsWinsRatio() + ratio.toPlainString());
 				itemMeta.setLore(lore);
+
+				itemMeta.getItemFlags().add(ItemFlag.HIDE_ATTRIBUTES);
+				itemMeta.getItemFlags().add(ItemFlag.HIDE_POTION_EFFECTS);
+				itemMeta.getItemFlags().add(ItemFlag.HIDE_ENCHANTS);
+
 				item.setItemMeta(itemMeta);
 				inv.setItem(position, item);
 			}
@@ -1413,7 +1429,7 @@ public class UtilsRandomEvents {
 
 		ItemStack[] contents = inv.getContents();
 		int i = 0;
-		ItemStack itemFill = plugin.getStatsFill();
+		ItemStack itemFill = plugin.getReventConfig().getStatsFill();
 		for (ItemStack item : contents) {
 			if (item == null) {
 				inv.setItem(i, itemFill);
@@ -1613,11 +1629,11 @@ public class UtilsRandomEvents {
 	public static boolean checkBanned(Player player, RandomEvents plugin) {
 		Boolean res = Boolean.FALSE;
 		Long now = (new Date()).getTime();
-		if (plugin.getBannedPlayers().getBannedPlayers().containsKey(player.getName())) {
-			if (plugin.getBannedPlayers().getBannedPlayers().get(player.getName()) > now) {
+		if (plugin.getReventConfig().getBannedPlayers().getBannedPlayers().containsKey(player.getName())) {
+			if (plugin.getReventConfig().getBannedPlayers().getBannedPlayers().get(player.getName()) > now) {
 				res = Boolean.TRUE;
 			} else {
-				plugin.getBannedPlayers().getBannedPlayers().remove(player.getName());
+				plugin.getReventConfig().getBannedPlayers().getBannedPlayers().remove(player.getName());
 			}
 
 		}
@@ -1626,7 +1642,7 @@ public class UtilsRandomEvents {
 
 	public static void checkDamageCounter(RandomEvents plugin, MatchActive matchActive) {
 		List<Player> playerMuertos = new ArrayList<Player>();
-		if (matchActive.getDamageCounter() >= plugin.getIdleTimeForDamage()) {
+		if (matchActive.getDamageCounter() >= plugin.getReventConfig().getIdleTimeForDamage()) {
 			for (Player p : matchActive.getPlayerHandler().getPlayersObj()) {
 				p.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getIdleDamage());
 				if (p.getHealth() > 1) {
@@ -2053,63 +2069,76 @@ public class UtilsRandomEvents {
 	}
 
 	public static void spawnParticles(Particle1711 particle, RandomEvents plugin, Location location) {
-		if (plugin.isUseParticles()) {
+		if (plugin.getReventConfig().isUseParticles()) {
 			try {
 				ParticleDisplay pa = ParticleDisplay.display(plugin.getApi(), location, particle);
 
-				String part = plugin.getParticleType().toUpperCase();
+				String part = plugin.getReventConfig().getParticleType().toUpperCase();
 				if (part.equals("RANDOM")) {
 					part = ParticleEffectRevent.values()[plugin.getRandom()
 							.nextInt(ParticleEffectRevent.values().length)].toString().toUpperCase();
 				}
 				switch (part) {
 				case "BLACKSUN":
-					XParticle.blackSun(plugin.getParticleRadius(), plugin.getParticleRadiusRate(),
-							plugin.getParticleRate(), plugin.getParticleRateChange(), pa);
+					XParticle.blackSun(plugin.getReventConfig().getParticleRadius(),
+							plugin.getReventConfig().getParticleRadiusRate(),
+							plugin.getReventConfig().getParticleRate(),
+							plugin.getReventConfig().getParticleRateChange(), pa);
 					break;
 				case "CIRCLE":
 
-					XParticle.circle(plugin.getParticleRadius(), plugin.getParticleRate(), pa);
+					XParticle.circle(plugin.getReventConfig().getParticleRadius(),
+							plugin.getReventConfig().getParticleRate(), pa);
 					break;
 				case "CRESCENT":
-					XParticle.crescent(plugin.getParticleRadius(), plugin.getParticleRate(), pa);
+					XParticle.crescent(plugin.getReventConfig().getParticleRadius(),
+							plugin.getReventConfig().getParticleRate(), pa);
 					break;
 				case "CYLINDER":
-					XParticle.cylinder(plugin.getParticleHeight(), plugin.getParticleRadius(), plugin.getParticleRate(),
+					XParticle.cylinder(plugin.getReventConfig().getParticleHeight(),
+							plugin.getReventConfig().getParticleRadius(), plugin.getReventConfig().getParticleRate(),
 							pa);
 					break;
 				case "DIAMOND":
-					XParticle.diamond(plugin.getParticleRadiusRate(), plugin.getParticleRate(),
-							plugin.getParticleHeight(), pa);
+					XParticle.diamond(plugin.getReventConfig().getParticleRadiusRate(),
+							plugin.getReventConfig().getParticleRate(), plugin.getReventConfig().getParticleHeight(),
+							pa);
 					break;
 				case "ELLIPSE":
-					XParticle.ellipse(plugin.getParticleRadius(), plugin.getParticleRadius2(), plugin.getParticleRate(),
+					XParticle.ellipse(plugin.getReventConfig().getParticleRadius(),
+							plugin.getReventConfig().getParticleRadius2(), plugin.getReventConfig().getParticleRate(),
 							pa);
 					break;
 				case "EYE":
-					XParticle.eye(plugin.getParticleRadius(), plugin.getParticleRadius2(), plugin.getParticleRate(),
-							plugin.getParticleExtension(), pa);
+					XParticle.eye(plugin.getReventConfig().getParticleRadius(),
+							plugin.getReventConfig().getParticleRadius2(), plugin.getReventConfig().getParticleRate(),
+							plugin.getReventConfig().getParticleExtension(), pa);
 					break;
 				case "FILLEDCIRCLE":
-					XParticle.filledCircle(plugin.getParticleRadius(), plugin.getParticleRate(),
-							plugin.getParticleRadiusRate(), pa);
+					XParticle.filledCircle(plugin.getReventConfig().getParticleRadius(),
+							plugin.getReventConfig().getParticleRate(),
+							plugin.getReventConfig().getParticleRadiusRate(), pa);
 					break;
 				case "ILLUMINATI":
-					XParticle.illuminati(plugin.getParticleSize(), plugin.getParticleExtension(), pa);
+					XParticle.illuminati(plugin.getReventConfig().getParticleSize(),
+							plugin.getReventConfig().getParticleExtension(), pa);
 					break;
 				case "INFINITY":
-					XParticle.infinity(plugin.getParticleRadius(), plugin.getParticleRate(), pa);
+					XParticle.infinity(plugin.getReventConfig().getParticleRadius(),
+							plugin.getReventConfig().getParticleRate(), pa);
 					break;
 				case "RING":
-					XParticle.ring(plugin.getParticleRate(), plugin.getParticleRadius(), plugin.getParticleRadius2(),
+					XParticle.ring(plugin.getReventConfig().getParticleRate(),
+							plugin.getReventConfig().getParticleRadius(), plugin.getReventConfig().getParticleRadius2(),
 							pa);
 					break;
 				case "SPHERE":
 					location.setY(location.getY() + 1);
-					XParticle.sphere(plugin.getParticleRadius(), plugin.getParticleRate(), pa);
+					XParticle.sphere(plugin.getReventConfig().getParticleRadius(),
+							plugin.getReventConfig().getParticleRate(), pa);
 					break;
 				case "MEGUMINEXPLOSION":
-					XParticle.meguminExplosion(plugin, plugin.getParticleSize(), pa);
+					XParticle.meguminExplosion(plugin, plugin.getReventConfig().getParticleSize(), pa);
 					break;
 				}
 
@@ -2707,7 +2736,7 @@ public class UtilsRandomEvents {
 							lore.add(plugin.getLanguage().getCreditsReady());
 
 						} else {
-							if (plugin.isMysqlEnabled()) {
+							if (plugin.getReventConfig().isMysqlEnabled()) {
 
 								Integer credits = creditos.containsKey(match.getName()) ? creditos.get(match.getName())
 										: 0;
@@ -2730,11 +2759,14 @@ public class UtilsRandomEvents {
 					}
 
 				}
-			} else if (plugin.isMysqlEnabled()) {
+			} else if (plugin.getReventConfig().isMysqlEnabled()) {
 				lore.add(plugin.getLanguage().getCreditsBal().replaceAll("%credits%",
 						"" + (creditos.containsKey(match.getName()) ? creditos.get(match.getName()) : 0)));
 			}
 			cabezaMeta.setLore(lore);
+			cabezaMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+			cabezaMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+			cabezaMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 			cabeza.setItemMeta(cabezaMeta);
 			inv.setItem(i - (page * 36), cabeza);
 		}
@@ -2786,6 +2818,7 @@ public class UtilsRandomEvents {
 				cabezaMeta.getItemFlags().add(ItemFlag.HIDE_ATTRIBUTES);
 				cabezaMeta.getItemFlags().add(ItemFlag.HIDE_POTION_EFFECTS);
 				cabezaMeta.getItemFlags().add(ItemFlag.HIDE_ENCHANTS);
+
 				cabeza.setItemMeta(cabezaMeta);
 				inv.setItem(i - (page * (size - 9)), cabeza);
 			}
@@ -2892,7 +2925,7 @@ public class UtilsRandomEvents {
 
 			}
 		}
-		player.setItemInHand(plugin.getEndVanishItem());
+		player.setItemInHand(plugin.getReventConfig().getEndVanishItem());
 		player.updateInventory();
 		plugin.getMatchActive().getPlayerHandler().getPlayersVanish().add(player);
 	}
@@ -2903,7 +2936,7 @@ public class UtilsRandomEvents {
 				player.showPlayer(p);
 			}
 		}
-		player.setItemInHand(plugin.getVanishItem());
+		player.setItemInHand(plugin.getReventConfig().getVanishItem());
 		player.updateInventory();
 		plugin.getMatchActive().getPlayerHandler().getPlayersVanish().remove(player);
 
@@ -2931,7 +2964,8 @@ public class UtilsRandomEvents {
 	public static Integer getTeamLessPlayers(RandomEvents plugin, MatchActive matchActive,
 			Map<Integer, Set<Player>> teams, Integer numberOfTeams) {
 		List<Integer> teamsToSee = new ArrayList<Integer>();
-		if ((plugin.isEquilibrateTeams() && plugin.isForceNonEmptyTeams()) || matchActive.teamsWithPlayers() < 2) {
+		if ((plugin.getReventConfig().isEquilibrateTeams() && plugin.getReventConfig().isForceNonEmptyTeams())
+				|| matchActive.teamsWithPlayers() < 2) {
 			for (int i = 0; i < numberOfTeams; i++) {
 				teamsToSee.add(i);
 			}
@@ -2973,7 +3007,7 @@ public class UtilsRandomEvents {
 	}
 
 	public static void doCommandsKill(Player p, RandomEvents plugin) {
-		for (String cmd : plugin.getCommandsOnKill()) {
+		for (String cmd : plugin.getReventConfig().getCommandsOnKill()) {
 
 			Boolean ejecutaComando = Boolean.TRUE;
 			String[] trozosComandos = cmd.split(" ");

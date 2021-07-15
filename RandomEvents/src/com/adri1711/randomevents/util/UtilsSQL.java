@@ -60,7 +60,7 @@ public class UtilsSQL {
 	public static void getStats(Player p, RandomEvents plugin) {
 		Stats estadistica = new Stats();
 		String query = "";
-		if (plugin.isMysqlUUIDMode()) {
+		if (plugin.getReventConfig().isMysqlUUIDMode()) {
 			query = Queries.SELECT_ALL_UUID_MODE.replaceAll(Queries.UUID, p.getUniqueId().toString());
 		} else {
 			query = Queries.SELECT_ALL_NAME_MODE.replaceAll(Queries.NAME, p.getName());
@@ -120,7 +120,7 @@ public class UtilsSQL {
 
 	public static void updateTries(Player p, MinigameType minigame, RandomEvents plugin) {
 		String query = "";
-		if (plugin.isMysqlEnabled()) {
+		if (plugin.getReventConfig().isMysqlEnabled()) {
 			query = Queries.INSERT_UPDATE_TRIES.replaceAll(Queries.UUID, p.getUniqueId().toString())
 					.replaceAll(Queries.NAME, p.getName()).replaceAll(Queries.GAME, minigame.getCodigo());
 
@@ -139,7 +139,7 @@ public class UtilsSQL {
 
 	public static void updateWins(Player p, MinigameType minigame, RandomEvents plugin) {
 		String query = "";
-		if (plugin.isMysqlEnabled()) {
+		if (plugin.getReventConfig().isMysqlEnabled()) {
 
 			query = Queries.INSERT_UPDATE_WINS.replaceAll(Queries.UUID, p.getUniqueId().toString())
 					.replaceAll(Queries.NAME, p.getName()).replaceAll(Queries.GAME, minigame.getCodigo());
@@ -160,7 +160,7 @@ public class UtilsSQL {
 	public static Integer getAllStatsSync(Player p, PlaceholderType type, RandomEvents plugin) {
 		Integer res = null;
 		String query = "";
-		if (plugin.isMysqlUUIDMode()) {
+		if (plugin.getReventConfig().isMysqlUUIDMode()) {
 			if (type == PlaceholderType.TRIES)
 				query = Queries.SELECT_TRIES_ALL_UUID_MODE.replaceAll(Queries.UUID, p.getUniqueId().toString());
 			else
@@ -223,7 +223,7 @@ public class UtilsSQL {
 			RandomEvents plugin) {
 		Integer res = null;
 		String query = "";
-		if (plugin.isMysqlUUIDMode()) {
+		if (plugin.getReventConfig().isMysqlUUIDMode()) {
 			if (type == PlaceholderType.TRIES)
 				query = Queries.SELECT_TRIES_GAME_UUID_MODE.replaceAll(Queries.UUID, p.getUniqueId().toString())
 						.replaceAll(Queries.GAME, minigameType.getCodigo());
@@ -288,9 +288,9 @@ public class UtilsSQL {
 	public static void getCreditsGUI(Player p, RandomEvents plugin) {
 		Map<String, Integer> creditos = new HashMap<String, Integer>();
 
-		if (plugin.isMysqlEnabled()) {
+		if (plugin.getReventConfig().isMysqlEnabled()) {
 			String query = "";
-			if (plugin.isMysqlUUIDMode()) {
+			if (plugin.getReventConfig().isMysqlUUIDMode()) {
 				query = Queries.SELECT_ALL_CREDITS_UUID_MODE.replaceAll(Queries.UUID, p.getUniqueId().toString());
 			} else {
 				query = Queries.SELECT_ALL_CREDITS_NAME_MODE.replaceAll(Queries.NAME, p.getName());
@@ -331,9 +331,9 @@ public class UtilsSQL {
 	public static void getCreditsGUI(Player p, Integer page, RandomEvents plugin) {
 		Map<String, Integer> creditos = new HashMap<String, Integer>();
 
-		if (plugin.isMysqlEnabled()) {
+		if (plugin.getReventConfig().isMysqlEnabled()) {
 			String query = "";
-			if (plugin.isMysqlUUIDMode()) {
+			if (plugin.getReventConfig().isMysqlUUIDMode()) {
 				query = Queries.SELECT_ALL_CREDITS_UUID_MODE.replaceAll(Queries.UUID, p.getUniqueId().toString());
 			} else {
 				query = Queries.SELECT_ALL_CREDITS_NAME_MODE.replaceAll(Queries.NAME, p.getName());
@@ -375,7 +375,7 @@ public class UtilsSQL {
 	public static void getCreditsText(Player p, Player playerBal, RandomEvents plugin) {
 		Map<String, Integer> creditos = new HashMap<String, Integer>();
 		String query = "";
-		if (plugin.isMysqlUUIDMode()) {
+		if (plugin.getReventConfig().isMysqlUUIDMode()) {
 			query = Queries.SELECT_ALL_CREDITS_UUID_MODE.replaceAll(Queries.UUID, playerBal.getUniqueId().toString());
 		} else {
 			query = Queries.SELECT_ALL_CREDITS_NAME_MODE.replaceAll(Queries.NAME, playerBal.getName());
@@ -412,7 +412,7 @@ public class UtilsSQL {
 
 	public static void addCredits(Player p, String event, Integer credits, RandomEvents plugin) {
 		String query = "";
-		if (plugin.isMysqlEnabled()) {
+		if (plugin.getReventConfig().isMysqlEnabled()) {
 			query = Queries.INSERT_UPDATE_ADD_CREDITS.replaceAll(Queries.UUID, p.getUniqueId().toString())
 					.replaceAll(Queries.NAME, p.getName()).replaceAll(Queries.EVENT, event)
 					.replaceAll(Queries.CREDITS, "" + credits);
@@ -433,9 +433,9 @@ public class UtilsSQL {
 	public static void removeCredits(Player p, String event, RandomEvents plugin) {
 		String query = "";
 
-		if (plugin.isMysqlEnabled()) {
+		if (plugin.getReventConfig().isMysqlEnabled()) {
 
-			if (plugin.isMysqlUUIDMode()) {
+			if (plugin.getReventConfig().isMysqlUUIDMode()) {
 				query = Queries.UPDATE_REMOVE_CREDITS_UUID_MODE.replaceAll(Queries.UUID, p.getUniqueId().toString())
 						.replaceAll(Queries.EVENT, event);
 			} else {

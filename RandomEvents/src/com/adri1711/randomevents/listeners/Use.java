@@ -21,9 +21,11 @@ import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -32,10 +34,13 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -98,13 +103,13 @@ public class Use implements Listener {
 					&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.QUAKECRAFT)
 					&& !plugin.getMatchActive().getCooldownJump().containsKey(player)) {
 
-				Double time = new Date().getTime() + 1000 * plugin.getQuakeJumpCooldown();
+				Double time = new Date().getTime() + 1000 * plugin.getReventConfig().getQuakeJumpCooldown();
 				plugin.getMatchActive().getCooldownJump().put(player, time.longValue());
 
 				Vector v = player.getEyeLocation().getDirection().normalize();
 				v = new Vector(v.getX() * 2.0, v.getY() + 0.5, v.getZ() * 2.0);
 				player.setVelocity(v);
-				UtilsRandomEvents.playSound(player, XSound.ENTITY_ENDERMAN_TELEPORT);
+				UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_ENDERMAN_TELEPORT);
 
 			} else if ((evt.getAction() == Action.RIGHT_CLICK_BLOCK)
 					&& (player.getItemInHand().getType() == (XMaterial.WOODEN_HOE.parseMaterial())
@@ -166,9 +171,11 @@ public class Use implements Listener {
 									&& plugin.getMatchActive().getMatch().getInventoryChests().getContents() != null
 									&& plugin.getMatchActive().getMatch().getInventoryChests()
 											.getContents().length != 0) {
-								objetos = Math.max(plugin.getMinItemOnChests(), plugin.getRandom().nextInt(Math.min(
-										plugin.getMaxItemOnChests(),
-										plugin.getMatchActive().getMatch().getInventoryChests().getContents().length)));
+								objetos = Math.max(plugin.getReventConfig().getMinItemOnChests(),
+										plugin.getRandom()
+												.nextInt(Math.min(plugin.getReventConfig().getMaxItemOnChests(),
+														plugin.getMatchActive().getMatch().getInventoryChests()
+																.getContents().length)));
 							}
 							for (int i = 0; i < objetos; i++) {
 								chest.getBlockInventory()
@@ -192,7 +199,7 @@ public class Use implements Listener {
 					} else if (player.getItemInHand().getItemMeta() != null
 							&& player.getItemInHand().getItemMeta().getDisplayName() != null
 							&& player.getItemInHand().getItemMeta().getDisplayName()
-									.equals(plugin.getPowerUpItem().getItemMeta().getDisplayName())) {
+									.equals(plugin.getReventConfig().getPowerUpItem().getItemMeta().getDisplayName())) {
 
 						if (player.getItemInHand().getAmount() > 1) {
 							player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
@@ -205,24 +212,24 @@ public class Use implements Listener {
 						player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 60, 5));
 						player.sendMessage(
 								plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getNowProtected());
-					} else if (player.getItemInHand().equals(plugin.getCheckpointItem())) {
+					} else if (player.getItemInHand().equals(plugin.getReventConfig().getCheckpointItem())) {
 						evt.setCancelled(true);
 
 						UtilsRandomEvents.teleportaPlayer(player,
 								plugin.getMatchActive().getMapHandler().getCheckpoints().get(player.getName()), plugin);
 						player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 99));
 
-					} else if (player.getItemInHand().equals(plugin.getEndVanishItem())) {
+					} else if (player.getItemInHand().equals(plugin.getReventConfig().getEndVanishItem())) {
 						evt.setCancelled(true);
 						UtilsRandomEvents.showPlayers(player,
 								plugin.getMatchActive().getPlayerHandler().getPlayersObj(), plugin);
-						UtilsRandomEvents.playSound(player, XSound.ENTITY_PLAYER_LEVELUP);
+						UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_PLAYER_LEVELUP);
 
-					} else if (player.getItemInHand().equals(plugin.getVanishItem())) {
+					} else if (player.getItemInHand().equals(plugin.getReventConfig().getVanishItem())) {
 						evt.setCancelled(true);
 						UtilsRandomEvents.hidePlayers(player,
 								plugin.getMatchActive().getPlayerHandler().getPlayersObj(), plugin);
-						UtilsRandomEvents.playSound(player, XSound.ENTITY_PLAYER_LEVELUP);
+						UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_PLAYER_LEVELUP);
 
 					} else if (player.getItemInHand().getType() == (XMaterial.STONE_HOE.parseMaterial())
 							&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEGG)) {
@@ -243,15 +250,16 @@ public class Use implements Listener {
 							&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.QUAKECRAFT)
 							&& !plugin.getMatchActive().getCooldownShoot().containsKey(player)) {
 						try {
-							Double time = new Date().getTime() + 1000 * plugin.getQuakeShootCooldown();
+							Double time = new Date().getTime()
+									+ 1000 * plugin.getReventConfig().getQuakeShootCooldown();
 							plugin.getMatchActive().getCooldownShoot().put(player, time.longValue());
 							Boolean hit = Boolean.FALSE;
-							UtilsRandomEvents.playSound(player, XSound.ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR);
+							UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR);
 							Location locEnd = player.getLocation();
 							ParticleDisplay pa = ParticleDisplay.display(plugin.getApi(), locEnd,
 									Particle1711.REDSTONE);
 							for (Block loc : player.getLineOfSight((Set<Material>) null,
-									plugin.getQuakeShootDistance())) {
+									plugin.getReventConfig().getQuakeShootDistance())) {
 								if (!hit && (loc == null || loc.getType() == XMaterial.AIR.parseMaterial())) {
 									Collection<Entity> entities = loc.getLocation().getWorld()
 											.getNearbyEntities(loc.getLocation(), 0.5, 0.5, 0.5);
@@ -282,8 +290,8 @@ public class Use implements Listener {
 														false);
 												UtilsRandomEvents.doCommandsKill(player, plugin);
 												plugin.getMatchActive().reiniciaPlayer(hitted);
-												UtilsRandomEvents.playSound(hitted, XSound.ENTITY_VILLAGER_DEATH);
-												UtilsRandomEvents.playSound(player, XSound.ENTITY_PLAYER_LEVELUP);
+												UtilsRandomEvents.playSound(plugin,hitted, XSound.ENTITY_VILLAGER_DEATH);
+												UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_PLAYER_LEVELUP);
 												if (plugin.getMatchActive().getPuntuacion()
 														.containsKey(player.getName())) {
 													plugin.getMatchActive().getPuntuacion().put(player.getName(),
@@ -392,6 +400,23 @@ public class Use implements Listener {
 	}
 
 	@EventHandler
+	public void onPlayerSnowballThrow(ProjectileLaunchEvent evt) {
+		if (plugin.getMatchActive() != null) {
+			if (evt.getEntity() instanceof Snowball) {
+				Snowball snowball = (Snowball) evt.getEntity();
+				if (snowball.getShooter() != null && snowball.getShooter() instanceof Player) {
+					Player p = (Player) snowball.getShooter();
+					if (plugin.getMatchActive().getPlayerHandler().getPlayers().contains(p.getName())) {
+						if (plugin.getReventConfig().isInfiniteSnowballs()) {
+							p.getInventory().addItem(XMaterial.SNOWBALL.parseItem());
+						}
+					}
+				}
+			}
+		}
+	}
+
+	@EventHandler
 	public void onPlayerEggThrow(PlayerEggThrowEvent evt) {
 		Player player = evt.getPlayer();
 
@@ -480,7 +505,8 @@ public class Use implements Listener {
 				if (blockFace != null) {
 
 					List<Block> blocks = UtilsRandomEvents.getNearbyBlocks(nextBlock.getLocation(),
-							plugin.getSplatoonRadius(), plugin.getMatchActive().getMatch().getDatas(), true, plugin);
+							plugin.getReventConfig().getSplatoonRadius(), plugin.getMatchActive().getMatch().getDatas(),
+							true, plugin);
 					List<Location> locations = new ArrayList<Location>();
 
 					List<Location> locTeam = new ArrayList<Location>();
@@ -500,8 +526,8 @@ public class Use implements Listener {
 					}
 
 					Set<Location> locations2 = new HashSet<Location>();
-					if (locations.size() >= plugin.getSplatoonPaint()) {
-						while (locations2.size() < plugin.getSplatoonPaint()) {
+					if (locations.size() >= plugin.getReventConfig().getSplatoonPaint()) {
+						while (locations2.size() < plugin.getReventConfig().getSplatoonPaint()) {
 							Integer ra = match.getRandom().nextInt(locations.size());
 
 							locations2.add(locations.get(ra));
@@ -560,6 +586,32 @@ public class Use implements Listener {
 				}
 			}
 		}
+	}
+
+	public void onEntityExplode(EntityExplodeEvent event) {
+		if (plugin.getMatchActive() != null) {
+			Entity ent = event.getEntity();
+			if (ent instanceof Fireball) {
+				Fireball fireball = (Fireball) ent;
+				if (plugin.getMatchActive().getMapHandler().getFireballs().contains(fireball)) {
+					event.blockList().clear();
+					
+				}
+			}
+		}
+	}
+
+	public void onExplosionPrime(ExplosionPrimeEvent event) {
+		if (plugin.getMatchActive() != null) {
+			Entity ent = event.getEntity();
+			if (ent instanceof Fireball) {
+				Fireball fireball = (Fireball) ent;
+				if (plugin.getMatchActive().getMapHandler().getFireballs().contains(fireball)) {
+					event.setFire(false);
+				}
+			}
+		}
+
 	}
 
 	@EventHandler
@@ -642,7 +694,7 @@ public class Use implements Listener {
 
 							if (plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEEF)) {
 								evt.getBlock().setType(XMaterial.AIR.parseMaterial());
-								if (plugin.isSnowballSpleef()) {
+								if (plugin.getReventConfig().isSnowballSpleef()) {
 									player.getInventory().addItem(XMaterial.SNOWBALL.parseItem());
 									player.updateInventory();
 								}
@@ -669,7 +721,7 @@ public class Use implements Listener {
 							if (plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEEF)) {
 								evt.getBlock().setType(XMaterial.AIR.parseMaterial());
 
-								if (plugin.isSnowballSpleef()) {
+								if (plugin.getReventConfig().isSnowballSpleef()) {
 									player.getInventory().addItem(XMaterial.SNOWBALL.parseItem());
 									player.updateInventory();
 								}

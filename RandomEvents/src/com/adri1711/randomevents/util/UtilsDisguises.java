@@ -7,9 +7,9 @@ import com.adri1711.randomevents.RandomEvents;
 public class UtilsDisguises {
 
 	public static void disguisePlayer(Player p, RandomEvents plugin) {
-		if (plugin.getIsLibsDisguises() && plugin.isRandomDisguisePlayers()) {
+		if (plugin.getReventConfig().getIsLibsDisguises() && plugin.getReventConfig().isRandomDisguisePlayers()) {
 			me.libraryaddict.disguise.disguisetypes.PlayerDisguise playerDisguise = new me.libraryaddict.disguise.disguisetypes.PlayerDisguise(
-					plugin.getSkinDisguisePlayers());
+					plugin.getReventConfig().getSkinDisguisePlayers());
 			playerDisguise.setEntity(p);
 			playerDisguise.setHearSelfDisguise(false);
 			playerDisguise.setSelfDisguiseVisible(false);
@@ -19,7 +19,7 @@ public class UtilsDisguises {
 	}
 
 	public static void undisguisePlayer(Player p, RandomEvents plugin) {
-		if (plugin.getIsLibsDisguises() && plugin.isRandomDisguisePlayers()) {
+		if (plugin.getReventConfig().getIsLibsDisguises() && plugin.getReventConfig().isRandomDisguisePlayers()) {
 
 			me.libraryaddict.disguise.disguisetypes.Disguise disg = me.libraryaddict.disguise.DisguiseAPI
 					.getDisguise(p);

@@ -1,876 +1,1792 @@
 package com.adri1711.randomevents.config;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CoderResult;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Random;
+import java.util.Map.Entry;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Server;
-import org.bukkit.World;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scoreboard.Scoreboard;
 
-import com.adri1711.randomevents.exception.InvalidWorldException;
-import com.google.common.io.Files;
+import com.adri1711.randomevents.RandomEvents;
+import com.adri1711.randomevents.language.LanguageMessages;
+import com.adri1711.randomevents.match.Kit;
+import com.adri1711.randomevents.match.Match;
+import com.adri1711.randomevents.match.Tournament;
+import com.adri1711.randomevents.match.WaterDropStep;
+import com.adri1711.randomevents.match.utils.BannedPlayers;
+import com.adri1711.randomevents.metrics.Metrics;
+import com.adri1711.randomevents.placeholders.ReventPlaceholder;
+import com.adri1711.randomevents.util.NameTagHook;
+import com.adri1711.randomevents.util.UtilsRandomEvents;
+import com.adri1711.util.enums.XMaterial;
 
+public class ReventConfig {
 
-public class ReventConfig extends YamlConfiguration
-{
-	protected static final Logger LOGGER = Logger.getLogger("RandomEvents");
-	protected final File configFile;
-	protected String templateName = null;
-	protected static final Charset UTF8 = Charset.forName("UTF-8");
-	private Class<?> resourceClass = ReventConfig.class;
-	private static final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadExecutor();
-	private final AtomicInteger pendingDiskWrites = new AtomicInteger(0);
-	private final AtomicBoolean transaction = new AtomicBoolean(false);
+	private RandomEvents plugin;
 
-	public ReventConfig(final File configFile)
-	{
+	private Integer secondsTimer;
+
+	private Integer minPlayers;
+
+	private Integer probabilityRandomEvent;
+
+	private Integer probabilityRandomEventTournament;
+
+	private Integer probabilityPowerUp;
+
+	private ItemStack powerUpItem;
+	private ItemStack checkpointItem;
+
+	private Boolean useLastLocation;
+
+	private Integer numberOfTriesBeforeCancelling;
+
+	private boolean mysqlEnabled;
+
+	private String mysqlHost;
+
+	private String mysqlDatabase;
+
+	private String mysqlUsername;
+
+	private String mysqlPassword;
+
+	private Integer mysqlPort;
+
+	private boolean mysqlUUIDMode;
+
+	private boolean debugMode;
+
+	private Integer secondsCheckPlayers;
+
+	private List<String> allowedCmds;
+
+	private boolean forceEmptyInventoryToJoin;
+
+	private BannedPlayers bannedPlayers;
+
+	private Integer idleTimeForDamage;
+
+	private boolean inventoryManagement;
+
+	private boolean dropItemsAfterDie;
+
+	private Integer numberOfSecondsWithGems;
+
+	private Integer numberOfGems;
+
+	private int warmupTimeTNTRUN;
+
+	private Integer secondsToStartMatch;
+
+	private boolean highestPriorityDamageEvents;
+
+	private boolean optionalTitles;
+
+	private Integer maxItemOnChests;
+
+	private Integer minItemOnChests;
+
+	private boolean showBorders;
+
+	private boolean useParticles;
+
+	private Double particleSize;
+
+	private String particleDeath;
+
+	private String particleTNTTag;
+
+	private String particleType;
+
+	private Double particleRadius;
+
+	private Double particleRadiusRate;
+
+	private Double particleRadius2;
+
+	private Double particleRate;
+
+	private Double particleRateChange;
+
+	private Double particleHeight;
+
+	private Double particleExtension;
+
+	private boolean useScoreboard;
+
+	private List<String> commandsOnMatchEnd;
+
+	private List<String> commandsOnUserLeave;
+
+	private boolean advancedSpectatorMode;
+
+	private ItemStack statsFill;
+
+	private int statsBR;
+
+	private int statsBRT2;
+
+	private int statsLJ;
+
+	private int statsTKLL;
+
+	private int statsTKLLT2;
+
+	private int statsKBD;
+
+	private int statsEARR;
+
+	private int statsGEMC;
+
+	private int statsBOMB;
+
+	private int statsBOAT_RUN;
+
+	private int statsHORSE_RUN;
+
+	private int statsESCAPE_FROM_BEAST;
+
+	private int statsRACE;
+
+	private int statsTNTRUN;
+
+	private int statsSPLEEF;
+
+	private int statsSPLEGG;
+
+	private int statsOITC;
+
+	private int statsSG;
+
+	private int statsTSG;
+
+	private int statsSW;
+
+	private int statsTSW;
+
+	private int statsALLTIME;
+
+	private int statsANVIL_SPLEEF;
+	private int statsWDROP;
+
+	private int arrowRainDamage;
+
+	private int tntTagSpeedRunners;
+
+	private int tntTagSpeedHolder;
+
+	private boolean waterKillKnockbackDuel;
+
+	private boolean oitcHealAfterKill;
+
+	private boolean cooldownAfterDeath;
+
+	private boolean forcePlayersToEnter;
+
+	private boolean topKillerHealAfterKill;
+
+	private int cooldownUsersBeginEvents;
+
+	private boolean forcePlayersToSpectate;
+
+	private ItemStack vanishItem;
+	private ItemStack endVanishItem;
+
+	private Double sgAreaDamage;
+
+	private boolean globalCooldown;
+
+	private String cmdAlias;
+
+	private boolean needPasswordToJoin;
+
+	private String useEncoding;
+
+	private boolean snowballSpleef;
+
+	private boolean waterKillSG;
+
+	private boolean waterKillSW;
+
+	private int speedDuration;
+
+	private int mysqlMaxLifeTime;
+
+	private double quakeShootCooldown;
+
+	private double quakeJumpCooldown;
+
+	private int quakeShootDistance;
+
+	private boolean quakeGiveDefaultWeapon;
+	private boolean paintGiveDefaultWeapon;
+
+	private int statsQUAKE;
+
+	private int statsPBALL;
+
+	private int statsKOTH;
+
+	private int statsFISHSLAP;
+
+	private int statsHOE;
+
+	private int splatoonPaint;
+
+	private int splatoonRadius;
+
+	private int statsSPLATOON;
+
+	private int statsBOMBARDMENT;
+
+	private int statsSize;
+
+	private Double bombardmentBombSpeed;
+
+	private Double bombardmentBombDirection;
+
+	private int cooldownAfterDeathSeconds;
+
+	private int splatoonEggDamage;
+
+	private boolean matchPrivateMatch;
+
+	private boolean equilibrateTeams;
+
+	private boolean forceNonEmptyTeams;
+
+	private ItemStack kitsItem;
+
+	private ItemStack teamItem;
+
+	private int minNumberOfTriesBeforeBeginning;
+
+	private List<String> commandsOnEventFire;
+
+	private boolean waterKillBombardment;
+
+	private int offSetYBombardment;
+
+	private boolean disableMultipleWinners;
+
+	private boolean randomDisguisePlayers;
+
+	private Boolean isLibsDisguises;
+
+	private String skinDisguisePlayers;
+
+	private boolean infiniteSnowballs;
+
+	private List<String> commandsOnUserJoin;
+	private List<String> commandsOnKill;
+	private List<String> commandsOnMatchBegin;
+
+	private int snowballsDamage;
+
+	private boolean waterKillSpleef;
+
+	private boolean waterKillSplegg;
+
+	private boolean waterKillTNTRun;
+
+	private boolean waterKillAnvilSpleef;
+
+	private boolean multipleKillOnExplosion;
+
+	private Integer radiusOfTNTTagExplosion;
+
+	private boolean useTitleWhenGetBomb;
+
+	private boolean deactivateSounds;
+
+	public ReventConfig(RandomEvents plugin) {
 		super();
-		this.configFile = configFile.getAbsoluteFile();
+		this.plugin = plugin;
+		inicializaVariables(plugin);
 	}
-	private final byte[] bytebuffer = new byte[1024];
 
-	public synchronized void load()
-	{
-		if (pendingDiskWrites.get() != 0)
-		{
-			LOGGER.log(Level.INFO, "File {0} not read, because it''s not yet written to disk.", configFile);
-			return;
+	public void inicializaVariables(RandomEvents plugin) {
+		this.powerUpItem = new ItemStack(XMaterial.EMERALD.parseMaterial());
+		ItemMeta itemMeta = this.powerUpItem.getItemMeta();
+		itemMeta.setDisplayName("§2§lPowerUP");
+		this.powerUpItem.setItemMeta(itemMeta);
+
+		plugin.updateConfig();
+
+		plugin.setLanguage(new LanguageMessages(plugin));
+
+		plugin.setRandom(new Random());
+		Tournament tournament = new Tournament();
+		tournament.setMaxPlayers(plugin.getConfig().getInt("tournament.maxPlayers"));
+		tournament.setMinPlayers(plugin.getConfig().getInt("tournament.minPlayers"));
+		tournament.setNumberOfRounds(plugin.getConfig().getInt("tournament.numberOfRounds"));
+		tournament.setRewards(plugin.getConfig().getStringList("tournament.rewards"));
+		tournament.setPlayerSpawn(new Location(Bukkit.getWorld(plugin.getConfig().getString("tournament.spawn.world")),
+				plugin.getConfig().getDouble("tournament.spawn.x"), plugin.getConfig().getDouble("tournament.spawn.y"),
+				plugin.getConfig().getDouble("tournament.spawn.z"),
+				Double.valueOf(plugin.getConfig().getDouble("tournament.spawn.yaw")).floatValue(),
+				Double.valueOf(plugin.getConfig().getDouble("tournament.spawn.pitch")).floatValue()));
+		plugin.setTournament(tournament);
+
+		this.warmupTimeTNTRUN = plugin.getConfig().getInt("warmupTimeTNTRUN");
+		this.numberOfTriesBeforeCancelling = plugin.getConfig().getInt("numberOfTriesBeforeCancelling");
+
+		plugin.setSpawn(new Location(Bukkit.getWorld(plugin.getConfig().getString("spawn.world")),
+				plugin.getConfig().getDouble("spawn.x"), plugin.getConfig().getDouble("spawn.y"),
+				plugin.getConfig().getDouble("spawn.z"),
+				Double.valueOf(plugin.getConfig().getDouble("spawn.yaw")).floatValue(),
+				Double.valueOf(plugin.getConfig().getDouble("spawn.pitch")).floatValue()));
+
+		this.minPlayers = Integer.valueOf(plugin.getConfig().getInt("minPlayers"));
+		this.idleTimeForDamage = Integer.valueOf(plugin.getConfig().getInt("idleTimeForDamage"));
+		this.sgAreaDamage = Double.valueOf(plugin.getConfig().getDouble("sgAreaDamage"));
+
+		this.bombardmentBombSpeed = Double.valueOf(plugin.getConfig().getDouble("bombardmentBombSpeed"));
+		this.bombardmentBombDirection = Double.valueOf(plugin.getConfig().getDouble("bombardmentBombDirection"));
+
+		this.deactivateSounds = plugin.getConfig().getBoolean("deactivateSounds");
+		this.needPasswordToJoin = plugin.getConfig().getBoolean("needPasswordToJoin");
+		this.globalCooldown = plugin.getConfig().getBoolean("globalCooldown");
+		this.inventoryManagement = plugin.getConfig().getBoolean("inventoryManagement");
+		this.dropItemsAfterDie = plugin.getConfig().getBoolean("dropItemsAfterDie");
+		this.advancedSpectatorMode = plugin.getConfig().getBoolean("advancedSpectatorMode");
+
+		this.commandsOnEventFire = (List<String>) plugin.getConfig().getStringList("commandsOnEventFire");
+		this.commandsOnUserJoin = (List<String>) plugin.getConfig().getStringList("commandsOnUserJoin");
+		this.commandsOnKill = (List<String>) plugin.getConfig().getStringList("commandsOnKill");
+
+		this.commandsOnMatchBegin = (List<String>) plugin.getConfig().getStringList("commandsOnMatchBegin");
+		this.commandsOnMatchEnd = (List<String>) plugin.getConfig().getStringList("commandsOnMatchEnd");
+		this.commandsOnUserLeave = (List<String>) plugin.getConfig().getStringList("commandsOnUserLeave");
+		this.cooldownUsersBeginEvents = plugin.getConfig().getInt("cooldownUsersBeginEvents");
+		this.forcePlayersToEnter = plugin.getConfig().getBoolean("forcePlayersToEnter");
+		this.forcePlayersToSpectate = plugin.getConfig().getBoolean("forcePlayersToSpectate");
+		this.topKillerHealAfterKill = plugin.getConfig().getBoolean("topKillerHealAfterKill");
+		this.quakeGiveDefaultWeapon = plugin.getConfig().getBoolean("quakeGiveDefaultWeapon");
+		this.paintGiveDefaultWeapon = plugin.getConfig().getBoolean("paintGiveDefaultWeapon");
+		this.matchPrivateMatch = plugin.getConfig().getBoolean("matchPrivateMatch");
+		this.waterKillBombardment = plugin.getConfig().getBoolean("waterKillBombardment");
+		this.waterKillSpleef = plugin.getConfig().getBoolean("waterKillSpleef");
+		this.waterKillSplegg = plugin.getConfig().getBoolean("waterKillSplegg");
+		this.waterKillTNTRun = plugin.getConfig().getBoolean("waterKillTNTRun");
+		this.waterKillAnvilSpleef = plugin.getConfig().getBoolean("waterKillAnvilSpleef");
+
+		this.useTitleWhenGetBomb = plugin.getConfig().getBoolean("useTitleWhenGetBomb");
+		this.disableMultipleWinners = plugin.getConfig().getBoolean("disableMultipleWinners");
+		this.offSetYBombardment = plugin.getConfig().getInt("offSetYBombardment");
+
+		this.skinDisguisePlayers = plugin.getConfig().getString("skinDisguisePlayers");
+
+		this.equilibrateTeams = plugin.getConfig().getBoolean("equilibrateTeams");
+		this.forceNonEmptyTeams = plugin.getConfig().getBoolean("forceNonEmptyTeams");
+		this.infiniteSnowballs = plugin.getConfig().getBoolean("infiniteSnowballs");
+		this.snowballsDamage = plugin.getConfig().getInt("snowballsDamage");
+		this.quakeShootCooldown = plugin.getConfig().getDouble("quakeShootCooldown");
+		this.quakeJumpCooldown = plugin.getConfig().getDouble("quakeJumpCooldown");
+		this.quakeShootDistance = plugin.getConfig().getInt("quakeShootDistance");
+		this.minNumberOfTriesBeforeBeginning = plugin.getConfig().getInt("minNumberOfTriesBeforeBeginning");
+		this.splatoonPaint = plugin.getConfig().getInt("splatoonPaint");
+		this.splatoonRadius = plugin.getConfig().getInt("splatoonRadius");
+		this.cooldownAfterDeathSeconds = plugin.getConfig().getInt("cooldownAfterDeathSeconds");
+		this.splatoonEggDamage = plugin.getConfig().getInt("splatoonEggDamage");
+
+		this.useEncoding = plugin.getConfig().getString("useEncoding");
+		if (useEncoding.equals("UTF_8")) {
+			useEncoding = "UTF-8";
 		}
-		if (!configFile.getParentFile().exists())
-		{
-			if (!configFile.getParentFile().mkdirs())
-			{
-				LOGGER.log(Level.SEVERE, "FAILED TO CREATE CONFIG");
+		this.cmdAlias = plugin.getConfig().getString("cmdAlias");
+
+		Material mat = null;
+		String statsMenuFill = plugin.getConfig().getString("statsmenu.fill");
+		Integer data = null;
+		if (statsMenuFill.contains(":")) {
+			data = Integer.valueOf(statsMenuFill.split(":")[1]);
+			statsMenuFill = statsMenuFill.split(":")[0];
+		}
+		try {
+			mat = Material.valueOf(statsMenuFill);
+		} catch (Exception e) {
+			if (mat == null) {
+				mat = XMaterial.WHITE_STAINED_GLASS_PANE.parseMaterial();
 			}
 		}
-		// This will delete files where the first character is 0. In most cases they are broken.
-		if (configFile.exists() && configFile.length() != 0)
-		{
-			try
-			{
-				final InputStream input = new FileInputStream(configFile);
-				try
-				{
-					if (input.read() == 0)
-					{
-						input.close();
-						configFile.delete();
-					}
-				}
-				catch (IOException ex)
-				{
-					LOGGER.log(Level.SEVERE, null, ex);
-				}
-				finally
-				{
-					try
-					{
-						input.close();
-					}
-					catch (IOException ex)
-					{
-						LOGGER.log(Level.SEVERE, null, ex);
-					}
-				}
-			}
-			catch (FileNotFoundException ex)
-			{
-				LOGGER.log(Level.SEVERE, null, ex);
+
+		Material checkpointMat = null;
+		try {
+			checkpointMat = Material.valueOf(plugin.getConfig().getString("checkpointItem"));
+		} catch (Exception e) {
+			if (checkpointMat == null) {
+				checkpointMat = XMaterial.BLAZE_ROD.parseMaterial();
 			}
 		}
+		this.checkpointItem = new ItemStack(checkpointMat);
 
-		if (!configFile.exists())
-		{
-			if (legacyFileExists())
-			{
-				convertLegacyFile();
-			}
-			else if (altFileExists())
-			{
-				convertAltFile();
-			}
-			else if (templateName != null)
-			{
-				LOGGER.log(Level.INFO, "CREATING CONFIG FROM TEMPLATE");
-				createFromTemplate();
-			}
-			else
-			{
-				return;
+		Material matVanish = null;
+		String vanishMaterial = plugin.getConfig().getString("vanishItem");
+		Integer dataVanish = null;
+		if (vanishMaterial.contains(":")) {
+			dataVanish = Integer.valueOf(vanishMaterial.split(":")[1]);
+			vanishMaterial = vanishMaterial.split(":")[0];
+		}
+		try {
+			matVanish = Material.valueOf(vanishMaterial);
+		} catch (Exception e) {
+			if (matVanish == null) {
+				matVanish = XMaterial.ENDER_EYE.parseMaterial();
 			}
 		}
+		ItemMeta itemMetaCheck = this.checkpointItem.getItemMeta();
+		itemMetaCheck.setDisplayName(plugin.getLanguage().getItemReturnCheckpoint());
+		this.checkpointItem.setItemMeta(itemMetaCheck);
 
+		this.vanishItem = new ItemStack(matVanish);
+		if (dataVanish != null) {
+			vanishItem.setDurability(dataVanish.shortValue());
+			try {
+				vanishItem.getData().setData(dataVanish.byteValue());
+			} catch (Throwable e) {
 
-		try
-		{
-			final FileInputStream inputStream = new FileInputStream(configFile);
-			try
-			{
-				long startSize = configFile.length();
-				if (startSize > Integer.MAX_VALUE)
-				{
-					throw new InvalidConfigurationException("File too big");
-				}
-				ByteBuffer buffer = ByteBuffer.allocate((int)startSize);
-				int length;
-				while ((length = inputStream.read(bytebuffer)) != -1)
-				{
-					if (length > buffer.remaining())
-					{
-						ByteBuffer resize = ByteBuffer.allocate(buffer.capacity() + length - buffer.remaining());
-						int resizePosition = buffer.position();
-						buffer.rewind();
-						resize.put(buffer);
-						resize.position(resizePosition);
-						buffer = resize;
-					}
-					buffer.put(bytebuffer, 0, length);
-				}
-				buffer.rewind();
-				final CharBuffer data = CharBuffer.allocate(buffer.capacity());
-				CharsetDecoder decoder = UTF8.newDecoder();
-				CoderResult result = decoder.decode(buffer, data, true);
-				if (result.isError())
-				{
-					buffer.rewind();
-					data.clear();
-					LOGGER.log(Level.INFO, "File " + configFile.getAbsolutePath().toString() + " is not utf-8 encoded, trying " + Charset.defaultCharset().displayName());
-					decoder = Charset.defaultCharset().newDecoder();
-					result = decoder.decode(buffer, data, true);
-					if (result.isError())
-					{
-						throw new InvalidConfigurationException("Invalid Characters in file " + configFile.getAbsolutePath().toString());
-					}
-					else
-					{
-						decoder.flush(data);
-					}
-				}
-				else
-				{
-					decoder.flush(data);
-				}
-				final int end = data.position();
-				data.rewind();
-				super.loadFromString(data.subSequence(0, end).toString());
-			}
-			finally
-			{
-				inputStream.close();
 			}
 		}
-		catch (IOException ex)
-		{
-			LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
-		}
-		catch (InvalidConfigurationException ex)
-		{
-			File broken = new File(configFile.getAbsolutePath() + ".broken." + System.currentTimeMillis());
-			configFile.renameTo(broken);
-			LOGGER.log(Level.SEVERE, "The file " + configFile.toString() + " is broken, it has been renamed to " + broken.toString(), ex.getCause());
-		}
-	}
+		this.endVanishItem = new ItemStack(matVanish);
+		if (dataVanish != null) {
+			endVanishItem.setDurability(dataVanish.shortValue());
+			try {
+				endVanishItem.getData().setData(dataVanish.byteValue());
+			} catch (Throwable e) {
 
-	public boolean legacyFileExists()
-	{
-		return false;
-	}
-
-	public void convertLegacyFile()
-	{
-		LOGGER.log(Level.SEVERE, "Unable to import legacy config file.");
-	}
-
-	public boolean altFileExists()
-	{
-		return false;
-	}
-
-	public void convertAltFile()
-	{
-		LOGGER.log(Level.SEVERE, "Unable to import alt config file.");
-	}
-
-	private void createFromTemplate()
-	{
-		InputStream istr = null;
-		OutputStream ostr = null;
-		try
-		{
-			istr = resourceClass.getResourceAsStream(templateName);
-			if (istr == null)
-			{
-				LOGGER.log(Level.SEVERE, "COULD NOT FIND TEMPLATE");
-				return;
-			}
-			ostr = new FileOutputStream(configFile);
-			byte[] buffer = new byte[1024];
-			int length = 0;
-			length = istr.read(buffer);
-			while (length > 0)
-			{
-				ostr.write(buffer, 0, length);
-				length = istr.read(buffer);
 			}
 		}
-		catch (IOException ex)
-		{
-			LOGGER.log(Level.SEVERE, "FAILED TO WRITE CONFIG", ex);
-		}
-		finally
-		{
-			try
-			{
-				if (istr != null)
-				{
-					istr.close();
-				}
-			}
-			catch (IOException ex)
-			{
-				Logger.getLogger(ReventConfig.class.getName()).log(Level.SEVERE, null, ex);
-			}
-			try
-			{
-				if (ostr != null)
-				{
-					ostr.close();
-				}
-			}
-			catch (IOException ex)
-			{
-				LOGGER.log(Level.SEVERE, "FAILED TO CLOSE CONFIG", ex);
-			}
-		}
-	}
+		ItemMeta itemVanishItem = this.vanishItem.getItemMeta();
+		itemVanishItem.setDisplayName(plugin.getLanguage().getItemHidePlayer());
+		this.vanishItem.setItemMeta(itemVanishItem);
 
-	public void setTemplateName(final String templateName)
-	{
-		this.templateName = templateName;
-	}
+		ItemMeta itemEndVanishMeta = this.endVanishItem.getItemMeta();
+		itemEndVanishMeta.setDisplayName(plugin.getLanguage().getItemShowPlayer());
+		this.endVanishItem.setItemMeta(itemEndVanishMeta);
 
-	public File getFile()
-	{
-		return configFile;
-	}
+		this.oitcHealAfterKill = plugin.getConfig().getBoolean("oitcHealAfterKill");
+		this.cooldownAfterDeath = plugin.getConfig().getBoolean("cooldownAfterDeath");
+		this.tntTagSpeedRunners = plugin.getConfig().getInt("tntTagSpeedRunners");
 
-	public void setTemplateName(final String templateName, final Class<?> resClass)
-	{
-		this.templateName = templateName;
-		this.resourceClass = resClass;
-	}
+		this.tntTagSpeedHolder = plugin.getConfig().getInt("tntTagSpeedHolder");
+		this.arrowRainDamage = plugin.getConfig().getInt("arrowRainDamage");
+		this.waterKillKnockbackDuel = plugin.getConfig().getBoolean("waterKillKnockbackDuel");
+		this.snowballSpleef = plugin.getConfig().getBoolean("snowballSpleef");
+		this.waterKillSG = plugin.getConfig().getBoolean("waterKillSG");
+		this.waterKillSW = plugin.getConfig().getBoolean("waterKillSW");
+		this.speedDuration = plugin.getConfig().getInt("speedDuration");
 
-	public void startTransaction()
-	{
-		transaction.set(true);
-	}
+		this.statsFill = new ItemStack(mat);
+		if (data != null) {
+			statsFill.setDurability(data.shortValue());
+			try {
+				statsFill.getData().setData(data.byteValue());
+			} catch (Throwable e) {
 
-	public void stopTransaction()
-	{
-		transaction.set(false);
-		save();
-	}
-
-	public void save()
-	{
-		try
-		{
-			save(configFile);
-		}
-		catch (IOException ex)
-		{
-			LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
-		}
-	}
-
-	public void saveWithError() throws IOException
-	{
-		save(configFile);
-	}
-
-	@Override
-	public synchronized void save(final File file) throws IOException
-	{
-		if (!transaction.get())
-		{
-			delayedSave(file);
-		}
-	}
-
-	//This may be aborted if there are stagnant requests sitting in queue.
-	//This needs fixed to discard outstanding save requests.
-	public synchronized void forceSave()
-	{
-		try
-		{
-			Future<?> future = delayedSave(configFile);
-			if (future != null)
-			{
-				future.get();
 			}
 		}
-		catch (InterruptedException ex)
-		{
-			LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
+
+		this.statsALLTIME = plugin.getConfig().getInt("statsmenu.ALLTIME");
+		this.statsBR = plugin.getConfig().getInt("statsmenu.BR");
+		this.statsBRT2 = plugin.getConfig().getInt("statsmenu.BRT2");
+		this.statsLJ = plugin.getConfig().getInt("statsmenu.LJ");
+		this.statsTKLL = plugin.getConfig().getInt("statsmenu.TKLL");
+		this.statsTKLLT2 = plugin.getConfig().getInt("statsmenu.TKLLT2");
+		this.statsKBD = plugin.getConfig().getInt("statsmenu.KBD");
+		this.statsEARR = plugin.getConfig().getInt("statsmenu.EARR");
+		this.statsGEMC = plugin.getConfig().getInt("statsmenu.GEMC");
+		this.statsBOMB = plugin.getConfig().getInt("statsmenu.BOMB");
+		this.statsBOAT_RUN = plugin.getConfig().getInt("statsmenu.BOAT_RUN");
+		this.statsHORSE_RUN = plugin.getConfig().getInt("statsmenu.HORSE_RUN");
+		this.statsESCAPE_FROM_BEAST = plugin.getConfig().getInt("statsmenu.ESCAPE_FROM_BEAST");
+		this.statsRACE = plugin.getConfig().getInt("statsmenu.RACE");
+		this.statsTNTRUN = plugin.getConfig().getInt("statsmenu.TNTRUN");
+		this.statsSPLEEF = plugin.getConfig().getInt("statsmenu.SPLEEF");
+		this.statsSPLEGG = plugin.getConfig().getInt("statsmenu.SPLEGG");
+		this.statsOITC = plugin.getConfig().getInt("statsmenu.OITC");
+		this.statsSG = plugin.getConfig().getInt("statsmenu.SG");
+		this.statsTSG = plugin.getConfig().getInt("statsmenu.TSG");
+		this.statsSW = plugin.getConfig().getInt("statsmenu.SW");
+		this.statsTSW = plugin.getConfig().getInt("statsmenu.TSW");
+		this.statsANVIL_SPLEEF = plugin.getConfig().getInt("statsmenu.ANVIL_SPLEEF");
+		this.statsWDROP = plugin.getConfig().getInt("statsmenu.WDROP");
+		this.statsQUAKE = plugin.getConfig().getInt("statsmenu.QUAKE");
+		this.statsPBALL = plugin.getConfig().getInt("statsmenu.PBALL");
+		this.statsKOTH = plugin.getConfig().getInt("statsmenu.KOTH");
+		this.statsFISHSLAP = plugin.getConfig().getInt("statsmenu.FISHSLAP");
+		this.statsHOE = plugin.getConfig().getInt("statsmenu.HOE");
+		this.statsSPLATOON = plugin.getConfig().getInt("statsmenu.SPLATOON");
+		this.statsBOMBARDMENT = plugin.getConfig().getInt("statsmenu.BOMBARDMENT");
+		this.statsSize = plugin.getConfig().getInt("statsmenu.size");
+
+		this.allowedCmds = (List<String>) plugin.getConfig().getStringList("allowedCmds");
+
+		this.maxItemOnChests = Integer.valueOf(plugin.getConfig().getInt("maxItemOnChests"));
+		this.minItemOnChests = Integer.valueOf(plugin.getConfig().getInt("minItemOnChests"));
+		this.secondsToStartMatch = Integer.valueOf(plugin.getConfig().getInt("secondsToStartMatch"));
+		if (secondsToStartMatch == null) {
+			secondsToStartMatch = 0;
+		} else {
+			secondsToStartMatch = secondsToStartMatch - 3;
+			if (secondsToStartMatch < 0) {
+				secondsToStartMatch = 0;
+			}
 		}
-		catch (ExecutionException ex)
-		{
-			LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
-		}
-	}
 
-	public synchronized void cleanup()
-	{
-		forceSave();
-	}
+		this.particleDeath = (plugin.getConfig().getString("particleDeath"));
+		this.particleTNTTag = (plugin.getConfig().getString("particleTNTTag"));
 
-	private Future<?> delayedSave(final File file)
-	{
-		if (file == null)
-		{
-			throw new IllegalArgumentException("File cannot be null");
-		}
+		this.particleType = (plugin.getConfig().getString("particle.type"));
 
-		final String data = saveToString();
+		this.particleSize = Double.valueOf(plugin.getConfig().getDouble("particle.size"));
+		this.particleRadius = Double.valueOf(plugin.getConfig().getDouble("particle.radius"));
+		this.particleRadiusRate = Double.valueOf(plugin.getConfig().getDouble("particle.radiusRate"));
+		this.particleRadius2 = Double.valueOf(plugin.getConfig().getDouble("particle.radius2"));
+		this.particleRate = Double.valueOf(plugin.getConfig().getDouble("particle.rate"));
+		this.particleRateChange = Double.valueOf(plugin.getConfig().getDouble("particle.rateChange"));
+		this.particleHeight = Double.valueOf(plugin.getConfig().getDouble("particle.height"));
+		this.particleExtension = Double.valueOf(plugin.getConfig().getDouble("particle.extension"));
 
-		if (data.length() == 0)
-		{
-			return null;
+		this.secondsTimer = Integer.valueOf(plugin.getConfig().getInt("secondsTimer"));
+		this.secondsCheckPlayers = Integer.valueOf(plugin.getConfig().getInt("secondsCheckPlayers"));
+		if (secondsCheckPlayers == null) {
+			secondsCheckPlayers = 15;
 		}
 
-		Future<?> future = EXECUTOR_SERVICE.submit(new WriteRunner(configFile, data, pendingDiskWrites));
+		this.numberOfSecondsWithGems = Integer.valueOf(plugin.getConfig().getInt("numberOfSecondsWithGems"));
+		this.numberOfGems = Integer.valueOf(plugin.getConfig().getInt("numberOfGems"));
 
-		return future;
-	}
+		this.probabilityRandomEventTournament = Integer
+				.valueOf(plugin.getConfig().getInt("probabilityRandomEventTournament"));
+		this.probabilityRandomEvent = Integer.valueOf(plugin.getConfig().getInt("probabilityRandomEvent"));
 
+		this.highestPriorityDamageEvents = plugin.getConfig().getBoolean("highestPriorityDamageEvents");
 
-	private static class WriteRunner implements Runnable
-	{
-		private final File configFile;
-		private final String data;
-		private final AtomicInteger pendingDiskWrites;
+		this.debugMode = plugin.getConfig().getBoolean("debugMode");
 
-		private WriteRunner(final File configFile, final String data, final AtomicInteger pendingDiskWrites)
-		{
-			this.configFile = configFile;
-			this.data = data;
-			this.pendingDiskWrites = pendingDiskWrites;
+		this.multipleKillOnExplosion = plugin.getConfig().getBoolean("multipleKillOnExplosion");
+		this.radiusOfTNTTagExplosion = Integer.valueOf(plugin.getConfig().getInt("radiusOfTNTTagExplosion"));
+
+		this.randomDisguisePlayers = plugin.getConfig().getBoolean("randomDisguisePlayers");
+		this.useLastLocation = plugin.getConfig().getBoolean("useLastLocation");
+		this.optionalTitles = plugin.getConfig().getBoolean("optionalTitles");
+		this.showBorders = plugin.getConfig().getBoolean("showBorders");
+		this.useParticles = plugin.getConfig().getBoolean("useParticles");
+		this.useScoreboard = plugin.getConfig().getBoolean("useScoreboard");
+		this.setProbabilityPowerUp(Integer.valueOf(plugin.getConfig().getInt("probabilityPowerUp")));
+
+		plugin.setWaterDrops(UtilsRandomEvents.cargarWaterDrops(plugin));
+		plugin.setKits(UtilsRandomEvents.cargarKits(plugin));
+		plugin.setMatches(UtilsRandomEvents.cargarPartidas(plugin));
+
+		plugin.setMatchesAvailable(new ArrayList<Match>());
+		for (Match match : plugin.getMatches()) {
+			if (match.getEnabled() == null || match.getEnabled()) {
+				plugin.getMatchesAvailable().add(match);
+			}
 		}
 
-		@Override
-		public void run()
-		{
-			//long startTime = System.nanoTime();
-			synchronized (configFile)
-			{
-				if (pendingDiskWrites.get() > 1)
-				{
-					// Writes can be skipped, because they are stored in a queue (in the executor).
-					// Only the last is actually written.
-					pendingDiskWrites.decrementAndGet();
-					//LOGGER.log(Level.INFO, configFile + " skipped writing in " + (System.nanoTime() - startTime) + " nsec.");
-					return;
-				}
-				try
-				{
-					Files.createParentDirs(configFile);
+		this.bannedPlayers = UtilsRandomEvents.cargarBannedPlayers(plugin);
+		if (bannedPlayers == null || bannedPlayers.getBannedPlayers() == null) {
+			bannedPlayers = new BannedPlayers();
+		}
+		plugin.setSchedules(UtilsRandomEvents.cargarSchedules(plugin));
 
-					if (!configFile.exists())
-					{
-						try
-						{
-							LOGGER.log(Level.INFO, "CREATING EMPTY CONFIG");
-							if (!configFile.createNewFile())
-							{
-								LOGGER.log(Level.SEVERE,"FAILED TO CREATE CONFIG");
-								return;
-							}
-						}
-						catch (IOException ex)
-						{
-							LOGGER.log(Level.SEVERE, "FAILED TO CREATE CONFIG", ex);
-							return;
-						}
-					}
+		Date now = new Date();
+		long nowLong = now.getTime();
+		List<String> pl = new ArrayList<String>();
+		for (Entry<String, Long> entrada : bannedPlayers.getBannedPlayers().entrySet()) {
+			if (entrada.getValue() < nowLong) {
+				pl.add(entrada.getKey());
+			}
+		}
+		for (String p : pl) {
+			bannedPlayers.getBannedPlayers().remove(p);
+		}
 
-					final FileOutputStream fos = new FileOutputStream(configFile);
-					try
-					{
-						final OutputStreamWriter writer = new OutputStreamWriter(fos, UTF8);
+		this.forceEmptyInventoryToJoin = plugin.getConfig().getBoolean("forceEmptyInventoryToJoin");
+		this.mysqlEnabled = plugin.getConfig().getBoolean("mysql.enabled");
+		this.mysqlUUIDMode = plugin.getConfig().getBoolean("mysql.UUIDMode");
+		this.mysqlHost = plugin.getConfig().getString("mysql.host");
+		this.mysqlDatabase = plugin.getConfig().getString("mysql.database");
+		this.mysqlUsername = plugin.getConfig().getString("mysql.username");
+		this.mysqlPassword = plugin.getConfig().getString("mysql.password");
+		this.mysqlPort = plugin.getConfig().getInt("mysql.port");
+		this.mysqlMaxLifeTime = plugin.getConfig().getInt("mysql.maxLifeTime");
 
-						try
-						{
-							writer.write(data);
-						}
-						finally
-						{
-							writer.close();
-						}
-					}
-					finally
-					{
-						fos.close();
-					}
-				}
-				catch (IOException e)
-				{
-					LOGGER.log(Level.SEVERE, e.getMessage(), e);
-				}
-				finally
-				{
-					//LOGGER.log(Level.INFO, configFile + " written to disk in " + (System.nanoTime() - startTime) + " nsec.");
-					pendingDiskWrites.decrementAndGet();
+		kitsItem = XMaterial.CHEST.parseItem();
+		ItemMeta kitsMeta = kitsItem.getItemMeta();
+		kitsMeta.setDisplayName(plugin.getLanguage().getKitItemName());
+		kitsItem.setItemMeta(kitsMeta);
+
+		teamItem = XMaterial.WHITE_TERRACOTTA.parseItem();
+		ItemMeta teamMeta = teamItem.getItemMeta();
+		teamMeta.setDisplayName(plugin.getLanguage().getTeamItemName());
+		teamItem.setItemMeta(teamMeta);
+
+		int pluginId = 8944;
+		Metrics metrics = new Metrics(plugin, pluginId);
+
+		try {
+			if (plugin.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+				try {
+					new ReventPlaceholder(plugin).register();
+					System.out.println("[RandomEvents] PlaceholderAPI hooked succesfully!");
+
+				} catch (Exception e) {
+					System.out.println("[RandomEvents] PlaceholderAPI hook failed!");
 				}
 			}
+		} catch (Throwable e) {
+
 		}
+
 	}
 
-	public boolean hasProperty(final String path)
-	{
-		return isSet(path);
+	public RandomEvents getPlugin() {
+		return plugin;
 	}
 
-	public Location getLocation(final String path, final Server server) throws InvalidWorldException
-	{
-		final String worldString = (path == null ? "" : path + ".") + "world";
-		final String worldName = getString(worldString);
-		if (worldName == null || worldName.isEmpty())
-		{
-			return null;
-		}
-		final World world = server.getWorld(worldName);
-		if (world == null)
-		{
-			throw new InvalidWorldException(worldName);
-		}
-		return new Location(world,
-							getDouble((path == null ? "" : path + ".") + "x", 0),
-							getDouble((path == null ? "" : path + ".") + "y", 0),
-							getDouble((path == null ? "" : path + ".") + "z", 0),
-							(float)getDouble((path == null ? "" : path + ".") + "yaw", 0),
-							(float)getDouble((path == null ? "" : path + ".") + "pitch", 0));
+	public void setPlugin(RandomEvents plugin) {
+		this.plugin = plugin;
 	}
 
-	public void setProperty(final String path, final Location loc)
-	{
-		set((path == null ? "" : path + ".") + "world", loc.getWorld().getName());
-		set((path == null ? "" : path + ".") + "x", loc.getX());
-		set((path == null ? "" : path + ".") + "y", loc.getY());
-		set((path == null ? "" : path + ".") + "z", loc.getZ());
-		set((path == null ? "" : path + ".") + "yaw", loc.getYaw());
-		set((path == null ? "" : path + ".") + "pitch", loc.getPitch());
+	public Integer getSecondsTimer() {
+		return secondsTimer;
 	}
 
-	@Override
-	public ItemStack getItemStack(final String path)
-	{
-		final ItemStack stack = new ItemStack(
-				Material.valueOf(getString(path + ".type", "AIR")),
-				getInt(path + ".amount", 1),
-				(short)getInt(path + ".damage", 0));
-		final ConfigurationSection enchants = getConfigurationSection(path + ".enchant");
-		if (enchants != null)
-		{
-			for (String enchant : enchants.getKeys(false))
-			{
-				final Enchantment enchantment = Enchantment.getByName(enchant.toUpperCase(Locale.ENGLISH));
-				if (enchantment == null)
-				{
-					continue;
-				}
-				final int level = getInt(path + ".enchant." + enchant, enchantment.getStartLevel());
-				stack.addUnsafeEnchantment(enchantment, level);
-			}
-		}
-		return stack;
-		/*
-		 * ,
-		 * (byte)getInt(path + ".data", 0)
-		 */
+	public void setSecondsTimer(Integer secondsTimer) {
+		this.secondsTimer = secondsTimer;
 	}
 
-	public void setProperty(final String path, final ItemStack stack)
-	{
-		final Map<String, Object> map = new HashMap<String, Object>();
-		map.put("type", stack.getType().toString());
-		map.put("amount", stack.getAmount());
-		map.put("damage", stack.getDurability());
-		Map<Enchantment, Integer> enchantments = stack.getEnchantments();
-		if (!enchantments.isEmpty())
-		{
-			Map<String, Integer> enchant = new HashMap<String, Integer>();
-			for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet())
-			{
-				enchant.put(entry.getKey().getName().toLowerCase(Locale.ENGLISH), entry.getValue());
-			}
-			map.put("enchant", enchant);
-		}
-		// getData().getData() is broken
-		//map.put("data", stack.getDurability());
-		set(path, map);
+	public Integer getMinPlayers() {
+		return minPlayers;
 	}
 
-	public void setProperty(String path, List object)
-	{
-		set(path, new ArrayList(object));
+	public void setMinPlayers(Integer minPlayers) {
+		this.minPlayers = minPlayers;
 	}
 
-	public void setProperty(String path, Map object)
-	{
-		set(path, new LinkedHashMap(object));
+	public Integer getProbabilityRandomEvent() {
+		return probabilityRandomEvent;
 	}
 
-	public Object getProperty(String path)
-	{
-		return get(path);
+	public void setProbabilityRandomEvent(Integer probabilityRandomEvent) {
+		this.probabilityRandomEvent = probabilityRandomEvent;
 	}
 
-	public void setProperty(final String path, final BigDecimal bigDecimal)
-	{
-		set(path, bigDecimal.toString());
+	public Integer getProbabilityRandomEventTournament() {
+		return probabilityRandomEventTournament;
 	}
 
-	public void setProperty(String path, Object object)
-	{
-		set(path, object);
+	public void setProbabilityRandomEventTournament(Integer probabilityRandomEventTournament) {
+		this.probabilityRandomEventTournament = probabilityRandomEventTournament;
 	}
 
-	public void removeProperty(String path)
-	{
-		set(path, null);
+	public Integer getProbabilityPowerUp() {
+		return probabilityPowerUp;
 	}
 
-	@Override
-	public synchronized Object get(String path)
-	{
-		return super.get(path);
+	public void setProbabilityPowerUp(Integer probabilityPowerUp) {
+		this.probabilityPowerUp = probabilityPowerUp;
 	}
 
-	@Override
-	public synchronized Object get(String path, Object def)
-	{
-		return super.get(path, def);
+	public ItemStack getPowerUpItem() {
+		return powerUpItem;
 	}
 
-	public synchronized BigDecimal getBigDecimal(final String path, final BigDecimal def)
-	{
-		final String input = super.getString(path);
-		return toBigDecimal(input, def);
+	public void setPowerUpItem(ItemStack powerUpItem) {
+		this.powerUpItem = powerUpItem;
 	}
 
-	public static BigDecimal toBigDecimal(final String input, final BigDecimal def)
-	{
-		if (input == null || input.isEmpty())
-		{
-			return def;
-		}
-		else
-		{
-			try
-			{
-				return new BigDecimal(input, MathContext.DECIMAL128);
-			}
-			catch (NumberFormatException e)
-			{
-				return def;
-			}
-			catch (ArithmeticException e)
-			{
-				return def;
-			}
-		}
+	public ItemStack getCheckpointItem() {
+		return checkpointItem;
 	}
 
-	@Override
-	public synchronized boolean getBoolean(String path)
-	{
-		return super.getBoolean(path);
+	public void setCheckpointItem(ItemStack checkpointItem) {
+		this.checkpointItem = checkpointItem;
 	}
 
-	@Override
-	public synchronized boolean getBoolean(String path, boolean def)
-	{
-		return super.getBoolean(path, def);
+	public Boolean getUseLastLocation() {
+		return useLastLocation;
 	}
 
-	@Override
-	public synchronized List<Boolean> getBooleanList(String path)
-	{
-		return super.getBooleanList(path);
+	public void setUseLastLocation(Boolean useLastLocation) {
+		this.useLastLocation = useLastLocation;
 	}
 
-	@Override
-	public synchronized List<Byte> getByteList(String path)
-	{
-		return super.getByteList(path);
+	public Integer getNumberOfTriesBeforeCancelling() {
+		return numberOfTriesBeforeCancelling;
 	}
 
-	@Override
-	public synchronized List<Character> getCharacterList(String path)
-	{
-		return super.getCharacterList(path);
+	public void setNumberOfTriesBeforeCancelling(Integer numberOfTriesBeforeCancelling) {
+		this.numberOfTriesBeforeCancelling = numberOfTriesBeforeCancelling;
 	}
 
-	@Override
-	public synchronized ConfigurationSection getConfigurationSection(String path)
-	{
-		return super.getConfigurationSection(path);
+	public boolean isMysqlEnabled() {
+		return mysqlEnabled;
 	}
 
-	@Override
-	public synchronized double getDouble(String path)
-	{
-		return super.getDouble(path);
+	public void setMysqlEnabled(boolean mysqlEnabled) {
+		this.mysqlEnabled = mysqlEnabled;
 	}
 
-	@Override
-	public synchronized double getDouble(final String path, final double def)
-	{
-		return super.getDouble(path, def);
+	public String getMysqlHost() {
+		return mysqlHost;
 	}
 
-	@Override
-	public synchronized List<Double> getDoubleList(String path)
-	{
-		return super.getDoubleList(path);
+	public void setMysqlHost(String mysqlHost) {
+		this.mysqlHost = mysqlHost;
 	}
 
-	@Override
-	public synchronized List<Float> getFloatList(String path)
-	{
-		return super.getFloatList(path);
+	public String getMysqlDatabase() {
+		return mysqlDatabase;
 	}
 
-	@Override
-	public synchronized int getInt(String path)
-	{
-		return super.getInt(path);
+	public void setMysqlDatabase(String mysqlDatabase) {
+		this.mysqlDatabase = mysqlDatabase;
 	}
 
-	@Override
-	public synchronized int getInt(String path, int def)
-	{
-		return super.getInt(path, def);
+	public String getMysqlUsername() {
+		return mysqlUsername;
 	}
 
-	@Override
-	public synchronized List<Integer> getIntegerList(String path)
-	{
-		return super.getIntegerList(path);
+	public void setMysqlUsername(String mysqlUsername) {
+		this.mysqlUsername = mysqlUsername;
 	}
 
-	@Override
-	public synchronized ItemStack getItemStack(String path, ItemStack def)
-	{
-		return super.getItemStack(path, def);
+	public String getMysqlPassword() {
+		return mysqlPassword;
 	}
 
-	@Override
-	public synchronized Set<String> getKeys(boolean deep)
-	{
-		return super.getKeys(deep);
+	public void setMysqlPassword(String mysqlPassword) {
+		this.mysqlPassword = mysqlPassword;
 	}
 
-	@Override
-	public synchronized List<?> getList(String path)
-	{
-		return super.getList(path);
+	public Integer getMysqlPort() {
+		return mysqlPort;
 	}
 
-	@Override
-	public synchronized List<?> getList(String path, List<?> def)
-	{
-		return super.getList(path, def);
+	public void setMysqlPort(Integer mysqlPort) {
+		this.mysqlPort = mysqlPort;
 	}
 
-	@Override
-	public synchronized long getLong(String path)
-	{
-		return super.getLong(path);
+	public boolean isMysqlUUIDMode() {
+		return mysqlUUIDMode;
 	}
 
-	@Override
-	public synchronized long getLong(final String path, final long def)
-	{
-		return super.getLong(path, def);
+	public void setMysqlUUIDMode(boolean mysqlUUIDMode) {
+		this.mysqlUUIDMode = mysqlUUIDMode;
 	}
 
-	@Override
-	public synchronized List<Long> getLongList(String path)
-	{
-		return super.getLongList(path);
+	public boolean isDebugMode() {
+		return debugMode;
 	}
 
-	public synchronized Map<String, Object> getMap()
-	{
-		return map;
+	public void setDebugMode(boolean debugMode) {
+		this.debugMode = debugMode;
 	}
 
-	@Override
-	public synchronized List<Map<?, ?>> getMapList(String path)
-	{
-		return super.getMapList(path);
+	public Integer getSecondsCheckPlayers() {
+		return secondsCheckPlayers;
 	}
 
-	@Override
-	public synchronized OfflinePlayer getOfflinePlayer(String path)
-	{
-		return super.getOfflinePlayer(path);
+	public void setSecondsCheckPlayers(Integer secondsCheckPlayers) {
+		this.secondsCheckPlayers = secondsCheckPlayers;
 	}
 
-	@Override
-	public synchronized OfflinePlayer getOfflinePlayer(String path, OfflinePlayer def)
-	{
-		return super.getOfflinePlayer(path, def);
+	public List<String> getAllowedCmds() {
+		return allowedCmds;
 	}
 
-	@Override
-	public synchronized List<Short> getShortList(String path)
-	{
-		return super.getShortList(path);
+	public void setAllowedCmds(List<String> allowedCmds) {
+		this.allowedCmds = allowedCmds;
 	}
 
-	@Override
-	public synchronized String getString(String path)
-	{
-		return super.getString(path);
+	public boolean isForceEmptyInventoryToJoin() {
+		return forceEmptyInventoryToJoin;
 	}
 
-	@Override
-	public synchronized String getString(String path, String def)
-	{
-		return super.getString(path, def);
+	public void setForceEmptyInventoryToJoin(boolean forceEmptyInventoryToJoin) {
+		this.forceEmptyInventoryToJoin = forceEmptyInventoryToJoin;
 	}
 
-	@Override
-	public synchronized List<String> getStringList(String path)
-	{
-		return super.getStringList(path);
+	public BannedPlayers getBannedPlayers() {
+		return bannedPlayers;
 	}
 
-	@Override
-	public synchronized Map<String, Object> getValues(boolean deep)
-	{
-		return super.getValues(deep);
+	public void setBannedPlayers(BannedPlayers bannedPlayers) {
+		this.bannedPlayers = bannedPlayers;
 	}
 
-	@Override
-	public synchronized Vector getVector(String path)
-	{
-		return super.getVector(path);
+	public Integer getIdleTimeForDamage() {
+		return idleTimeForDamage;
 	}
 
-	@Override
-	public synchronized Vector getVector(String path, Vector def)
-	{
-		return super.getVector(path, def);
+	public void setIdleTimeForDamage(Integer idleTimeForDamage) {
+		this.idleTimeForDamage = idleTimeForDamage;
 	}
 
-	@Override
-	public synchronized boolean isBoolean(String path)
-	{
-		return super.isBoolean(path);
+	public boolean isInventoryManagement() {
+		return inventoryManagement;
 	}
 
-	@Override
-	public synchronized boolean isConfigurationSection(String path)
-	{
-		return super.isConfigurationSection(path);
+	public void setInventoryManagement(boolean inventoryManagement) {
+		this.inventoryManagement = inventoryManagement;
 	}
 
-	@Override
-	public synchronized boolean isDouble(String path)
-	{
-		return super.isDouble(path);
+	public boolean isDropItemsAfterDie() {
+		return dropItemsAfterDie;
 	}
 
-	@Override
-	public synchronized boolean isInt(String path)
-	{
-		return super.isInt(path);
+	public void setDropItemsAfterDie(boolean dropItemsAfterDie) {
+		this.dropItemsAfterDie = dropItemsAfterDie;
 	}
 
-	@Override
-	public synchronized boolean isItemStack(String path)
-	{
-		return super.isItemStack(path);
+	public Integer getNumberOfSecondsWithGems() {
+		return numberOfSecondsWithGems;
 	}
 
-	@Override
-	public synchronized boolean isList(String path)
-	{
-		return super.isList(path);
+	public void setNumberOfSecondsWithGems(Integer numberOfSecondsWithGems) {
+		this.numberOfSecondsWithGems = numberOfSecondsWithGems;
 	}
 
-	@Override
-	public synchronized boolean isLong(String path)
-	{
-		return super.isLong(path);
+	public Integer getNumberOfGems() {
+		return numberOfGems;
 	}
 
-	@Override
-	public synchronized boolean isOfflinePlayer(String path)
-	{
-		return super.isOfflinePlayer(path);
+	public void setNumberOfGems(Integer numberOfGems) {
+		this.numberOfGems = numberOfGems;
 	}
 
-	@Override
-	public synchronized boolean isSet(String path)
-	{
-		return super.isSet(path);
+	public int getWarmupTimeTNTRUN() {
+		return warmupTimeTNTRUN;
 	}
 
-	@Override
-	public synchronized boolean isString(String path)
-	{
-		return super.isString(path);
+	public void setWarmupTimeTNTRUN(int warmupTimeTNTRUN) {
+		this.warmupTimeTNTRUN = warmupTimeTNTRUN;
 	}
 
-	@Override
-	public synchronized boolean isVector(String path)
-	{
-		return super.isVector(path);
+	public Integer getSecondsToStartMatch() {
+		return secondsToStartMatch;
 	}
 
-	@Override
-	public synchronized void set(String path, Object value)
-	{
-		super.set(path, value);
+	public void setSecondsToStartMatch(Integer secondsToStartMatch) {
+		this.secondsToStartMatch = secondsToStartMatch;
 	}
+
+	public boolean isHighestPriorityDamageEvents() {
+		return highestPriorityDamageEvents;
+	}
+
+	public void setHighestPriorityDamageEvents(boolean highestPriorityDamageEvents) {
+		this.highestPriorityDamageEvents = highestPriorityDamageEvents;
+	}
+
+	public boolean isOptionalTitles() {
+		return optionalTitles;
+	}
+
+	public void setOptionalTitles(boolean optionalTitles) {
+		this.optionalTitles = optionalTitles;
+	}
+
+	public Integer getMaxItemOnChests() {
+		return maxItemOnChests;
+	}
+
+	public void setMaxItemOnChests(Integer maxItemOnChests) {
+		this.maxItemOnChests = maxItemOnChests;
+	}
+
+	public Integer getMinItemOnChests() {
+		return minItemOnChests;
+	}
+
+	public void setMinItemOnChests(Integer minItemOnChests) {
+		this.minItemOnChests = minItemOnChests;
+	}
+
+	public boolean isShowBorders() {
+		return showBorders;
+	}
+
+	public void setShowBorders(boolean showBorders) {
+		this.showBorders = showBorders;
+	}
+
+	public boolean isUseParticles() {
+		return useParticles;
+	}
+
+	public void setUseParticles(boolean useParticles) {
+		this.useParticles = useParticles;
+	}
+
+	public Double getParticleSize() {
+		return particleSize;
+	}
+
+	public void setParticleSize(Double particleSize) {
+		this.particleSize = particleSize;
+	}
+
+	public String getParticleDeath() {
+		return particleDeath;
+	}
+
+	public void setParticleDeath(String particleDeath) {
+		this.particleDeath = particleDeath;
+	}
+
+	public String getParticleTNTTag() {
+		return particleTNTTag;
+	}
+
+	public void setParticleTNTTag(String particleTNTTag) {
+		this.particleTNTTag = particleTNTTag;
+	}
+
+	public String getParticleType() {
+		return particleType;
+	}
+
+	public void setParticleType(String particleType) {
+		this.particleType = particleType;
+	}
+
+	public Double getParticleRadius() {
+		return particleRadius;
+	}
+
+	public void setParticleRadius(Double particleRadius) {
+		this.particleRadius = particleRadius;
+	}
+
+	public Double getParticleRadiusRate() {
+		return particleRadiusRate;
+	}
+
+	public void setParticleRadiusRate(Double particleRadiusRate) {
+		this.particleRadiusRate = particleRadiusRate;
+	}
+
+	public Double getParticleRadius2() {
+		return particleRadius2;
+	}
+
+	public void setParticleRadius2(Double particleRadius2) {
+		this.particleRadius2 = particleRadius2;
+	}
+
+	public Double getParticleRate() {
+		return particleRate;
+	}
+
+	public void setParticleRate(Double particleRate) {
+		this.particleRate = particleRate;
+	}
+
+	public Double getParticleRateChange() {
+		return particleRateChange;
+	}
+
+	public void setParticleRateChange(Double particleRateChange) {
+		this.particleRateChange = particleRateChange;
+	}
+
+	public Double getParticleHeight() {
+		return particleHeight;
+	}
+
+	public void setParticleHeight(Double particleHeight) {
+		this.particleHeight = particleHeight;
+	}
+
+	public Double getParticleExtension() {
+		return particleExtension;
+	}
+
+	public void setParticleExtension(Double particleExtension) {
+		this.particleExtension = particleExtension;
+	}
+
+	public boolean isUseScoreboard() {
+		return useScoreboard;
+	}
+
+	public void setUseScoreboard(boolean useScoreboard) {
+		this.useScoreboard = useScoreboard;
+	}
+
+	public List<String> getCommandsOnMatchEnd() {
+		return commandsOnMatchEnd;
+	}
+
+	public void setCommandsOnMatchEnd(List<String> commandsOnMatchEnd) {
+		this.commandsOnMatchEnd = commandsOnMatchEnd;
+	}
+
+	public List<String> getCommandsOnUserLeave() {
+		return commandsOnUserLeave;
+	}
+
+	public void setCommandsOnUserLeave(List<String> commandsOnUserLeave) {
+		this.commandsOnUserLeave = commandsOnUserLeave;
+	}
+
+	public boolean isAdvancedSpectatorMode() {
+		return advancedSpectatorMode;
+	}
+
+	public void setAdvancedSpectatorMode(boolean advancedSpectatorMode) {
+		this.advancedSpectatorMode = advancedSpectatorMode;
+	}
+
+	public ItemStack getStatsFill() {
+		return statsFill;
+	}
+
+	public void setStatsFill(ItemStack statsFill) {
+		this.statsFill = statsFill;
+	}
+
+	public int getStatsBR() {
+		return statsBR;
+	}
+
+	public void setStatsBR(int statsBR) {
+		this.statsBR = statsBR;
+	}
+
+	public int getStatsBRT2() {
+		return statsBRT2;
+	}
+
+	public void setStatsBRT2(int statsBRT2) {
+		this.statsBRT2 = statsBRT2;
+	}
+
+	public int getStatsLJ() {
+		return statsLJ;
+	}
+
+	public void setStatsLJ(int statsLJ) {
+		this.statsLJ = statsLJ;
+	}
+
+	public int getStatsTKLL() {
+		return statsTKLL;
+	}
+
+	public void setStatsTKLL(int statsTKLL) {
+		this.statsTKLL = statsTKLL;
+	}
+
+	public int getStatsTKLLT2() {
+		return statsTKLLT2;
+	}
+
+	public void setStatsTKLLT2(int statsTKLLT2) {
+		this.statsTKLLT2 = statsTKLLT2;
+	}
+
+	public int getStatsKBD() {
+		return statsKBD;
+	}
+
+	public void setStatsKBD(int statsKBD) {
+		this.statsKBD = statsKBD;
+	}
+
+	public int getStatsEARR() {
+		return statsEARR;
+	}
+
+	public void setStatsEARR(int statsEARR) {
+		this.statsEARR = statsEARR;
+	}
+
+	public int getStatsGEMC() {
+		return statsGEMC;
+	}
+
+	public void setStatsGEMC(int statsGEMC) {
+		this.statsGEMC = statsGEMC;
+	}
+
+	public int getStatsBOMB() {
+		return statsBOMB;
+	}
+
+	public void setStatsBOMB(int statsBOMB) {
+		this.statsBOMB = statsBOMB;
+	}
+
+	public int getStatsBOAT_RUN() {
+		return statsBOAT_RUN;
+	}
+
+	public void setStatsBOAT_RUN(int statsBOAT_RUN) {
+		this.statsBOAT_RUN = statsBOAT_RUN;
+	}
+
+	public int getStatsHORSE_RUN() {
+		return statsHORSE_RUN;
+	}
+
+	public void setStatsHORSE_RUN(int statsHORSE_RUN) {
+		this.statsHORSE_RUN = statsHORSE_RUN;
+	}
+
+	public int getStatsESCAPE_FROM_BEAST() {
+		return statsESCAPE_FROM_BEAST;
+	}
+
+	public void setStatsESCAPE_FROM_BEAST(int statsESCAPE_FROM_BEAST) {
+		this.statsESCAPE_FROM_BEAST = statsESCAPE_FROM_BEAST;
+	}
+
+	public int getStatsRACE() {
+		return statsRACE;
+	}
+
+	public void setStatsRACE(int statsRACE) {
+		this.statsRACE = statsRACE;
+	}
+
+	public int getStatsTNTRUN() {
+		return statsTNTRUN;
+	}
+
+	public void setStatsTNTRUN(int statsTNTRUN) {
+		this.statsTNTRUN = statsTNTRUN;
+	}
+
+	public int getStatsSPLEEF() {
+		return statsSPLEEF;
+	}
+
+	public void setStatsSPLEEF(int statsSPLEEF) {
+		this.statsSPLEEF = statsSPLEEF;
+	}
+
+	public int getStatsSPLEGG() {
+		return statsSPLEGG;
+	}
+
+	public void setStatsSPLEGG(int statsSPLEGG) {
+		this.statsSPLEGG = statsSPLEGG;
+	}
+
+	public int getStatsOITC() {
+		return statsOITC;
+	}
+
+	public void setStatsOITC(int statsOITC) {
+		this.statsOITC = statsOITC;
+	}
+
+	public int getStatsSG() {
+		return statsSG;
+	}
+
+	public void setStatsSG(int statsSG) {
+		this.statsSG = statsSG;
+	}
+
+	public int getStatsTSG() {
+		return statsTSG;
+	}
+
+	public void setStatsTSG(int statsTSG) {
+		this.statsTSG = statsTSG;
+	}
+
+	public int getStatsSW() {
+		return statsSW;
+	}
+
+	public void setStatsSW(int statsSW) {
+		this.statsSW = statsSW;
+	}
+
+	public int getStatsTSW() {
+		return statsTSW;
+	}
+
+	public void setStatsTSW(int statsTSW) {
+		this.statsTSW = statsTSW;
+	}
+
+	public int getStatsALLTIME() {
+		return statsALLTIME;
+	}
+
+	public void setStatsALLTIME(int statsALLTIME) {
+		this.statsALLTIME = statsALLTIME;
+	}
+
+	public int getStatsANVIL_SPLEEF() {
+		return statsANVIL_SPLEEF;
+	}
+
+	public void setStatsANVIL_SPLEEF(int statsANVIL_SPLEEF) {
+		this.statsANVIL_SPLEEF = statsANVIL_SPLEEF;
+	}
+
+	public int getStatsWDROP() {
+		return statsWDROP;
+	}
+
+	public void setStatsWDROP(int statsWDROP) {
+		this.statsWDROP = statsWDROP;
+	}
+
+	public int getArrowRainDamage() {
+		return arrowRainDamage;
+	}
+
+	public void setArrowRainDamage(int arrowRainDamage) {
+		this.arrowRainDamage = arrowRainDamage;
+	}
+
+	public int getTntTagSpeedRunners() {
+		return tntTagSpeedRunners;
+	}
+
+	public void setTntTagSpeedRunners(int tntTagSpeedRunners) {
+		this.tntTagSpeedRunners = tntTagSpeedRunners;
+	}
+
+	public int getTntTagSpeedHolder() {
+		return tntTagSpeedHolder;
+	}
+
+	public void setTntTagSpeedHolder(int tntTagSpeedHolder) {
+		this.tntTagSpeedHolder = tntTagSpeedHolder;
+	}
+
+	public boolean isWaterKillKnockbackDuel() {
+		return waterKillKnockbackDuel;
+	}
+
+	public void setWaterKillKnockbackDuel(boolean waterKillKnockbackDuel) {
+		this.waterKillKnockbackDuel = waterKillKnockbackDuel;
+	}
+
+	public boolean isOitcHealAfterKill() {
+		return oitcHealAfterKill;
+	}
+
+	public void setOitcHealAfterKill(boolean oitcHealAfterKill) {
+		this.oitcHealAfterKill = oitcHealAfterKill;
+	}
+
+	public boolean isCooldownAfterDeath() {
+		return cooldownAfterDeath;
+	}
+
+	public void setCooldownAfterDeath(boolean cooldownAfterDeath) {
+		this.cooldownAfterDeath = cooldownAfterDeath;
+	}
+
+	public boolean isForcePlayersToEnter() {
+		return forcePlayersToEnter;
+	}
+
+	public void setForcePlayersToEnter(boolean forcePlayersToEnter) {
+		this.forcePlayersToEnter = forcePlayersToEnter;
+	}
+
+	public boolean isTopKillerHealAfterKill() {
+		return topKillerHealAfterKill;
+	}
+
+	public void setTopKillerHealAfterKill(boolean topKillerHealAfterKill) {
+		this.topKillerHealAfterKill = topKillerHealAfterKill;
+	}
+
+	public int getCooldownUsersBeginEvents() {
+		return cooldownUsersBeginEvents;
+	}
+
+	public void setCooldownUsersBeginEvents(int cooldownUsersBeginEvents) {
+		this.cooldownUsersBeginEvents = cooldownUsersBeginEvents;
+	}
+
+	public boolean isForcePlayersToSpectate() {
+		return forcePlayersToSpectate;
+	}
+
+	public void setForcePlayersToSpectate(boolean forcePlayersToSpectate) {
+		this.forcePlayersToSpectate = forcePlayersToSpectate;
+	}
+
+	public ItemStack getVanishItem() {
+		return vanishItem;
+	}
+
+	public void setVanishItem(ItemStack vanishItem) {
+		this.vanishItem = vanishItem;
+	}
+
+	public ItemStack getEndVanishItem() {
+		return endVanishItem;
+	}
+
+	public void setEndVanishItem(ItemStack endVanishItem) {
+		this.endVanishItem = endVanishItem;
+	}
+
+	public Double getSgAreaDamage() {
+		return sgAreaDamage;
+	}
+
+	public void setSgAreaDamage(Double sgAreaDamage) {
+		this.sgAreaDamage = sgAreaDamage;
+	}
+
+	public boolean isGlobalCooldown() {
+		return globalCooldown;
+	}
+
+	public void setGlobalCooldown(boolean globalCooldown) {
+		this.globalCooldown = globalCooldown;
+	}
+
+	public String getCmdAlias() {
+		return cmdAlias;
+	}
+
+	public void setCmdAlias(String cmdAlias) {
+		this.cmdAlias = cmdAlias;
+	}
+
+	public boolean isNeedPasswordToJoin() {
+		return needPasswordToJoin;
+	}
+
+	public void setNeedPasswordToJoin(boolean needPasswordToJoin) {
+		this.needPasswordToJoin = needPasswordToJoin;
+	}
+
+	public String getUseEncoding() {
+		return useEncoding;
+	}
+
+	public void setUseEncoding(String useEncoding) {
+		this.useEncoding = useEncoding;
+	}
+
+	public boolean isSnowballSpleef() {
+		return snowballSpleef;
+	}
+
+	public void setSnowballSpleef(boolean snowballSpleef) {
+		this.snowballSpleef = snowballSpleef;
+	}
+
+	public boolean isWaterKillSG() {
+		return waterKillSG;
+	}
+
+	public void setWaterKillSG(boolean waterKillSG) {
+		this.waterKillSG = waterKillSG;
+	}
+
+	public boolean isWaterKillSW() {
+		return waterKillSW;
+	}
+
+	public void setWaterKillSW(boolean waterKillSW) {
+		this.waterKillSW = waterKillSW;
+	}
+
+	public int getSpeedDuration() {
+		return speedDuration;
+	}
+
+	public void setSpeedDuration(int speedDuration) {
+		this.speedDuration = speedDuration;
+	}
+
+	public int getMysqlMaxLifeTime() {
+		return mysqlMaxLifeTime;
+	}
+
+	public void setMysqlMaxLifeTime(int mysqlMaxLifeTime) {
+		this.mysqlMaxLifeTime = mysqlMaxLifeTime;
+	}
+
+	public double getQuakeShootCooldown() {
+		return quakeShootCooldown;
+	}
+
+	public void setQuakeShootCooldown(double quakeShootCooldown) {
+		this.quakeShootCooldown = quakeShootCooldown;
+	}
+
+	public double getQuakeJumpCooldown() {
+		return quakeJumpCooldown;
+	}
+
+	public void setQuakeJumpCooldown(double quakeJumpCooldown) {
+		this.quakeJumpCooldown = quakeJumpCooldown;
+	}
+
+	public int getQuakeShootDistance() {
+		return quakeShootDistance;
+	}
+
+	public void setQuakeShootDistance(int quakeShootDistance) {
+		this.quakeShootDistance = quakeShootDistance;
+	}
+
+	public boolean isQuakeGiveDefaultWeapon() {
+		return quakeGiveDefaultWeapon;
+	}
+
+	public void setQuakeGiveDefaultWeapon(boolean quakeGiveDefaultWeapon) {
+		this.quakeGiveDefaultWeapon = quakeGiveDefaultWeapon;
+	}
+
+	public boolean isPaintGiveDefaultWeapon() {
+		return paintGiveDefaultWeapon;
+	}
+
+	public void setPaintGiveDefaultWeapon(boolean paintGiveDefaultWeapon) {
+		this.paintGiveDefaultWeapon = paintGiveDefaultWeapon;
+	}
+
+	public int getStatsQUAKE() {
+		return statsQUAKE;
+	}
+
+	public void setStatsQUAKE(int statsQUAKE) {
+		this.statsQUAKE = statsQUAKE;
+	}
+
+	public int getStatsPBALL() {
+		return statsPBALL;
+	}
+
+	public void setStatsPBALL(int statsPBALL) {
+		this.statsPBALL = statsPBALL;
+	}
+
+	public int getStatsKOTH() {
+		return statsKOTH;
+	}
+
+	public void setStatsKOTH(int statsKOTH) {
+		this.statsKOTH = statsKOTH;
+	}
+
+	public int getStatsFISHSLAP() {
+		return statsFISHSLAP;
+	}
+
+	public void setStatsFISHSLAP(int statsFISHSLAP) {
+		this.statsFISHSLAP = statsFISHSLAP;
+	}
+
+	public int getStatsHOE() {
+		return statsHOE;
+	}
+
+	public void setStatsHOE(int statsHOE) {
+		this.statsHOE = statsHOE;
+	}
+
+	public int getSplatoonPaint() {
+		return splatoonPaint;
+	}
+
+	public void setSplatoonPaint(int splatoonPaint) {
+		this.splatoonPaint = splatoonPaint;
+	}
+
+	public int getSplatoonRadius() {
+		return splatoonRadius;
+	}
+
+	public void setSplatoonRadius(int splatoonRadius) {
+		this.splatoonRadius = splatoonRadius;
+	}
+
+	public int getStatsSPLATOON() {
+		return statsSPLATOON;
+	}
+
+	public void setStatsSPLATOON(int statsSPLATOON) {
+		this.statsSPLATOON = statsSPLATOON;
+	}
+
+	public int getStatsBOMBARDMENT() {
+		return statsBOMBARDMENT;
+	}
+
+	public void setStatsBOMBARDMENT(int statsBOMBARDMENT) {
+		this.statsBOMBARDMENT = statsBOMBARDMENT;
+	}
+
+	public int getStatsSize() {
+		return statsSize;
+	}
+
+	public void setStatsSize(int statsSize) {
+		this.statsSize = statsSize;
+	}
+
+	public Double getBombardmentBombSpeed() {
+		return bombardmentBombSpeed;
+	}
+
+	public void setBombardmentBombSpeed(Double bombardmentBombSpeed) {
+		this.bombardmentBombSpeed = bombardmentBombSpeed;
+	}
+
+	public Double getBombardmentBombDirection() {
+		return bombardmentBombDirection;
+	}
+
+	public void setBombardmentBombDirection(Double bombardmentBombDirection) {
+		this.bombardmentBombDirection = bombardmentBombDirection;
+	}
+
+	public int getCooldownAfterDeathSeconds() {
+		return cooldownAfterDeathSeconds;
+	}
+
+	public void setCooldownAfterDeathSeconds(int cooldownAfterDeathSeconds) {
+		this.cooldownAfterDeathSeconds = cooldownAfterDeathSeconds;
+	}
+
+	public int getSplatoonEggDamage() {
+		return splatoonEggDamage;
+	}
+
+	public void setSplatoonEggDamage(int splatoonEggDamage) {
+		this.splatoonEggDamage = splatoonEggDamage;
+	}
+
+	public boolean isMatchPrivateMatch() {
+		return matchPrivateMatch;
+	}
+
+	public void setMatchPrivateMatch(boolean matchPrivateMatch) {
+		this.matchPrivateMatch = matchPrivateMatch;
+	}
+
+	public boolean isEquilibrateTeams() {
+		return equilibrateTeams;
+	}
+
+	public void setEquilibrateTeams(boolean equilibrateTeams) {
+		this.equilibrateTeams = equilibrateTeams;
+	}
+
+	public boolean isForceNonEmptyTeams() {
+		return forceNonEmptyTeams;
+	}
+
+	public void setForceNonEmptyTeams(boolean forceNonEmptyTeams) {
+		this.forceNonEmptyTeams = forceNonEmptyTeams;
+	}
+
+	public ItemStack getKitsItem() {
+		return kitsItem;
+	}
+
+	public void setKitsItem(ItemStack kitsItem) {
+		this.kitsItem = kitsItem;
+	}
+
+	public ItemStack getTeamItem() {
+		return teamItem;
+	}
+
+	public void setTeamItem(ItemStack teamItem) {
+		this.teamItem = teamItem;
+	}
+
+	public int getMinNumberOfTriesBeforeBeginning() {
+		return minNumberOfTriesBeforeBeginning;
+	}
+
+	public void setMinNumberOfTriesBeforeBeginning(int minNumberOfTriesBeforeBeginning) {
+		this.minNumberOfTriesBeforeBeginning = minNumberOfTriesBeforeBeginning;
+	}
+
+	public List<String> getCommandsOnEventFire() {
+		return commandsOnEventFire;
+	}
+
+	public void setCommandsOnEventFire(List<String> commandsOnEventFire) {
+		this.commandsOnEventFire = commandsOnEventFire;
+	}
+
+	public boolean isWaterKillBombardment() {
+		return waterKillBombardment;
+	}
+
+	public void setWaterKillBombardment(boolean waterKillBombardment) {
+		this.waterKillBombardment = waterKillBombardment;
+	}
+
+	public int getOffSetYBombardment() {
+		return offSetYBombardment;
+	}
+
+	public void setOffSetYBombardment(int offSetYBombardment) {
+		this.offSetYBombardment = offSetYBombardment;
+	}
+
+	public boolean isDisableMultipleWinners() {
+		return disableMultipleWinners;
+	}
+
+	public void setDisableMultipleWinners(boolean disableMultipleWinners) {
+		this.disableMultipleWinners = disableMultipleWinners;
+	}
+
+	public boolean isRandomDisguisePlayers() {
+		return randomDisguisePlayers;
+	}
+
+	public void setRandomDisguisePlayers(boolean randomDisguisePlayers) {
+		this.randomDisguisePlayers = randomDisguisePlayers;
+	}
+
+	public Boolean getIsLibsDisguises() {
+		return isLibsDisguises;
+	}
+
+	public void setIsLibsDisguises(Boolean isLibsDisguises) {
+		this.isLibsDisguises = isLibsDisguises;
+	}
+
+	public String getSkinDisguisePlayers() {
+		return skinDisguisePlayers;
+	}
+
+	public void setSkinDisguisePlayers(String skinDisguisePlayers) {
+		this.skinDisguisePlayers = skinDisguisePlayers;
+	}
+
+	public boolean isInfiniteSnowballs() {
+		return infiniteSnowballs;
+	}
+
+	public void setInfiniteSnowballs(boolean infiniteSnowballs) {
+		this.infiniteSnowballs = infiniteSnowballs;
+	}
+
+	public List<String> getCommandsOnUserJoin() {
+		return commandsOnUserJoin;
+	}
+
+	public void setCommandsOnUserJoin(List<String> commandsOnUserJoin) {
+		this.commandsOnUserJoin = commandsOnUserJoin;
+	}
+
+	public List<String> getCommandsOnKill() {
+		return commandsOnKill;
+	}
+
+	public void setCommandsOnKill(List<String> commandsOnKill) {
+		this.commandsOnKill = commandsOnKill;
+	}
+
+	public List<String> getCommandsOnMatchBegin() {
+		return commandsOnMatchBegin;
+	}
+
+	public void setCommandsOnMatchBegin(List<String> commandsOnMatchBegin) {
+		this.commandsOnMatchBegin = commandsOnMatchBegin;
+	}
+
+	public int getSnowballsDamage() {
+		return snowballsDamage;
+	}
+
+	public void setSnowballsDamage(int snowballsDamage) {
+		this.snowballsDamage = snowballsDamage;
+	}
+
+	public boolean isWaterKillSpleef() {
+		return waterKillSpleef;
+	}
+
+	public void setWaterKillSpleef(boolean waterKillSpleef) {
+		this.waterKillSpleef = waterKillSpleef;
+	}
+
+	public boolean isWaterKillSplegg() {
+		return waterKillSplegg;
+	}
+
+	public void setWaterKillSplegg(boolean waterKillSplegg) {
+		this.waterKillSplegg = waterKillSplegg;
+	}
+
+	public boolean isWaterKillTNTRun() {
+		return waterKillTNTRun;
+	}
+
+	public void setWaterKillTNTRun(boolean waterKillTNTRun) {
+		this.waterKillTNTRun = waterKillTNTRun;
+	}
+
+	public boolean isWaterKillAnvilSpleef() {
+		return waterKillAnvilSpleef;
+	}
+
+	public void setWaterKillAnvilSpleef(boolean waterKillAnvilSpleef) {
+		this.waterKillAnvilSpleef = waterKillAnvilSpleef;
+	}
+
+	public boolean isMultipleKillOnExplosion() {
+		return multipleKillOnExplosion;
+	}
+
+	public void setMultipleKillOnExplosion(boolean multipleKillOnExplosion) {
+		this.multipleKillOnExplosion = multipleKillOnExplosion;
+	}
+
+	public Integer getRadiusOfTNTTagExplosion() {
+		return radiusOfTNTTagExplosion;
+	}
+
+	public void setRadiusOfTNTTagExplosion(Integer radiusOfTNTTagExplosion) {
+		this.radiusOfTNTTagExplosion = radiusOfTNTTagExplosion;
+	}
+
+	public boolean isUseTitleWhenGetBomb() {
+		return useTitleWhenGetBomb;
+	}
+
+	public void setUseTitleWhenGetBomb(boolean useTitleWhenGetBomb) {
+		this.useTitleWhenGetBomb = useTitleWhenGetBomb;
+	}
+
+	public boolean isDeactivateSounds() {
+		return deactivateSounds;
+	}
+
+	public void setDeactivateSounds(boolean deactivateSounds) {
+		this.deactivateSounds = deactivateSounds;
+	}
+
 }

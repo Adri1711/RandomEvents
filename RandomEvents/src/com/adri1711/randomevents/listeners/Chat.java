@@ -53,7 +53,7 @@ public class Chat implements Listener {
 			}
 		}
 
-		if (aliase.equalsIgnoreCase(plugin.getCmdAlias())) {
+		if (aliase.equalsIgnoreCase(plugin.getReventConfig().getCmdAlias())) {
 			event.setCancelled(true);
 			plugin.onCommand(event.getPlayer(), null, "revent", campos.toArray(new String[campos.size()]));
 		} else {
@@ -61,7 +61,7 @@ public class Chat implements Listener {
 			if (plugin.getMatchActive() != null
 					&& plugin.getMatchActive().getPlayerHandler().getPlayersSpectators().contains(p)) {
 
-				if (!plugin.getAllowedCmds().contains(aliase.toLowerCase()) && !p.hasPermission("randomevent.bypass")) {
+				if (!plugin.getReventConfig().getAllowedCmds().contains(aliase.toLowerCase()) && !p.hasPermission("randomevent.bypass")) {
 					event.setCancelled(true);
 					p.sendMessage(plugin.getLanguage().getCmdNotAllowed());
 				}
@@ -74,7 +74,7 @@ public class Chat implements Listener {
 		Player player = event.getPlayer();
 
 		if (plugin.getPlayerWaterDrop().containsKey(player.getName())) {
-			if (plugin.isDebugMode()) {
+			if (plugin.getReventConfig().isDebugMode()) {
 				System.out.println("RandomEvents :: Message of creation: " + event.getMessage());
 			}
 			checkMessageCreationWaterDrop(ChatColor.stripColor(event.getMessage().trim()), player,
@@ -83,7 +83,7 @@ public class Chat implements Listener {
 			event.setCancelled(Boolean.TRUE);
 
 		} else if (plugin.getPlayerKit().containsKey(player.getName())) {
-			if (plugin.isDebugMode()) {
+			if (plugin.getReventConfig().isDebugMode()) {
 				System.out.println("RandomEvents :: Message of creation: " + event.getMessage());
 			}
 
@@ -93,7 +93,7 @@ public class Chat implements Listener {
 			event.setCancelled(Boolean.TRUE);
 
 		} else if (plugin.getPlayerMatches().containsKey(player.getName())) {
-			if (plugin.isDebugMode()) {
+			if (plugin.getReventConfig().isDebugMode()) {
 				System.out.println("RandomEvents :: Message of creation: " + event.getMessage());
 			}
 
@@ -103,7 +103,7 @@ public class Chat implements Listener {
 			event.setCancelled(Boolean.TRUE);
 
 		} else {
-			if (plugin.isMatchPrivateMatch() && plugin.getMatchActive() != null
+			if (plugin.getReventConfig().isMatchPrivateMatch() && plugin.getMatchActive() != null
 					&& plugin.getMatchActive().getPlayerHandler().getPlayersSpectators().contains(player)) {
 				event.getRecipients().clear();
 				event.getRecipients().addAll(plugin.getMatchActive().getPlayerHandler().getPlayersSpectators());
