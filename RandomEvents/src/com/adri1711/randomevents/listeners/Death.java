@@ -53,6 +53,8 @@ public class Death implements Listener {
 							case SG:
 							case TSG:
 							case TSW:
+							case TSG_REAL:
+							case TSW_REAL:
 								if (!plugin.getMatchActive().getAllowDamage()) {
 									ev.setCancelled(true);
 								} else {
@@ -67,6 +69,7 @@ public class Death implements Listener {
 							case BATTLE_ROYALE:
 							case BATTLE_ROYALE_CABALLO:
 							case BATTLE_ROYALE_TEAM_2:
+							case BATTLE_ROYALE_TEAMS:
 							case PAINTBALL:
 							case TNT_RUN:
 							case SPLEEF:
@@ -170,6 +173,8 @@ public class Death implements Listener {
 							case TSG:
 							case SW:
 							case TSW:
+							case TSG_REAL:
+							case TSW_REAL:
 								if (!plugin.getMatchActive().getAllowDamage()) {
 									ev.setCancelled(true);
 								}
@@ -283,6 +288,8 @@ public class Death implements Listener {
 			case SW:
 			case TSG:
 			case TSW:
+			case TSG_REAL:
+			case TSW_REAL:
 				if (!plugin.getMatchActive().getAllowDamage()) {
 					ev.setCancelled(true);
 				} else {
@@ -300,6 +307,7 @@ public class Death implements Listener {
 			case BATTLE_ROYALE:
 			case BATTLE_ROYALE_CABALLO:
 			case BATTLE_ROYALE_TEAM_2:
+			case BATTLE_ROYALE_TEAMS:
 			case PAINTBALL:
 			case ESCAPE_ARROW:
 			case ANVIL_SPLEEF:
@@ -586,6 +594,8 @@ public class Death implements Listener {
 			case SW:
 			case TSG:
 			case TSW:
+			case TSG_REAL:
+			case TSW_REAL:
 				if (!plugin.getMatchActive().getAllowDamage()) {
 					ev.setCancelled(true);
 				} else {
@@ -597,9 +607,11 @@ public class Death implements Listener {
 			case BATTLE_ROYALE:
 			case BATTLE_ROYALE_CABALLO:
 			case BATTLE_ROYALE_TEAM_2:
+			case BATTLE_ROYALE_TEAMS:
 			case PAINTBALL:
 			case TOP_KILLER:
 			case TOP_KILLER_TEAM_2:
+			case TOP_KILLER_TEAMS:
 			case ANVIL_SPLEEF:
 			case BOMBARDMENT:
 			case ESCAPE_FROM_BEAST:
@@ -731,6 +743,8 @@ public class Death implements Listener {
 					case SW:
 					case TSG:
 					case TSW:
+					case TSG_REAL:
+					case TSW_REAL:
 						if (!plugin.getMatchActive().getAllowDamage()) {
 							ev.setCancelled(true);
 						} else {
@@ -751,6 +765,7 @@ public class Death implements Listener {
 					case BATTLE_ROYALE_CABALLO:
 					case PAINTBALL:
 					case BATTLE_ROYALE_TEAM_2:
+					case BATTLE_ROYALE_TEAMS:
 						UtilsRandomEvents.mandaMensaje(plugin,
 								plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 								plugin.getLanguage().getPvpKill().replaceAll("%victim%", player.getName())
@@ -945,6 +960,8 @@ public class Death implements Listener {
 					case SW:
 					case TSG:
 					case TSW:
+					case TSG_REAL:
+					case TSW_REAL:
 						if (!plugin.getMatchActive().getAllowDamage()) {
 							ev.setCancelled(true);
 						} else {
@@ -956,9 +973,11 @@ public class Death implements Listener {
 					case BATTLE_ROYALE:
 					case BATTLE_ROYALE_CABALLO:
 					case BATTLE_ROYALE_TEAM_2:
+					case BATTLE_ROYALE_TEAMS:
 					case PAINTBALL:
 					case TOP_KILLER:
 					case TOP_KILLER_TEAM_2:
+					case TOP_KILLER_TEAMS:
 					case OITC:
 					case KOTH:
 						if (plugin.getReventConfig().isHighestPriorityDamageEvents()) {
@@ -1084,6 +1103,8 @@ public class Death implements Listener {
 					case SW:
 					case TSG:
 					case TSW:
+					case TSG_REAL:
+					case TSW_REAL:
 						if (!plugin.getMatchActive().getAllowDamage()) {
 							ev.setCancelled(true);
 						} else {
@@ -1104,6 +1125,7 @@ public class Death implements Listener {
 					case BATTLE_ROYALE:
 					case BATTLE_ROYALE_CABALLO:
 					case BATTLE_ROYALE_TEAM_2:
+					case BATTLE_ROYALE_TEAMS:
 					case PAINTBALL:
 						UtilsRandomEvents.mandaMensaje(plugin,
 								plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
@@ -1306,6 +1328,8 @@ public class Death implements Listener {
 					case SW:
 					case TSG:
 					case TSW:
+					case TSG_REAL:
+					case TSW_REAL:
 						if (!plugin.getMatchActive().getAllowDamage()) {
 							ev.setCancelled(true);
 						} else {
@@ -1317,9 +1341,11 @@ public class Death implements Listener {
 					case BATTLE_ROYALE:
 					case BATTLE_ROYALE_CABALLO:
 					case BATTLE_ROYALE_TEAM_2:
+					case BATTLE_ROYALE_TEAMS:
 					case PAINTBALL:
 					case TOP_KILLER:
 					case TOP_KILLER_TEAM_2:
+					case TOP_KILLER_TEAMS:
 					case KOTH:
 						if (!plugin.getMatchActive().getAllowDamage()) {
 							ev.setCancelled(true);

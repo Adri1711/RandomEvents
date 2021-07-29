@@ -211,6 +211,7 @@ public class RandomEvents extends JavaPlugin {
 		this.playersCreationKit = new HashMap<String, Integer>();
 		this.playersEntity = new HashMap<String, EntityType>();
 		reventConfig = new ReventConfig(this);
+		reventConfig.inicializaVariables();
 
 	}
 
@@ -643,6 +644,5 @@ public class RandomEvents extends JavaPlugin {
 	public void setColorBoard(Scoreboard colorBoard) {
 		this.colorBoard = colorBoard;
 	}
-	
-	
+
 }

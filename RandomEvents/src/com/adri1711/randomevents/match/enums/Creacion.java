@@ -22,7 +22,7 @@ public enum Creacion {
 
 	ARENA_SPAWNS(5,
 			"§6§lGo to the arena you created and write 'Done' to set each spawn location for the players (%players%/%maxPlayers%) or 'Next' to end the spawns",
-			"ALLMINIGAMES", "PBALL,HOE,SPLATOON"),
+			"ALLMINIGAMES", "PBALL,HOE,SPLATOON,TKLLTEAMS,BRTEAMS,TSGTEAMS,TSWTEAMS"),
 
 	ANOTHER_ARENA_SPAWNS(6, "§6§lPut another player spawn, say 'Done' (%players%/%maxPlayers%) ", ""),
 
@@ -44,7 +44,7 @@ public enum Creacion {
 			"§6§lGo to the arena you created and write 'Done' to set the spawn location of the mob, 'New' to choose another mob or 'End' to end the creation of the RandomEvent",
 			""),
 
-	PLAY_TIME(14, "§6§lChoose the play time in seconds", "TKLL,QUAKE,OITC,TKLLT2,KOTH,FISHSLAP,HOE,SPLATOON"),
+	PLAY_TIME(14, "§6§lChoose the play time in seconds", "TKLL,QUAKE,OITC,TKLLT2,KOTH,FISHSLAP,HOE,SPLATOON,TKLLTEAMS"),
 
 	ARROW_LOCATION1(15, "§6§lSet the first location of the cuboid of spawn of arrows, say 'Done'", "EARR"),
 
@@ -88,33 +88,33 @@ public enum Creacion {
 			"§6§lGet another block you want to set mineable for spleef on your hand and say 'Done' or say 'Next' to end the spleef materials",
 			""),
 
-	MAP_LOCATION1(32, "§6§lSet the first location of the cuboid of the map, say 'Done'", "SG,TSG,SW,TSW,ANVIL_SPLEEF"),
+	MAP_LOCATION1(32, "§6§lSet the first location of the cuboid of the map, say 'Done'", "SG,TSG,SW,TSW,TSGTEAMS,TSWTEAMS,ANVIL_SPLEEF"),
 
-	MAP_LOCATION2(33, "§6§lSet the second location of the cuboid of the map, say 'Done'", "SG,TSG,SW,TSW,ANVIL_SPLEEF"),
+	MAP_LOCATION2(33, "§6§lSet the second location of the cuboid of the map, say 'Done'", "SG,TSG,SW,TSW,TSGTEAMS,TSWTEAMS,ANVIL_SPLEEF"),
 
 	INVENTORY_CHESTS(34,
 			"§6§lTake the inventory that will have a probability to appear in chests and say 'Done' to set it or 'Add' to add the items",
-			"SG,TSG,SW,TSW"),
+			"SG,TSG,SW,TSW,TSGTEAMS,TSWTEAMS"),
 
-	WARMUP_TIME(35, "§6§lChoose the warmup time in seconds", "SG,TSG,SW,TSW"),
+	WARMUP_TIME(35, "§6§lChoose the warmup time in seconds", "SG,TSG,SW,TSW,TSGTEAMS,TSWTEAMS"),
 
-	SHRINK_TIME(36, "§6§lChoose to shrink the border in seconds", "SG,TSG"),
+	SHRINK_TIME(36, "§6§lChoose to shrink the border in seconds", "SG,TSG,TSGTEAMS"),
 
 	BLOCKS_ALLOWED(37, "§6§lPut in your hand a block allowed to break/place in the map and say 'Done'",
-			"SG,TSG,SW,TSW,HOE,SPLATOON"),
+			"SG,TSG,SW,TSW,HOE,SPLATOON,TSWTEAMS,TSGTEAMS"),
 
-	NO_MOVE_TIME(38, "§6§lChoose to allow players to move in seconds", "SG,TSG,SW,TSW"),
+	NO_MOVE_TIME(38, "§6§lChoose to allow players to move in seconds", "SG,TSG,SW,TSW,TSWTEAMS,TSGTEAMS"),
 
 	TIMER_ANVIL_SPAWN(39, "§6§lWrite the number of seconds (it can have decimals) to respawn each anvil",
 			"ANVIL_SPLEEF"),
 
 	WATER_DROP_SCENES(40, "§6§lChoose a scene to add to the event", "WDROP"),
 
-	NUMBER_OF_TEAMS(41, "§6§lChoose a number of teams between 2 and 8", "PBALL,HOE,SPLATOON"),
+	NUMBER_OF_TEAMS(41, "§6§lChoose a number of teams between 2 and 8", "PBALL,HOE,SPLATOON,TKLLTEAMS,BRTEAMS,TSGTEAMS,TSWTEAMS"),
 
 	TEAM_SPAWNS(42,
 			"§6§lGo to the arena you created and write 'Done' to set each spawn location for the team (%players%/%maxTeams%)",
-			"PBALL,HOE,SPLATOON"),
+			"PBALL,HOE,SPLATOON,TKLLTEAMS,BRTEAMS,TSGTEAMS,TSWTEAMS"),
 
 	ANOTHER_TEAM_SPAWNS(43, "§6§lPut another team spawn, say 'Done' (%players%/%maxTeams%) ", ""),
 

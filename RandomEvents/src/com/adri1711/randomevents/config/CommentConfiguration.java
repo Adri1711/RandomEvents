@@ -20,9 +20,13 @@ public class CommentConfiguration extends YamlConfiguration {
 	 * comments.put("path.prior.to.comment", "comment")
 	 */
 	private final Map<String, List<String>> comments;
+	private List<String> commentsAux;
+
+	private String path = "";
 
 	public CommentConfiguration() {
 		comments = new HashMap<>();
+		commentsAux = new ArrayList<String>();
 	}
 
 	@Override
@@ -40,12 +44,21 @@ public class CommentConfiguration extends YamlConfiguration {
 		int lineNumber = 0;
 		for (Iterator<String> iterator = list.iterator(); iterator.hasNext(); lineNumber++) {
 			String line = iterator.next();
-			sb.append(line);
-			sb.append('\n');
+
 
 			if (!line.isEmpty()) {
 				if (line.contains(":")) {
+					String path = currentPath.toString();
+					String key = getKeyFromLine(line);
 
+					if (comments.containsKey(key)) {
+						comments.get(key).forEach(string -> {
+							sb.append(string);
+							sb.append('\n');
+						});
+					}
+					sb.append(line);
+					sb.append('\n');
 					int layerFromLine = getLayerFromLine(line, lineNumber);
 
 					if (layerFromLine < currentLayer) {
@@ -53,7 +66,6 @@ public class CommentConfiguration extends YamlConfiguration {
 								regressPathBy(currentLayer - layerFromLine, currentPath.toString()));
 					}
 
-					String key = getKeyFromLine(line);
 
 					if (currentLayer == 0) {
 						currentPath = new StringBuilder(key);
@@ -61,16 +73,17 @@ public class CommentConfiguration extends YamlConfiguration {
 						currentPath.append("." + key);
 					}
 
-					String path = currentPath.toString();
-					if (comments.containsKey(path)) {
-						comments.get(path).forEach(string -> {
-							sb.append(string);
-							sb.append('\n');
-						});
-					}
+				}else{
+					sb.append(line);
+					sb.append('\n');
 				}
+			} else {
+				sb.append(line);
+				sb.append('\n');
 			}
+
 		}
+		
 
 		return sb.toString();
 	}
@@ -84,14 +97,16 @@ public class CommentConfiguration extends YamlConfiguration {
 
 		int currentLayer = 0;
 		String currentPath = "";
+		path = "";
 
 		int lineNumber = 0;
 		for (Iterator<String> iterator = list.iterator(); iterator.hasNext(); lineNumber++) {
 			String line = iterator.next();
-
 			String trimmed = line.trim();
-			if (trimmed.startsWith("#") || trimmed.isEmpty()) {
-				addCommentLine(currentPath, line);
+
+
+			if (trimmed.startsWith("##") || trimmed.isEmpty()) {
+				addCommentLine(line);
 				continue;
 			}
 
@@ -102,30 +117,49 @@ public class CommentConfiguration extends YamlConfiguration {
 
 					if (layerFromLine < currentLayer) {
 						currentPath = regressPathBy(currentLayer - layerFromLine, currentPath);
+
 					}
 
 					String key = getKeyFromLine(line);
 
 					if (currentLayer == 0) {
 						currentPath = key;
+
 					} else {
 						currentPath += "." + key;
+
+					}
+
+					if (!currentPath.equals(path)) {
+						setCommentLine(currentPath);
+						path = currentPath;
 					}
 				}
 			}
 		}
 	}
 
-	private void addCommentLine(String currentPath, String line) {
-
-		List<String> list = comments.get(currentPath);
-		if (list == null) {
-			list = new ArrayList<>();
-		}
-		list.add(line);
-
-		comments.put(currentPath, list);
+	private void setCommentLine(String currentPath) {
+		List<String> lista = new ArrayList<String>();
+		lista.addAll(commentsAux);
+		comments.put(currentPath, lista);
+		commentsAux.clear();
 	}
+
+	private void addCommentLine(String line) {
+		commentsAux.add(line);
+	}
+
+	// private void addCommentLine(String currentPath, String line) {
+	//
+	// List<String> list = comments.get(currentPath);
+	// if (list == null) {
+	// list = new ArrayList<>();
+	// }
+	// list.add(line);
+	//
+	// comments.put(currentPath, list);
+	// }
 
 	private String getKeyFromLine(String line) {
 		String key = null;

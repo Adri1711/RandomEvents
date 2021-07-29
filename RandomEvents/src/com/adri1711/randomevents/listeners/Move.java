@@ -114,6 +114,7 @@ public class Move implements Listener {
 
 				case SG:
 				case TSG:
+				case TSG_REAL:
 					if (plugin.getReventConfig().isWaterKillSG()) {
 						if (evt.getTo().getBlock() != null && evt.getTo().getBlock().getType() != null
 								&& (evt.getTo().getBlock().getType() == XMaterial.WATER.parseMaterial()
@@ -128,6 +129,7 @@ public class Move implements Listener {
 					break;
 				case SW:
 				case TSW:
+				case TSW_REAL:
 					if (plugin.getReventConfig().isWaterKillSW()) {
 						if (evt.getTo().getBlock() != null && evt.getTo().getBlock().getType() != null
 								&& (evt.getTo().getBlock().getType() == XMaterial.WATER.parseMaterial()

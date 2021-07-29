@@ -57,6 +57,8 @@ public class WeaponShoot implements Listener {
 									case SW:
 									case TSG:
 									case TSW:
+									case TSG_REAL:
+									case TSW_REAL:
 										if (!plugin.getMatchActive().getAllowDamage()) {
 											ev.setCancelled(true);
 										} else {
@@ -78,6 +80,7 @@ public class WeaponShoot implements Listener {
 									case BATTLE_ROYALE:
 									case BATTLE_ROYALE_CABALLO:
 									case BATTLE_ROYALE_TEAM_2:
+									case BATTLE_ROYALE_TEAMS:
 									case PAINTBALL:
 										UtilsRandomEvents.mandaMensaje(plugin,
 												plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
@@ -136,6 +139,7 @@ public class WeaponShoot implements Listener {
 
 									case TOP_KILLER:
 									case TOP_KILLER_TEAM_2:
+									case TOP_KILLER_TEAMS:
 										plugin.getMatchActive().reiniciaPlayer(player);
 										UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_VILLAGER_DEATH);
 
@@ -276,6 +280,8 @@ public class WeaponShoot implements Listener {
 									case SW:
 									case TSG:
 									case TSW:
+									case TSG_REAL:
+									case TSW_REAL:
 										if (!plugin.getMatchActive().getAllowDamage()) {
 											ev.setCancelled(true);
 										} else {
@@ -287,9 +293,11 @@ public class WeaponShoot implements Listener {
 									case BATTLE_ROYALE:
 									case BATTLE_ROYALE_CABALLO:
 									case BATTLE_ROYALE_TEAM_2:
+									case BATTLE_ROYALE_TEAMS:
 									case PAINTBALL:
 									case TOP_KILLER:
 									case TOP_KILLER_TEAM_2:
+									case TOP_KILLER_TEAMS:
 									case OITC:
 									case KOTH:
 										if (plugin.getReventConfig().isHighestPriorityDamageEvents()) {
@@ -400,6 +408,8 @@ public class WeaponShoot implements Listener {
 							case SW:
 							case TSG:
 							case TSW:
+							case TSG_REAL:
+							case TSW_REAL:
 								if (!plugin.getMatchActive().getAllowDamage()) {
 									ev.setCancelled(true);
 								} else {
@@ -418,6 +428,7 @@ public class WeaponShoot implements Listener {
 							case BATTLE_ROYALE:
 							case BATTLE_ROYALE_CABALLO:
 							case BATTLE_ROYALE_TEAM_2:
+							case BATTLE_ROYALE_TEAMS:
 							case PAINTBALL:
 							case ESCAPE_ARROW:
 							case ANVIL_SPLEEF:
@@ -519,6 +530,7 @@ public class WeaponShoot implements Listener {
 								break;
 							case TOP_KILLER:
 							case TOP_KILLER_TEAM_2:
+							case TOP_KILLER_TEAMS:
 
 								if (ev.getDamager() instanceof Arrow) {
 									Arrow arrow = (Arrow) ev.getDamager();
@@ -723,6 +735,8 @@ public class WeaponShoot implements Listener {
 							case SW:
 							case TSG:
 							case TSW:
+							case TSG_REAL:
+							case TSW_REAL:
 								if (!plugin.getMatchActive().getAllowDamage()) {
 									ev.setCancelled(true);
 								} else {
@@ -734,9 +748,11 @@ public class WeaponShoot implements Listener {
 							case BATTLE_ROYALE:
 							case BATTLE_ROYALE_CABALLO:
 							case BATTLE_ROYALE_TEAM_2:
+							case BATTLE_ROYALE_TEAMS:
 							case PAINTBALL:
 							case TOP_KILLER:
 							case TOP_KILLER_TEAM_2:
+							case TOP_KILLER_TEAMS:
 							case ANVIL_SPLEEF:
 							case BOMBARDMENT:
 							case ESCAPE_FROM_BEAST:

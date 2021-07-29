@@ -109,7 +109,7 @@ public class Use implements Listener {
 				Vector v = player.getEyeLocation().getDirection().normalize();
 				v = new Vector(v.getX() * 2.0, v.getY() + 0.5, v.getZ() * 2.0);
 				player.setVelocity(v);
-				UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_ENDERMAN_TELEPORT);
+				UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_ENDERMAN_TELEPORT);
 
 			} else if ((evt.getAction() == Action.RIGHT_CLICK_BLOCK)
 					&& (player.getItemInHand().getType() == (XMaterial.WOODEN_HOE.parseMaterial())
@@ -118,9 +118,13 @@ public class Use implements Listener {
 							|| player.getItemInHand().getType() == (XMaterial.GOLDEN_HOE.parseMaterial())
 							|| player.getItemInHand().getType() == (XMaterial.DIAMOND_HOE.parseMaterial()))
 					&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.HOEHOEHOE)) {
-
-				if (plugin.getMatchActive().getMatch().getDatas()
-						.contains(evt.getClickedBlock().getState().getData())) {
+				
+				
+				if (plugin.getMatchActive().getMatch().getDatas() != null
+						&& !plugin.getMatchActive().getMatch().getDatas().isEmpty()
+						&& evt.getClickedBlock().getType() != null && evt.getClickedBlock().getState().getData() != null
+						&& UtilsRandomEvents.contieneMaterialData(evt.getClickedBlock(),
+								plugin.getMatchActive().getMatch())) {
 					Integer equipo = plugin.getMatchActive().getEquipoCopy(player);
 					Petos peto = Petos.getPeto(equipo);
 					if (peto != null) {
@@ -223,13 +227,13 @@ public class Use implements Listener {
 						evt.setCancelled(true);
 						UtilsRandomEvents.showPlayers(player,
 								plugin.getMatchActive().getPlayerHandler().getPlayersObj(), plugin);
-						UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_PLAYER_LEVELUP);
+						UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_PLAYER_LEVELUP);
 
 					} else if (player.getItemInHand().equals(plugin.getReventConfig().getVanishItem())) {
 						evt.setCancelled(true);
 						UtilsRandomEvents.hidePlayers(player,
 								plugin.getMatchActive().getPlayerHandler().getPlayersObj(), plugin);
-						UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_PLAYER_LEVELUP);
+						UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_PLAYER_LEVELUP);
 
 					} else if (player.getItemInHand().getType() == (XMaterial.STONE_HOE.parseMaterial())
 							&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEGG)) {
@@ -254,7 +258,7 @@ public class Use implements Listener {
 									+ 1000 * plugin.getReventConfig().getQuakeShootCooldown();
 							plugin.getMatchActive().getCooldownShoot().put(player, time.longValue());
 							Boolean hit = Boolean.FALSE;
-							UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR);
+							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR);
 							Location locEnd = player.getLocation();
 							ParticleDisplay pa = ParticleDisplay.display(plugin.getApi(), locEnd,
 									Particle1711.REDSTONE);
@@ -290,8 +294,10 @@ public class Use implements Listener {
 														false);
 												UtilsRandomEvents.doCommandsKill(player, plugin);
 												plugin.getMatchActive().reiniciaPlayer(hitted);
-												UtilsRandomEvents.playSound(plugin,hitted, XSound.ENTITY_VILLAGER_DEATH);
-												UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_PLAYER_LEVELUP);
+												UtilsRandomEvents.playSound(plugin, hitted,
+														XSound.ENTITY_VILLAGER_DEATH);
+												UtilsRandomEvents.playSound(plugin, player,
+														XSound.ENTITY_PLAYER_LEVELUP);
 												if (plugin.getMatchActive().getPuntuacion()
 														.containsKey(player.getName())) {
 													plugin.getMatchActive().getPuntuacion().put(player.getName(),
@@ -595,7 +601,7 @@ public class Use implements Listener {
 				Fireball fireball = (Fireball) ent;
 				if (plugin.getMatchActive().getMapHandler().getFireballs().contains(fireball)) {
 					event.blockList().clear();
-					
+
 				}
 			}
 		}
@@ -625,6 +631,11 @@ public class Use implements Listener {
 				case SW:
 				case TSG:
 				case TSW:
+				case TSG_REAL:
+				case TSW_REAL:
+				case BATTLE_ROYALE:
+				case BATTLE_ROYALE_TEAM_2:
+				case BATTLE_ROYALE_TEAMS:
 					break;
 				default:
 					evt.setCancelled(true);
@@ -647,6 +658,11 @@ public class Use implements Listener {
 					case SW:
 					case TSG:
 					case TSW:
+					case TSG_REAL:
+					case TSW_REAL:
+					case BATTLE_ROYALE:
+					case BATTLE_ROYALE_TEAM_2:
+					case BATTLE_ROYALE_TEAMS:
 						break;
 					default:
 						evt.setCancelled(true);
@@ -680,7 +696,7 @@ public class Use implements Listener {
 									.remove(evt.getBlock().getLocation());
 						} else if (plugin.getMatchActive().getMatch().getMaterial() != null
 
-								&& evt.getBlock().getType() != null && evt.getBlock().getType().toString()
+								&& evt.getBlock().getType() != null &&  evt.getBlock().getType().toString()
 										.equals(plugin.getMatchActive().getMatch().getMaterial())) {
 							evt.setCancelled(true);
 							try {
@@ -707,10 +723,8 @@ public class Use implements Listener {
 								&& evt.getBlock().getType() != null && evt.getBlock().getState().getData() != null
 								&& UtilsRandomEvents.contieneMaterialData(evt.getBlock(),
 										plugin.getMatchActive().getMatch())) {
-
 							evt.setCancelled(true);
 							try {
-								System.out.println(evt.getBlock().getType());
 								plugin.getMatchActive().getMapHandler().getBlockDisappeared().put(
 										evt.getBlock().getLocation(),
 										new MaterialData(evt.getBlock().getType(), evt.getBlock().getData()));

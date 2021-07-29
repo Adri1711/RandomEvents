@@ -45,6 +45,10 @@ public class GUI implements Listener {
 							switch(plugin.getMatchActive().getMatch().getMinigame()){
 							case PAINTBALL:
 							case SPLATOON:
+							case BATTLE_ROYALE_TEAMS:
+							case TOP_KILLER_TEAMS:
+							case TSW_REAL:
+							case TSG_REAL:
 							case HOEHOEHOE:
 								event.setCancelled(true);
 								break;

@@ -13,11 +13,15 @@ public enum MinigameType {
 
 	BATTLE_ROYALE_TEAM_2("BRT2", XMaterial.STONE_SWORD.parseMaterial(), "getNameTeamBattleRoyale"),
 
+	BATTLE_ROYALE_TEAMS("BRTEAMS", XMaterial.ORANGE_DYE.parseMaterial(), "getNameRealTeamBattleRoyale"),
+
 	BATTLE_ROYALE_CABALLO("LJ", XMaterial.IRON_HORSE_ARMOR.parseMaterial(), "getNameKnightsBattle"),
 
 	TOP_KILLER("TKLL", XMaterial.IRON_SWORD.parseMaterial(), "getNameTopKiller"),
 
 	TOP_KILLER_TEAM_2("TKLLT2", XMaterial.IRON_SWORD.parseMaterial(), "getNameTeamTopKiller"),
+
+	TOP_KILLER_TEAMS("TKLLTEAMS", XMaterial.GOLDEN_SWORD.parseMaterial(), "getNameRealTeamTopKiller"),
 
 	KNOCKBACK_DUEL("KBD", XMaterial.WOODEN_SWORD.parseMaterial(), "getNameKnockbackDuel"),
 
@@ -49,9 +53,13 @@ public enum MinigameType {
 
 	TSG("TSG", XMaterial.COOKED_BEEF.parseMaterial(), "getNameTeamSurvivalGames"),
 
+	TSG_REAL("TSGTEAMS", XMaterial.COOKED_PORKCHOP.parseMaterial(), "getNameRealTeamSurvivalGames"),
+
 	SW("SW", XMaterial.DIRT.parseMaterial(), "getNameSkywars"),
 
 	TSW("TSW", XMaterial.STONE.parseMaterial(), "getNameTeamSkywars"),
+
+	TSW_REAL("TSWTEAMS", XMaterial.BEDROCK.parseMaterial(), "getNameRealTeamSkywars"),
 
 	WDROP("WDROP", XMaterial.WATER_BUCKET.parseMaterial(), "getNameWaterDrop"),
 
@@ -68,8 +76,6 @@ public enum MinigameType {
 	SPLATOON("SPLATOON", XMaterial.RED_DYE.parseMaterial(), "getNameSplatoon"),
 
 	BOMBARDMENT("BOMBARDMENT", XMaterial.COAL_BLOCK.parseMaterial(), "getNameBombardment");
-
-	
 
 	private String codigo;
 	private Material material;
@@ -99,14 +105,13 @@ public enum MinigameType {
 		this.codigo = codigo;
 	}
 
-	
-	public String getMessage(RandomEvents plugin){
-		String menu="";
+	public String getMessage(RandomEvents plugin) {
+		String menu = "";
 		try {
 			Method method = plugin.getLanguage().getClass().getDeclaredMethod(message);
 			menu += method.invoke(plugin.getLanguage());
-		} catch (NoSuchMethodException | SecurityException | IllegalAccessException
-				| IllegalArgumentException | InvocationTargetException e) {
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
 			e.printStackTrace();
 		}
 		return menu;
@@ -115,7 +120,7 @@ public enum MinigameType {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
+
 	public String getMessage() {
 		return message;
 	}

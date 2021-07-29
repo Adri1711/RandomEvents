@@ -308,13 +308,20 @@ public class ReventConfig {
 
 	private boolean deactivateSounds;
 
+	private int statsBRTEAMS;
+
+	private int statsTKLLTEAMS;
+
+	private int statsTSGTEAMS;
+
+	private int statsTSWTEAMS;
+
 	public ReventConfig(RandomEvents plugin) {
 		super();
 		this.plugin = plugin;
-		inicializaVariables(plugin);
 	}
 
-	public void inicializaVariables(RandomEvents plugin) {
+	public void inicializaVariables() {
 		this.powerUpItem = new ItemStack(XMaterial.EMERALD.parseMaterial());
 		ItemMeta itemMeta = this.powerUpItem.getItemMeta();
 		itemMeta.setDisplayName("§2§lPowerUP");
@@ -527,6 +534,10 @@ public class ReventConfig {
 		this.statsHOE = plugin.getConfig().getInt("statsmenu.HOE");
 		this.statsSPLATOON = plugin.getConfig().getInt("statsmenu.SPLATOON");
 		this.statsBOMBARDMENT = plugin.getConfig().getInt("statsmenu.BOMBARDMENT");
+		this.statsBRTEAMS = plugin.getConfig().getInt("statsmenu.BRTEAMS");
+		this.statsTKLLTEAMS = plugin.getConfig().getInt("statsmenu.TKLLTEAMS");
+		this.statsTSGTEAMS = plugin.getConfig().getInt("statsmenu.TSGTEAMS");
+		this.statsTSWTEAMS = plugin.getConfig().getInt("statsmenu.TSWTEAMS");
 		this.statsSize = plugin.getConfig().getInt("statsmenu.size");
 
 		this.allowedCmds = (List<String>) plugin.getConfig().getStringList("allowedCmds");
@@ -1787,6 +1798,38 @@ public class ReventConfig {
 
 	public void setDeactivateSounds(boolean deactivateSounds) {
 		this.deactivateSounds = deactivateSounds;
+	}
+
+	public int getStatsBRTEAMS() {
+		return statsBRTEAMS;
+	}
+
+	public void setStatsBRTEAMS(int statsBRTEAMS) {
+		this.statsBRTEAMS = statsBRTEAMS;
+	}
+
+	public int getStatsTKLLTEAMS() {
+		return statsTKLLTEAMS;
+	}
+
+	public void setStatsTKLLTEAMS(int statsTKLLTEAMS) {
+		this.statsTKLLTEAMS = statsTKLLTEAMS;
+	}
+
+	public int getStatsTSGTEAMS() {
+		return statsTSGTEAMS;
+	}
+
+	public void setStatsTSGTEAMS(int statsTSGTEAMS) {
+		this.statsTSGTEAMS = statsTSGTEAMS;
+	}
+
+	public int getStatsTSWTEAMS() {
+		return statsTSWTEAMS;
+	}
+
+	public void setStatsTSWTEAMS(int statsTSWTEAMS) {
+		this.statsTSWTEAMS = statsTSWTEAMS;
 	}
 
 }

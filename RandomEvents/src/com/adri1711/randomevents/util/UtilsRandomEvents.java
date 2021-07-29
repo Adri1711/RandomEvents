@@ -1360,8 +1360,9 @@ public class UtilsRandomEvents {
 		for (MinigameType minigame : MinigameType.values()) {
 			Integer position = -1;
 			try {
-				Method method = plugin.getClass().getDeclaredMethod("getStats" + minigame.getCodigo());
-				position = (Integer) method.invoke(plugin);
+				Method method = plugin.getReventConfig().getClass()
+						.getDeclaredMethod("getStats" + minigame.getCodigo());
+				position = (Integer) method.invoke(plugin.getReventConfig());
 			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException e) {
 				e.printStackTrace();
@@ -1394,8 +1395,8 @@ public class UtilsRandomEvents {
 
 		Integer position = -1;
 		try {
-			Method method = plugin.getClass().getDeclaredMethod("getStatsALLTIME");
-			position = (Integer) method.invoke(plugin);
+			Method method = plugin.getReventConfig().getClass().getDeclaredMethod("getStatsALLTIME");
+			position = (Integer) method.invoke(plugin.getReventConfig());
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
 			e.printStackTrace();
@@ -1463,14 +1464,19 @@ public class UtilsRandomEvents {
 		for (MaterialData matDat : match.getDatas()) {
 			Material mat = null;
 			byte data = block.getState().getData().getData();
+
 			if (block.getState().getData().getItemType().toString().contains("_LOG")) {
 				data = Byte.valueOf("" + data % 4);
 			}
+
+
 			if (matDat.getItemType().toString().contains("LEGACY_")) {
 				mat = block.getState().getData().getItemType();
 			} else {
 				mat = block.getType();
 			}
+			
+
 			if (matDat.getItemType() == mat && matDat.getData() == data) {
 				res = true;
 			}
@@ -2162,6 +2168,8 @@ public class UtilsRandomEvents {
 		lines.add("");
 		switch (matchActive.getMatch().getMinigame()) {
 		case PAINTBALL:
+		case BATTLE_ROYALE_TEAMS:
+		case TSW_REAL:
 
 			lines = prepareLinesTeam(lines, matchActive, plugin, player);
 			lines.add("");
@@ -2183,6 +2191,13 @@ public class UtilsRandomEvents {
 			lines.add("");
 			lines = prepareLinesDeadAlive(lines, matchActive, plugin, playersDead);
 
+			break;
+		case TSG_REAL:
+			lines = prepareLinesTeam(lines, matchActive, plugin, player);
+			lines.add("");
+			lines = prepareLinesTime(lines, plugin, matchActive);
+			lines.add("");
+			lines = prepareLinesDeadAliveTeam(lines, matchActive, plugin, playersDeadObj);
 			break;
 		case TSG:
 			lines = prepareLinesTeammate(lines, matchActive, plugin, player);
@@ -2233,6 +2248,7 @@ public class UtilsRandomEvents {
 
 		case HOEHOEHOE:
 		case SPLATOON:
+		case TOP_KILLER_TEAMS:
 			lines = prepareLinesTeam(lines, matchActive, plugin, player);
 			lines.add("");
 

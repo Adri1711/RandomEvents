@@ -125,9 +125,16 @@ public class TournamentActive {
 
 				if (to == 1) {
 
-					if (!m.getMinigame().equals(MinigameType.BATTLE_ROYALE_TEAM_2) && !m.getMinigame().equals(MinigameType.PAINTBALL)
+					if (!m.getMinigame().equals(MinigameType.BATTLE_ROYALE_TEAM_2)
+							&& !m.getMinigame().equals(MinigameType.PAINTBALL)
 							&& !m.getMinigame().equals(MinigameType.TOP_KILLER_TEAM_2)
-							&& !m.getMinigame().equals(MinigameType.TSG) && !m.getMinigame().equals(MinigameType.TSW)) {
+							&& !m.getMinigame().equals(MinigameType.TSG) && !m.getMinigame().equals(MinigameType.TSW)
+							&& !m.getMinigame().equals(MinigameType.HOEHOEHOE)
+							&& !m.getMinigame().equals(MinigameType.SPLATOON)
+							&& !m.getMinigame().equals(MinigameType.TSW_REAL)
+							&& !m.getMinigame().equals(MinigameType.TSG_REAL)
+							&& !m.getMinigame().equals(MinigameType.BATTLE_ROYALE_TEAMS)
+							&& !m.getMinigame().equals(MinigameType.TOP_KILLER_TEAMS)) {
 						matches.add(m);
 					}
 
@@ -166,7 +173,7 @@ public class TournamentActive {
 
 			UtilsRandomEvents.borraInventario(player, plugin);
 
-			UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin,true);
+			UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin, true);
 
 			if (!muerto) {
 				UtilsRandomEvents.sacaInventario(plugin, player);
@@ -249,7 +256,7 @@ public class TournamentActive {
 						for (Player p : Bukkit.getOnlinePlayers()) {
 							if (p.hasPermission(ComandosEnum.CMD_JOIN_TOURNAMENT.getPermission())) {
 								if (playSound) {
-									UtilsRandomEvents.playSound(plugin,p, XSound.ENTITY_VILLAGER_HURT);
+									UtilsRandomEvents.playSound(plugin, p, XSound.ENTITY_VILLAGER_HURT);
 								}
 								for (String pri : primerasPartes) {
 									p.sendMessage(pri);
@@ -342,7 +349,7 @@ public class TournamentActive {
 	public void daRecompensas(List<Player> ganadores, List<Player> playersSpectators) {
 		if (getPlaying()) {
 			setPlaying(Boolean.FALSE);
-			UtilsRandomEvents.playSound(plugin,playersSpectators, XSound.ENTITY_ENDER_DRAGON_DEATH);
+			UtilsRandomEvents.playSound(plugin, playersSpectators, XSound.ENTITY_ENDER_DRAGON_DEATH);
 
 			String cadenaGanadores = "";
 			if (ganadores.size() == 1) {
@@ -444,7 +451,7 @@ public class TournamentActive {
 				playersSpectators.remove(player);
 				getPlayers().remove(player.getName());
 				getPlayersObj().remove(player);
-				UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin,true);
+				UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin, true);
 
 				player.setHealth(player.getMaxHealth());
 				player.setFoodLevel(20);
@@ -508,7 +515,7 @@ public class TournamentActive {
 				getPlayersObj().add(player);
 				getPlayersSpectators().add(player);
 
-				UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_BAT_HURT);
+				UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_BAT_HURT);
 			} else {
 				UtilsRandomEvents.sacaInventario(plugin, player);
 

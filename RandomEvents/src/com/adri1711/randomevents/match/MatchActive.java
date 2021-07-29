@@ -344,7 +344,7 @@ public class MatchActive {
 				getPlayerHandler().getPlayers().add(player.getName());
 				getPlayerHandler().getPlayersObj().add(player);
 				getPlayerHandler().getPlayersSpectators().add(player);
-				UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_BAT_HURT);
+				UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_BAT_HURT);
 				List<Kit> kits = UtilsRandomEvents.kitsAvailable(player, match.getKits(), plugin);
 				if (kits.size() > 1) {
 
@@ -397,7 +397,7 @@ public class MatchActive {
 					if (plugin.getReventConfig().isAdvancedSpectatorMode()) {
 						player.setGameMode(GameMode.SPECTATOR);
 					}
-					UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_BAT_HURT);
+					UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_BAT_HURT);
 				} else {
 					UtilsRandomEvents.sacaInventario(plugin, player);
 				}
@@ -526,7 +526,8 @@ public class MatchActive {
 			}
 		}
 		if (plugin.getReventConfig().isShowBorders() && (getMatch().getMinigame().equals(MinigameType.SG)
-				|| getMatch().getMinigame().equals(MinigameType.TSG))) {
+				|| getMatch().getMinigame().equals(MinigameType.TSG)
+				|| getMatch().getMinigame().equals(MinigameType.TSG_REAL))) {
 			UtilsRandomEvents.setWorldBorder(plugin,
 					new Location(getMapHandler().getActualCuboid().getWorld(), 0, 0, 0), Double.MAX_VALUE, player);
 		}
@@ -555,7 +556,8 @@ public class MatchActive {
 			}
 			for (Player p : players) {
 				if (plugin.getReventConfig().isShowBorders() && (getMatch().getMinigame().equals(MinigameType.SG)
-						|| getMatch().getMinigame().equals(MinigameType.TSG))) {
+						|| getMatch().getMinigame().equals(MinigameType.TSG)
+						|| getMatch().getMinigame().equals(MinigameType.TSG_REAL))) {
 					UtilsRandomEvents.setWorldBorder(plugin,
 							new Location(getMapHandler().getActualCuboid().getWorld(), 0, 0, 0), Double.MAX_VALUE, p);
 				}
@@ -842,11 +844,15 @@ public class MatchActive {
 
 	public void daRecompensas(Boolean tiempo) {
 		setPlaying(Boolean.FALSE);
-		UtilsRandomEvents.playSound(plugin,getPlayerHandler().getPlayersSpectators(), XSound.ENTITY_ENDER_DRAGON_DEATH);
+		UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
+				XSound.ENTITY_ENDER_DRAGON_DEATH);
 		List<Player> ganadores = new ArrayList<Player>();
 		switch (getMatch().getMinigame()) {
 		case TSW:
+		case TSW_REAL:
+		case TSG_REAL:
 		case TSG:
+		case BATTLE_ROYALE_TEAMS:
 		case BATTLE_ROYALE_TEAM_2:
 		case PAINTBALL:
 			if (getPlayerHandler().getPlayersObj().size() > 0) {
@@ -881,6 +887,7 @@ public class MatchActive {
 		case QUAKECRAFT:
 		case OITC:
 		case TOP_KILLER_TEAM_2:
+		case TOP_KILLER_TEAMS:
 		case HOEHOEHOE:
 		case SPLATOON:
 			ganadores.addAll(sacaGanadoresPartidaTiempo());
@@ -1153,6 +1160,8 @@ public class MatchActive {
 		case SW:
 		case TSG:
 		case TSW:
+		case TSG_REAL:
+		case TSW_REAL:
 		case GEM_CRAWLER:
 			Location center = getMapHandler().getCuboid().getCenter();
 			if (center != null) {
@@ -1277,12 +1286,13 @@ public class MatchActive {
 						.replace("%event%", match.getName()).replace("%type%", match.getMinigame().getMessage(plugin)),
 				Boolean.FALSE);
 
-		UtilsRandomEvents.playSound(plugin,getPlayerHandler().getPlayersSpectators(), XSound.ENTITY_PLAYER_LEVELUP);
+		UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(), XSound.ENTITY_PLAYER_LEVELUP);
 		UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
 				plugin.getLanguage().getSecondsRemaining3(), Boolean.FALSE);
 		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 			public void run() {
-				UtilsRandomEvents.playSound(plugin,getPlayerHandler().getPlayersSpectators(), XSound.ENTITY_PLAYER_LEVELUP);
+				UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
+						XSound.ENTITY_PLAYER_LEVELUP);
 				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
 						plugin.getLanguage().getSecondsRemaining2(), Boolean.FALSE);
 			}
@@ -1290,7 +1300,8 @@ public class MatchActive {
 
 		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 			public void run() {
-				UtilsRandomEvents.playSound(plugin,getPlayerHandler().getPlayersSpectators(), XSound.ENTITY_PLAYER_LEVELUP);
+				UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
+						XSound.ENTITY_PLAYER_LEVELUP);
 				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
 						plugin.getLanguage().getSecondsRemaining1(), Boolean.FALSE);
 			}
@@ -1299,7 +1310,7 @@ public class MatchActive {
 		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 			public void run() {
 				if (playSound) {
-					UtilsRandomEvents.playSound(plugin,getPlayerHandler().getPlayersSpectators(),
+					UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
 							XSound.ENTITY_ENDER_DRAGON_GROWL);
 				}
 				comienzaPartida();
@@ -1435,7 +1446,7 @@ public class MatchActive {
 				Bukkit.getServer().getScheduler().runTaskLater(getPlugin(), new Runnable() {
 					@Override
 					public void run() {
-						UtilsRandomEvents.playSound(plugin,getPlayerHandler().getPlayersSpectators(),
+						UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
 								XSound.ENTITY_PLAYER_LEVELUP);
 						UtilsRandomEvents.mandaMensaje(getPlugin(), getPlayerHandler().getPlayersSpectators(),
 								plugin.getLanguage().getSecondsRemaining3(), true);
@@ -1446,7 +1457,7 @@ public class MatchActive {
 				Bukkit.getServer().getScheduler().runTaskLater(getPlugin(), new Runnable() {
 					@Override
 					public void run() {
-						UtilsRandomEvents.playSound(plugin,getPlayerHandler().getPlayersSpectators(),
+						UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
 								XSound.ENTITY_PLAYER_LEVELUP);
 						UtilsRandomEvents.mandaMensaje(getPlugin(), getPlayerHandler().getPlayersSpectators(),
 								plugin.getLanguage().getSecondsRemaining2(), true);
@@ -1457,7 +1468,7 @@ public class MatchActive {
 				Bukkit.getServer().getScheduler().runTaskLater(getPlugin(), new Runnable() {
 					@Override
 					public void run() {
-						UtilsRandomEvents.playSound(plugin,getPlayerHandler().getPlayersSpectators(),
+						UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
 								XSound.ENTITY_PLAYER_LEVELUP);
 						UtilsRandomEvents.mandaMensaje(getPlugin(), getPlayerHandler().getPlayersSpectators(),
 								plugin.getLanguage().getSecondsRemaining1(), true);
@@ -1628,6 +1639,28 @@ public class MatchActive {
 
 			partidaPorTiempo();
 			break;
+
+		case TOP_KILLER_TEAMS:
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
+			this.allowDamage = true;
+			for (Player p : getPlayerHandler().getPlayersObj()) {
+				sortTeams(p);
+			}
+			equilibrateTeams();
+			for (Player p : getPlayerHandler().getPlayersObj()) {
+
+				iniciaPlayerTeam(p);
+
+			}
+
+			mandaMensajesEquipo(getPlayerHandler().getEquipos());
+
+			partidaPorTiempo();
+			break;
 		case TSG:
 			for (Player p : getPlayerHandler().getPlayersSpectators()) {
 				if (!getPlayerHandler().getPlayersObj().contains(p)) {
@@ -1663,6 +1696,55 @@ public class MatchActive {
 
 				partidaSG();
 			}
+			break;
+		case TSG_REAL:
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
+			this.allowDamage = true;
+			for (Player p : getPlayerHandler().getPlayersObj()) {
+				sortTeams(p);
+			}
+			equilibrateTeams();
+			for (Player p : getPlayerHandler().getPlayersObj()) {
+				iniciaPlayerTeam(p);
+			}
+			mandaMensajesEquipo(getPlayerHandler().getEquipos());
+			doMoveAndWarmup();
+			if (plugin.getReventConfig().isShowBorders()) {
+				Double distance = Math.min(
+						(getMapHandler().getActualCuboid().getMaxX() - getMapHandler().getActualCuboid().getMinX())
+								/ 1.,
+						(getMapHandler().getActualCuboid().getMaxZ() - getMapHandler().getActualCuboid().getMinZ())
+								/ 1.);
+				for (Player p : getPlayerHandler().getPlayersObj()) {
+					UtilsRandomEvents.setWorldBorder(getPlugin(), getMapHandler().getActualCuboid().getCenter(),
+							distance, p);
+				}
+
+				partidaSG();
+			}
+			break;
+		case TSW_REAL:
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
+			this.allowDamage = true;
+			for (Player p : getPlayerHandler().getPlayersObj()) {
+				sortTeams(p);
+			}
+			equilibrateTeams();
+			for (Player p : getPlayerHandler().getPlayersObj()) {
+				iniciaPlayerTeam(p);
+
+			}
+			mandaMensajesEquipo(getPlayerHandler().getEquipos());
+			doMoveAndWarmup();
+
 			break;
 		case TSW:
 			for (Player p : getPlayerHandler().getPlayersSpectators()) {
@@ -1734,6 +1816,30 @@ public class MatchActive {
 			mandaMensajesEquipo(getPlayerHandler().getEquipos());
 			partidaPorTiempo();
 
+			break;
+		case BATTLE_ROYALE_TEAMS:
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
+			this.allowDamage = true;
+			for (Player p : getPlayerHandler().getPlayersObj()) {
+				sortTeams(p);
+			}
+			equilibrateTeams();
+			for (Player p : getPlayerHandler().getPlayersObj()) {
+				iniciaPlayerTeam(p);
+
+			}
+			mandaMensajesEquipo(getPlayerHandler().getEquipos());
+			task = new BukkitRunnable() {
+				public void run() {
+
+					UtilsRandomEvents.checkDamageCounter(plugin, getMatchActive());
+				}
+			};
+			task.runTaskTimer(plugin, 0, 20L);
 			break;
 		case BATTLE_ROYALE_TEAM_2:
 			for (Player p : getPlayerHandler().getPlayersSpectators()) {
@@ -1992,8 +2098,8 @@ public class MatchActive {
 			listaPlayers.addAll(entrada.getValue());
 			getPlayerHandler().getEquipos().put(entrada.getKey(), listaPlayers);
 		}
-
 		setCanBreak(true);
+
 	}
 
 	private void sortTeams(Player p) {
@@ -2092,10 +2198,10 @@ public class MatchActive {
 				}
 				try {
 					for (Player s : listaShoot) {
-						UtilsRandomEvents.playSound(plugin,s, XSound.BLOCK_WOODEN_DOOR_CLOSE, 3.0F, 2.0F);
+						UtilsRandomEvents.playSound(plugin, s, XSound.BLOCK_WOODEN_DOOR_CLOSE, 3.0F, 2.0F);
 						Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 							public void run() {
-								UtilsRandomEvents.playSound(plugin,s, XSound.BLOCK_WOODEN_DOOR_CLOSE, 3.0F, 2.0F);
+								UtilsRandomEvents.playSound(plugin, s, XSound.BLOCK_WOODEN_DOOR_CLOSE, 3.0F, 2.0F);
 
 							}
 						}, 2L);
@@ -2313,7 +2419,7 @@ public class MatchActive {
 			plugin.getApi().usaTitle(getPlayerHandler().getPlayerContador(), "", plugin.getLanguage().getPlayerHasBomb()
 					.replace("%player%", getPlayerHandler().getPlayerContador().getName()));
 		}
-		UtilsRandomEvents.playSound(plugin,getPlayerHandler().getPlayerContador(), XSound.ENTITY_VILLAGER_HURT);
+		UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayerContador(), XSound.ENTITY_VILLAGER_HURT);
 
 	}
 
@@ -2368,7 +2474,8 @@ public class MatchActive {
 
 			if (dif <= 0) {
 
-				UtilsRandomEvents.playSound(plugin,getPlayerHandler().getPlayersSpectators(), XSound.ENTITY_GENERIC_EXPLODE);
+				UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
+						XSound.ENTITY_GENERIC_EXPLODE);
 
 				List<Player> muertos = new ArrayList<Player>();
 				if (plugin.getReventConfig().isMultipleKillOnExplosion()) {
@@ -2399,7 +2506,7 @@ public class MatchActive {
 					UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
 							plugin.getLanguage().getBombSeconds().replace("%seconds%", dif + ""), true);
 				} else if (dif > 0 && dif <= 5) {
-					UtilsRandomEvents.playSound(plugin,getPlayerHandler().getPlayersSpectators(),
+					UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
 							XSound.BLOCK_NOTE_BLOCK_BANJO);
 					UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
 							plugin.getLanguage().getBombSeconds().replace("%seconds%", dif + ""), true);
@@ -2619,15 +2726,18 @@ public class MatchActive {
 				// spawnMobs(bWave.getMobs(), getPlugin());
 
 			} else if (dif == 1) {
-				UtilsRandomEvents.playSound(plugin,getPlayerHandler().getPlayersSpectators(), XSound.ENTITY_PLAYER_LEVELUP);
+				UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
+						XSound.ENTITY_PLAYER_LEVELUP);
 				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
 						plugin.getLanguage().getSecondsRemaining1(), Boolean.TRUE);
 			} else if (dif == 2) {
-				UtilsRandomEvents.playSound(plugin,getPlayerHandler().getPlayersSpectators(), XSound.ENTITY_PLAYER_LEVELUP);
+				UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
+						XSound.ENTITY_PLAYER_LEVELUP);
 				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
 						plugin.getLanguage().getSecondsRemaining2(), Boolean.TRUE);
 			} else if (dif == 3) {
-				UtilsRandomEvents.playSound(plugin,getPlayerHandler().getPlayersSpectators(), XSound.ENTITY_PLAYER_LEVELUP);
+				UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
+						XSound.ENTITY_PLAYER_LEVELUP);
 				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
 						plugin.getLanguage().getSecondsRemaining3(), Boolean.TRUE);
 			}
@@ -2704,6 +2814,10 @@ public class MatchActive {
 		case PAINTBALL:
 		case HOEHOEHOE:
 		case SPLATOON:
+		case TSW_REAL:
+		case TSG_REAL:
+		case TOP_KILLER_TEAMS:
+		case BATTLE_ROYALE_TEAMS:
 			loc = match.getSpawns().get(getEquipo(p));
 			getMapHandler().getCheckpoints().put(p.getName(), loc);
 			UtilsRandomEvents.teleportaPlayer(p, loc, plugin);
@@ -3164,7 +3278,7 @@ public class MatchActive {
 						for (Player p : Bukkit.getOnlinePlayers()) {
 							if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())) {
 								if (playSound) {
-									UtilsRandomEvents.playSound(plugin,p, XSound.ENTITY_VILLAGER_HURT);
+									UtilsRandomEvents.playSound(plugin, p, XSound.ENTITY_VILLAGER_HURT);
 								}
 								for (String pri : primerasPartes) {
 									p.sendMessage(pri);
@@ -3296,7 +3410,7 @@ public class MatchActive {
 							for (Player p : Bukkit.getOnlinePlayers()) {
 								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())) {
 									if (playSound) {
-										UtilsRandomEvents.playSound(plugin,p, XSound.ENTITY_VILLAGER_HURT);
+										UtilsRandomEvents.playSound(plugin, p, XSound.ENTITY_VILLAGER_HURT);
 									}
 									for (String pri : primerasPartes) {
 										p.sendMessage(pri);
@@ -3340,6 +3454,7 @@ public class MatchActive {
 			case BATTLE_ROYALE:
 			case BATTLE_ROYALE_CABALLO:
 			case BATTLE_ROYALE_TEAM_2:
+			case BATTLE_ROYALE_TEAMS:
 			case BOMB_TAG:
 			case ESCAPE_ARROW:
 			case ANVIL_SPLEEF:
@@ -3358,10 +3473,13 @@ public class MatchActive {
 			case FISH_SLAP:
 			case QUAKECRAFT:
 			case TOP_KILLER_TEAM_2:
+			case TOP_KILLER_TEAMS:
 			case HOEHOEHOE:
 			case SPLATOON:
 			case TSG:
 			case TSW:
+			case TSG_REAL:
+			case TSW_REAL:
 			case WDROP:
 			case PAINTBALL:
 				getPlayerHandler().getOldScoreboards().put(p.getName(), p.getScoreboard());
@@ -3419,22 +3537,24 @@ public class MatchActive {
 
 		switch (getMatch().getMinigame()) {
 		case KOTH:
-			if (checkDate != -1L) {
-				Long diff = now - checkDate;
+			if (getPlayerHandler().getPlayerContador() != null && getPlayerHandler().getPlayerContador().equals(p)) {
+				if (checkDate != -1L) {
+					Long diff = now - checkDate;
 
-				if (diff >= 1000) {
-					diff = diff - (diff % 1000);
-					Double difere = diff / 1000.0;
-					if (getPuntuacion().containsKey(p.getName())) {
-						getPuntuacion().put(p.getName(), getPuntuacion().get(p.getName()) + difere.intValue());
+					if (diff >= 1000) {
+						diff = diff - (diff % 1000);
+						Double difere = diff / 1000.0;
+						if (getPuntuacion().containsKey(p.getName())) {
+							getPuntuacion().put(p.getName(), getPuntuacion().get(p.getName()) + difere.intValue());
 
-					} else {
-						getPuntuacion().put(p.getName(), difere.intValue());
+						} else {
+							getPuntuacion().put(p.getName(), difere.intValue());
+						}
 					}
 				}
+				getPlayerHandler().setPlayerContador(null);
+				UtilsRandomEvents.playSound(plugin, p, XSound.ENTITY_BAT_HURT);
 			}
-			getPlayerHandler().setPlayerContador(null);
-			UtilsRandomEvents.playSound(plugin,p, XSound.ENTITY_BAT_HURT);
 
 			break;
 
@@ -3454,7 +3574,7 @@ public class MatchActive {
 				}
 			}
 			getPlayerHandler().getPlayersContadores().remove(p);
-			UtilsRandomEvents.playSound(plugin,p, XSound.ENTITY_BAT_HURT);
+			UtilsRandomEvents.playSound(plugin, p, XSound.ENTITY_BAT_HURT);
 
 			break;
 		default:
@@ -3469,11 +3589,11 @@ public class MatchActive {
 		case KOTH:
 			checkDate = now;
 			getPlayerHandler().setPlayerContador(p);
-			UtilsRandomEvents.playSound(plugin,p, XSound.ENTITY_PLAYER_LEVELUP);
+			UtilsRandomEvents.playSound(plugin, p, XSound.ENTITY_PLAYER_LEVELUP);
 			break;
 		case FISH_SLAP:
 			getPlayerHandler().getPlayersContadores().put(p, now);
-			UtilsRandomEvents.playSound(plugin,p, XSound.ENTITY_PLAYER_LEVELUP);
+			UtilsRandomEvents.playSound(plugin, p, XSound.ENTITY_PLAYER_LEVELUP);
 
 			break;
 		default:
@@ -3525,7 +3645,7 @@ public class MatchActive {
 			actual++;
 			getStep().put(player, actual);
 			UtilsRandomEvents.teleportaPlayer(player, getWaterDrops().get(actual).getSpawn(), plugin);
-			UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_PLAYER_LEVELUP);
+			UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_PLAYER_LEVELUP);
 			updateScoreboards();
 		}
 	}

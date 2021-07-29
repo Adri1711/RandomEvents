@@ -1037,7 +1037,14 @@ public class Chat implements Listener {
 
 							if (player.getItemInHand() != null
 									&& player.getItemInHand().getType() != (XMaterial.AIR.parseMaterial())) {
-								match.getDatas().add(player.getItemInHand().getData());
+								try {
+									MaterialData mat = new MaterialData(player.getItemInHand().getType(),
+											player.getItemInHand().getData().getData());
+									match.getDatas().add(mat);
+								} catch (Throwable eb) {
+									match.getDatas().add(player.getItemInHand().getData());
+								}
+								plugin.getPlayersCreation().remove(player.getName());
 								plugin.getPlayersCreation().put(player.getName(),
 										Creacion.ANOTHER_MATERIAL_SPLEEF.getPosition());
 								actua = Boolean.FALSE;
@@ -1062,7 +1069,14 @@ public class Chat implements Listener {
 
 							if (player.getItemInHand() != null
 									&& player.getItemInHand().getType() != (XMaterial.AIR.parseMaterial())) {
-								match.getDatas().add(player.getItemInHand().getData());
+								try {
+									MaterialData mat = new MaterialData(player.getItemInHand().getType(),
+											player.getItemInHand().getData().getData());
+									match.getDatas().add(mat);
+								} catch (Throwable eb) {
+									match.getDatas().add(player.getItemInHand().getData());
+								}
+								plugin.getPlayersCreation().remove(player.getName());
 								actua = Boolean.FALSE;
 								// actualiza =
 								// UtilsRandomEvents.pasaACreation(plugin,

@@ -74,13 +74,11 @@ public class Constantes {
 
 		CMD_MATCHES("menuMatches", "menu.admin.matches",
 				"   &6/revent matches:\n          &e-> Show all Random Events available"),
-		
-		CMD_KITS("kitsCmd", "menu.kits.list",
-				"   &6/revent kits:\n          &e-> Show all Kits available"),
-		
-		CMD_KITS_EDIT("kitsEditCmd", "menu.kits.edit",
-				"   &6/revent kitedit <id>:\n          &e-> Edit a kit"),
-		
+
+		CMD_KITS("kitsCmd", "menu.kits.list", "   &6/revent kits:\n          &e-> Show all Kits available"),
+
+		CMD_KITS_EDIT("kitsEditCmd", "menu.kits.edit", "   &6/revent kitedit <id>:\n          &e-> Edit a kit"),
+
 		CMD_CHECKPOINT("checkpoint", "menu.checkpoint",
 				"   &6/revent checkpoint:\n          &e-> Makes the user go back to the checkpoint"),
 
@@ -146,7 +144,7 @@ public class Constantes {
 		CMD_RELOAD("reload", "menu.admin.reload", "   &6/revent reload:\n          &e-> Reload the plugin"),
 
 		TAG_PLUGIN("tagPlugin", "tagPlugin", "&a&lRandomEvents &f&l>>"),
-		
+
 		TAG_CHAT_PLUGIN("tagChat", "tagChat", "&f[&eRandomEvents&f]"),
 
 		INVALID_INPUT("invalidInput", "creation.invalidInput", "&c&lInvalid input, try another one"),
@@ -199,9 +197,8 @@ public class Constantes {
 
 		END_OF_ARENA_CREATION("endOfArenaCreation", "creation.endOfArenaCreation",
 				"&6&lYou successfully created a RandomEvents!"),
-		
-		END_OF_KIT_CREATION("endOfKitCreation", "creation.endOfKitCreation",
-				"&6&lYou successfully edited a Kit!"),
+
+		END_OF_KIT_CREATION("endOfKitCreation", "creation.endOfKitCreation", "&6&lYou successfully edited a Kit!"),
 
 		END_OF_SCHEDULE_CREATION("endOfScheduleCreation", "creation.endOfScheduleCreation",
 				"&6&lYou successfully created a Schedule!"),
@@ -259,36 +256,6 @@ public class Constantes {
 				"&6&lTournament Random Event &e&l>>  %clickhere% &8[ &a%players%/%neededPlayers% &8] "),
 
 		CLICK_HERE("clickHere", "announce.clickHere", "&b[Click here to join]"),
-
-		// FIRST_ANNOUNCE("firstAnnounce", "announce.firstAnnounce",
-		// "\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█ &5&lRandom
-		// Event\n&f█&8█&f██&8███&f█ &c%type%\n&f█&8█&f████&8█&f█ &8[
-		// &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█ "),
-		//
-		// NEXT_ANNOUNCE("nextAnnounce", "announce.nextAnnounce",
-		// "\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█ &5&lRandom
-		// Event\n&f█&8█&f██&8███&f█ &c%type%\n&f█&8█&f████&8█&f█ &8[
-		// &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█ "),
-		//
-		// FIRST_ANNOUNCE_TOURNAMENT("firstAnnounceTournament",
-		// "announce.firstAnnounceTournament",
-		// "\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█ &5&lTournament Random
-		// Event\n&f█&8█&f██&8███&f█ &c%type%\n&f█&8█&f████&8█&f█ &8[
-		// &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█ "),
-		//
-		// NEXT_ANNOUNCE_TOURNAMENT("nextAnnounceTournament",
-		// "announce.nextAnnounceTournament",
-		// "\n&f████████\n&f█&8██████&f█\n&f█&8█&f█████&f█ &5&lTournament Random
-		// Event\n&f█&8█&f██&8███&f█ &c%type%\n&f█&8█&f████&8█&f█ &8[
-		// &a%players%/%neededPlayers% &8] \n&f█&8█&f████&8█&f█ "),
-		//
-		//
-		// LAST_PART("lastPart", "announce.lastPart",
-		// "\n&f█&8██████&f█\n&f████████"),
-		//
-		// LAST_PART_TOURNAMENT("lastPartTournament",
-		// "announce.lastPartTournament",
-		// "\n&f█&8██████&f█\n&f████████"),
 
 		RACE_TOURNAMENT("raceTournament", "announce.raceTournament",
 				"&6&lThe player %player% has reached the goal ( %players% / %neededPlayers% )"),
@@ -379,7 +346,7 @@ public class Constantes {
 		SCOREBOARD_TEAM_DEATH_FORMAT("scoreboardTeamDeath", "scoreboard.team.dead", "&c☠ %team_color%%name%"),
 
 		SCOREBOARD_TEAM_FORMAT("scoreboardTeam", "scoreboard.teamformat", "&6Team: %team_color%%name%"),
-		
+
 		SCOREBOARD_TEAM_POINTS("scoreboardTeamPoints", "scoreboard.teampoints", "%team_color%%team_name%: &e%points%"),
 
 		SCOREBOARD_COMPANION_FORMAT("scoreboardTeammate", "scoreboard.teammate", "&6Mate: &e%name%"),
@@ -428,80 +395,88 @@ public class Constantes {
 		ITEM_SHOW_PLAYER("itemShowPlayer", "item.showPlayer", "&2&lShow players"),
 
 		KIT_GUI_NAME("kitGuiName", "kit.guiName", "&6&lKits"),
-		
+
 		TEAM_GUI_NAME("teamGuiName", "team.guiName", "&6&lTeams"),
 
 		KIT_CHOSEN("kitChosen", "kit.chosen", "&6&lYou chosed %kit_name%"),
 
 		KIT_ITEM_NAME("kitItemName", "kit.itemName", "&6&lKits"),
-		
+
 		TEAM_ITEM_NAME("teamItemName", "team.itemName", "&6&lTeam"),
 
 		KIT_DEFAULT_NAME("kitDefaultName", "kit.defaultName", "&6&lKit: %kit_name%"),
 
 		KIT_DEFAULT_LORE("kitDefaultLore", "kit.defaultLore", "&eChoose it!;&eWin with this one!."),
-		
-		
-		NAME_BATTLEROYALE("nameBattleRoyale", "minigameName.BattleRoyale","Battle Royale"),
 
-		NAME_TEAMBATTLEROYALE("nameTeamBattleRoyale", "minigameName.DuoBattleRoyale","Duo Battle Royale"),
+		NAME_BATTLEROYALE("nameBattleRoyale", "minigameName.BattleRoyale", "Battle Royale"),
 
-		NAME_KNIGHTSBATTLE("nameKnightsBattle", "minigameName.KnightsBattle","Knights Battle"),
+		NAME_TEAMBATTLEROYALE("nameTeamBattleRoyale", "minigameName.DuoBattleRoyale", "Duo Battle Royale"),
 
-		NAME_TOPKILLER("nameTopKiller", "minigameName.TopKiller","Top Killer"),
+		NAME_KNIGHTSBATTLE("nameKnightsBattle", "minigameName.KnightsBattle", "Knights Battle"),
 
-		NAME_TEAMTOPKILLER("nameTeamTopKiller", "minigameName.DuoTopKiller","Duo Top Killer"),
+		NAME_TOPKILLER("nameTopKiller", "minigameName.TopKiller", "Top Killer"),
 
-		NAME_KNOCKBACKDUEL("nameKnockbackDuel", "minigameName.KnockbackDuel","Knockback Duel"),
+		NAME_TEAMTOPKILLER("nameTeamTopKiller", "minigameName.DuoTopKiller", "Duo Top Killer"),
 
-		NAME_ARROWRAIN("nameArrowRain", "minigameName.ArrowRain","Arrow Rain"),
+		NAME_KNOCKBACKDUEL("nameKnockbackDuel", "minigameName.KnockbackDuel", "Knockback Duel"),
 
-		NAME_ANVILSPLEEF("nameAnvilSpleef", "minigameName.AnvilSpleef","Anvil Spleef"),
+		NAME_ARROWRAIN("nameArrowRain", "minigameName.ArrowRain", "Arrow Rain"),
 
-		NAME_GEMCARRIER("nameGemCarrier", "minigameName.GemCarrier","Gem Carrier"),
+		NAME_ANVILSPLEEF("nameAnvilSpleef", "minigameName.AnvilSpleef", "Anvil Spleef"),
 
-		NAME_TNTTAG("nameTNTTag", "minigameName.TNTTag","TNT Tag"),
+		NAME_GEMCARRIER("nameGemCarrier", "minigameName.GemCarrier", "Gem Carrier"),
 
-		NAME_BOATRACE("nameBoatRace", "minigameName.BoatRace","Boat Race"),
+		NAME_TNTTAG("nameTNTTag", "minigameName.TNTTag", "TNT Tag"),
 
-		NAME_HORSERACE("nameHorseRace", "minigameName.HorseRace","Horse Race"),
+		NAME_BOATRACE("nameBoatRace", "minigameName.BoatRace", "Boat Race"),
 
-		NAME_ESCAPEBEAST("nameEscapeBeast", "minigameName.EscapeBeast","Escape from the Beast"),
+		NAME_HORSERACE("nameHorseRace", "minigameName.HorseRace", "Horse Race"),
 
-		NAME_RACE("nameRace", "minigameName.Race","Race"),
+		NAME_ESCAPEBEAST("nameEscapeBeast", "minigameName.EscapeBeast", "Escape from the Beast"),
 
-		NAME_TNTRUN("nameTNTRun", "minigameName.TNTRun","TNT Run"),
+		NAME_RACE("nameRace", "minigameName.Race", "Race"),
 
-		NAME_SPLEEF("nameSpleef", "minigameName.Spleef","Spleef"),
+		NAME_TNTRUN("nameTNTRun", "minigameName.TNTRun", "TNT Run"),
 
-		NAME_SPLEGG("nameSplegg", "minigameName.Splegg","Splegg"),
+		NAME_SPLEEF("nameSpleef", "minigameName.Spleef", "Spleef"),
 
-		NAME_OITC("nameOITC", "minigameName.OITC","One in the Chamber"),
+		NAME_SPLEGG("nameSplegg", "minigameName.Splegg", "Splegg"),
 
-		NAME_SURVIVALGAMES("nameSurvivalGames", "minigameName.SurvivalGames","Survival Games"),
+		NAME_OITC("nameOITC", "minigameName.OITC", "One in the Chamber"),
 
-		NAME_TEAMSURVIVALGAMES("nameTeamSurvivalGames", "minigameName.DuoSurvivalGames","Duo Survival Games"),
+		NAME_SURVIVALGAMES("nameSurvivalGames", "minigameName.SurvivalGames", "Survival Games"),
 
-		NAME_SKYWARS("nameSkywars", "minigameName.Skywars","Skywars"),
+		NAME_TEAMSURVIVALGAMES("nameTeamSurvivalGames", "minigameName.DuoSurvivalGames", "Duo Survival Games"),
 
-		NAME_TEAMSKYWARS("nameTeamSkywars", "minigameName.DuoSkywars","Duo Skywars"),
+		NAME_SKYWARS("nameSkywars", "minigameName.Skywars", "Skywars"),
 
-		NAME_WATERDROP("nameWaterDrop", "minigameName.WaterDrop","Dropper"),
+		NAME_TEAMSKYWARS("nameTeamSkywars", "minigameName.DuoSkywars", "Duo Skywars"),
 
-		NAME_QUAKECRAFT("nameQuakeCraft", "minigameName.QuakeCraft","Quake Craft"),
+		NAME_WATERDROP("nameWaterDrop", "minigameName.WaterDrop", "Dropper"),
 
-		NAME_PAINTBALL("namePaintball", "minigameName.Paintball","Paintball"),
+		NAME_QUAKECRAFT("nameQuakeCraft", "minigameName.QuakeCraft", "Quake Craft"),
 
-		NAME_KINGHILL("nameKingHill", "minigameName.KingHill","King of the Hill"),
+		NAME_PAINTBALL("namePaintball", "minigameName.Paintball", "Paintball"),
 
-		NAME_FISHSLAP("nameFishSlap", "minigameName.FishSlap","Fish Slap"),
+		NAME_KINGHILL("nameKingHill", "minigameName.KingHill", "King of the Hill"),
 
-		NAME_HOEHOEHOE("nameHoehoehoe", "minigameName.Hoehoehoe","Hoe hoe hoe"),
+		NAME_FISHSLAP("nameFishSlap", "minigameName.FishSlap", "Fish Slap"),
 
-		NAME_SPLATOON("nameSplatoon", "minigameName.Splatoon","Splatoon"),
+		NAME_HOEHOEHOE("nameHoehoehoe", "minigameName.Hoehoehoe", "Hoe hoe hoe"),
 
-		NAME_BOMBARDMENT("nameBombardment", "minigameName.Bombardment","Bombardment"),
-		
+		NAME_SPLATOON("nameSplatoon", "minigameName.Splatoon", "Splatoon"),
+
+		NAME_BOMBARDMENT("nameBombardment", "minigameName.Bombardment", "Bombardment"),
+
+		NAME_REALTEAMBATTLEROYALE("nameRealTeamBattleRoyale", "minigameName.TeamBattleRoyale", "Team Battle Royale"),
+
+		NAME_REALTEAMTOPKILLER("nameRealTeamTopKiller", "minigameName.TeamTopKiller", "Team Top Killer"),
+
+		NAME_REALTEAMSKYWARS("nameRealTeamSkywars", "minigameName.TeamSkywars", "Team Skywars"),
+
+		NAME_REALTEAMSURVIVALGAMES("nameRealTeamSurvivalGames", "minigameName.TeamSurvivalGames",
+				"Team Survival Games"),
+
 		MINIGAME_DESC_BR("minigameDescriptionBR", "minigame.description.BR",
 				"&eA fierce battle where just 1 player;&e or team can remain alive."),
 
@@ -589,7 +564,19 @@ public class Constantes {
 
 		MINIGAME_DESC_SPLATOON("minigameDescriptionSPLATOON", "minigame.description.SPLATOON",
 				"&ePaint all the field;&e to your color to win the match!"),
-		
+
+		MINIGAME_DESC_TSGTEAMS("minigameDescriptionTSGTEAMS", "minigame.description.TSGTEAMS",
+				"&eA fierce battle where just 1 player;&e or team can remain alive."),
+
+		MINIGAME_DESC_TSWTEAMS("minigameDescriptionTSWTEAMS", "minigame.description.TSWTEAMS",
+				"&eA fierce battle where just 1 player;&e or team can remain alive."),
+
+		MINIGAME_DESC_TKLLTEAMS("minigameDescriptionTKLLTEAMS", "minigame.description.TKLLTEAMS",
+				"&eOnly the most powerful assasin can win this event, kill players to get points,;&e the team with more points will get the rewards"),
+
+		MINIGAME_DESC_BRTEAMS("minigameDescriptionBRTEAMS", "minigame.description.BRTEAMS",
+				"&eA fierce battle where just 1 player;&e or team can remain alive."),
+
 		MINIGAME_DESC_BOMBARDMENT("minigameDescriptionBOMBARDMENT", "minigame.description.BOMBARDMENT",
 				"&eAvoid;&e the fireballs to win the match!");
 

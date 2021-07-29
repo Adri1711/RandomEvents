@@ -234,6 +234,10 @@ public class LanguageMessages {
 	private String nameHoehoehoe;
 	private String nameSplatoon;
 	private String nameBombardment;
+	private String nameRealTeamBattleRoyale;
+	private String nameRealTeamTopKiller;
+	private String nameRealTeamSkywars;
+	private String nameRealTeamSurvivalGames;
 
 	private List<String> kitDefaultLore;
 
@@ -267,6 +271,11 @@ public class LanguageMessages {
 	private List<String> minigameDescriptionHOE;
 	private List<String> minigameDescriptionSPLATOON;
 	private List<String> minigameDescriptionBOMBARDMENT;
+
+	private List<String> minigameDescriptionTSGTEAMS;
+	private List<String> minigameDescriptionTSWTEAMS;
+	private List<String> minigameDescriptionTKLLTEAMS;
+	private List<String> minigameDescriptionBRTEAMS;
 
 	public LanguageMessages(RandomEvents plugin) {
 		this.file = new File(plugin.getDataFolder(), "messages.yml");
@@ -2095,6 +2104,38 @@ public class LanguageMessages {
 		return nameBombardment.replaceAll("&", "§");
 	}
 
+	public String getNameRealTeamBattleRoyale() {
+		return nameRealTeamBattleRoyale.replaceAll("&", "§");
+	}
+
+	public String getNameRealTeamTopKiller() {
+		return nameRealTeamTopKiller.replaceAll("&", "§");
+	}
+
+	public String getNameRealTeamSkywars() {
+		return nameRealTeamSkywars.replaceAll("&", "§");
+	}
+
+	public String getNameRealTeamSurvivalGames() {
+		return nameRealTeamSurvivalGames.replaceAll("&", "§");
+	}
+
+	public List<String> getMinigameDescriptionTSGTEAMS() {
+		return minigameDescriptionTSGTEAMS;
+	}
+
+	public List<String> getMinigameDescriptionTSWTEAMS() {
+		return minigameDescriptionTSWTEAMS;
+	}
+
+	public List<String> getMinigameDescriptionTKLLTEAMS() {
+		return minigameDescriptionTKLLTEAMS;
+	}
+
+	public List<String> getMinigameDescriptionBRTEAMS() {
+		return minigameDescriptionBRTEAMS;
+	}
+
 	public void setNameBattleRoyale(String nameBattleRoyale) {
 		this.nameBattleRoyale = nameBattleRoyale;
 	}
@@ -2214,7 +2255,37 @@ public class LanguageMessages {
 	public void setNameBombardment(String nameBombardment) {
 		this.nameBombardment = nameBombardment;
 	}
-	
 
-	
+	public void setNameRealTeamBattleRoyale(String nameRealTeamBattleRoyale) {
+		this.nameRealTeamBattleRoyale = nameRealTeamBattleRoyale;
+	}
+
+	public void setNameRealTeamTopKiller(String nameRealTeamTopKiller) {
+		this.nameRealTeamTopKiller = nameRealTeamTopKiller;
+	}
+
+	public void setNameRealTeamSkywars(String nameRealTeamSkywars) {
+		this.nameRealTeamSkywars = nameRealTeamSkywars;
+	}
+
+	public void setNameRealTeamSurvivalGames(String nameRealTeamSurvivalGames) {
+		this.nameRealTeamSurvivalGames = nameRealTeamSurvivalGames;
+	}
+
+	public void setMinigameDescriptionTSGTEAMS(List<String> minigameDescriptionTSGTEAMS) {
+		this.minigameDescriptionTSGTEAMS = minigameDescriptionTSGTEAMS;
+	}
+
+	public void setMinigameDescriptionTSWTEAMS(List<String> minigameDescriptionTSWTEAMS) {
+		this.minigameDescriptionTSWTEAMS = minigameDescriptionTSWTEAMS;
+	}
+
+	public void setMinigameDescriptionTKLLTEAMS(List<String> minigameDescriptionTKLLTEAMS) {
+		this.minigameDescriptionTKLLTEAMS = minigameDescriptionTKLLTEAMS;
+	}
+
+	public void setMinigameDescriptionBRTEAMS(List<String> minigameDescriptionBRTEAMS) {
+		this.minigameDescriptionBRTEAMS = minigameDescriptionBRTEAMS;
+	}
+
 }
