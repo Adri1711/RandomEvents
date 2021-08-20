@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import com.adri1711.randomevents.RandomEvents;
+import com.adri1711.randomevents.api.events.ReventSpawnEvent;
 import com.adri1711.randomevents.commands.ComandosEnum;
 import com.adri1711.randomevents.match.enums.MinigameType;
 import com.adri1711.randomevents.match.utils.RangePlayers;
@@ -203,6 +204,11 @@ public class TournamentActive {
 									partida = new MatchActive(entrada.getValue(), plugin, forzada, true, getInstance(),
 											getPlayers(), getPlayersObj(), getPlayersSpectators());
 									plugin.setMatchActive(partida);
+									try {
+										Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(plugin.getMatchActive(),false));
+									} catch (Exception e) {
+										System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+									}
 								}
 							}
 
@@ -335,6 +341,11 @@ public class TournamentActive {
 						getPartida().getPlayerHandler().setPlayersSpectators(playersSpectators);
 
 						plugin.setMatchActive(getPartida());
+						try {
+							Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(plugin.getMatchActive(),false));
+						} catch (Exception e) {
+							System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+						}
 
 						getPartida().matchBegin();
 						siguiente = Boolean.FALSE;

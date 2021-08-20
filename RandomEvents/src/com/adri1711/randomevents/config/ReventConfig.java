@@ -281,6 +281,7 @@ public class ReventConfig {
 	private boolean randomDisguisePlayers;
 
 	private Boolean isLibsDisguises;
+	private Boolean isProtocolLib;
 
 	private String skinDisguisePlayers;
 
@@ -1686,6 +1687,15 @@ public class ReventConfig {
 
 	public void setIsLibsDisguises(Boolean isLibsDisguises) {
 		this.isLibsDisguises = isLibsDisguises;
+	}
+	
+
+	public Boolean getIsProtocolLib() {
+		return isProtocolLib;
+	}
+
+	public void setIsProtocolLib(Boolean isProtocolLib) {
+		this.isProtocolLib = isProtocolLib;
 	}
 
 	public String getSkinDisguisePlayers() {

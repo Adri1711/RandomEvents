@@ -12,11 +12,11 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import com.adri1711.randomevents.RandomEvents;
+import com.adri1711.randomevents.api.events.ReventSpawnEvent;
 import com.adri1711.randomevents.match.Kit;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
 import com.adri1711.randomevents.match.TournamentActive;
-import com.adri1711.randomevents.match.WaterDropStep;
 import com.adri1711.randomevents.match.enums.MinigameType;
 import com.adri1711.randomevents.match.schedule.DayWeek;
 import com.adri1711.randomevents.match.schedule.Schedule;
@@ -399,6 +399,11 @@ public class ComandosExecutor {
 			plugin.setForzado(Boolean.TRUE);
 			plugin.setMatchActive(
 					UtilsRandomEvents.escogeMatchActiveAleatoria(plugin, plugin.getMatchesAvailable(), true));
+			try {
+				Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(plugin.getMatchActive(),true));
+			} catch (Exception e) {
+				System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+			}
 			if (player != null)
 				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getMatchBeginSoon());
 		} else {
@@ -429,6 +434,11 @@ public class ComandosExecutor {
 				if (m.getEnabled() == null || m.getEnabled()) {
 					plugin.setForzado(Boolean.TRUE);
 					plugin.setMatchActive(new MatchActive(m, plugin, true));
+					try {
+						Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(plugin.getMatchActive(),true));
+					} catch (Exception e) {
+						System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+					}
 					if (player != null)
 						player.sendMessage(
 								plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getMatchBeginSoon());

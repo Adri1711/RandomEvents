@@ -1099,6 +1099,10 @@ public class MatchActive {
 					}
 				}
 			}
+			if (getPlayerHandler().getPlayerContador() != null) {
+				UtilsRandomEvents.removeGlow(plugin, getPlayerHandler().getPlayerContador(),
+						getPlayerHandler().getPlayersTotalObj());
+			}
 			if (cancelled) {
 				List<Player> playersOnline = new ArrayList<Player>();
 				playersOnline.addAll(Bukkit.getOnlinePlayers());
@@ -1163,15 +1167,17 @@ public class MatchActive {
 		case TSG_REAL:
 		case TSW_REAL:
 		case GEM_CRAWLER:
-			Location center = getMapHandler().getCuboid().getCenter();
-			if (center != null) {
+			if (getMapHandler() != null && getMapHandler().getCuboid() != null) {
+				Location center = getMapHandler().getCuboid().getCenter();
+				if (center != null) {
 
-				Collection<Entity> entities = center.getWorld().getNearbyEntities(center,
-						center.distance(match.getLocation1()), 5, center.distance(match.getLocation1()));
-				for (Entity e : entities) {
-					if (e != null) {
-						if (!(e instanceof Player)) {
-							e.remove();
+					Collection<Entity> entities = center.getWorld().getNearbyEntities(center,
+							center.distance(match.getLocation1()), 5, center.distance(match.getLocation1()));
+					for (Entity e : entities) {
+						if (e != null) {
+							if (!(e instanceof Player)) {
+								e.remove();
+							}
 						}
 					}
 				}
@@ -2400,9 +2406,16 @@ public class MatchActive {
 	}
 
 	public void bombRandom() {
+		if (getPlayerHandler().getPlayerContador() != null) {
+			UtilsRandomEvents.removeGlow(plugin, getPlayerHandler().getPlayerContador(),
+					getPlayerHandler().getPlayersTotalObj());
+		}
 		getPlayerHandler().setPlayerContador(
 				getPlayerHandler().getPlayersObj().get(getRandom().nextInt(getPlayerHandler().getPlayersObj().size())));
-
+		if (getPlayerHandler().getPlayerContador() != null) {
+			UtilsRandomEvents.addGlow(plugin, getPlayerHandler().getPlayerContador(),
+					getPlayerHandler().getPlayersTotalObj());
+		}
 		ponInventarioMatch(getPlayerHandler().getPlayerContador());
 		removePotionsEffects(getPlayerHandler().getPlayerContador());
 		if (plugin.getReventConfig().getTntTagSpeedHolder() > 0) {

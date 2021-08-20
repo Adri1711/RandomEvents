@@ -31,6 +31,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.logging.log4j.core.Core;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -51,7 +52,6 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import com.adri1711.randomevents.RandomEvents;
@@ -75,6 +75,9 @@ import com.adri1711.util.enums.ParticleDisplay;
 import com.adri1711.util.enums.XMaterial;
 import com.adri1711.util.enums.XParticle;
 import com.adri1711.util.enums.XSound;
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.google.common.io.Files;
 
 public class UtilsRandomEvents {
@@ -1469,13 +1472,11 @@ public class UtilsRandomEvents {
 				data = Byte.valueOf("" + data % 4);
 			}
 
-
 			if (matDat.getItemType().toString().contains("LEGACY_")) {
 				mat = block.getState().getData().getItemType();
 			} else {
 				mat = block.getType();
 			}
-			
 
 			if (matDat.getItemType() == mat && matDat.getData() == data) {
 				res = true;
@@ -2958,15 +2959,15 @@ public class UtilsRandomEvents {
 
 	}
 
-	public static List<Block> getNearbyBlocks(Location location, int radius, List<MaterialData> datas, Boolean wool,
-			RandomEvents plugin) {
+	public static List<Block> getNearbyBlocks(Match match, Location location, int radius, List<MaterialData> datas,
+			Boolean wool, RandomEvents plugin) {
 		List<Block> blocks = new ArrayList<Block>();
 		for (int x = location.getBlockX() - radius; x <= location.getBlockX() + radius; x++) {
 			for (int y = location.getBlockY() - radius; y <= location.getBlockY() + radius; y++) {
 				for (int z = location.getBlockZ() - radius; z <= location.getBlockZ() + radius; z++) {
 					Location loc = new Location(location.getWorld(), x, y, z);
 					if (datas == null || (loc.getBlock() != null && loc.getBlock().getType() != null
-							&& (datas.contains(loc.getBlock().getState().getData())
+							&& (UtilsRandomEvents.contieneMaterialData(loc.getBlock(), match)
 									|| (wool && loc.getBlock().getType().toString().toUpperCase().contains("WOOL"))))) {
 
 						blocks.add(loc.getBlock());
@@ -3050,6 +3051,26 @@ public class UtilsRandomEvents {
 
 		}
 
+	}
+
+	public static void addGlow(RandomEvents plugin, Player player, List<Player> receivers) {
+		if (plugin!=null && plugin.getReventConfig()!=null && plugin.getReventConfig().getIsLibsDisguises()!=null && plugin.getReventConfig().getIsLibsDisguises()) {
+			try {
+				UtilsDisguises.addGlow(player, plugin);
+			} catch (Throwable e) {
+				System.out.println(e);
+			}
+		}
+	}
+
+	public static void removeGlow(RandomEvents plugin, Player player, List<Player> receivers) {
+		if (plugin!=null && plugin.getReventConfig()!=null && plugin.getReventConfig().getIsLibsDisguises()!=null && plugin.getReventConfig().getIsLibsDisguises()) {
+			try {
+				UtilsDisguises.removeGlow(player, plugin);
+			} catch (Throwable e) {
+				System.out.println(e);
+			}
+		}
 	}
 
 }

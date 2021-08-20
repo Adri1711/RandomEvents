@@ -16,13 +16,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
 import com.adri1711.api.API1711;
+import com.adri1711.randomevents.api.events.ReventSpawnEvent;
 import com.adri1711.randomevents.bbdd.HikariCP;
 import com.adri1711.randomevents.commands.Comandos;
 import com.adri1711.randomevents.commands.ComandosExecutor;
@@ -45,7 +45,6 @@ import com.adri1711.randomevents.match.Tournament;
 import com.adri1711.randomevents.match.TournamentActive;
 import com.adri1711.randomevents.match.WaterDropStep;
 import com.adri1711.randomevents.match.schedule.Schedule;
-import com.adri1711.randomevents.match.utils.BannedPlayers;
 import com.adri1711.randomevents.util.NameTagHook;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.randomevents.util.UtilsSQL;
@@ -146,6 +145,15 @@ public class RandomEvents extends JavaPlugin {
 
 		}
 
+		if (getServer().getPluginManager().getPlugin("ProtocolLib") != null) {
+			getReventConfig().setIsProtocolLib(Boolean.TRUE);
+			System.out.println("[RandomEvents] ProtocolLib hooked succesfully!");
+
+		} else {
+			getReventConfig().setIsProtocolLib(Boolean.FALSE);
+
+		}
+
 		if (getServer().getPluginManager().getPlugin("NametagEdit") != null) {
 			nametagHook = new NameTagHook(this);
 			System.out.println("[RandomEvents] NameTagEdit hooked succesfully!");
@@ -232,6 +240,11 @@ public class RandomEvents extends JavaPlugin {
 								} else {
 									matchActive = UtilsRandomEvents.escogeMatchActiveAleatoria(getPlugin(),
 											matchesAvailable, false);
+									try {
+										Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(matchActive,false));
+									} catch (Exception e) {
+										System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+									}
 								}
 							} else {
 								if (getSchedules() != null && !getSchedules().isEmpty()) {
@@ -246,13 +259,28 @@ public class RandomEvents extends JavaPlugin {
 													sched.getMatchName());
 											if (match != null) {
 												matchActive = new MatchActive(match, getPlugin(), false);
+												try {
+													Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(matchActive,false));
+												} catch (Exception e) {
+													System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+												}
 											} else {
 												matchActive = UtilsRandomEvents.escogeMatchActiveAleatoria(getPlugin(),
 														matchesAvailable, false);
+												try {
+													Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(matchActive,false));
+												} catch (Exception e) {
+													System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+												}
 											}
 										} else {
 											matchActive = UtilsRandomEvents.escogeMatchActiveAleatoria(getPlugin(),
 													matchesAvailable, false);
+											try {
+												Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(matchActive,false));
+											} catch (Exception e) {
+												System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+											}
 										}
 									} else {
 										comienzaTemporizador();

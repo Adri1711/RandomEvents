@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.adri1711.randomevents.RandomEvents;
+import com.adri1711.randomevents.api.events.ReventSpawnEvent;
 import com.adri1711.randomevents.match.Kit;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
@@ -120,6 +122,11 @@ public class GUI implements Listener {
 									if (m != null) {
 										plugin.setForzado(Boolean.TRUE);
 										plugin.setMatchActive(new MatchActive(m, plugin, true));
+										try {
+											Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(plugin.getMatchActive(),true));
+										} catch (Exception e) {
+											System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+										}
 										p.closeInventory();
 
 									}
@@ -140,6 +147,11 @@ public class GUI implements Listener {
 											if (m != null) {
 												plugin.setForzado(Boolean.TRUE);
 												plugin.setMatchActive(new MatchActive(m, plugin, true));
+												try {
+													Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(plugin.getMatchActive(),true));
+												} catch (Exception e) {
+													System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+												}
 												p.closeInventory();
 												Calendar c = Calendar.getInstance();
 												c.setTime(new Date());
@@ -194,6 +206,11 @@ public class GUI implements Listener {
 															UtilsSQL.removeCredits(p, m.getName(), plugin);
 															plugin.setForzado(Boolean.TRUE);
 															plugin.setMatchActive(new MatchActive(m, plugin, true));
+															try {
+																Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(plugin.getMatchActive(),true));
+															} catch (Exception e) {
+																System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+															}
 															p.closeInventory();
 														}
 													}
@@ -213,6 +230,11 @@ public class GUI implements Listener {
 										if (m != null) {
 											plugin.setForzado(Boolean.TRUE);
 											plugin.setMatchActive(new MatchActive(m, plugin, true));
+											try {
+												Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(plugin.getMatchActive(),true));
+											} catch (Exception e) {
+												System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+											}
 											p.closeInventory();
 											Calendar c = Calendar.getInstance();
 											c.setTime(new Date());
@@ -258,6 +280,11 @@ public class GUI implements Listener {
 										UtilsSQL.removeCredits(p, m.getName(), plugin);
 										plugin.setForzado(Boolean.TRUE);
 										plugin.setMatchActive(new MatchActive(m, plugin, true));
+										try {
+											Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(plugin.getMatchActive(),true));
+										} catch (Exception e) {
+											System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+										}
 										p.closeInventory();
 									}
 								}

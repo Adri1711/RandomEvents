@@ -510,7 +510,7 @@ public class Use implements Listener {
 
 				if (blockFace != null) {
 
-					List<Block> blocks = UtilsRandomEvents.getNearbyBlocks(nextBlock.getLocation(),
+					List<Block> blocks = UtilsRandomEvents.getNearbyBlocks(plugin.getMatchActive().getMatch(),nextBlock.getLocation(),
 							plugin.getReventConfig().getSplatoonRadius(), plugin.getMatchActive().getMatch().getDatas(),
 							true, plugin);
 					List<Location> locations = new ArrayList<Location>();
