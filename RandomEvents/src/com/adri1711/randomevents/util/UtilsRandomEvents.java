@@ -82,21 +82,21 @@ import com.google.common.io.Files;
 
 public class UtilsRandomEvents {
 
-	public static String preparaStringTiempo(Integer tiempo) {
+	public static String preparaStringTiempo(Integer tiempo, RandomEvents plugin) {
 
 		Integer horas = Double.valueOf(tiempo / 3600.0).intValue();
 		Integer minutos = Double.valueOf((tiempo - 3600 * horas) / 60.0).intValue();
 		Integer segundos = Double.valueOf((tiempo - 3600 * horas) - 60 * minutos).intValue();
 		String resultado = "";
 		if (horas != 0) {
-			resultado += horas + " h ";
+			resultado += plugin.getLanguage().getHoursFormat().replace("%hours%", "" + horas);
 		}
 		if (minutos != 0) {
-			resultado += minutos + " min ";
+			resultado += plugin.getLanguage().getMinutesFormat().replace("%minutes%", "" + minutos);
 		}
 
 		if (segundos != 0) {
-			resultado += segundos + " seconds ";
+			resultado += plugin.getLanguage().getSecondsFormat().replace("%seconds%", "" + segundos);
 		}
 
 		return resultado;
@@ -682,6 +682,7 @@ public class UtilsRandomEvents {
 		Boolean res = true;
 		if (!comprueba || !plugin.getReventConfig().getUseLastLocation()) {
 			if (loc != null) {
+				p.setVelocity(new Vector(0, 0, 0));
 				try {
 					p.teleport(loc);
 
@@ -864,32 +865,44 @@ public class UtilsRandomEvents {
 	}
 
 	public static void mandaMensaje(RandomEvents plugin, List<Player> players, String message, Boolean tag) {
+		mandaMensaje(plugin, players, message, tag, true, false);
+	}
+
+	public static void mandaMensaje(RandomEvents plugin, List<Player> players, String message, Boolean tag,
+			Boolean allowTitle, Boolean forceTitle) {
 		message = message.replaceAll("<color>", "§");
 		if (tag) {
 			message = plugin.getLanguage().getTagPlugin() + message;
 		}
-		for (Player p : players) {
-			if (plugin.getReventConfig().isOptionalTitles()) {
-				plugin.getApi().usaTitle(p, "", message);
-			} else {
-				p.sendMessage(message);
+		if (!message.isEmpty()) {
+			for (Player p : players) {
+				if (plugin.getReventConfig().isOptionalTitles() && allowTitle) {
+					plugin.getApi().usaTitle(p, "", message);
+				} else {
+					p.sendMessage(message);
+					if (forceTitle) {
+						plugin.getApi().usaTitle(p, "", message);
+					}
+				}
 			}
 		}
 	}
 
-	public static void mandaMensaje(RandomEvents plugin, List<Player> players, List<String> messages, Boolean tag) {
-		String message = "";
-		for (String msg : messages) {
-			if (tag) {
-				message += plugin.getLanguage().getTagPlugin() + msg.replaceAll("<color>", "§") + "\n";
-			} else {
-				message += msg.replaceAll("<color>", "§") + "\n";
-			}
-		}
-		for (Player p : players) {
-			p.sendMessage(message);
-		}
-	}
+	// public static void mandaMensaje(RandomEvents plugin, List<Player>
+	// players, List<String> messages, Boolean tag) {
+	// String message = "";
+	// for (String msg : messages) {
+	// if (tag) {
+	// message += plugin.getLanguage().getTagPlugin() +
+	// msg.replaceAll("<color>", "§") + "\n";
+	// } else {
+	// message += msg.replaceAll("<color>", "§") + "\n";
+	// }
+	// }
+	// for (Player p : players) {
+	// p.sendMessage(message);
+	// }
+	// }
 
 	public static void tiraCohete(Location l) {
 		Firework fw = (Firework) l.getWorld().spawnEntity(l, EntityType.FIREWORK);
@@ -1547,7 +1560,7 @@ public class UtilsRandomEvents {
 
 	}
 
-	public static String calculateTime(long seconds) {
+	public static String calculateTime(long seconds, RandomEvents plugin) {
 		int day = (int) TimeUnit.SECONDS.toDays(seconds);
 		long hours = TimeUnit.SECONDS.toHours(seconds) - TimeUnit.DAYS.toHours(day);
 		long minute = TimeUnit.SECONDS.toMinutes(seconds) - TimeUnit.DAYS.toMinutes(day)
@@ -1556,17 +1569,19 @@ public class UtilsRandomEvents {
 				- TimeUnit.HOURS.toSeconds(hours) - TimeUnit.MINUTES.toSeconds(minute);
 
 		String s = "";
+
 		if (day > 0) {
-			s += day + "d ";
+			s += plugin.getLanguage().getDaysFormat().replace("%days%", "" + day);
 		}
-		if (hours > 0) {
-			s += hours + "h ";
+		if (hours != 0) {
+			s += plugin.getLanguage().getHoursFormat().replace("%hours%", "" + hours);
 		}
-		if (minute > 0) {
-			s += minute + "m ";
+		if (minute != 0) {
+			s += plugin.getLanguage().getMinutesFormat().replace("%minutes%", "" + minute);
 		}
-		if (second > 0) {
-			s += second + "s";
+
+		if (second != 0) {
+			s += plugin.getLanguage().getSecondsFormat().replace("%seconds%", "" + second);
 		}
 		return s;
 	}
@@ -2071,7 +2086,9 @@ public class UtilsRandomEvents {
 	}
 
 	public static void setWorldBorder(RandomEvents plugin, Location center, Double size, Player p) {
-		plugin.getApi().createWorldBorder(p, size, center);
+		if (plugin.getReventConfig().isShowBorders()) {
+			plugin.getApi().createWorldBorder(p, size, center);
+		}
 
 	}
 
@@ -2250,6 +2267,8 @@ public class UtilsRandomEvents {
 		case HOEHOEHOE:
 		case SPLATOON:
 		case TOP_KILLER_TEAMS:
+		case PAINTBALL_TOP_KILL:
+
 			lines = prepareLinesTeam(lines, matchActive, plugin, player);
 			lines.add("");
 
@@ -3054,7 +3073,8 @@ public class UtilsRandomEvents {
 	}
 
 	public static void addGlow(RandomEvents plugin, Player player, List<Player> receivers) {
-		if (plugin!=null && plugin.getReventConfig()!=null && plugin.getReventConfig().getIsLibsDisguises()!=null && plugin.getReventConfig().getIsLibsDisguises()) {
+		if (plugin != null && plugin.getReventConfig() != null && plugin.getReventConfig().getIsLibsDisguises() != null
+				&& plugin.getReventConfig().getIsLibsDisguises()) {
 			try {
 				UtilsDisguises.addGlow(player, plugin);
 			} catch (Throwable e) {
@@ -3064,7 +3084,8 @@ public class UtilsRandomEvents {
 	}
 
 	public static void removeGlow(RandomEvents plugin, Player player, List<Player> receivers) {
-		if (plugin!=null && plugin.getReventConfig()!=null && plugin.getReventConfig().getIsLibsDisguises()!=null && plugin.getReventConfig().getIsLibsDisguises()) {
+		if (plugin != null && plugin.getReventConfig() != null && plugin.getReventConfig().getIsLibsDisguises() != null
+				&& plugin.getReventConfig().getIsLibsDisguises()) {
 			try {
 				UtilsDisguises.removeGlow(player, plugin);
 			} catch (Throwable e) {

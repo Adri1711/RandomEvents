@@ -22,7 +22,7 @@ public enum Creacion {
 
 	ARENA_SPAWNS(5,
 			"§6§lGo to the arena you created and write 'Done' to set each spawn location for the players (%players%/%maxPlayers%) or 'Next' to end the spawns",
-			"ALLMINIGAMES", "PBALL,HOE,SPLATOON,TKLLTEAMS,BRTEAMS,TSGTEAMS,TSWTEAMS"),
+			"ALLMINIGAMES", "PBALL,HOE,SPLATOON,TKLLTEAMS,BRTEAMS,TSGTEAMS,TSWTEAMS,PBALLTK"),
 
 	ANOTHER_ARENA_SPAWNS(6, "§6§lPut another player spawn, say 'Done' (%players%/%maxPlayers%) ", ""),
 
@@ -44,7 +44,7 @@ public enum Creacion {
 			"§6§lGo to the arena you created and write 'Done' to set the spawn location of the mob, 'New' to choose another mob or 'End' to end the creation of the RandomEvent",
 			""),
 
-	PLAY_TIME(14, "§6§lChoose the play time in seconds", "TKLL,QUAKE,OITC,TKLLT2,KOTH,FISHSLAP,HOE,SPLATOON,TKLLTEAMS"),
+	PLAY_TIME(14, "§6§lChoose the play time in seconds", "TKLL,QUAKE,OITC,TKLLT2,KOTH,FISHSLAP,HOE,SPLATOON,TKLLTEAMS,PBALLTK"),
 
 	ARROW_LOCATION1(15, "§6§lSet the first location of the cuboid of spawn of arrows, say 'Done'", "EARR"),
 
@@ -110,11 +110,11 @@ public enum Creacion {
 
 	WATER_DROP_SCENES(40, "§6§lChoose a scene to add to the event", "WDROP"),
 
-	NUMBER_OF_TEAMS(41, "§6§lChoose a number of teams between 2 and 8", "PBALL,HOE,SPLATOON,TKLLTEAMS,BRTEAMS,TSGTEAMS,TSWTEAMS"),
+	NUMBER_OF_TEAMS(41, "§6§lChoose a number of teams between 2 and 8", "PBALL,HOE,SPLATOON,TKLLTEAMS,BRTEAMS,TSGTEAMS,TSWTEAMS,PBALLTK"),
 
 	TEAM_SPAWNS(42,
 			"§6§lGo to the arena you created and write 'Done' to set each spawn location for the team (%players%/%maxTeams%)",
-			"PBALL,HOE,SPLATOON,TKLLTEAMS,BRTEAMS,TSGTEAMS,TSWTEAMS"),
+			"PBALL,HOE,SPLATOON,TKLLTEAMS,BRTEAMS,TSGTEAMS,TSWTEAMS,PBALLTK"),
 
 	ANOTHER_TEAM_SPAWNS(43, "§6§lPut another team spawn, say 'Done' (%players%/%maxTeams%) ", ""),
 

@@ -316,6 +316,10 @@ public class ReventConfig {
 	private int statsTSGTEAMS;
 
 	private int statsTSWTEAMS;
+	
+	private int statsPBALLTK;
+	
+	private int distanceClearEntities;
 
 	public ReventConfig(RandomEvents plugin) {
 		super();
@@ -539,6 +543,8 @@ public class ReventConfig {
 		this.statsTKLLTEAMS = plugin.getConfig().getInt("statsmenu.TKLLTEAMS");
 		this.statsTSGTEAMS = plugin.getConfig().getInt("statsmenu.TSGTEAMS");
 		this.statsTSWTEAMS = plugin.getConfig().getInt("statsmenu.TSWTEAMS");
+		this.statsPBALLTK = plugin.getConfig().getInt("statsmenu.PBALLTK");
+		this.distanceClearEntities = plugin.getConfig().getInt("distanceClearEntities");
 		this.statsSize = plugin.getConfig().getInt("statsmenu.size");
 
 		this.allowedCmds = (List<String>) plugin.getConfig().getStringList("allowedCmds");
@@ -1841,5 +1847,23 @@ public class ReventConfig {
 	public void setStatsTSWTEAMS(int statsTSWTEAMS) {
 		this.statsTSWTEAMS = statsTSWTEAMS;
 	}
+
+	public int getStatsPBALLTK() {
+		return statsPBALLTK;
+	}
+
+	public void setStatsPBALLTK(int statsPBALLTK) {
+		this.statsPBALLTK = statsPBALLTK;
+	}
+
+	public int getDistanceClearEntities() {
+		return distanceClearEntities;
+	}
+
+	public void setDistanceClearEntities(int distanceClearEntities) {
+		this.distanceClearEntities = distanceClearEntities;
+	}
+	
+	
 
 }

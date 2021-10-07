@@ -135,7 +135,8 @@ public class TournamentActive {
 							&& !m.getMinigame().equals(MinigameType.TSW_REAL)
 							&& !m.getMinigame().equals(MinigameType.TSG_REAL)
 							&& !m.getMinigame().equals(MinigameType.BATTLE_ROYALE_TEAMS)
-							&& !m.getMinigame().equals(MinigameType.TOP_KILLER_TEAMS)) {
+							&& !m.getMinigame().equals(MinigameType.TOP_KILLER_TEAMS)
+							&& !m.getMinigame().equals(MinigameType.PAINTBALL_TOP_KILL)) {
 						matches.add(m);
 					}
 

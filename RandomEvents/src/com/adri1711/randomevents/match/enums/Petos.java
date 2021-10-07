@@ -27,7 +27,7 @@ public enum Petos {
 
 	BLACK(6, Color.BLACK, DyeColor.BLACK, XMaterial.BLACK_WOOL, XMaterial.BLACK_TERRACOTTA, ChatColor.BLACK, "Black"),
 
-	WHITE(7, Color.WHITE, DyeColor.WHITE, XMaterial.WHITE_WOOL, XMaterial.WHITE_TERRACOTTA, ChatColor.WHITE, "White");
+	BROWN(7, Color.MAROON, DyeColor.BROWN, XMaterial.BROWN_WOOL, XMaterial.BROWN_TERRACOTTA, ChatColor.GOLD, "Brown");
 
 	private Integer team;
 

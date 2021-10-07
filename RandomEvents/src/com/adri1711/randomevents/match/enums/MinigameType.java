@@ -66,6 +66,8 @@ public enum MinigameType {
 	QUAKECRAFT("QUAKE", XMaterial.STONE_HOE.parseMaterial(), "getNameQuakeCraft"),
 
 	PAINTBALL("PBALL", XMaterial.SNOWBALL.parseMaterial(), "getNamePaintball"),
+	
+	PAINTBALL_TOP_KILL("PBALLTK", XMaterial.SNOW.parseMaterial(), "getNamePaintballTopKill"),
 
 	KOTH("KOTH", XMaterial.GOLDEN_HELMET.parseMaterial(), "getNameKingHill"),
 

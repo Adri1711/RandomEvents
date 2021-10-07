@@ -203,6 +203,13 @@ public class LanguageMessages {
 	private String kitDefaultName;
 	private String kitGuiName;
 	private String kitChosen;
+	
+	
+	private String daysFormat;
+	private String hoursFormat;
+	private String minutesFormat;
+	private String secondsFormat;
+	
 
 	private String nameBattleRoyale;
 	private String nameTeamBattleRoyale;
@@ -229,6 +236,7 @@ public class LanguageMessages {
 	private String nameWaterDrop;
 	private String nameQuakeCraft;
 	private String namePaintball;
+	private String namePaintballTopKill;
 	private String nameKingHill;
 	private String nameFishSlap;
 	private String nameHoehoehoe;
@@ -276,6 +284,8 @@ public class LanguageMessages {
 	private List<String> minigameDescriptionTSWTEAMS;
 	private List<String> minigameDescriptionTKLLTEAMS;
 	private List<String> minigameDescriptionBRTEAMS;
+	private List<String> minigameDescriptionPBALLTK;
+	
 
 	public LanguageMessages(RandomEvents plugin) {
 		this.file = new File(plugin.getDataFolder(), "messages.yml");
@@ -2084,6 +2094,14 @@ public class LanguageMessages {
 		return namePaintball.replaceAll("&", "§");
 	}
 
+	public String getNamePaintballTopKill() {
+		return namePaintballTopKill.replaceAll("&", "§");
+	}
+
+	public void setNamePaintballTopKill(String namePaintballTopKill) {
+		this.namePaintballTopKill = namePaintballTopKill;
+	}
+
 	public String getNameKingHill() {
 		return nameKingHill.replaceAll("&", "§");
 	}
@@ -2118,6 +2136,27 @@ public class LanguageMessages {
 
 	public String getNameRealTeamSurvivalGames() {
 		return nameRealTeamSurvivalGames.replaceAll("&", "§");
+	}
+	
+
+	public String getHoursFormat() {
+		return hoursFormat.replaceAll("&", "§");
+	}
+
+	public String getDaysFormat() {
+		return daysFormat.replaceAll("&", "§");
+	}
+
+	public void setDaysFormat(String daysFormat) {
+		this.daysFormat = daysFormat;
+	}
+
+	public String getMinutesFormat() {
+		return minutesFormat.replaceAll("&", "§");
+	}
+
+	public String getSecondsFormat() {
+		return secondsFormat.replaceAll("&", "§");
 	}
 
 	public List<String> getMinigameDescriptionTSGTEAMS() {
@@ -2286,6 +2325,26 @@ public class LanguageMessages {
 
 	public void setMinigameDescriptionBRTEAMS(List<String> minigameDescriptionBRTEAMS) {
 		this.minigameDescriptionBRTEAMS = minigameDescriptionBRTEAMS;
+	}
+
+	public void setHoursFormat(String hoursFormat) {
+		this.hoursFormat = hoursFormat;
+	}
+
+	public void setMinutesFormat(String minutesFormat) {
+		this.minutesFormat = minutesFormat;
+	}
+
+	public void setSecondsFormat(String secondsFormat) {
+		this.secondsFormat = secondsFormat;
+	}
+
+	public List<String> getMinigameDescriptionPBALLTK() {
+		return minigameDescriptionPBALLTK;
+	}
+
+	public void setMinigameDescriptionPBALLTK(List<String> minigameDescriptionPBALLTK) {
+		this.minigameDescriptionPBALLTK = minigameDescriptionPBALLTK;
 	}
 
 }

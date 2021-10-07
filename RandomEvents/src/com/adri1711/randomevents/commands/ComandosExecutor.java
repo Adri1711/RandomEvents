@@ -43,7 +43,7 @@ public class ComandosExecutor {
 											+ plugin.getLanguage().getYouAreBanned().replaceAll("%time%",
 													UtilsRandomEvents.calculateTime((plugin.getReventConfig()
 															.getBannedPlayers().getBannedPlayers().get(player.getName())
-															- (new Date()).getTime()) / 1000)));
+															- (new Date()).getTime()) / 1000,plugin)));
 						} else {
 							plugin.getMatchActive().uneAPlayer(player);
 						}
@@ -78,7 +78,7 @@ public class ComandosExecutor {
 											+ plugin.getLanguage().getYouAreBanned().replaceAll("%time%",
 													UtilsRandomEvents.calculateTime((plugin.getReventConfig()
 															.getBannedPlayers().getBannedPlayers().get(player.getName())
-															- (new Date()).getTime()) / 1000)));
+															- (new Date()).getTime()) / 1000,plugin)));
 						} else {
 							plugin.getMatchActive().uneAPlayer(player);
 						}
@@ -111,7 +111,7 @@ public class ComandosExecutor {
 											.replaceAll("%time%",
 													UtilsRandomEvents.calculateTime((plugin.getReventConfig()
 															.getBannedPlayers().getBannedPlayers().get(player.getName())
-															- (new Date()).getTime()) / 1000)));
+															- (new Date()).getTime()) / 1000,plugin)));
 				} else {
 					plugin.getMatchActive().uneAPlayerSpec(player);
 				}
@@ -136,7 +136,7 @@ public class ComandosExecutor {
 								+ plugin.getLanguage().getYouAreBanned().replaceAll("%time%",
 										UtilsRandomEvents.calculateTime(
 												(plugin.getReventConfig().getBannedPlayers().getBannedPlayers()
-														.get(player.getName()) - (new Date()).getTime()) / 1000)));
+														.get(player.getName()) - (new Date()).getTime()) / 1000,plugin)));
 					} else {
 						plugin.getTournamentActive().uneAPlayer(player);
 					}
@@ -179,7 +179,7 @@ public class ComandosExecutor {
 						+ plugin.getLanguage().getBanPlayer()
 								.replaceAll("%time%",
 										UtilsRandomEvents
-												.calculateTime((c.getTime().getTime() - (new Date()).getTime()) / 1000))
+												.calculateTime((c.getTime().getTime() - (new Date()).getTime()) / 1000,plugin))
 								.replaceAll("%player%", namePlayer));
 			}
 		} catch (Exception e) {
@@ -215,7 +215,7 @@ public class ComandosExecutor {
 						+ plugin.getLanguage().getBanPlayer()
 								.replaceAll("%time%",
 										UtilsRandomEvents
-												.calculateTime((c.getTime().getTime() - (new Date()).getTime()) / 1000))
+												.calculateTime((c.getTime().getTime() - (new Date()).getTime()) / 1000,plugin))
 								.replaceAll("%player%", namePlayer)
 						+ ". Reason: " + reason);
 			}
@@ -360,7 +360,7 @@ public class ComandosExecutor {
 					// + (s.getMinute() > 10 ? s.getMinute() : ("0" +
 					// s.getMinute())));
 					player.sendMessage(plugin.getLanguage().getNextEventIsRandom() + " "
-							+ UtilsRandomEvents.calculateTime((d.getTime() - new Date().getTime()) / 1000));
+							+ UtilsRandomEvents.calculateTime((d.getTime() - new Date().getTime()) / 1000,plugin));
 
 				} else {
 					// player.sendMessage(plugin.getLanguage().getNextEventName()
@@ -371,7 +371,7 @@ public class ComandosExecutor {
 					// + (s.getMinute() > 10 ? s.getMinute() : ("0" +
 					// s.getMinute())));
 					player.sendMessage(plugin.getLanguage().getNextEventName() + s.getMatchName() + " "
-							+ UtilsRandomEvents.calculateTime((d.getTime() - new Date().getTime()) / 1000));
+							+ UtilsRandomEvents.calculateTime((d.getTime() - new Date().getTime()) / 1000,plugin));
 				}
 			}
 		} else {

@@ -24,6 +24,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Horse;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -888,6 +889,7 @@ public class MatchActive {
 		case OITC:
 		case TOP_KILLER_TEAM_2:
 		case TOP_KILLER_TEAMS:
+		case PAINTBALL_TOP_KILL:
 		case HOEHOEHOE:
 		case SPLATOON:
 			ganadores.addAll(sacaGanadoresPartidaTiempo());
@@ -1050,12 +1052,11 @@ public class MatchActive {
 		if (tournamentObj == null) {
 
 			for (Player p : getPlayerHandler().getPlayersSpectators()) {
-
-				switch (match.getMinigame()) {
-				case BOAT_RUN:
-				case BATTLE_ROYALE_CABALLO:
-				case HORSE_RUN:
-					List<Entity> entities = p.getNearbyEntities(6., 6., 6.);
+				try {
+					List<Entity> entities = p.getNearbyEntities(
+							plugin.getReventConfig().getDistanceClearEntities() * 1.0,
+							plugin.getReventConfig().getDistanceClearEntities() * 1.0,
+							plugin.getReventConfig().getDistanceClearEntities() * 1.0);
 					if (entities != null) {
 						for (Entity e : entities) {
 							if (e != null && (e instanceof Horse || e instanceof Boat)) {
@@ -1063,11 +1064,9 @@ public class MatchActive {
 							}
 						}
 					}
-					break;
-				default:
-					break;
-				}
+				} catch (Exception e) {
 
+				}
 				echaDePartida(p, false, true, true, false, false);
 			}
 			for (Player player : ganadores) {
@@ -1172,7 +1171,7 @@ public class MatchActive {
 				if (center != null) {
 
 					Collection<Entity> entities = center.getWorld().getNearbyEntities(center,
-							center.distance(match.getLocation1()), 5, center.distance(match.getLocation1()));
+							center.distance(match.getLocation1()), 60, center.distance(match.getLocation1()));
 					for (Entity e : entities) {
 						if (e != null) {
 							if (!(e instanceof Player)) {
@@ -1180,7 +1179,15 @@ public class MatchActive {
 							}
 						}
 					}
+
 				}
+			}
+			for (Player p : getPlayerHandler().getPlayersObj()) {
+				Entity entity = p;
+				entity.getNearbyEntities(plugin.getReventConfig().getDistanceClearEntities(),
+						plugin.getReventConfig().getDistanceClearEntities(),
+						plugin.getReventConfig().getDistanceClearEntities()).stream()
+						.filter(entstream -> entstream instanceof Item).map(Item.class::cast).forEach(Item::remove);
 			}
 			break;
 		default:
@@ -1294,13 +1301,13 @@ public class MatchActive {
 
 		UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(), XSound.ENTITY_PLAYER_LEVELUP);
 		UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
-				plugin.getLanguage().getSecondsRemaining3(), Boolean.FALSE);
+				plugin.getLanguage().getSecondsRemaining3(), Boolean.FALSE, true, true);
 		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 			public void run() {
 				UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
 						XSound.ENTITY_PLAYER_LEVELUP);
 				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
-						plugin.getLanguage().getSecondsRemaining2(), Boolean.FALSE);
+						plugin.getLanguage().getSecondsRemaining2(), Boolean.FALSE, true, true);
 			}
 		}, 20 * 1L);
 
@@ -1309,7 +1316,7 @@ public class MatchActive {
 				UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
 						XSound.ENTITY_PLAYER_LEVELUP);
 				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
-						plugin.getLanguage().getSecondsRemaining1(), Boolean.FALSE);
+						plugin.getLanguage().getSecondsRemaining1(), Boolean.FALSE, true, true);
 			}
 		}, 20 * 2L);
 
@@ -1363,9 +1370,10 @@ public class MatchActive {
 					UtilsRandomEvents.setWorldBorder(getPlugin(), getMapHandler().getActualCuboid().getCenter(),
 							distance, p);
 				}
-				partidaSG();
+				
 
 			}
+			partidaSG();
 			break;
 		case SW:
 			for (Player p : getPlayerHandler().getPlayersSpectators()) {
@@ -1455,7 +1463,7 @@ public class MatchActive {
 						UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
 								XSound.ENTITY_PLAYER_LEVELUP);
 						UtilsRandomEvents.mandaMensaje(getPlugin(), getPlayerHandler().getPlayersSpectators(),
-								plugin.getLanguage().getSecondsRemaining3(), true);
+								plugin.getLanguage().getSecondsRemaining3(), Boolean.FALSE, true, true);
 					}
 				}, 20 * plugin.getReventConfig().getWarmupTimeTNTRUN() - 60);
 			}
@@ -1466,7 +1474,7 @@ public class MatchActive {
 						UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
 								XSound.ENTITY_PLAYER_LEVELUP);
 						UtilsRandomEvents.mandaMensaje(getPlugin(), getPlayerHandler().getPlayersSpectators(),
-								plugin.getLanguage().getSecondsRemaining2(), true);
+								plugin.getLanguage().getSecondsRemaining2(), Boolean.FALSE, true, true);
 					}
 				}, 20 * plugin.getReventConfig().getWarmupTimeTNTRUN() - 40);
 			}
@@ -1477,7 +1485,7 @@ public class MatchActive {
 						UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
 								XSound.ENTITY_PLAYER_LEVELUP);
 						UtilsRandomEvents.mandaMensaje(getPlugin(), getPlayerHandler().getPlayersSpectators(),
-								plugin.getLanguage().getSecondsRemaining1(), true);
+								plugin.getLanguage().getSecondsRemaining1(), Boolean.FALSE, true, true);
 					}
 				}, 20 * plugin.getReventConfig().getWarmupTimeTNTRUN() - 20);
 			}
@@ -1647,6 +1655,7 @@ public class MatchActive {
 			break;
 
 		case TOP_KILLER_TEAMS:
+		case PAINTBALL_TOP_KILL:
 			for (Player p : getPlayerHandler().getPlayersSpectators()) {
 				if (!getPlayerHandler().getPlayersObj().contains(p)) {
 					mandaSpectatorPlayer(p);
@@ -1700,8 +1709,8 @@ public class MatchActive {
 							distance, p);
 				}
 
-				partidaSG();
 			}
+			partidaSG();
 			break;
 		case TSG_REAL:
 			for (Player p : getPlayerHandler().getPlayersSpectators()) {
@@ -1730,8 +1739,8 @@ public class MatchActive {
 							distance, p);
 				}
 
-				partidaSG();
 			}
+			partidaSG();
 			break;
 		case TSW_REAL:
 			for (Player p : getPlayerHandler().getPlayersSpectators()) {
@@ -2300,7 +2309,7 @@ public class MatchActive {
 	}
 
 	private void shrinkMap(Cuboid cubo) {
-		Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
+		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 
 			@Override
 			public void run() {
@@ -2311,8 +2320,10 @@ public class MatchActive {
 									/ 1.,
 							(getMapHandler().getActualCuboid().getMaxZ() - getMapHandler().getActualCuboid().getMinZ())
 									/ 1.);
+					
 					UtilsRandomEvents.setWorldBorder(getPlugin(), getMapHandler().getActualCuboid().getCenter(),
 							distance, p);
+					
 				}
 				if (cubo.getMaxX() < getMapHandler().getActualCuboid().getMaxX()) {
 
@@ -2742,17 +2753,17 @@ public class MatchActive {
 				UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
 						XSound.ENTITY_PLAYER_LEVELUP);
 				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
-						plugin.getLanguage().getSecondsRemaining1(), Boolean.TRUE);
+						plugin.getLanguage().getSecondsRemaining1(), Boolean.FALSE, true, true);
 			} else if (dif == 2) {
 				UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
 						XSound.ENTITY_PLAYER_LEVELUP);
 				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
-						plugin.getLanguage().getSecondsRemaining2(), Boolean.TRUE);
+						plugin.getLanguage().getSecondsRemaining2(), Boolean.FALSE, true, true);
 			} else if (dif == 3) {
 				UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
 						XSound.ENTITY_PLAYER_LEVELUP);
 				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
-						plugin.getLanguage().getSecondsRemaining3(), Boolean.TRUE);
+						plugin.getLanguage().getSecondsRemaining3(), Boolean.FALSE, true, true);
 			}
 		}
 
@@ -2830,6 +2841,7 @@ public class MatchActive {
 		case TSW_REAL:
 		case TSG_REAL:
 		case TOP_KILLER_TEAMS:
+		case PAINTBALL_TOP_KILL:
 		case BATTLE_ROYALE_TEAMS:
 			loc = match.getSpawns().get(getEquipo(p));
 			getMapHandler().getCheckpoints().put(p.getName(), loc);
@@ -3487,6 +3499,7 @@ public class MatchActive {
 			case QUAKECRAFT:
 			case TOP_KILLER_TEAM_2:
 			case TOP_KILLER_TEAMS:
+			case PAINTBALL_TOP_KILL:
 			case HOEHOEHOE:
 			case SPLATOON:
 			case TSG:
@@ -3496,7 +3509,7 @@ public class MatchActive {
 			case WDROP:
 			case PAINTBALL:
 				getPlayerHandler().getOldScoreboards().put(p.getName(), p.getScoreboard());
-				FastBoard fBoard = new FastBoard(p);
+				FastBoard fBoard = plugin.getApi().createFastBoard(p);
 
 				fBoard.updateTitle(plugin.getLanguage().getScoreboardTitle());
 

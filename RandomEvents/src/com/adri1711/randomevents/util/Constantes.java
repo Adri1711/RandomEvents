@@ -279,6 +279,18 @@ public class Constantes {
 
 		CLEAR_INVENTORY("clearInventory", "comun.clearInventory",
 				"&c&lClear the inventory before joining the RandomEvent"),
+		
+		DAYS_FORMAT("daysFormat", "comun.daysFormat",
+				"&6&l%days% h"),
+		
+		HOURS_FORMAT("hoursFormat", "comun.hoursFormat",
+				"&6&l%hours% h"),
+		
+		MINUTES_FORMAT("minutesFormat", "comun.minutesFormat",
+				"&6&l%minutes% m"),
+		
+		SECONDS_FORMAT("secondsFormat", "comun.secondsFormat",
+				"&6&l%seconds% s"),
 
 		SHOW_ALONE("showAlone", "match.showAlone", "&6&lYou are playing alone, good luck!"),
 
@@ -457,6 +469,8 @@ public class Constantes {
 		NAME_QUAKECRAFT("nameQuakeCraft", "minigameName.QuakeCraft", "Quake Craft"),
 
 		NAME_PAINTBALL("namePaintball", "minigameName.Paintball", "Paintball"),
+		
+		NAME_PAINTBALLTOPKILLER("namePaintballTopKill", "minigameName.PaintballTopKill", "Paintball Top Kill"),
 
 		NAME_KINGHILL("nameKingHill", "minigameName.KingHill", "King of the Hill"),
 
@@ -573,7 +587,10 @@ public class Constantes {
 
 		MINIGAME_DESC_TKLLTEAMS("minigameDescriptionTKLLTEAMS", "minigame.description.TKLLTEAMS",
 				"&eOnly the most powerful assasin can win this event, kill players to get points,;&e the team with more points will get the rewards"),
-
+		
+		MINIGAME_DESC_PBALLTK("minigameDescriptionPBALLTK", "minigame.description.PBALLTK",
+				"&eThrow snowballs to your enemies;&eOnly the most powerful assasin can win this event, kill players to get points,;&e the team with more points will get the rewards"),
+		
 		MINIGAME_DESC_BRTEAMS("minigameDescriptionBRTEAMS", "minigame.description.BRTEAMS",
 				"&eA fierce battle where just 1 player;&e or team can remain alive."),
 

@@ -94,7 +94,7 @@ public class ReventPlaceholder extends PlaceholderExpansion {
 					d = entrada.getValue();
 				}
 				if (s != null) {
-					res = "" + (UtilsRandomEvents.calculateTime((d.getTime() - new Date().getTime()) / 1000));
+					res = "" + (UtilsRandomEvents.calculateTime((d.getTime() - new Date().getTime()) / 1000,plugin));
 
 				}
 			} else {
@@ -115,7 +115,7 @@ public class ReventPlaceholder extends PlaceholderExpansion {
 				}
 				if (s != null) {
 					res = (s.getMatchName() != null ? (s.getMatchName() + ":") : "Random:")
-							+ (UtilsRandomEvents.calculateTime((d.getTime() - new Date().getTime()) / 1000));
+							+ (UtilsRandomEvents.calculateTime((d.getTime() - new Date().getTime()) / 1000,plugin));
 
 				}
 			} else {

@@ -18,6 +18,9 @@ cmdAlias: 'revent'
 ##Deactivate all sounds of the plugin
 deactivateSounds: false
 
+##Distance to clear entities when a match end, this will clear dropped items when the match finish
+distanceClearEntities: 20
+
 ##Seconds to check if the probability match for a random event
 secondsTimer: 60
 
@@ -428,11 +431,13 @@ statsmenu:
   FISHSLAP: 43
   HOE: 37
   SPLATOON: 44
-  BOMBARDMENT: 49
-  BRTEAMS: 45
-  TKLLTEAMS: 46
-  TSGTEAMS: 47
-  TSWTEAMS: 48
+  BOMBARDMENT: 46
+  BRTEAMS: 47
+  TKLLTEAMS: 48
+  PBALLTK: 50
+  TSGTEAMS: 51
+  TSWTEAMS: 52
+
 ##################################################################
 ##					     MYSQL CONFIG   	    				##
 ##################################################################

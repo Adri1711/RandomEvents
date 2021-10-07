@@ -46,6 +46,7 @@ public class GUI implements Listener {
 						if ( event.getSlotType() != null && (event.getSlotType() == InventoryType.SlotType.ARMOR)) {
 							switch(plugin.getMatchActive().getMatch().getMinigame()){
 							case PAINTBALL:
+							case PAINTBALL_TOP_KILL:
 							case SPLATOON:
 							case BATTLE_ROYALE_TEAMS:
 							case TOP_KILLER_TEAMS:
