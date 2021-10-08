@@ -335,6 +335,39 @@ public class ReventConfig {
 	}
 
 	public void inicializaVariables() {
+		
+		if (plugin.getServer().getPluginManager().getPlugin("LibsDisguises") != null) {
+			setIsLibsDisguises(Boolean.TRUE);
+			System.out.println("[RandomEvents] LibsDisguises hooked succesfully!");
+
+		} else {
+			setIsLibsDisguises(Boolean.FALSE);
+
+		}
+		if (plugin.getServer().getPluginManager().getPlugin("Citizens") != null) {
+			setIsCitizens(Boolean.TRUE);
+			System.out.println("[RandomEvents] Citizens hooked succesfully!");
+
+		} else {
+			setIsCitizens(Boolean.FALSE);
+
+		}
+		
+		setIsNoteBlockAPI(Boolean.FALSE);
+		if (Bukkit.getPluginManager().isPluginEnabled("NoteBlockAPI")){
+			setIsNoteBlockAPI(Boolean.TRUE);
+			System.out.println("[RandomEvents] NoteBlockAPI hooked succesfully!");
+		}
+
+		if (plugin.getServer().getPluginManager().getPlugin("ProtocolLib") != null) {
+			setIsProtocolLib(Boolean.TRUE);
+			System.out.println("[RandomEvents] ProtocolLib hooked succesfully!");
+
+		} else {
+			setIsProtocolLib(Boolean.FALSE);
+
+		}
+		
 		this.powerUpItem = new ItemStack(XMaterial.EMERALD.parseMaterial());
 		ItemMeta itemMeta = this.powerUpItem.getItemMeta();
 		itemMeta.setDisplayName("§2§lPowerUP");

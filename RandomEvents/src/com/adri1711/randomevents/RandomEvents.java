@@ -136,37 +136,7 @@ public class RandomEvents extends JavaPlugin {
 			System.out.println("[RandomEvents] CrackShot hooked succesfully!");
 
 		}
-		if (getServer().getPluginManager().getPlugin("LibsDisguises") != null) {
-			getReventConfig().setIsLibsDisguises(Boolean.TRUE);
-			System.out.println("[RandomEvents] LibsDisguises hooked succesfully!");
-
-		} else {
-			getReventConfig().setIsLibsDisguises(Boolean.FALSE);
-
-		}
-		if (getServer().getPluginManager().getPlugin("Citizens") != null) {
-			getReventConfig().setIsCitizens(Boolean.TRUE);
-			System.out.println("[RandomEvents] Citizens hooked succesfully!");
-
-		} else {
-			getReventConfig().setIsCitizens(Boolean.FALSE);
-
-		}
 		
-		getReventConfig().setIsNoteBlockAPI(Boolean.FALSE);
-		if (Bukkit.getPluginManager().isPluginEnabled("NoteBlockAPI")){
-			getReventConfig().setIsNoteBlockAPI(Boolean.TRUE);
-			System.out.println("[RandomEvents] NoteBlockAPI hooked succesfully!");
-		}
-
-		if (getServer().getPluginManager().getPlugin("ProtocolLib") != null) {
-			getReventConfig().setIsProtocolLib(Boolean.TRUE);
-			System.out.println("[RandomEvents] ProtocolLib hooked succesfully!");
-
-		} else {
-			getReventConfig().setIsProtocolLib(Boolean.FALSE);
-
-		}
 
 		if (getServer().getPluginManager().getPlugin("NametagEdit") != null) {
 			nametagHook = new NameTagHook(this);
