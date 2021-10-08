@@ -144,6 +144,20 @@ public class RandomEvents extends JavaPlugin {
 			getReventConfig().setIsLibsDisguises(Boolean.FALSE);
 
 		}
+		if (getServer().getPluginManager().getPlugin("Citizens") != null) {
+			getReventConfig().setIsCitizens(Boolean.TRUE);
+			System.out.println("[RandomEvents] Citizens hooked succesfully!");
+
+		} else {
+			getReventConfig().setIsCitizens(Boolean.FALSE);
+
+		}
+		
+		getReventConfig().setIsNoteBlockAPI(Boolean.FALSE);
+		if (Bukkit.getPluginManager().isPluginEnabled("NoteBlockAPI")){
+			getReventConfig().setIsNoteBlockAPI(Boolean.TRUE);
+			System.out.println("[RandomEvents] NoteBlockAPI hooked succesfully!");
+		}
 
 		if (getServer().getPluginManager().getPlugin("ProtocolLib") != null) {
 			getReventConfig().setIsProtocolLib(Boolean.TRUE);

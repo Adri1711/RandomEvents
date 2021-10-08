@@ -27,6 +27,7 @@ import com.adri1711.randomevents.match.enums.CreacionWaterDrop;
 import com.adri1711.randomevents.match.enums.MinigameType;
 import com.adri1711.randomevents.match.utils.InventoryPers;
 import com.adri1711.randomevents.util.Constantes;
+import com.adri1711.randomevents.util.UtilsCitizen;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.util.enums.XMaterial;
 
@@ -61,7 +62,8 @@ public class Chat implements Listener {
 			if (plugin.getMatchActive() != null
 					&& plugin.getMatchActive().getPlayerHandler().getPlayersSpectators().contains(p)) {
 
-				if (!plugin.getReventConfig().getAllowedCmds().contains(aliase.toLowerCase()) && !p.hasPermission("randomevent.bypass")) {
+				if (!plugin.getReventConfig().getAllowedCmds().contains(aliase.toLowerCase())
+						&& !p.hasPermission("randomevent.bypass")) {
 					event.setCancelled(true);
 					p.sendMessage(plugin.getLanguage().getCmdNotAllowed());
 				}
@@ -784,6 +786,21 @@ public class Chat implements Listener {
 							// actualiza =
 							// UtilsRandomEvents.pasaACreation(plugin,
 							// player, position + 1, match);
+						}
+						break;
+					case ID_NPC:
+
+						try {
+
+							Integer idnpc = Integer.valueOf(message.trim());
+							if (UtilsCitizen.compruebaCitizensId(idnpc, plugin)) {
+								match.setNPCId(idnpc);
+								plugin.getPlayersCreation().remove(player.getName());
+							} else {
+								player.sendMessage(plugin.getLanguage().getInvalidInput());
+							}
+						} catch (Exception e) {
+							player.sendMessage(plugin.getLanguage().getInvalidInput());
 						}
 						break;
 

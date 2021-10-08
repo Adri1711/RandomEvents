@@ -1767,6 +1767,11 @@ public class UtilsRandomEvents {
 							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getNumberOfTeams();
 						}
 						break;
+					case ID_NPC:
+						if (match.getNPCId() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getNPCId();
+						}
+						break;
 					case SPAWN_PLAYER:
 						if (match.getPlayerSpawn() != null) {
 							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
@@ -1983,6 +1988,11 @@ public class UtilsRandomEvents {
 				break;
 			case KITS:
 				if (match.getKits() == null || match.getKits().isEmpty()) {
+					res = Boolean.FALSE;
+				}
+				break;
+			case ID_NPC:
+				if (match.getNPCId() == null ) {
 					res = Boolean.FALSE;
 				}
 				break;
@@ -2239,6 +2249,8 @@ public class UtilsRandomEvents {
 		case SPLEGG:
 		case SW:
 		case TNT_RUN:
+		case RACE:
+		case RED_GREEN_LIGHT:
 			lines = prepareLinesDeadAlive(lines, matchActive, plugin, playersDead);
 			break;
 

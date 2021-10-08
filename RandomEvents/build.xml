@@ -11,13 +11,15 @@
 			</fileset>
 			<fileset file="defaultConfig.yml">
 			</fileset>
+			<fileset file="Luzverde2.nbs">
+			</fileset>
 			<zipgroupfileset dir="E:/ProgramarPlugins/libs" includes="HikariCP-3.4.5.jar" />
 			<zipgroupfileset dir="E:/ProgramarPlugins/libs" includes="slf4j-api-1.7.25.jar" />
 
 		</jar>
 		<jar destfile="E:/ProgramarPlugins/RandomEvents/VActual/${ant.project.name}.jar">
 			<!--<jar destfile="E:/ProgramarPlugins/Pruebas1-15/plugins/${ant.project.name}.jar"> !-->
-		
+
 			<fileset dir="bin">
 			</fileset>
 			<fileset file="plugin.yml">
@@ -25,6 +27,8 @@
 			<fileset file="config.yml">
 			</fileset>
 			<fileset file="defaultConfig.yml">
+			</fileset>
+			<fileset file="Luzverde2.nbs">
 			</fileset>
 			<zipgroupfileset dir="E:/ProgramarPlugins/libs" includes="HikariCP-3.4.5.jar" />
 			<zipgroupfileset dir="E:/ProgramarPlugins/libs" includes="slf4j-api-1.7.25.jar" />

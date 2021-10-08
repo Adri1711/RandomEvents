@@ -229,6 +229,7 @@ public class WeaponShoot implements Listener {
 									case BOAT_RUN:
 									case HORSE_RUN:
 									case RACE:
+									case RED_GREEN_LIGHT:
 										ev.setCancelled(true);
 										break;
 									case ESCAPE_FROM_BEAST:
@@ -375,6 +376,7 @@ public class WeaponShoot implements Listener {
 									case BOAT_RUN:
 									case HORSE_RUN:
 									case RACE:
+									case RED_GREEN_LIGHT:
 										ev.setCancelled(true);
 										break;
 									case QUAKECRAFT:
@@ -659,6 +661,7 @@ public class WeaponShoot implements Listener {
 							case BOAT_RUN:
 							case HORSE_RUN:
 							case RACE:
+							case RED_GREEN_LIGHT:
 								ev.setCancelled(true);
 								break;
 							case HOEHOEHOE:
@@ -776,6 +779,7 @@ public class WeaponShoot implements Listener {
 							case BOAT_RUN:
 							case HORSE_RUN:
 							case RACE:
+							case RED_GREEN_LIGHT:
 								ev.setCancelled(true);
 								break;
 

@@ -77,7 +77,12 @@ public enum MinigameType {
 
 	SPLATOON("SPLATOON", XMaterial.RED_DYE.parseMaterial(), "getNameSplatoon"),
 
-	BOMBARDMENT("BOMBARDMENT", XMaterial.COAL_BLOCK.parseMaterial(), "getNameBombardment");
+	BOMBARDMENT("BOMBARDMENT", XMaterial.COAL_BLOCK.parseMaterial(), "getNameBombardment"),
+	
+	
+	RED_GREEN_LIGHT("REDGREEN", XMaterial.EMERALD_BLOCK.parseMaterial(), "getNameRedGreenLight")
+	
+	;
 
 	private String codigo;
 	private Material material;

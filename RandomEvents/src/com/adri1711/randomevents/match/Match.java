@@ -66,6 +66,7 @@ public class Match implements Comparable<Match> {
 	private Boolean enabled;
 	
 	private Integer numberOfTeams;
+	private Integer NPCId;
 	
 	private ItemStack head;
 
@@ -299,6 +300,15 @@ public class Match implements Comparable<Match> {
 
 	public void setKits(List<String> kits) {
 		this.kits = kits;
+	}
+
+	
+	public Integer getNPCId() {
+		return NPCId;
+	}
+
+	public void setNPCId(Integer nPCId) {
+		NPCId = nPCId;
 	}
 
 	@Override

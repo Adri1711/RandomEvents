@@ -172,8 +172,10 @@ public class ReventConfig {
 	private int statsSW;
 
 	private int statsTSW;
+	private int statsREDGREEN;
 
 	private int statsALLTIME;
+	
 
 	private int statsANVIL_SPLEEF;
 	private int statsWDROP;
@@ -282,6 +284,8 @@ public class ReventConfig {
 
 	private Boolean isLibsDisguises;
 	private Boolean isProtocolLib;
+	private Boolean isCitizens;
+	private Boolean isNoteBlockAPI;
 
 	private String skinDisguisePlayers;
 
@@ -316,10 +320,14 @@ public class ReventConfig {
 	private int statsTSGTEAMS;
 
 	private int statsTSWTEAMS;
-	
+
 	private int statsPBALLTK;
-	
+
 	private int distanceClearEntities;
+
+	private int secondsCheckStopSong;
+
+	private int probabilityPerCheckToStopSound;
 
 	public ReventConfig(RandomEvents plugin) {
 		super();
@@ -410,6 +418,8 @@ public class ReventConfig {
 		this.splatoonRadius = plugin.getConfig().getInt("splatoonRadius");
 		this.cooldownAfterDeathSeconds = plugin.getConfig().getInt("cooldownAfterDeathSeconds");
 		this.splatoonEggDamage = plugin.getConfig().getInt("splatoonEggDamage");
+		this.secondsCheckStopSong = plugin.getConfig().getInt("secondsCheckStopSong");
+		this.probabilityPerCheckToStopSound = plugin.getConfig().getInt("probabilityPerCheckToStopSound");
 
 		this.useEncoding = plugin.getConfig().getString("useEncoding");
 		if (useEncoding.equals("UTF_8")) {
@@ -544,9 +554,10 @@ public class ReventConfig {
 		this.statsTSGTEAMS = plugin.getConfig().getInt("statsmenu.TSGTEAMS");
 		this.statsTSWTEAMS = plugin.getConfig().getInt("statsmenu.TSWTEAMS");
 		this.statsPBALLTK = plugin.getConfig().getInt("statsmenu.PBALLTK");
+		this.statsREDGREEN = plugin.getConfig().getInt("statsmenu.REDGREEN");
 		this.distanceClearEntities = plugin.getConfig().getInt("distanceClearEntities");
 		this.statsSize = plugin.getConfig().getInt("statsmenu.size");
-
+		
 		this.allowedCmds = (List<String>) plugin.getConfig().getStringList("allowedCmds");
 
 		this.maxItemOnChests = Integer.valueOf(plugin.getConfig().getInt("maxItemOnChests"));
@@ -1694,7 +1705,6 @@ public class ReventConfig {
 	public void setIsLibsDisguises(Boolean isLibsDisguises) {
 		this.isLibsDisguises = isLibsDisguises;
 	}
-	
 
 	public Boolean getIsProtocolLib() {
 		return isProtocolLib;
@@ -1863,7 +1873,46 @@ public class ReventConfig {
 	public void setDistanceClearEntities(int distanceClearEntities) {
 		this.distanceClearEntities = distanceClearEntities;
 	}
-	
+
+	public Boolean getIsNoteBlockAPI() {
+		return isNoteBlockAPI;
+	}
+
+	public void setIsNoteBlockAPI(Boolean isNoteBlockAPI) {
+		this.isNoteBlockAPI = isNoteBlockAPI;
+	}
+
+	public Boolean getIsCitizens() {
+		return isCitizens;
+	}
+
+	public void setIsCitizens(Boolean isCitizens) {
+		this.isCitizens = isCitizens;
+	}
+
+	public int getSecondsCheckStopSong() {
+		return secondsCheckStopSong;
+	}
+
+	public void setSecondsCheckStopSong(int secondsCheckStopSong) {
+		this.secondsCheckStopSong = secondsCheckStopSong;
+	}
+
+	public int getProbabilityPerCheckToStopSound() {
+		return probabilityPerCheckToStopSound;
+	}
+
+	public void setProbabilityPerCheckToStopSound(int probabilityPerCheckToStopSound) {
+		this.probabilityPerCheckToStopSound = probabilityPerCheckToStopSound;
+	}
+
+	public int getStatsREDGREEN() {
+		return statsREDGREEN;
+	}
+
+	public void setStatsREDGREEN(int statsREDGREEN) {
+		this.statsREDGREEN = statsREDGREEN;
+	}
 	
 
 }

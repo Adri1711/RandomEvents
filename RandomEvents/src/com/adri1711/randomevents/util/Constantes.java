@@ -481,6 +481,8 @@ public class Constantes {
 		NAME_SPLATOON("nameSplatoon", "minigameName.Splatoon", "Splatoon"),
 
 		NAME_BOMBARDMENT("nameBombardment", "minigameName.Bombardment", "Bombardment"),
+		
+		NAME_REDGREEN_LIGHT("nameRedGreenLight", "minigameName.RedGreenLight", "Red Light-Green Light"),
 
 		NAME_REALTEAMBATTLEROYALE("nameRealTeamBattleRoyale", "minigameName.TeamBattleRoyale", "Team Battle Royale"),
 
@@ -593,6 +595,9 @@ public class Constantes {
 		
 		MINIGAME_DESC_BRTEAMS("minigameDescriptionBRTEAMS", "minigame.description.BRTEAMS",
 				"&eA fierce battle where just 1 player;&e or team can remain alive."),
+		
+		MINIGAME_DESC_REDGREEN("minigameDescriptionREDGREEN", "minigame.description.REDGREEN",
+				"&eBe the first to reach the goal, but watch out;&e just walk when the music is on."),
 
 		MINIGAME_DESC_BOMBARDMENT("minigameDescriptionBOMBARDMENT", "minigame.description.BOMBARDMENT",
 				"&eAvoid;&e the fireballs to win the match!");

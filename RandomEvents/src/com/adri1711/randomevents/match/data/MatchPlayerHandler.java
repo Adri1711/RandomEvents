@@ -44,6 +44,7 @@ public class MatchPlayerHandler {
 	private List<Player> goalPlayers;
 
 	private Set<Player> paintPlayers;
+	private Set<Player> playerToKill;
 
 	private Map<Player, Set<Location>> paintedLocations;
 
@@ -65,6 +66,7 @@ public class MatchPlayerHandler {
 		this.equipos = new HashMap<Integer, Set<Player>>();
 		this.teamsCopy = new HashMap<Integer, Set<Player>>();
 		this.paintPlayers = new HashSet<Player>();
+		this.playerToKill = new HashSet<Player>();
 		this.goalPlayers = new ArrayList<Player>();
 		this.scoreboards = new HashMap<String, FastBoard>();
 		this.oldScoreboards = new HashMap<String, Scoreboard>();
@@ -85,6 +87,7 @@ public class MatchPlayerHandler {
 		this.playersSpectators = playersSpectators;
 		this.playersVanish = new ArrayList<Player>();
 		this.paintPlayers = new HashSet<Player>();
+		this.playerToKill=new HashSet<Player>();
 		this.playersPrefix = new HashMap<String, String>();
 
 		this.equipos = new HashMap<Integer, Set<Player>>();
@@ -233,6 +236,14 @@ public class MatchPlayerHandler {
 
 	public void setPaintPlayers(Set<Player> paintPlayers) {
 		this.paintPlayers = paintPlayers;
+	}
+
+	public Set<Player> getPlayerToKill() {
+		return playerToKill;
+	}
+
+	public void setPlayerToKill(Set<Player> playerToKill) {
+		this.playerToKill = playerToKill;
 	}
 
 	public Map<Player, Set<Location>> getPaintedLocations() {

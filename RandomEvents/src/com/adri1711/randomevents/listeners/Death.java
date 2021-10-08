@@ -139,6 +139,7 @@ public class Death implements Listener {
 								ev.setCancelled(true);
 								break;
 							case RACE:
+							case RED_GREEN_LIGHT:
 								ev.setCancelled(true);
 
 								break;
@@ -163,6 +164,7 @@ public class Death implements Listener {
 
 								break;
 							case RACE:
+							case RED_GREEN_LIGHT:
 								ev.setCancelled(true);
 								// UtilsRandomEvents.teleportaPlayer(player,
 								// plugin.getMatchActive().getCheckpoints().get(player.getName()),
@@ -535,6 +537,7 @@ public class Death implements Listener {
 			case BOAT_RUN:
 			case HORSE_RUN:
 			case RACE:
+			case RED_GREEN_LIGHT:
 				ev.setCancelled(true);
 				break;
 			case HOEHOEHOE:
@@ -656,6 +659,7 @@ public class Death implements Listener {
 			case BOAT_RUN:
 			case HORSE_RUN:
 			case RACE:
+			case RED_GREEN_LIGHT:
 				ev.setCancelled(true);
 				break;
 
@@ -939,6 +943,7 @@ public class Death implements Listener {
 					case BOAT_RUN:
 					case HORSE_RUN:
 					case RACE:
+					case RED_GREEN_LIGHT:
 						ev.setCancelled(true);
 						break;
 					case ESCAPE_FROM_BEAST:
@@ -1093,6 +1098,7 @@ public class Death implements Listener {
 					case BOAT_RUN:
 					case HORSE_RUN:
 					case RACE:
+					case RED_GREEN_LIGHT:
 						ev.setCancelled(true);
 						break;
 					case HOEHOEHOE:
@@ -1322,6 +1328,7 @@ public class Death implements Listener {
 					case BOAT_RUN:
 					case HORSE_RUN:
 					case RACE:
+					case RED_GREEN_LIGHT:
 						ev.setCancelled(true);
 						break;
 					case ESCAPE_FROM_BEAST:
@@ -1518,6 +1525,7 @@ public class Death implements Listener {
 					case BOAT_RUN:
 					case HORSE_RUN:
 					case RACE:
+					case RED_GREEN_LIGHT:
 						ev.setCancelled(true);
 						break;
 					case HOEHOEHOE:

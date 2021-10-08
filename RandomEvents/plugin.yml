@@ -3,7 +3,7 @@ main: com.adri1711.randomevents.RandomEvents
 version: 2.4
 api-version: 1.13
 depend: [Lib1711]
-softdepend: [CrackShot, PlaceholderAPI, WorldEdit, WorldGuard, Multiworld, Multiverse-Core, NametagEdit, LibsDisguises]
+softdepend: [CrackShot, PlaceholderAPI, WorldEdit, WorldGuard, Multiworld, Multiverse-Core, NametagEdit, LibsDisguises, NoteBlockAPI, Citizens]
 commands:
    revent:
       description: Shows the command menu too

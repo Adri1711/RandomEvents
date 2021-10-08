@@ -27,12 +27,12 @@ import org.bukkit.entity.Horse;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
@@ -46,9 +46,10 @@ import com.adri1711.randomevents.match.enums.MinigameType;
 import com.adri1711.randomevents.match.enums.Petos;
 import com.adri1711.randomevents.match.utils.Cuboid;
 import com.adri1711.randomevents.match.utils.InventoryPers;
+import com.adri1711.randomevents.match.utils.SongUtils;
 import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.FeatherBoardUtils;
-import com.adri1711.randomevents.util.NameTag;
+import com.adri1711.randomevents.util.UtilsCitizen;
 import com.adri1711.randomevents.util.UtilsDisguises;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.randomevents.util.UtilsSQL;
@@ -107,7 +108,6 @@ public class MatchActive {
 
 	private Integer tries;
 	private Integer counter;
-
 	private BukkitRunnable task;
 	private BukkitRunnable task2;
 	private BukkitRunnable task3;
@@ -153,6 +153,7 @@ public class MatchActive {
 		case BOAT_RUN:
 		case HORSE_RUN:
 		case RACE:
+		case RED_GREEN_LIGHT:
 		case ESCAPE_FROM_BEAST:
 			getMapHandler().setCuboid(new Cuboid(match.getLocation1(), match.getLocation2()));
 			break;
@@ -241,6 +242,7 @@ public class MatchActive {
 		case BOAT_RUN:
 		case HORSE_RUN:
 		case RACE:
+		case RED_GREEN_LIGHT:
 		case ESCAPE_FROM_BEAST:
 			getMapHandler().setCuboid(new Cuboid(match.getLocation1(), match.getLocation2()));
 			break;
@@ -456,6 +458,8 @@ public class MatchActive {
 		Location lastLocation = player.getLocation();
 		dropItems(player, forzado);
 		unregisterTeam(player);
+		if (plugin.getReventConfig().getIsNoteBlockAPI())
+			SongUtils.playRecord(player, false, plugin);
 		if (plugin.getReventConfig().isRandomDisguisePlayers()) {
 			UtilsDisguises.undisguisePlayer(player, plugin);
 		}
@@ -567,6 +571,8 @@ public class MatchActive {
 
 			}
 		}
+		if (plugin.getReventConfig().getIsNoteBlockAPI())
+			SongUtils.playRecord(players, false, plugin);
 		for (Player player : players) {
 			if (plugin.getReventConfig().isRandomDisguisePlayers()) {
 
@@ -659,6 +665,8 @@ public class MatchActive {
 	public void compruebaPartida() {
 		if (getPlaying()) {
 			if (getPlayerHandler().getPlayersObj().isEmpty()) {
+				if (getMatch().getMinigame() == MinigameType.RED_GREEN_LIGHT)
+					UtilsCitizen.forceLastTurnAroundNPC(getMatch().getNPCId(), plugin);
 				for (Entity entity : getMobs()) {
 					entity.remove();
 				}
@@ -668,7 +676,8 @@ public class MatchActive {
 				finalizaPartida(getPlayerHandler().getPlayersObj(), Boolean.FALSE, Boolean.FALSE);
 
 			}
-			if (getPlayerHandler().getPlayersObj().size() == 1) {
+			if (getPlayerHandler().getPlayersObj().size() == 1
+					&& getMatch().getMinigame() != MinigameType.RED_GREEN_LIGHT) {
 				if (getTournament()) {
 					tournamentObj.nextGame(getCopia(getPlayerHandler().getPlayers()),
 							getCopiaP(getPlayerHandler().getPlayersObj()),
@@ -905,6 +914,7 @@ public class MatchActive {
 		case BOAT_RUN:
 		case HORSE_RUN:
 		case RACE:
+		case RED_GREEN_LIGHT:
 		case WDROP:
 			if (getPlayerHandler().getPlayerContador() != null) {
 				ganadores.add(getPlayerHandler().getPlayerContador());
@@ -1148,16 +1158,19 @@ public class MatchActive {
 	}
 
 	public void reiniciaValoresPartida(Boolean reinicia) {
-		if (task != null) {
-			task.cancel();
-		}
-		if (task2 != null) {
-			task2.cancel();
-		}
-		if (task3 != null) {
-			task3.cancel();
-		}
+		try {
+			if (task != null) {
 
+				task.cancel();
+			}
+			if (task2 != null) {
+				task2.cancel();
+			}
+			if (task3 != null) {
+				task3.cancel();
+			}
+		} catch (Exception e) {
+		}
 		switch (match.getMinigame()) {
 		case SG:
 		case SW:
@@ -1190,6 +1203,9 @@ public class MatchActive {
 						.filter(entstream -> entstream instanceof Item).map(Item.class::cast).forEach(Item::remove);
 			}
 			break;
+		case RED_GREEN_LIGHT:
+			UtilsCitizen.forceLastTurnAroundNPC(getMatch().getNPCId(), plugin);
+
 		default:
 			break;
 		}
@@ -1370,7 +1386,6 @@ public class MatchActive {
 					UtilsRandomEvents.setWorldBorder(getPlugin(), getMapHandler().getActualCuboid().getCenter(),
 							distance, p);
 				}
-				
 
 			}
 			partidaSG();
@@ -2018,7 +2033,25 @@ public class MatchActive {
 
 			}
 			break;
+		case RED_GREEN_LIGHT:
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
 
+			this.allowDamage = false;
+			for (Player p : getPlayerHandler().getPlayersObj()) {
+				iniciaPlayer(p);
+				p.updateInventory();
+
+			}
+			if (plugin.getReventConfig().getIsNoteBlockAPI())
+				SongUtils.playRecord(getPlayerHandler().getPlayersObj(), true, plugin);
+
+			partidaRedGreen(0);
+
+			break;
 		case ESCAPE_ARROW:
 			for (Player p : getPlayerHandler().getPlayersSpectators()) {
 				if (!getPlayerHandler().getPlayersObj().contains(p)) {
@@ -2114,6 +2147,47 @@ public class MatchActive {
 			getPlayerHandler().getEquipos().put(entrada.getKey(), listaPlayers);
 		}
 		setCanBreak(true);
+
+	}
+
+	private void partidaRedGreen(int i) {
+
+		if (getPlaying()) {
+			Double timer = 20. * plugin.getReventConfig().getSecondsCheckStopSong();
+
+			Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
+				public void run() {
+					if (!allowDamage) {
+
+						Integer random = getRandom().nextInt(100);
+						if (random < plugin.getReventConfig().getProbabilityPerCheckToStopSound()) {
+							allowDamage = true;
+							if (plugin.getReventConfig().getIsNoteBlockAPI())
+								SongUtils.playRecord(getPlayerHandler().getPlayersObj(), false, plugin);
+							UtilsCitizen.turnAroundNPC(getMatch().getNPCId(), plugin);
+							UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersObj(),
+									XSound.ENTITY_BAT_HURT);
+						}
+						partidaRedGreen(0);
+
+					} else {
+						if (i == 1) {
+							if (getPlayerHandler().getPlayerToKill().isEmpty()) {
+								allowDamage = false;
+								UtilsCitizen.turnAroundNPC(getMatch().getNPCId(), plugin);
+								if (plugin.getReventConfig().getIsNoteBlockAPI())
+									SongUtils.playRecord(getPlayerHandler().getPlayersObj(), true, plugin);
+
+							}
+							partidaRedGreen(0);
+						} else {
+							partidaRedGreen(1);
+						}
+					}
+				}
+
+			}, timer.longValue());
+		}
 
 	}
 
@@ -2320,10 +2394,10 @@ public class MatchActive {
 									/ 1.,
 							(getMapHandler().getActualCuboid().getMaxZ() - getMapHandler().getActualCuboid().getMinZ())
 									/ 1.);
-					
+
 					UtilsRandomEvents.setWorldBorder(getPlugin(), getMapHandler().getActualCuboid().getCenter(),
 							distance, p);
-					
+
 				}
 				if (cubo.getMaxX() < getMapHandler().getActualCuboid().getMaxX()) {
 
@@ -4004,6 +4078,14 @@ public class MatchActive {
 
 	public void setCanBreak(Boolean canBreak) {
 		this.canBreak = canBreak;
+	}
+
+	public Boolean getTeams() {
+		return teams;
+	}
+
+	public void setTeams(Boolean teams) {
+		this.teams = teams;
 	}
 
 }

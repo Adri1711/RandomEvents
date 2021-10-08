@@ -203,13 +203,11 @@ public class LanguageMessages {
 	private String kitDefaultName;
 	private String kitGuiName;
 	private String kitChosen;
-	
-	
+
 	private String daysFormat;
 	private String hoursFormat;
 	private String minutesFormat;
 	private String secondsFormat;
-	
 
 	private String nameBattleRoyale;
 	private String nameTeamBattleRoyale;
@@ -242,6 +240,7 @@ public class LanguageMessages {
 	private String nameHoehoehoe;
 	private String nameSplatoon;
 	private String nameBombardment;
+	private String nameRedGreenLight;
 	private String nameRealTeamBattleRoyale;
 	private String nameRealTeamTopKiller;
 	private String nameRealTeamSkywars;
@@ -279,13 +278,13 @@ public class LanguageMessages {
 	private List<String> minigameDescriptionHOE;
 	private List<String> minigameDescriptionSPLATOON;
 	private List<String> minigameDescriptionBOMBARDMENT;
+	private List<String> minigameDescriptionREDGREEN;
 
 	private List<String> minigameDescriptionTSGTEAMS;
 	private List<String> minigameDescriptionTSWTEAMS;
 	private List<String> minigameDescriptionTKLLTEAMS;
 	private List<String> minigameDescriptionBRTEAMS;
 	private List<String> minigameDescriptionPBALLTK;
-	
 
 	public LanguageMessages(RandomEvents plugin) {
 		this.file = new File(plugin.getDataFolder(), "messages.yml");
@@ -2122,6 +2121,14 @@ public class LanguageMessages {
 		return nameBombardment.replaceAll("&", "§");
 	}
 
+	public String getNameRedGreenLight() {
+		return nameRedGreenLight.replaceAll("&", "§");
+	}
+
+	public void setNameRedGreenLight(String nameRedGreenLight) {
+		this.nameRedGreenLight = nameRedGreenLight;
+	}
+
 	public String getNameRealTeamBattleRoyale() {
 		return nameRealTeamBattleRoyale.replaceAll("&", "§");
 	}
@@ -2137,7 +2144,6 @@ public class LanguageMessages {
 	public String getNameRealTeamSurvivalGames() {
 		return nameRealTeamSurvivalGames.replaceAll("&", "§");
 	}
-	
 
 	public String getHoursFormat() {
 		return hoursFormat.replaceAll("&", "§");
@@ -2345,6 +2351,14 @@ public class LanguageMessages {
 
 	public void setMinigameDescriptionPBALLTK(List<String> minigameDescriptionPBALLTK) {
 		this.minigameDescriptionPBALLTK = minigameDescriptionPBALLTK;
+	}
+
+	public List<String> getMinigameDescriptionREDGREEN() {
+		return minigameDescriptionREDGREEN;
+	}
+
+	public void setMinigameDescriptionREDGREEN(List<String> minigameDescriptionREDGREEN) {
+		this.minigameDescriptionREDGREEN = minigameDescriptionREDGREEN;
 	}
 
 }

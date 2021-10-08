@@ -76,10 +76,10 @@ public enum Creacion {
 	ANOTHER_ENTITY_SPAWNS(27, "§6§lPut another entity spawn, say 'Done' . (%entities%/%maxPlayers%)", ""),
 
 	GOAL_LOCATION1(28, "§6§lSet the first location of the cuboid of the goal, say 'Done'",
-			"BOAT_RUN,HORSE_RUN,ESCAPE_FROM_BEAST,RACE"),
+			"BOAT_RUN,HORSE_RUN,ESCAPE_FROM_BEAST,RACE,REDGREEN"),
 
 	GOAL_LOCATION2(29, "§6§lSet the second location of the cuboid of the goal, say 'Done'",
-			"BOAT_RUN,HORSE_RUN,ESCAPE_FROM_BEAST,RACE"),
+			"BOAT_RUN,HORSE_RUN,ESCAPE_FROM_BEAST,RACE,REDGREEN"),
 
 	MATERIAL_SPLEEF(30, "§6§lGet the block you want to set mineable for spleef on your hand and say 'Done'",
 			"SPLEEF,SPLEGG,ANVIL_SPLEEF"),
@@ -103,7 +103,7 @@ public enum Creacion {
 	BLOCKS_ALLOWED(37, "§6§lPut in your hand a block allowed to break/place in the map and say 'Done'",
 			"SG,TSG,SW,TSW,HOE,SPLATOON,TSWTEAMS,TSGTEAMS"),
 
-	NO_MOVE_TIME(38, "§6§lChoose to allow players to move in seconds", "SG,TSG,SW,TSW,TSWTEAMS,TSGTEAMS"),
+	NO_MOVE_TIME(38, "§6§lChoose to allow players to move in seconds", "SG,TSG,SW,TSW,TSWTEAMS,TSGTEAMS,REDGREEN"),
 
 	TIMER_ANVIL_SPAWN(39, "§6§lWrite the number of seconds (it can have decimals) to respawn each anvil",
 			"ANVIL_SPLEEF"),
@@ -124,11 +124,16 @@ public enum Creacion {
 	
 	CANNON_SPAWNS(46,
 			"§6§lGo to the arena you created and write 'Done' to set each spawn location for cannons or 'Next' to stop. ",
-			"BOMBARDMENT"),
+			"BOMBARDMENT,REDGREEN"),
 	
 	TNT_TAG_HEAD(47,
 			"§6§lTake the item to put in the head and say 'Done'. ",
 			"BOMB"),
+	
+	ID_NPC(48,
+			"§6§lPut the Citizens ID of the NPC for the game. ",
+			"REDGREEN"),
+	
 
 	SAVE(997, "§6§lYou are about to save a Random Event, put 'Y' to confirm or 'N' to continue creating",
 			"ALLMINIGAMES"),

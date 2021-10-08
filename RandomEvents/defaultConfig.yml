@@ -326,6 +326,17 @@ splatoonRadius: 2
 splatoonEggDamage: 5
 
 ##################################################################
+##					 GREEN LIGHT RED LIGHT 	    				##
+##################################################################
+
+##Seconds to check probability to stop the match
+secondsCheckStopSong: 1
+
+##Probability to stop the song each time it checks
+probabilityPerCheckToStopSound: 30
+
+
+##################################################################
 ##				    PARTICLES SETTINGS		    				##
 ##################################################################
 
@@ -437,6 +448,7 @@ statsmenu:
   PBALLTK: 50
   TSGTEAMS: 51
   TSWTEAMS: 52
+  REDGREEN: 49
 
 ##################################################################
 ##					     MYSQL CONFIG   	    				##
