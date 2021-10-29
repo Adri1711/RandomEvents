@@ -526,7 +526,7 @@ public class MatchActive {
 					&& (sacaSpectator || match.getSpectatorSpawns() == null || match.getSpectatorSpawns().isEmpty())) {
 				hazComandosDeSalir(player);
 				borraScoreboard(player);
-				if (plugin.getReventConfig().isInventoryManagement() && res)
+				if (plugin.getReventConfig().isInventoryManagement() && !getMatch().getUseOwnInventory() && res)
 					UtilsRandomEvents.sacaInventario(plugin, player);
 			}
 		}
@@ -2161,7 +2161,11 @@ public class MatchActive {
 
 						Integer random = getRandom().nextInt(100);
 						if (random < plugin.getReventConfig().getProbabilityPerCheckToStopSound()) {
-							allowDamage = true;
+							Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
+								public void run() {
+									allowDamage = true;
+								}
+							}, plugin.getReventConfig().getTicksAfterMusicStopToKill());
 							if (plugin.getReventConfig().getIsNoteBlockAPI())
 								SongUtils.playRecord(getPlayerHandler().getPlayersObj(), false, plugin);
 							UtilsCitizen.turnAroundNPC(getMatch().getNPCId(), plugin);
@@ -3175,7 +3179,7 @@ public class MatchActive {
 	}
 
 	public void ponInventarioMatch(Player p) {
-		if (plugin.getReventConfig().isInventoryManagement()) {
+		if (plugin.getReventConfig().isInventoryManagement() && !getMatch().getUseOwnInventory()) {
 
 			p.getInventory().clear();
 
@@ -3234,7 +3238,7 @@ public class MatchActive {
 	}
 
 	public void ponInventarioRunner(Player p) {
-		if (plugin.getReventConfig().isInventoryManagement()) {
+		if (plugin.getReventConfig().isInventoryManagement() && !getMatch().getUseOwnInventory()) {
 
 			p.getInventory().setContents(match.getInventoryRunners().getContents());
 			p.getInventory().setHelmet(match.getInventoryRunners().getHelmet());
@@ -3255,7 +3259,7 @@ public class MatchActive {
 	}
 
 	public void ponInventarioBeast(Player p) {
-		if (plugin.getReventConfig().isInventoryManagement()) {
+		if (plugin.getReventConfig().isInventoryManagement() && !getMatch().getUseOwnInventory()) {
 
 			p.getInventory().setContents(match.getInventoryBeast().getContents());
 			p.getInventory().setHelmet(match.getInventoryBeast().getHelmet());

@@ -52,7 +52,9 @@ public class Match implements Comparable<Match> {
 	private InventoryPers inventoryRunners;
 
 	private InventoryPers inventoryChests;
-
+	
+	private Boolean useOwnInventory;
+	
 	private Location beastSpawn;
 
 	private String material;
@@ -81,6 +83,7 @@ public class Match implements Comparable<Match> {
 		this.datas = new ArrayList<MaterialData>();
 		this.scenes = new ArrayList<String>();
 		this.kits = new ArrayList<String>();
+		this.useOwnInventory=false;
 	}
 
 	public String getName() {
@@ -309,6 +312,15 @@ public class Match implements Comparable<Match> {
 
 	public void setNPCId(Integer nPCId) {
 		NPCId = nPCId;
+	}
+
+	
+	public Boolean getUseOwnInventory() {
+		return useOwnInventory;
+	}
+
+	public void setUseOwnInventory(Boolean useOwnInventory) {
+		this.useOwnInventory = useOwnInventory;
 	}
 
 	@Override

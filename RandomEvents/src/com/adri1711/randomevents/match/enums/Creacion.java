@@ -134,6 +134,10 @@ public enum Creacion {
 			"§6§lPut the Citizens ID of the NPC for the game. ",
 			"REDGREEN"),
 	
+	USE_OWN_INVENTORY(49,
+			"",
+			"ALLMINIGAMES"),
+	
 
 	SAVE(997, "§6§lYou are about to save a Random Event, put 'Y' to confirm or 'N' to continue creating",
 			"ALLMINIGAMES"),

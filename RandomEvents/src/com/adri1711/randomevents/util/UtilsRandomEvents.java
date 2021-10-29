@@ -467,7 +467,7 @@ public class UtilsRandomEvents {
 
 	public static Boolean guardaInventario(RandomEvents plugin, Player player) {
 		Boolean exitoso = Boolean.TRUE;
-		if (plugin.getReventConfig().isInventoryManagement()) {
+		if (plugin.getReventConfig().isInventoryManagement() && (plugin.getMatchActive()==null || !plugin.getMatchActive().getMatch().getUseOwnInventory())) {
 
 			File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories",
 					player.getName() + ".json");
@@ -564,7 +564,7 @@ public class UtilsRandomEvents {
 	}
 
 	public static void sacaInventario(RandomEvents plugin, Player player) {
-		if (plugin.getReventConfig().isInventoryManagement()) {
+		if (plugin.getReventConfig().isInventoryManagement() && (plugin.getMatchActive()==null || !plugin.getMatchActive().getMatch().getUseOwnInventory())) {
 
 			File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories");
 			File dataFolderOld = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventoriesold");
@@ -1098,7 +1098,7 @@ public class UtilsRandomEvents {
 	}
 
 	public static void borraInventario(Player player, RandomEvents plugin) {
-		if (plugin.getReventConfig().isInventoryManagement()) {
+		if (plugin.getReventConfig().isInventoryManagement() && (plugin.getMatchActive()==null || !plugin.getMatchActive().getMatch().getUseOwnInventory())) {
 			player.getInventory().clear();
 			player.getInventory().setHelmet(null);
 			player.getInventory().setLeggings(null);
@@ -1747,6 +1747,12 @@ public class UtilsRandomEvents {
 					case BATTLE_NAME:
 						if (match.getName() != null) {
 							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getName();
+						}
+
+						break;
+					case USE_OWN_INVENTORY:
+						if (match.getUseOwnInventory() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + (match.getUseOwnInventory()?"Yes":"No");
 						}
 
 						break;

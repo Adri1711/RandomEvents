@@ -175,7 +175,6 @@ public class ReventConfig {
 	private int statsREDGREEN;
 
 	private int statsALLTIME;
-	
 
 	private int statsANVIL_SPLEEF;
 	private int statsWDROP;
@@ -329,13 +328,15 @@ public class ReventConfig {
 
 	private int probabilityPerCheckToStopSound;
 
+	private int ticksAfterMusicStopToKill;
+
 	public ReventConfig(RandomEvents plugin) {
 		super();
 		this.plugin = plugin;
 	}
 
 	public void inicializaVariables() {
-		
+
 		if (plugin.getServer().getPluginManager().getPlugin("LibsDisguises") != null) {
 			setIsLibsDisguises(Boolean.TRUE);
 			System.out.println("[RandomEvents] LibsDisguises hooked succesfully!");
@@ -352,9 +353,9 @@ public class ReventConfig {
 			setIsCitizens(Boolean.FALSE);
 
 		}
-		
+
 		setIsNoteBlockAPI(Boolean.FALSE);
-		if (Bukkit.getPluginManager().isPluginEnabled("NoteBlockAPI")){
+		if (Bukkit.getPluginManager().isPluginEnabled("NoteBlockAPI")) {
 			setIsNoteBlockAPI(Boolean.TRUE);
 			System.out.println("[RandomEvents] NoteBlockAPI hooked succesfully!");
 		}
@@ -367,7 +368,7 @@ public class ReventConfig {
 			setIsProtocolLib(Boolean.FALSE);
 
 		}
-		
+
 		this.powerUpItem = new ItemStack(XMaterial.EMERALD.parseMaterial());
 		ItemMeta itemMeta = this.powerUpItem.getItemMeta();
 		itemMeta.setDisplayName("§2§lPowerUP");
@@ -452,6 +453,7 @@ public class ReventConfig {
 		this.cooldownAfterDeathSeconds = plugin.getConfig().getInt("cooldownAfterDeathSeconds");
 		this.splatoonEggDamage = plugin.getConfig().getInt("splatoonEggDamage");
 		this.secondsCheckStopSong = plugin.getConfig().getInt("secondsCheckStopSong");
+		this.ticksAfterMusicStopToKill = plugin.getConfig().getInt("secondsCheckStopSong");
 		this.probabilityPerCheckToStopSound = plugin.getConfig().getInt("probabilityPerCheckToStopSound");
 
 		this.useEncoding = plugin.getConfig().getString("useEncoding");
@@ -590,7 +592,7 @@ public class ReventConfig {
 		this.statsREDGREEN = plugin.getConfig().getInt("statsmenu.REDGREEN");
 		this.distanceClearEntities = plugin.getConfig().getInt("distanceClearEntities");
 		this.statsSize = plugin.getConfig().getInt("statsmenu.size");
-		
+
 		this.allowedCmds = (List<String>) plugin.getConfig().getStringList("allowedCmds");
 
 		this.maxItemOnChests = Integer.valueOf(plugin.getConfig().getInt("maxItemOnChests"));
@@ -1946,6 +1948,13 @@ public class ReventConfig {
 	public void setStatsREDGREEN(int statsREDGREEN) {
 		this.statsREDGREEN = statsREDGREEN;
 	}
-	
+
+	public int getTicksAfterMusicStopToKill() {
+		return ticksAfterMusicStopToKill;
+	}
+
+	public void setTicksAfterMusicStopToKill(int ticksAfterMusicStopToKill) {
+		this.ticksAfterMusicStopToKill = ticksAfterMusicStopToKill;
+	}
 
 }

@@ -335,6 +335,9 @@ secondsCheckStopSong: 1
 ##Probability to stop the song each time it checks
 probabilityPerCheckToStopSound: 30
 
+#When the npc turn around, it will wait that ticks to kill people that moves (20 ticks = 1 second)
+ticksAfterMusicStopToKill: 10
+
 
 ##################################################################
 ##				    PARTICLES SETTINGS		    				##

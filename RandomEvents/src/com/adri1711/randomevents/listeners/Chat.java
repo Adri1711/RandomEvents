@@ -1343,6 +1343,7 @@ public class Chat implements Listener {
 							case ANOTHER_MATERIAL_SPLEEF:
 								match.setDatas(new ArrayList<MaterialData>());
 								break;
+							
 							default:
 								break;
 							}
@@ -1440,6 +1441,9 @@ public class Chat implements Listener {
 					}
 					player.sendMessage("§6§l" + plugin.getKits().size() + " - §e§lNew Kit");
 
+					break;
+				case USE_OWN_INVENTORY:
+					match.setUseOwnInventory(!match.getUseOwnInventory());
 					break;
 				default:
 					player.sendMessage(c.getMessage(match));
