@@ -599,7 +599,7 @@ public class UtilsRandomEvents {
 					}
 
 				} catch (FileNotFoundException e) {
-					System.out.println("[RandomEvents] Error in sacaInventario catch 1");
+					System.out.println("Error in sacaInventario catch 1");
 					System.out.println(e.getMessage());
 				} finally {
 					try {
@@ -667,7 +667,7 @@ public class UtilsRandomEvents {
 						}
 					}
 				} catch (Exception exc) {
-					System.out.println("[RandomEvents] Error in sacaInventario catch 2");
+					System.out.println("Error in sacaInventario catch 2");
 					System.out.println(exc.getMessage());
 				}
 			}
