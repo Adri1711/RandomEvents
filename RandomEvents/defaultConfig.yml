@@ -144,6 +144,9 @@ equilibrateTeams: true
 ##Force non empty teams. Only works if  equilibrateTeams is enabled
 forceNonEmptyTeams: true
 
+##Seconds that a player is invincible after respawning in a top kill event (Put 0 to disable)
+invincibleAfterRespawn: 2
+
 
 ##################################################################
 ##					    KNOCKBACK DUEL 		    				##

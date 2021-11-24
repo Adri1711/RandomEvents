@@ -307,6 +307,11 @@ public class Constantes {
 		MATCH_BEGIN_SOON("matchBeginSoon", "match.matchBeginSoon", "&6&lThe Random Event will begin soon"),
 
 		LOST_GEMS("lostGems", "match.lostGems", "&e&l%player% &6&llost all gems"),
+		
+		GREEN_RED_LIGHT_MOVE("greenRedLightMove", "match.greenRedLightMove", "&a&lMOVE"),
+		
+		GREEN_RED_LIGHT_STOP("greenRedLightStop", "match.greenRedLightStop", "&c&lSTOP"),
+
 
 		PLAYER_WINNING("playerWinning", "match.playerWinning",
 				"&6&lThe player &e&l%player% &6&lhas enough gems, kill him or the match will end"),

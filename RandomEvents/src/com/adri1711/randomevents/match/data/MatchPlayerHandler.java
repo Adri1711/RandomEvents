@@ -29,6 +29,8 @@ public class MatchPlayerHandler {
 	private List<Player> playersSpectators;
 
 	private List<Player> playersVanish;
+	
+	private List<String> playersInvincible;
 
 	private Player beast;
 
@@ -55,6 +57,7 @@ public class MatchPlayerHandler {
 	private Map<Integer, Set<Player>> teamsCopy;
 
 	public MatchPlayerHandler() {
+		this.playersInvincible = new ArrayList<String>();
 		this.players = new ArrayList<String>();
 		this.playersTotal = new ArrayList<String>();
 		this.playersPrefix = new HashMap<String, String>();
@@ -76,6 +79,8 @@ public class MatchPlayerHandler {
 	}
 
 	public MatchPlayerHandler(List<String> players, List<Player> playersGanadores, List<Player> playersSpectators) {
+		this.playersInvincible = new ArrayList<String>();
+
 		this.players = players;
 		this.playersTotal = new ArrayList<String>();
 		this.playersObj=new ArrayList<Player>();
@@ -260,6 +265,14 @@ public class MatchPlayerHandler {
 
 	public void setPlayersPrefix(Map<String, String> playersPrefix) {
 		this.playersPrefix = playersPrefix;
+	}
+
+	public List<String> getPlayersInvincible() {
+		return playersInvincible;
+	}
+
+	public void setPlayersInvincible(List<String> playersInvincible) {
+		this.playersInvincible = playersInvincible;
 	}
 	
 

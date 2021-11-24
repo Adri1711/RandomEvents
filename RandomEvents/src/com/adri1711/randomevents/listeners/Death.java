@@ -43,7 +43,7 @@ public class Death implements Listener {
 				if (plugin.getMatchActive() != null
 						&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())) {
 					plugin.getMatchActive().setDamageCounter(0);
-					if (!plugin.getMatchActive().getPlaying()) {
+					if (!plugin.getMatchActive().getPlaying() || plugin.getMatchActive().getPlayerHandler().getPlayersInvincible().contains(player.getName())) {
 						ev.setCancelled(true);
 					} else {
 						if (((player.getHealth() - ev.getFinalDamage()) <= 0)) {
@@ -213,7 +213,7 @@ public class Death implements Listener {
 			if (plugin.getMatchActive() != null
 					&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())) {
 				plugin.getMatchActive().setDamageCounter(0);
-				if (!plugin.getMatchActive().getPlaying()) {
+				if (!plugin.getMatchActive().getPlaying() || plugin.getMatchActive().getPlayerHandler().getPlayersInvincible().contains(player.getName())) {
 					ev.setCancelled(true);
 				} else {
 					if (ev.getDamager() instanceof Player) {

@@ -330,6 +330,8 @@ public class ReventConfig {
 
 	private int ticksAfterMusicStopToKill;
 
+	private int invincibleAfterRespawn;
+
 	public ReventConfig(RandomEvents plugin) {
 		super();
 		this.plugin = plugin;
@@ -453,8 +455,9 @@ public class ReventConfig {
 		this.cooldownAfterDeathSeconds = plugin.getConfig().getInt("cooldownAfterDeathSeconds");
 		this.splatoonEggDamage = plugin.getConfig().getInt("splatoonEggDamage");
 		this.secondsCheckStopSong = plugin.getConfig().getInt("secondsCheckStopSong");
-		this.ticksAfterMusicStopToKill = plugin.getConfig().getInt("secondsCheckStopSong");
+		this.ticksAfterMusicStopToKill = plugin.getConfig().getInt("ticksAfterMusicStopToKill");
 		this.probabilityPerCheckToStopSound = plugin.getConfig().getInt("probabilityPerCheckToStopSound");
+		this.invincibleAfterRespawn = plugin.getConfig().getInt("invincibleAfterRespawn");
 
 		this.useEncoding = plugin.getConfig().getString("useEncoding");
 		if (useEncoding.equals("UTF_8")) {
@@ -1955,6 +1958,14 @@ public class ReventConfig {
 
 	public void setTicksAfterMusicStopToKill(int ticksAfterMusicStopToKill) {
 		this.ticksAfterMusicStopToKill = ticksAfterMusicStopToKill;
+	}
+
+	public int getInvincibleAfterRespawn() {
+		return invincibleAfterRespawn;
+	}
+
+	public void setInvincibleAfterRespawn(int invincibleAfterRespawn) {
+		this.invincibleAfterRespawn = invincibleAfterRespawn;
 	}
 
 }

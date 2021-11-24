@@ -9,7 +9,7 @@ import com.adri1711.randomevents.util.Constantes;
 
 public enum Creacion {
 
-	MINIGAME_TYPE(0, "§6§lChoose Minigame type", "ALLMINIGAMES"),
+	MINIGAME_TYPE(0, "§6§lChoose Minigame type (Put 0 in chat)", "ALLMINIGAMES"),
 
 	BATTLE_NAME(1, "§6§lYou began the creation of the RandomEvent. Write the match's name", "ALLMINIGAMES"),
 
@@ -44,7 +44,8 @@ public enum Creacion {
 			"§6§lGo to the arena you created and write 'Done' to set the spawn location of the mob, 'New' to choose another mob or 'End' to end the creation of the RandomEvent",
 			""),
 
-	PLAY_TIME(14, "§6§lChoose the play time in seconds", "TKLL,QUAKE,OITC,TKLLT2,KOTH,FISHSLAP,HOE,SPLATOON,TKLLTEAMS,PBALLTK"),
+	PLAY_TIME(14, "§6§lChoose the play time in seconds",
+			"TKLL,QUAKE,OITC,TKLLT2,KOTH,FISHSLAP,HOE,SPLATOON,TKLLTEAMS,PBALLTK"),
 
 	ARROW_LOCATION1(15, "§6§lSet the first location of the cuboid of spawn of arrows, say 'Done'", "EARR"),
 
@@ -88,9 +89,11 @@ public enum Creacion {
 			"§6§lGet another block you want to set mineable for spleef on your hand and say 'Done' or say 'Next' to end the spleef materials",
 			""),
 
-	MAP_LOCATION1(32, "§6§lSet the first location of the cuboid of the map, say 'Done'", "SG,TSG,SW,TSW,TSGTEAMS,TSWTEAMS,ANVIL_SPLEEF"),
+	MAP_LOCATION1(32, "§6§lSet the first location of the cuboid of the map, say 'Done'",
+			"SG,TSG,SW,TSW,TSGTEAMS,TSWTEAMS,ANVIL_SPLEEF"),
 
-	MAP_LOCATION2(33, "§6§lSet the second location of the cuboid of the map, say 'Done'", "SG,TSG,SW,TSW,TSGTEAMS,TSWTEAMS,ANVIL_SPLEEF"),
+	MAP_LOCATION2(33, "§6§lSet the second location of the cuboid of the map, say 'Done'",
+			"SG,TSG,SW,TSW,TSGTEAMS,TSWTEAMS,ANVIL_SPLEEF"),
 
 	INVENTORY_CHESTS(34,
 			"§6§lTake the inventory that will have a probability to appear in chests and say 'Done' to set it or 'Add' to add the items",
@@ -110,7 +113,8 @@ public enum Creacion {
 
 	WATER_DROP_SCENES(40, "§6§lChoose a scene to add to the event", "WDROP"),
 
-	NUMBER_OF_TEAMS(41, "§6§lChoose a number of teams between 2 and 8", "PBALL,HOE,SPLATOON,TKLLTEAMS,BRTEAMS,TSGTEAMS,TSWTEAMS,PBALLTK"),
+	NUMBER_OF_TEAMS(41, "§6§lChoose a number of teams between 2 and 8",
+			"PBALL,HOE,SPLATOON,TKLLTEAMS,BRTEAMS,TSGTEAMS,TSWTEAMS,PBALLTK"),
 
 	TEAM_SPAWNS(42,
 			"§6§lGo to the arena you created and write 'Done' to set each spawn location for the team (%players%/%maxTeams%)",
@@ -121,23 +125,18 @@ public enum Creacion {
 	KOTH_LOCATION1(44, "§6§lSet the first location of the cuboid of the Koth, say 'Done'", "KOTH,FISHSLAP"),
 
 	KOTH_LOCATION2(45, "§6§lSet the second location of the cuboid of the Koth, say 'Done'", "KOTH,FISHSLAP"),
-	
+
 	CANNON_SPAWNS(46,
 			"§6§lGo to the arena you created and write 'Done' to set each spawn location for cannons or 'Next' to stop. ",
 			"BOMBARDMENT,REDGREEN"),
-	
-	TNT_TAG_HEAD(47,
-			"§6§lTake the item to put in the head and say 'Done'. ",
-			"BOMB"),
-	
-	ID_NPC(48,
-			"§6§lPut the Citizens ID of the NPC for the game. ",
-			"REDGREEN"),
-	
-	USE_OWN_INVENTORY(49,
-			"",
-			"ALLMINIGAMES"),
-	
+
+	TNT_TAG_HEAD(47, "§6§lTake the item to put in the head and say 'Done'. ", "BOMB"),
+
+	ID_NPC(48, "§6§lPut the Citizens ID of the NPC for the game. ", "REDGREEN"),
+
+	USE_OWN_INVENTORY(49, "", "ALLMINIGAMES"),
+
+	ALL_BLOCKS_ALLOWED(50, "§6§lChanged blocks allowed", "SG,TSG,SW,TSW,HOE,SPLATOON,TSWTEAMS,TSGTEAMS"),
 
 	SAVE(997, "§6§lYou are about to save a Random Event, put 'Y' to confirm or 'N' to continue creating",
 			"ALLMINIGAMES"),
@@ -178,6 +177,7 @@ public enum Creacion {
 				}
 			}
 		}
+		
 		return creation;
 	}
 

@@ -60,6 +60,8 @@ public class Match implements Comparable<Match> {
 	private String material;
 
 	private List<MaterialData> datas;
+	
+	private Boolean allMaterialAllowed;
 
 	private List<String> scenes;
 	
@@ -84,6 +86,7 @@ public class Match implements Comparable<Match> {
 		this.scenes = new ArrayList<String>();
 		this.kits = new ArrayList<String>();
 		this.useOwnInventory=false;
+		this.allMaterialAllowed=false;
 	}
 
 	public String getName() {
@@ -110,6 +113,14 @@ public class Match implements Comparable<Match> {
 	// public void setEquipment(ItemStack[] equipment) {
 	// this.equipment = equipment;
 	// }
+
+	public Boolean getAllMaterialAllowed() {
+		return allMaterialAllowed;
+	}
+
+	public void setAllMaterialAllowed(Boolean allMaterialAllowed) {
+		this.allMaterialAllowed = allMaterialAllowed;
+	}
 
 	public Integer getAmountPlayers() {
 		return amountPlayers;

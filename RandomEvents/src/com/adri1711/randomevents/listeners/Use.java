@@ -120,11 +120,11 @@ public class Use implements Listener {
 					&& plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.HOEHOEHOE)) {
 				
 				
-				if (plugin.getMatchActive().getMatch().getDatas() != null
+				if (plugin.getMatchActive().getMatch().getAllMaterialAllowed() || (plugin.getMatchActive().getMatch().getDatas() != null
 						&& !plugin.getMatchActive().getMatch().getDatas().isEmpty()
 						&& evt.getClickedBlock().getType() != null && evt.getClickedBlock().getState().getData() != null
 						&& UtilsRandomEvents.contieneMaterialData(evt.getClickedBlock(),
-								plugin.getMatchActive().getMatch())) {
+								plugin.getMatchActive().getMatch()))) {
 					Integer equipo = plugin.getMatchActive().getEquipoCopy(player);
 					Petos peto = Petos.getPeto(equipo);
 					if (peto != null) {
@@ -473,10 +473,10 @@ public class Use implements Listener {
 								nextBlock.getState().getData().clone());
 						nextBlock.setType(XMaterial.AIR.parseMaterial());
 
-					} else if (plugin.getMatchActive().getMatch().getDatas() != null
+					} else if (plugin.getMatchActive().getMatch().getAllMaterialAllowed() || (plugin.getMatchActive().getMatch().getDatas() != null
 							&& !plugin.getMatchActive().getMatch().getDatas().isEmpty() && nextBlock.getType() != null
 							&& nextBlock.getState().getData() != null
-							&& UtilsRandomEvents.contieneMaterialData(nextBlock, plugin.getMatchActive().getMatch())) {
+							&& UtilsRandomEvents.contieneMaterialData(nextBlock, plugin.getMatchActive().getMatch()))) {
 						plugin.getMatchActive().getMapHandler().getBlockDisappeared().put(nextBlock.getLocation(),
 								nextBlock.getState().getData().clone());
 						nextBlock.setType(XMaterial.AIR.parseMaterial());
@@ -718,11 +718,11 @@ public class Use implements Listener {
 							} else {
 								evt.getBlock().breakNaturally();
 							}
-						} else if (plugin.getMatchActive().getMatch().getDatas() != null
+						} else if (plugin.getMatchActive().getMatch().getAllMaterialAllowed() || (plugin.getMatchActive().getMatch().getDatas() != null
 								&& !plugin.getMatchActive().getMatch().getDatas().isEmpty()
 								&& evt.getBlock().getType() != null && evt.getBlock().getState().getData() != null
 								&& UtilsRandomEvents.contieneMaterialData(evt.getBlock(),
-										plugin.getMatchActive().getMatch())) {
+										plugin.getMatchActive().getMatch()))) {
 							evt.setCancelled(true);
 							try {
 								plugin.getMatchActive().getMapHandler().getBlockDisappeared().put(
@@ -806,10 +806,10 @@ public class Use implements Listener {
 					plugin.getMatchActive().getMapHandler().getBlockPlaced().put(evt.getBlock().getLocation(),
 							evt.getBlock().getState().getData().clone());
 					// evt.getBlock().setType(XMaterial.AIR.parseMaterial());
-				} else if (plugin.getMatchActive().getMatch().getDatas() != null
+				} else if (plugin.getMatchActive().getMatch().getAllMaterialAllowed() || (plugin.getMatchActive().getMatch().getDatas() != null
 						&& !plugin.getMatchActive().getMatch().getDatas().isEmpty() && evt.getBlock().getType() != null
 						&& evt.getBlock().getState().getData() != null
-						&& UtilsRandomEvents.contieneMaterialData(evt.getBlock(), plugin.getMatchActive().getMatch())) {
+						&& UtilsRandomEvents.contieneMaterialData(evt.getBlock(), plugin.getMatchActive().getMatch()))) {
 					// evt.setCancelled(true);
 					evt.setCancelled(false);
 					plugin.getMatchActive().getMapHandler().getBlockPlaced().put(evt.getBlock().getLocation(),
@@ -896,7 +896,7 @@ public class Use implements Listener {
 							event.getBlock().setType(XMaterial.AIR.parseMaterial());
 							event.setCancelled(true);
 
-							if (plugin.getMatchActive().getMatch().getDatas() != null
+							if (plugin.getMatchActive().getMatch().getAllMaterialAllowed() || (plugin.getMatchActive().getMatch().getDatas() != null
 									&& !plugin.getMatchActive().getMatch().getDatas().isEmpty()
 									&& l2.getBlock().getType() != null && l2.getBlock().getState().getData() != null
 									&& (UtilsRandomEvents.contieneMaterialData(l2.getBlock(),
@@ -904,7 +904,7 @@ public class Use implements Listener {
 											|| l2.getBlock().getType().equals(XMaterial.ANVIL.parseMaterial())
 											|| l2.getBlock().getType().equals(XMaterial.CHIPPED_ANVIL.parseMaterial())
 											|| l2.getBlock().getType()
-													.equals(XMaterial.DAMAGED_ANVIL.parseMaterial()))) {
+													.equals(XMaterial.DAMAGED_ANVIL.parseMaterial())))) {
 								plugin.getMatchActive().getMapHandler().getBlockDisappeared()
 										.put(l2.getBlock().getLocation(), l2.getBlock().getState().getData().clone());
 								l2.getBlock().setType(XMaterial.AIR.parseMaterial());

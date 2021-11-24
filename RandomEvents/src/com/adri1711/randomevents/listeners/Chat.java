@@ -1444,6 +1444,11 @@ public class Chat implements Listener {
 					break;
 				case USE_OWN_INVENTORY:
 					match.setUseOwnInventory(!match.getUseOwnInventory());
+					actua=true;
+					break;
+				case ALL_BLOCKS_ALLOWED:
+					match.setAllMaterialAllowed(!match.getAllMaterialAllowed());
+					actua=true;
 					break;
 				default:
 					player.sendMessage(c.getMessage(match));

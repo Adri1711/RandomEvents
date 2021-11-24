@@ -2161,6 +2161,9 @@ public class MatchActive {
 
 						Integer random = getRandom().nextInt(100);
 						if (random < plugin.getReventConfig().getProbabilityPerCheckToStopSound()) {
+							UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersObj(),
+									plugin.getLanguage().getGreenRedLightStop(), false, true, false);
+
 							Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 								public void run() {
 									allowDamage = true;
@@ -2179,6 +2182,8 @@ public class MatchActive {
 							if (getPlayerHandler().getPlayerToKill().isEmpty()) {
 								allowDamage = false;
 								UtilsCitizen.turnAroundNPC(getMatch().getNPCId(), plugin);
+								UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersObj(),
+										plugin.getLanguage().getGreenRedLightMove(), false, true, false);
 								if (plugin.getReventConfig().getIsNoteBlockAPI())
 									SongUtils.playRecord(getPlayerHandler().getPlayersObj(), true, plugin);
 
@@ -2980,12 +2985,16 @@ public class MatchActive {
 					public void run() {
 						if (getPlayerHandler().getPlayersObj().contains(p) && getPlaying()) {
 							reiniciaGemCrawler(p);
+							invincibility(p);
+
 						}
 					}
 
 				}, 20L * plugin.getReventConfig().getCooldownAfterDeathSeconds());
 			} else {
 				reiniciaGemCrawler(p);
+				invincibility(p);
+
 			}
 			break;
 		case WDROP:
@@ -3011,6 +3020,8 @@ public class MatchActive {
 						if (getPlayerHandler().getPlayersObj().contains(p) && getPlaying()) {
 
 							reiniciaDefault(p);
+							invincibility(p);
+
 							if (plugin.getReventConfig().isQuakeGiveDefaultWeapon()) {
 								p.getInventory().addItem(XMaterial.STONE_HOE.parseItem());
 								p.updateInventory();
@@ -3021,6 +3032,8 @@ public class MatchActive {
 				}, 20L * plugin.getReventConfig().getCooldownAfterDeathSeconds());
 			} else {
 				reiniciaDefault(p);
+				invincibility(p);
+
 				if (plugin.getReventConfig().isQuakeGiveDefaultWeapon()) {
 					p.getInventory().addItem(XMaterial.STONE_HOE.parseItem());
 					p.updateInventory();
@@ -3042,6 +3055,8 @@ public class MatchActive {
 						if (getPlayerHandler().getPlayersObj().contains(p) && getPlaying()) {
 
 							reiniciaDefault(p);
+							invincibility(p);
+
 							if (getEquipo(p) != null)
 								p.getInventory().setChestplate(Petos.getPeto(getEquipo(p)).getPeto());
 							if (plugin.getReventConfig().isQuakeGiveDefaultWeapon()) {
@@ -3055,6 +3070,8 @@ public class MatchActive {
 				}, 20L * plugin.getReventConfig().getCooldownAfterDeathSeconds());
 			} else {
 				reiniciaDefault(p);
+				invincibility(p);
+
 				if (getEquipo(p) != null)
 					p.getInventory().setChestplate(Petos.getPeto(getEquipo(p)).getPeto());
 				if (plugin.getReventConfig().isQuakeGiveDefaultWeapon()) {
@@ -3080,18 +3097,37 @@ public class MatchActive {
 						if (getPlayerHandler().getPlayersObj().contains(p) && getPlaying()) {
 
 							reiniciaDefault(p);
+							invincibility(p);
 						}
 					}
 
 				}, 20L * plugin.getReventConfig().getCooldownAfterDeathSeconds());
 			} else {
 				reiniciaDefault(p);
+				invincibility(p);
+
 			}
 
 			break;
 		}
 		updateScoreboards();
 
+	}
+
+	public void invincibility(Player p) {
+		if (plugin.getReventConfig().getInvincibleAfterRespawn() > 0) {
+
+			getPlayerHandler().getPlayersInvincible().add(p.getName());
+			Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
+
+				@Override
+				public void run() {
+					getPlayerHandler().getPlayersInvincible().remove(p.getName());
+
+				}
+
+			}, 20L * plugin.getReventConfig().getInvincibleAfterRespawn());
+		}
 	}
 
 	private void reiniciaDefault(Player p) {
@@ -3213,6 +3249,8 @@ public class MatchActive {
 					}
 				}
 			}
+			if (getEquipo(p) != null)
+				p.getInventory().setChestplate(Petos.getPeto(getEquipo(p)).getPeto());
 			p.setGameMode(GameMode.SURVIVAL);
 			p.updateInventory();
 			p.setHealth(p.getMaxHealth());

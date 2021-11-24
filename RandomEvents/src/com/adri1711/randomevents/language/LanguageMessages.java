@@ -188,6 +188,9 @@ public class LanguageMessages {
 	private String playerOffline;
 	private String eventInvalid;
 	private String creditsEventRunning;
+	
+	private String greenRedLightMove;
+	private String greenRedLightStop;
 
 	private String guiCMD;
 
@@ -2360,5 +2363,22 @@ public class LanguageMessages {
 	public void setMinigameDescriptionREDGREEN(List<String> minigameDescriptionREDGREEN) {
 		this.minigameDescriptionREDGREEN = minigameDescriptionREDGREEN;
 	}
+	
+	public String getGreenRedLightMove() {
+		return greenRedLightMove.replaceAll("&", "§");
+	}
+
+	public void setGreenRedLightMove(String greenRedLightMove) {
+		this.greenRedLightMove = greenRedLightMove;
+	}
+
+	public String getGreenRedLightStop() {
+		return greenRedLightStop.replaceAll("&", "§");
+	}
+
+	public void setGreenRedLightStop(String greenRedLightStop) {
+		this.greenRedLightStop = greenRedLightStop;
+	}
+	
 
 }

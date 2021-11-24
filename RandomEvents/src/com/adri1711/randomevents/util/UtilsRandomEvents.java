@@ -1756,6 +1756,12 @@ public class UtilsRandomEvents {
 						}
 
 						break;
+					case ALL_BLOCKS_ALLOWED:
+						if (match.getAllMaterialAllowed() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + (match.getAllMaterialAllowed()?"Yes":"No");
+						}
+
+						break;
 					case AMOUNT_PLAYERS:
 						if (match.getAmountPlayers() != null) {
 							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getAmountPlayers();
