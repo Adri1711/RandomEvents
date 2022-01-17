@@ -174,7 +174,9 @@ public class LanguageMessages {
 	private String delete;
 	private String disable;
 	private String enable;
-
+	private String disableSchedule;
+	private String enableSchedule;
+	
 	private String creditsAddedOther;
 	private String creditsAdded;
 	private String creditsBal;
@@ -902,6 +904,22 @@ public class LanguageMessages {
 
 	public void setStatsDisabled(String statsDisabled) {
 		this.statsDisabled = statsDisabled;
+	}
+
+	public String getDisableSchedule() {
+		return disableSchedule.replaceAll("&", "§");
+	}
+
+	public void setDisableSchedule(String disableSchedule) {
+		this.disableSchedule = disableSchedule;
+	}
+
+	public String getEnableSchedule() {
+		return enableSchedule.replaceAll("&", "§");
+	}
+
+	public void setEnableSchedule(String enableSchedule) {
+		this.enableSchedule = enableSchedule;
 	}
 
 	public String getStatsWinsRatio() {

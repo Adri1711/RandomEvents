@@ -52,6 +52,7 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import com.adri1711.randomevents.RandomEvents;
@@ -395,6 +396,115 @@ public class UtilsRandomEvents {
 			}
 		}
 	}
+	public static void enableMatchSchedule(RandomEvents plugin, Match match, Player player) {
+		if (match.getEnabledSchedule() != null && !match.getEnabledSchedule()) {
+			plugin.getMatches().remove(match);
+			match.setEnabledSchedule(Boolean.TRUE);
+			try {
+				String json = UtilidadesJson.fromMatchToJSON(plugin, match);
+				if (json != null) {
+					File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//events");
+					if (!dataFolder.exists()) {
+						dataFolder.mkdir();
+					}
+
+					File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//events",
+							match.getMinigame().getCodigo() + "_" + ChatColor
+									.stripColor(match.getName().replaceAll("<color>", "§")).replaceAll(" ", "_")
+									+ ".json");
+					if (!bossFile.exists()) {
+						bossFile.createNewFile();
+					} else {
+						bossFile.delete();
+						bossFile.createNewFile();
+					}
+
+					OutputStream os = new FileOutputStream(bossFile, true);
+					PrintWriter pw = new PrintWriter(
+							new OutputStreamWriter(os, Charset.forName(plugin.getReventConfig().getUseEncoding())));
+
+					pw.println(json);
+
+					pw.flush();
+
+					pw.close();
+					plugin.getMatches().add(match);
+					plugin.getMatchesAvailableSchedule().add(match);
+					if (player != null) {
+						player.sendMessage(
+								plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getEventEnabled());
+					}
+				} else {
+					System.out.println("JSON was null.");
+					if (player != null) {
+						player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
+					}
+				}
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				if (player != null) {
+					player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
+				}
+			}
+		}
+	}
+
+	public static void disableMatchSchedule(RandomEvents plugin, Match match, Player player) {
+		if (match.getEnabledSchedule() == null || match.getEnabledSchedule()) {
+			plugin.getMatches().remove(match);
+			plugin.getMatchesAvailableSchedule().remove(match);
+			match.setEnabledSchedule(Boolean.FALSE);
+			try {
+				String json = UtilidadesJson.fromMatchToJSON(plugin, match);
+				if (json != null) {
+					File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//events");
+					if (!dataFolder.exists()) {
+						dataFolder.mkdir();
+					}
+
+					File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//events",
+							match.getMinigame().getCodigo() + "_" + ChatColor
+									.stripColor(match.getName().replaceAll("<color>", "§")).replaceAll(" ", "_")
+									+ ".json");
+					if (!bossFile.exists()) {
+						bossFile.createNewFile();
+					} else {
+						bossFile.delete();
+						bossFile.createNewFile();
+					}
+
+					OutputStream os = new FileOutputStream(bossFile, true);
+					PrintWriter pw = null;
+					pw = new PrintWriter(
+							new OutputStreamWriter(os, Charset.forName(plugin.getReventConfig().getUseEncoding())));
+
+					pw.println(json);
+
+					pw.flush();
+
+					pw.close();
+					plugin.getMatches().add(match);
+					if (player != null) {
+						player.sendMessage(
+								plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getEventDisabled());
+					}
+				} else {
+					System.out.println("JSON was null.");
+					if (player != null) {
+						player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
+					}
+				}
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				if (player != null) {
+					player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
+				}
+			}
+		}
+	}
+	
+	
+	
 
 	public static void borraMatch(RandomEvents plugin, Match match, Player player) {
 		try {
@@ -467,7 +577,8 @@ public class UtilsRandomEvents {
 
 	public static Boolean guardaInventario(RandomEvents plugin, Player player) {
 		Boolean exitoso = Boolean.TRUE;
-		if (plugin.getReventConfig().isInventoryManagement() && (plugin.getMatchActive()==null || !plugin.getMatchActive().getMatch().getUseOwnInventory())) {
+		if (plugin.getReventConfig().isInventoryManagement()
+				&& (plugin.getMatchActive() == null || !plugin.getMatchActive().getMatch().getUseOwnInventory())) {
 
 			File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories",
 					player.getName() + ".json");
@@ -564,7 +675,8 @@ public class UtilsRandomEvents {
 	}
 
 	public static void sacaInventario(RandomEvents plugin, Player player) {
-		if (plugin.getReventConfig().isInventoryManagement() && (plugin.getMatchActive()==null || !plugin.getMatchActive().getMatch().getUseOwnInventory())) {
+		if (plugin.getReventConfig().isInventoryManagement()
+				&& (plugin.getMatchActive() == null || !plugin.getMatchActive().getMatch().getUseOwnInventory())) {
 
 			File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories");
 			File dataFolderOld = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventoriesold");
@@ -1098,7 +1210,8 @@ public class UtilsRandomEvents {
 	}
 
 	public static void borraInventario(Player player, RandomEvents plugin) {
-		if (plugin.getReventConfig().isInventoryManagement() && (plugin.getMatchActive()==null || !plugin.getMatchActive().getMatch().getUseOwnInventory())) {
+		if (plugin.getReventConfig().isInventoryManagement()
+				&& (plugin.getMatchActive() == null || !plugin.getMatchActive().getMatch().getUseOwnInventory())) {
 			player.getInventory().clear();
 			player.getInventory().setHelmet(null);
 			player.getInventory().setLeggings(null);
@@ -1752,13 +1865,15 @@ public class UtilsRandomEvents {
 						break;
 					case USE_OWN_INVENTORY:
 						if (match.getUseOwnInventory() != null) {
-							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + (match.getUseOwnInventory()?"Yes":"No");
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
+									+ (match.getUseOwnInventory() ? "Yes" : "No");
 						}
 
 						break;
 					case ALL_BLOCKS_ALLOWED:
 						if (match.getAllMaterialAllowed() != null) {
-							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + (match.getAllMaterialAllowed()?"Yes":"No");
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
+									+ (match.getAllMaterialAllowed() ? "Yes" : "No");
 						}
 
 						break;
@@ -2004,7 +2119,7 @@ public class UtilsRandomEvents {
 				}
 				break;
 			case ID_NPC:
-				if (match.getNPCId() == null ) {
+				if (match.getNPCId() == null) {
 					res = Boolean.FALSE;
 				}
 				break;
@@ -3117,5 +3232,15 @@ public class UtilsRandomEvents {
 			}
 		}
 	}
+
+	public static void invinciblePlayer(Player player, RandomEvents plugin) {
+		if (plugin.getReventConfig().getInvincibleAfterGame() > 0) {
+			player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,
+					plugin.getReventConfig().getInvincibleAfterGame(), 20));
+		}
+
+	}
+	
+	
 
 }

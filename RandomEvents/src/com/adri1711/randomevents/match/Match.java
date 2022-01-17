@@ -68,6 +68,7 @@ public class Match implements Comparable<Match> {
 	private List<String> kits;
 
 	private Boolean enabled;
+	private Boolean enabledSchedule;
 	
 	private Integer numberOfTeams;
 	private Integer NPCId;
@@ -300,6 +301,15 @@ public class Match implements Comparable<Match> {
 
 	public List<String> getScenes() {
 		return scenes;
+	}
+	
+
+	public Boolean getEnabledSchedule() {
+		return enabledSchedule;
+	}
+
+	public void setEnabledSchedule(Boolean enabledSchedule) {
+		this.enabledSchedule = enabledSchedule;
 	}
 
 	public void setScenes(List<String> scenes) {

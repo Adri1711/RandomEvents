@@ -68,6 +68,7 @@ public class RandomEvents extends JavaPlugin {
 	private List<WaterDropStep> waterDrops;
 	private List<Kit> kits;
 	private List<Match> matchesAvailable;
+	private List<Match> matchesAvailableSchedule;
 
 	private Tournament tournament;
 
@@ -136,7 +137,6 @@ public class RandomEvents extends JavaPlugin {
 			System.out.println("[RandomEvents] CrackShot hooked succesfully!");
 
 		}
-		
 
 		if (getServer().getPluginManager().getPlugin("NametagEdit") != null) {
 			nametagHook = new NameTagHook(this);
@@ -155,9 +155,13 @@ public class RandomEvents extends JavaPlugin {
 				setKits(UtilsRandomEvents.cargarKits(getPlugin()));
 				setMatches(UtilsRandomEvents.cargarPartidas(getPlugin()));
 				matchesAvailable = new ArrayList<Match>();
+				matchesAvailableSchedule = new ArrayList<Match>();
 				for (Match match : matches) {
 					if (match.getEnabled() == null || match.getEnabled()) {
 						matchesAvailable.add(match);
+					}
+					if (match.getEnabled() == null || (match.getEnabled() && match.getEnabledSchedule())) {
+						matchesAvailableSchedule.add(match);
 					}
 				}
 				setSpawn(new Location(Bukkit.getWorld(getConfig().getString("spawn.world")),
@@ -213,68 +217,79 @@ public class RandomEvents extends JavaPlugin {
 			tournamentActive = null;
 			Bukkit.getServer().getScheduler().runTaskLater((Plugin) this, new Runnable() {
 				public void run() {
+					if (matchActive == null) {
+						if (matchesAvailable != null && !matchesAvailable.isEmpty()
+								&& Bukkit.getOnlinePlayers().size() >= reventConfig.getMinPlayers()) {
+							if (!forzado) {
 
-					if (matchesAvailable != null && !matchesAvailable.isEmpty()
-							&& Bukkit.getOnlinePlayers().size() >= reventConfig.getMinPlayers()) {
-						if (!forzado) {
-
-							if (reventConfig.getProbabilityRandomEvent() > random.nextInt(100)) {
-								if (reventConfig.getProbabilityRandomEventTournament() > random.nextInt(100)) {
-									tournamentActive = new TournamentActive(tournament, getPlugin(), false);
-								} else {
-									matchActive = UtilsRandomEvents.escogeMatchActiveAleatoria(getPlugin(),
-											matchesAvailable, false);
-									try {
-										Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(matchActive,false));
-									} catch (Exception e) {
-										System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+								if (reventConfig.getProbabilityRandomEvent() > random.nextInt(100)) {
+									if (reventConfig.getProbabilityRandomEventTournament() > random.nextInt(100)) {
+										tournamentActive = new TournamentActive(tournament, getPlugin(), false);
+									} else {
+										matchActive = UtilsRandomEvents.escogeMatchActiveAleatoria(getPlugin(),
+												matchesAvailable, false);
+										try {
+											Bukkit.getPluginManager()
+													.callEvent(new ReventSpawnEvent(matchActive, false));
+										} catch (Exception e) {
+											System.out.println(
+													"[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+										}
 									}
-								}
-							} else {
-								if (getSchedules() != null && !getSchedules().isEmpty()) {
-									Calendar c = Calendar.getInstance();
-									c.setTime(new Date());
-									Schedule sched = UtilsRandomEvents.findSchedule(getPlugin(),
-											c.get(Calendar.DAY_OF_WEEK), c.get(Calendar.HOUR_OF_DAY),
-											c.get(Calendar.MINUTE));
-									if (sched != null) {
-										if (sched.getMatchName() != null && !sched.getMatchName().isEmpty()) {
-											Match match = UtilsRandomEvents.findMatch(getPlugin(),
-													sched.getMatchName());
-											if (match != null) {
-												matchActive = new MatchActive(match, getPlugin(), false);
-												try {
-													Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(matchActive,false));
-												} catch (Exception e) {
-													System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+								} else {
+									if (getSchedules() != null && !getSchedules().isEmpty()) {
+										Calendar c = Calendar.getInstance();
+										c.setTime(new Date());
+										Schedule sched = UtilsRandomEvents.findSchedule(getPlugin(),
+												c.get(Calendar.DAY_OF_WEEK), c.get(Calendar.HOUR_OF_DAY),
+												c.get(Calendar.MINUTE));
+										if (sched != null) {
+											if (sched.getMatchName() != null && !sched.getMatchName().isEmpty()) {
+												Match match = UtilsRandomEvents.findMatch(getPlugin(),
+														sched.getMatchName());
+												if (match != null) {
+													matchActive = new MatchActive(match, getPlugin(), false);
+													try {
+														Bukkit.getPluginManager()
+																.callEvent(new ReventSpawnEvent(matchActive, false));
+													} catch (Exception e) {
+														System.out.println(
+																"[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+													}
+												} else {
+													matchActive = UtilsRandomEvents.escogeMatchActiveAleatoria(
+															getPlugin(), matchesAvailableSchedule, false);
+													try {
+														Bukkit.getPluginManager()
+																.callEvent(new ReventSpawnEvent(matchActive, false));
+													} catch (Exception e) {
+														System.out.println(
+																"[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+													}
 												}
 											} else {
 												matchActive = UtilsRandomEvents.escogeMatchActiveAleatoria(getPlugin(),
-														matchesAvailable, false);
+														matchesAvailableSchedule, false);
 												try {
-													Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(matchActive,false));
+													Bukkit.getPluginManager()
+															.callEvent(new ReventSpawnEvent(matchActive, false));
 												} catch (Exception e) {
-													System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+													System.out.println(
+															"[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
 												}
 											}
 										} else {
-											matchActive = UtilsRandomEvents.escogeMatchActiveAleatoria(getPlugin(),
-													matchesAvailable, false);
-											try {
-												Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(matchActive,false));
-											} catch (Exception e) {
-												System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
-											}
+											comienzaTemporizador();
+
 										}
 									} else {
+
 										comienzaTemporizador();
-
 									}
-								} else {
-
-									comienzaTemporizador();
 								}
 							}
+						} else {
+							comienzaTemporizador();
 						}
 					} else {
 						comienzaTemporizador();
@@ -567,6 +582,14 @@ public class RandomEvents extends JavaPlugin {
 
 	public void setMatchesAvailable(List<Match> matchesAvailable) {
 		this.matchesAvailable = matchesAvailable;
+	}
+
+	public List<Match> getMatchesAvailableSchedule() {
+		return matchesAvailableSchedule;
+	}
+
+	public void setMatchesAvailableSchedule(List<Match> matchesAvailableSchedule) {
+		this.matchesAvailableSchedule = matchesAvailableSchedule;
 	}
 
 	public Tournament getTournament() {

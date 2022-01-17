@@ -1,8 +1,10 @@
 package com.adri1711.randomevents.api;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.match.Match;
@@ -19,5 +21,32 @@ public class RandomEventsAPI {
 	public static MatchActive getMatch() {
 		return plugin.getMatchActive();
 	}
+
+	public static List<Player> getPlayers() {
+		List<Player> players = new ArrayList<Player>();
+		if (plugin.getMatchActive() != null) {
+			players = plugin.getMatchActive().getPlayerHandler().getPlayersObj();
+		}
+		return players;
+
+	}
+
+	public static List<Player> getSpectators() {
+		List<Player> players = new ArrayList<Player>();
+		if (plugin.getMatchActive() != null) {
+			players = plugin.getMatchActive().getPlayerHandler().getPlayersSpectators();
+		}
+		return players;
+
+	}
+
+	public static String getMinigame() {
+		return plugin.getMatchActive() != null ? plugin.getMatchActive().getMatch().getMinigame().getCodigo() : null;
+	}
+
+	public static String getMatchName() {
+		return plugin.getMatchActive() != null ? plugin.getMatchActive().getMatch().getName() : null;
+	}
+	
 
 }

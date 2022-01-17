@@ -82,6 +82,10 @@ public enum ComandosEnum {
 	CMD_DISABLE("disable", 2, "randomevent.admin.disable", "getDisable", "disableRandomEvent", true, true),
 
 	CMD_ENABLE("enable", 2, "randomevent.admin.enable", "getEnable", "enableRandomEvent", true, true),
+	
+	CMD_DISABLE_SCHED("disableschedule", 2, "randomevent.admin.disable", "getDisableSchedule", "disableRandomEventSchedule", true, true),
+
+	CMD_ENABLE_SCHED("enableschedule", 2, "randomevent.admin.enable", "getEnableSchedule", "enableRandomEventSchedule", true, true),
 
 	CMD_EDIT("edit", 2, "randomevent.admin.edit", "getEdit", "editRandomEvent", true, true),
 

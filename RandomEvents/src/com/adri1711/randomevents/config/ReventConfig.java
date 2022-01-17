@@ -2,29 +2,23 @@ package com.adri1711.randomevents.config;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scoreboard.Scoreboard;
 
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.language.LanguageMessages;
-import com.adri1711.randomevents.match.Kit;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.Tournament;
-import com.adri1711.randomevents.match.WaterDropStep;
 import com.adri1711.randomevents.match.utils.BannedPlayers;
 import com.adri1711.randomevents.metrics.Metrics;
 import com.adri1711.randomevents.placeholders.ReventPlaceholder;
-import com.adri1711.randomevents.util.NameTagHook;
 import com.adri1711.randomevents.util.UtilsRandomEvents;
 import com.adri1711.util.enums.XMaterial;
 
@@ -44,6 +38,8 @@ public class ReventConfig {
 
 	private ItemStack powerUpItem;
 	private ItemStack checkpointItem;
+
+	private Integer invincibleAfterGame;
 
 	private Boolean useLastLocation;
 
@@ -206,7 +202,7 @@ public class ReventConfig {
 
 	private boolean globalCooldown;
 
-	private String cmdAlias;
+	private List<String> cmdAlias;
 
 	private boolean needPasswordToJoin;
 
@@ -332,6 +328,12 @@ public class ReventConfig {
 
 	private int invincibleAfterRespawn;
 
+	private Boolean restrictWorlds;
+
+	private List<String> allowedWorlds;
+	
+	private Boolean teamMatchRandomRespawn;
+
 	public ReventConfig(RandomEvents plugin) {
 		super();
 		this.plugin = plugin;
@@ -386,6 +388,7 @@ public class ReventConfig {
 		tournament.setMinPlayers(plugin.getConfig().getInt("tournament.minPlayers"));
 		tournament.setNumberOfRounds(plugin.getConfig().getInt("tournament.numberOfRounds"));
 		tournament.setRewards(plugin.getConfig().getStringList("tournament.rewards"));
+
 		tournament.setPlayerSpawn(new Location(Bukkit.getWorld(plugin.getConfig().getString("tournament.spawn.world")),
 				plugin.getConfig().getDouble("tournament.spawn.x"), plugin.getConfig().getDouble("tournament.spawn.y"),
 				plugin.getConfig().getDouble("tournament.spawn.z"),
@@ -394,6 +397,7 @@ public class ReventConfig {
 		plugin.setTournament(tournament);
 
 		this.warmupTimeTNTRUN = plugin.getConfig().getInt("warmupTimeTNTRUN");
+		this.invincibleAfterGame = plugin.getConfig().getInt("invincibleAfterGame");
 		this.numberOfTriesBeforeCancelling = plugin.getConfig().getInt("numberOfTriesBeforeCancelling");
 
 		plugin.setSpawn(new Location(Bukkit.getWorld(plugin.getConfig().getString("spawn.world")),
@@ -405,7 +409,10 @@ public class ReventConfig {
 		this.minPlayers = Integer.valueOf(plugin.getConfig().getInt("minPlayers"));
 		this.idleTimeForDamage = Integer.valueOf(plugin.getConfig().getInt("idleTimeForDamage"));
 		this.sgAreaDamage = Double.valueOf(plugin.getConfig().getDouble("sgAreaDamage"));
-
+		this.restrictWorlds = plugin.getConfig().getBoolean("restrictWorlds");
+		this.teamMatchRandomRespawn = plugin.getConfig().getBoolean("teamMatchRandomRespawn");
+		
+		this.allowedWorlds = plugin.getConfig().getStringList("allowedWorlds");
 		this.bombardmentBombSpeed = Double.valueOf(plugin.getConfig().getDouble("bombardmentBombSpeed"));
 		this.bombardmentBombDirection = Double.valueOf(plugin.getConfig().getDouble("bombardmentBombDirection"));
 
@@ -463,7 +470,10 @@ public class ReventConfig {
 		if (useEncoding.equals("UTF_8")) {
 			useEncoding = "UTF-8";
 		}
-		this.cmdAlias = plugin.getConfig().getString("cmdAlias");
+		this.cmdAlias = new ArrayList<String>();
+		for (String ali : plugin.getConfig().getString("cmdAlias").split(";")) {
+			cmdAlias.add(ali);
+		}
 
 		Material mat = null;
 		String statsMenuFill = plugin.getConfig().getString("statsmenu.fill");
@@ -1432,11 +1442,11 @@ public class ReventConfig {
 		this.globalCooldown = globalCooldown;
 	}
 
-	public String getCmdAlias() {
+	public List<String> getCmdAlias() {
 		return cmdAlias;
 	}
 
-	public void setCmdAlias(String cmdAlias) {
+	public void setCmdAlias(List<String> cmdAlias) {
 		this.cmdAlias = cmdAlias;
 	}
 
@@ -1966,6 +1976,38 @@ public class ReventConfig {
 
 	public void setInvincibleAfterRespawn(int invincibleAfterRespawn) {
 		this.invincibleAfterRespawn = invincibleAfterRespawn;
+	}
+
+	public Integer getInvincibleAfterGame() {
+		return invincibleAfterGame;
+	}
+
+	public void setInvincibleAfterGame(Integer invincibleAfterGame) {
+		this.invincibleAfterGame = invincibleAfterGame;
+	}
+
+	public Boolean getRestrictWorlds() {
+		return restrictWorlds;
+	}
+
+	public void setRestrictWorlds(Boolean restrictWorlds) {
+		this.restrictWorlds = restrictWorlds;
+	}
+
+	public List<String> getAllowedWorlds() {
+		return allowedWorlds;
+	}
+
+	public void setAllowedWorlds(List<String> allowedWorlds) {
+		this.allowedWorlds = allowedWorlds;
+	}
+
+	public Boolean getTeamMatchRandomRespawn() {
+		return teamMatchRandomRespawn;
+	}
+
+	public void setTeamMatchRandomRespawn(Boolean teamMatchRandomRespawn) {
+		this.teamMatchRandomRespawn = teamMatchRandomRespawn;
 	}
 
 }

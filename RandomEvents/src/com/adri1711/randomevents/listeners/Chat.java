@@ -54,7 +54,7 @@ public class Chat implements Listener {
 			}
 		}
 
-		if (aliase.equalsIgnoreCase(plugin.getReventConfig().getCmdAlias())) {
+		if (plugin.getReventConfig().getCmdAlias().contains(aliase.toLowerCase())) {
 			event.setCancelled(true);
 			plugin.onCommand(event.getPlayer(), null, "revent", campos.toArray(new String[campos.size()]));
 		} else {

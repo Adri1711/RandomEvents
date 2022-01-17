@@ -38,12 +38,12 @@ public class ComandosExecutor {
 						.getAmountPlayers()) {
 					if (plugin.getMatchActive().getPassword().equals(password)) {
 						if (UtilsRandomEvents.checkBanned(player, plugin)) {
-							player.sendMessage(
-									plugin.getLanguage().getTagPlugin() + " "
-											+ plugin.getLanguage().getYouAreBanned().replaceAll("%time%",
-													UtilsRandomEvents.calculateTime((plugin.getReventConfig()
-															.getBannedPlayers().getBannedPlayers().get(player.getName())
-															- (new Date()).getTime()) / 1000,plugin)));
+							player.sendMessage(plugin.getLanguage().getTagPlugin() + " "
+									+ plugin.getLanguage().getYouAreBanned().replaceAll("%time%",
+											UtilsRandomEvents.calculateTime(
+													(plugin.getReventConfig().getBannedPlayers().getBannedPlayers()
+															.get(player.getName()) - (new Date()).getTime()) / 1000,
+													plugin)));
 						} else {
 							plugin.getMatchActive().uneAPlayer(player);
 						}
@@ -73,12 +73,12 @@ public class ComandosExecutor {
 						.getAmountPlayers()) {
 					if (!plugin.getReventConfig().isNeedPasswordToJoin()) {
 						if (UtilsRandomEvents.checkBanned(player, plugin)) {
-							player.sendMessage(
-									plugin.getLanguage().getTagPlugin() + " "
-											+ plugin.getLanguage().getYouAreBanned().replaceAll("%time%",
-													UtilsRandomEvents.calculateTime((plugin.getReventConfig()
-															.getBannedPlayers().getBannedPlayers().get(player.getName())
-															- (new Date()).getTime()) / 1000,plugin)));
+							player.sendMessage(plugin.getLanguage().getTagPlugin() + " "
+									+ plugin.getLanguage().getYouAreBanned().replaceAll("%time%",
+											UtilsRandomEvents.calculateTime(
+													(plugin.getReventConfig().getBannedPlayers().getBannedPlayers()
+															.get(player.getName()) - (new Date()).getTime()) / 1000,
+													plugin)));
 						} else {
 							plugin.getMatchActive().uneAPlayer(player);
 						}
@@ -107,11 +107,11 @@ public class ComandosExecutor {
 				if (UtilsRandomEvents.checkBanned(player, plugin)) {
 					player.sendMessage(
 							plugin.getLanguage().getTagPlugin() + " "
-									+ plugin.getLanguage().getYouAreBanned()
-											.replaceAll("%time%",
-													UtilsRandomEvents.calculateTime((plugin.getReventConfig()
-															.getBannedPlayers().getBannedPlayers().get(player.getName())
-															- (new Date()).getTime()) / 1000,plugin)));
+									+ plugin.getLanguage().getYouAreBanned().replaceAll("%time%",
+											UtilsRandomEvents.calculateTime(
+													(plugin.getReventConfig().getBannedPlayers().getBannedPlayers()
+															.get(player.getName()) - (new Date()).getTime()) / 1000,
+													plugin)));
 				} else {
 					plugin.getMatchActive().uneAPlayerSpec(player);
 				}
@@ -136,7 +136,8 @@ public class ComandosExecutor {
 								+ plugin.getLanguage().getYouAreBanned().replaceAll("%time%",
 										UtilsRandomEvents.calculateTime(
 												(plugin.getReventConfig().getBannedPlayers().getBannedPlayers()
-														.get(player.getName()) - (new Date()).getTime()) / 1000,plugin)));
+														.get(player.getName()) - (new Date()).getTime()) / 1000,
+												plugin)));
 					} else {
 						plugin.getTournamentActive().uneAPlayer(player);
 					}
@@ -175,12 +176,12 @@ public class ComandosExecutor {
 			}
 			plugin.getReventConfig().getBannedPlayers().getBannedPlayers().put(namePlayer, c.getTime().getTime());
 			for (Player pla : Bukkit.getOnlinePlayers()) {
-				pla.sendMessage(plugin.getLanguage().getTagPlugin() + " "
-						+ plugin.getLanguage().getBanPlayer()
-								.replaceAll("%time%",
-										UtilsRandomEvents
-												.calculateTime((c.getTime().getTime() - (new Date()).getTime()) / 1000,plugin))
-								.replaceAll("%player%", namePlayer));
+				pla.sendMessage(
+						plugin.getLanguage().getTagPlugin() + " "
+								+ plugin.getLanguage().getBanPlayer()
+										.replaceAll("%time%", UtilsRandomEvents.calculateTime(
+												(c.getTime().getTime() - (new Date()).getTime()) / 1000, plugin))
+										.replaceAll("%player%", namePlayer));
 			}
 		} catch (Exception e) {
 
@@ -211,13 +212,13 @@ public class ComandosExecutor {
 			}
 			plugin.getReventConfig().getBannedPlayers().getBannedPlayers().put(namePlayer, c.getTime().getTime());
 			for (Player pla : Bukkit.getOnlinePlayers()) {
-				pla.sendMessage(plugin.getLanguage().getTagPlugin() + " "
-						+ plugin.getLanguage().getBanPlayer()
-								.replaceAll("%time%",
-										UtilsRandomEvents
-												.calculateTime((c.getTime().getTime() - (new Date()).getTime()) / 1000,plugin))
-								.replaceAll("%player%", namePlayer)
-						+ ". Reason: " + reason);
+				pla.sendMessage(
+						plugin.getLanguage().getTagPlugin() + " "
+								+ plugin.getLanguage().getBanPlayer()
+										.replaceAll("%time%", UtilsRandomEvents.calculateTime(
+												(c.getTime().getTime() - (new Date()).getTime()) / 1000, plugin))
+										.replaceAll("%player%", namePlayer)
+								+ ". Reason: " + reason);
 			}
 		} catch (Exception e) {
 
@@ -310,6 +311,37 @@ public class ComandosExecutor {
 		}
 
 	}
+	public void disableRandomEventSchedule(RandomEvents plugin, Player player, String number) {
+		try {
+			Match match = plugin.getMatches().get(Integer.valueOf(number));
+			if (match != null) {
+				UtilsRandomEvents.disableMatchSchedule(plugin, match, player);
+			} else {
+				if (player != null)
+					player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());
+			}
+		} catch (Exception e) {
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());
+		}
+
+	}
+
+	public void enableRandomEventSchedule(RandomEvents plugin, Player player, String number) {
+		try {
+			Match match = plugin.getMatches().get(Integer.valueOf(number));
+			if (match != null) {
+				UtilsRandomEvents.enableMatchSchedule(plugin, match, player);
+			} else {
+				if (player != null)
+					player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());
+			}
+		} catch (Exception e) {
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());
+		}
+
+	}
 
 	public void showRandomEvents(RandomEvents plugin, Player player) {
 		player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getMatches());
@@ -318,10 +350,12 @@ public class ComandosExecutor {
 
 				player.sendMessage(((m.getEnabled() == null || m.getEnabled()) ? "§6" : "§c") + "§l"
 						+ plugin.getMatches().indexOf(m) + " - " + m.getMinigame().getMessage(plugin) + " -> "
-						+ m.getName().replaceAll(" ", "_"));
+						+ m.getName().replaceAll(" ", "_") + ""
+						+ ((m.getEnabledSchedule() == null || m.getEnabledSchedule()) ? "" : "§c(Schedule Disabled)"));
 			} else {
 				System.out.println(plugin.getMatches().indexOf(m) + " - " + m.getMinigame().getMessage(plugin) + " -> "
-						+ m.getName().replaceAll(" ", "_"));
+						+ m.getName().replaceAll(" ", "_") + ""
+						+ ((m.getEnabledSchedule() == null || m.getEnabledSchedule()) ? "" : "§c(Schedule Disabled)"));
 			}
 		}
 
@@ -360,7 +394,7 @@ public class ComandosExecutor {
 					// + (s.getMinute() > 10 ? s.getMinute() : ("0" +
 					// s.getMinute())));
 					player.sendMessage(plugin.getLanguage().getNextEventIsRandom() + " "
-							+ UtilsRandomEvents.calculateTime((d.getTime() - new Date().getTime()) / 1000,plugin));
+							+ UtilsRandomEvents.calculateTime((d.getTime() - new Date().getTime()) / 1000, plugin));
 
 				} else {
 					// player.sendMessage(plugin.getLanguage().getNextEventName()
@@ -371,7 +405,7 @@ public class ComandosExecutor {
 					// + (s.getMinute() > 10 ? s.getMinute() : ("0" +
 					// s.getMinute())));
 					player.sendMessage(plugin.getLanguage().getNextEventName() + s.getMatchName() + " "
-							+ UtilsRandomEvents.calculateTime((d.getTime() - new Date().getTime()) / 1000,plugin));
+							+ UtilsRandomEvents.calculateTime((d.getTime() - new Date().getTime()) / 1000, plugin));
 				}
 			}
 		} else {
@@ -400,7 +434,7 @@ public class ComandosExecutor {
 			plugin.setMatchActive(
 					UtilsRandomEvents.escogeMatchActiveAleatoria(plugin, plugin.getMatchesAvailable(), true));
 			try {
-				Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(plugin.getMatchActive(),true));
+				Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(plugin.getMatchActive(), true));
 			} catch (Exception e) {
 				System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
 			}
@@ -435,7 +469,7 @@ public class ComandosExecutor {
 					plugin.setForzado(Boolean.TRUE);
 					plugin.setMatchActive(new MatchActive(m, plugin, true));
 					try {
-						Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(plugin.getMatchActive(),true));
+						Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(plugin.getMatchActive(), true));
 					} catch (Exception e) {
 						System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
 					}

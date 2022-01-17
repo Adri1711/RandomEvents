@@ -340,10 +340,11 @@ public class MatchActive {
 
 	private void procesoUnirPlayer(Player player) {
 		if (UtilsRandomEvents.guardaInventario(plugin, player)) {
+			hazComandosDeUnion(player);
+
 			UtilsRandomEvents.borraInventario(player, plugin);
 			if (UtilsRandomEvents.teleportaPlayer(player, match.getPlayerSpawn(), plugin)) {
 
-				hazComandosDeUnion(player);
 				getPlayerHandler().getPlayers().add(player.getName());
 				getPlayerHandler().getPlayersObj().add(player);
 				getPlayerHandler().getPlayersSpectators().add(player);
@@ -495,6 +496,7 @@ public class MatchActive {
 			}
 			try {
 				if (sacaSpectator || match.getSpectatorSpawns() == null || match.getSpectatorSpawns().isEmpty()) {
+					UtilsRandomEvents.invinciblePlayer(player, plugin);
 					res = UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin, true);
 				} else {
 					Location l = null;
@@ -504,6 +506,7 @@ public class MatchActive {
 						i++;
 					}
 					if (l != null) {
+						UtilsRandomEvents.invinciblePlayer(player, plugin);
 						UtilsRandomEvents.teleportaPlayer(player, l, plugin);
 					}
 					player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getLeaveCommand());
@@ -600,6 +603,7 @@ public class MatchActive {
 				}
 			}
 			if (sacaSpectator || match.getSpectatorSpawns() == null || match.getSpectatorSpawns().isEmpty()) {
+				UtilsRandomEvents.invinciblePlayer(player, plugin);
 				UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin, true);
 			} else {
 				UtilsRandomEvents.teleportaPlayer(player,
@@ -1361,6 +1365,7 @@ public class MatchActive {
 
 		}
 		Double jumpStrength = null;
+		Double speed = null;
 		switch (match.getMinigame()) {
 		case SG:
 			for (Player p : getPlayerHandler().getPlayersSpectators()) {
@@ -1918,6 +1923,11 @@ public class MatchActive {
 				} else {
 					horse.setJumpStrength(jumpStrength);
 				}
+				if (speed == null) {
+					speed = plugin.getApi().getHorseSpeed(horse);
+				} else {
+					plugin.getApi().setHorseSpeed(horse, speed);
+				}
 
 				horse.getInventory().setSaddle(new ItemStack(XMaterial.SADDLE.parseMaterial(), 1)); // Gives
 				// horse
@@ -1951,6 +1961,11 @@ public class MatchActive {
 					} else {
 						horse.setJumpStrength(jumpStrength);
 					}
+					if (speed == null) {
+						speed = plugin.getApi().getHorseSpeed(horse);
+					} else {
+						plugin.getApi().setHorseSpeed(horse, speed);
+					}
 					// the
 					// horse
 					horse.getInventory().setSaddle(new ItemStack(XMaterial.SADDLE.parseMaterial(), 1)); // Gives
@@ -1973,6 +1988,11 @@ public class MatchActive {
 						jumpStrength = horse.getJumpStrength();
 					} else {
 						horse.setJumpStrength(jumpStrength);
+					}
+					if (speed == null) {
+						speed = plugin.getApi().getHorseSpeed(horse);
+					} else {
+						plugin.getApi().setHorseSpeed(horse, speed);
 					}
 					// the
 					// horse
@@ -3133,7 +3153,14 @@ public class MatchActive {
 	private void reiniciaDefault(Player p) {
 		p.setGameMode(GameMode.SURVIVAL);
 
-		Location loc2 = match.getSpawns().get(getRandom().nextInt(match.getSpawns().size()));
+		Location loc2 = null;
+		
+		if(getPlayerHandler().getEquipos()!=null && !getPlayerHandler().getEquipos().isEmpty() && !plugin.getReventConfig().getTeamMatchRandomRespawn()){
+			loc2=match.getSpawns().get(getEquipo(p));
+
+		}else{
+			loc2=match.getSpawns().get(getRandom().nextInt(match.getSpawns().size()));
+		}
 		UtilsRandomEvents.teleportaPlayer(p, loc2, plugin);
 
 		ponInventarioMatch(p);
@@ -3344,7 +3371,10 @@ public class MatchActive {
 							String startingMatch = plugin.getLanguage().getStartingMatch().replaceAll("%time%",
 									startTime.toString());
 							for (Player p : Bukkit.getOnlinePlayers()) {
-								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())) {
+								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())
+										&& (!plugin.getReventConfig().getRestrictWorlds() || (p.getWorld() != null
+												&& p.getWorld().getName() != null && plugin.getReventConfig()
+														.getAllowedWorlds().contains(p.getWorld().getName())))) {
 
 									p.sendMessage(plugin.getLanguage().getTagPlugin() + startingMatch);
 								}
@@ -3417,7 +3447,10 @@ public class MatchActive {
 						// ultimasPartes.remove(0);
 
 						for (Player p : Bukkit.getOnlinePlayers()) {
-							if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())) {
+							if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())
+									&& (!plugin.getReventConfig().getRestrictWorlds() || (p.getWorld() != null
+											&& p.getWorld().getName() != null && plugin.getReventConfig()
+													.getAllowedWorlds().contains(p.getWorld().getName())))) {
 								if (playSound) {
 									UtilsRandomEvents.playSound(plugin, p, XSound.ENTITY_VILLAGER_HURT);
 								}
@@ -3476,7 +3509,10 @@ public class MatchActive {
 								String startingMatch = plugin.getLanguage().getStartingMatch().replaceAll("%time%",
 										startTime.toString());
 								for (Player p : Bukkit.getOnlinePlayers()) {
-									if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())) {
+									if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())
+											&& (!plugin.getReventConfig().getRestrictWorlds() || (p.getWorld() != null
+													&& p.getWorld().getName() != null && plugin.getReventConfig()
+															.getAllowedWorlds().contains(p.getWorld().getName())))) {
 
 										p.sendMessage(plugin.getLanguage().getTagPlugin() + startingMatch);
 									}
@@ -3549,7 +3585,10 @@ public class MatchActive {
 							// ultimasPartes.remove(0);
 
 							for (Player p : Bukkit.getOnlinePlayers()) {
-								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())) {
+								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())
+										&& (!plugin.getReventConfig().getRestrictWorlds() || (p.getWorld() != null
+												&& p.getWorld().getName() != null && plugin.getReventConfig()
+														.getAllowedWorlds().contains(p.getWorld().getName())))) {
 									if (playSound) {
 										UtilsRandomEvents.playSound(plugin, p, XSound.ENTITY_VILLAGER_HURT);
 									}

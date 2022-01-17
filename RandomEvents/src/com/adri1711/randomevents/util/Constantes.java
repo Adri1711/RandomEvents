@@ -135,6 +135,12 @@ public class Constantes {
 
 		CMD_ENABLE("enable", "menu.admin.enable",
 				"   &6/revent enable <number>:\n          &e-> Enables a Random Event"),
+		
+		CMD_DISABLE_SCHEDULE("disableSchedule", "menu.admin.disableschedule",
+				"   &6/revent disableschedule <number>:\n          &e-> Disables a Random Event on Schedule"),
+
+		CMD_ENABLE_SCHEDULE("enableSchedule", "menu.admin.enableschedule",
+				"   &6/revent enableschedule <number>:\n          &e-> Enables a Random Event on Schedule"),
 
 		CMD_EDIT("edit", "menu.admin.edit", "   &6/revent edit <number>:\n          &e-> Edits a Random Event"),
 

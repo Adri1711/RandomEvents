@@ -13,10 +13,15 @@ useEncoding: 'UTF-8'
 ##################################################################
 ##						  GENERAL   							##
 ##################################################################
-cmdAlias: 'revent'
+
+##You can concatenate diferent alias with ';' (DONT USE CAPS HERE)
+cmdAlias: 'revent;event'
 
 ##Deactivate all sounds of the plugin
 deactivateSounds: false
+
+##Ticks invincible after game
+invincibleAfterGame: 0
 
 ##Distance to clear entities when a match end, this will clear dropped items when the match finish
 distanceClearEntities: 20
@@ -62,6 +67,9 @@ forcePlayersToEnter: false
 
 ##Force the players to enter the random event spectating ( It will works only if forcePlayersToEnter is enabled )
 forcePlayersToSpectate: false
+
+##Respawn on a random spawn in team games
+teamMatchRandomRespawn: false
 
 ##CAUTION. IT IS HIGHLY RECOMMENDED to let it true. If false, the plugin will not manage the items so players will join with own items and can lose them there.
 ##Some minigames might not work if its set to false (Splegg, TNT Tag...) as they need special items to work
@@ -109,7 +117,13 @@ allowedCmds:
     - msg
     - ac
     - revent
-    - randomevent
+    - randomevent   
+##Restrict to certain worlds
+restrictWorlds: false
+##Allowed worlds for broadcast (DONT USE CAPS HERE)
+allowedWorlds:
+    - 'world'
+
 ##################################################################
 ##					 SOME MINIGAMES SETUP       				##
 ##################################################################
