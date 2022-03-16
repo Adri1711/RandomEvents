@@ -14,6 +14,8 @@ public class InventoryPers {
 
 	private float totalExp;
 	private int level;
+	private int hunger;
+	private double health;
 
 	private ItemStack helmet;
 	private ItemStack chestplate;
@@ -184,6 +186,22 @@ public class InventoryPers {
 		if (Float.floatToIntBits(totalExp) != Float.floatToIntBits(other.totalExp))
 			return false;
 		return true;
+	}
+
+	public int getHunger() {
+		return hunger;
+	}
+
+	public void setHunger(int hunger) {
+		this.hunger = hunger;
+	}
+
+	public double getHealth() {
+		return health;
+	}
+
+	public void setHealth(double health) {
+		this.health = health;
 	}
 
 }

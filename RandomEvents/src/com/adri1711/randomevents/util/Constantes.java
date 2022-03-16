@@ -143,6 +143,8 @@ public class Constantes {
 				"   &6/revent enableschedule <number>:\n          &e-> Enables a Random Event on Schedule"),
 
 		CMD_EDIT("edit", "menu.admin.edit", "   &6/revent edit <number>:\n          &e-> Edits a Random Event"),
+		
+		CMD_TP("tp", "menu.admin.tp", "   &6/revent tp <number>:\n          &e-> Teleport to a Random Event"),
 
 		CMD_CANCEL("cancel", "menu.admin.cancel",
 				"   &6/revent cancel:\n          &e-> Cancels the creation of a Random Event"),

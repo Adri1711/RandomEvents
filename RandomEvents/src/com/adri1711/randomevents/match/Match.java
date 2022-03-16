@@ -3,6 +3,7 @@ package com.adri1711.randomevents.match;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
@@ -14,6 +15,8 @@ import com.adri1711.randomevents.match.utils.InventoryPers;
 public class Match implements Comparable<Match> {
 
 	private String name;
+	
+	private String permission;
 
 	private InventoryPers inventory;
 
@@ -72,6 +75,8 @@ public class Match implements Comparable<Match> {
 	
 	private Integer numberOfTeams;
 	private Integer NPCId;
+	
+	private GameMode gamemode;
 	
 	private ItemStack head;
 
@@ -505,6 +510,22 @@ public class Match implements Comparable<Match> {
 
 	public void setHead(ItemStack head) {
 		this.head = head;
+	}
+
+	public GameMode getGamemode() {
+		return gamemode;
+	}
+
+	public void setGamemode(GameMode gamemode) {
+		this.gamemode = gamemode;
+	}
+
+	public String getPermission() {
+		return permission;
+	}
+
+	public void setPermission(String permission) {
+		this.permission = permission;
 	}
 
 	

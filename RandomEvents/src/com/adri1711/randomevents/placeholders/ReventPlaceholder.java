@@ -142,6 +142,24 @@ public class ReventPlaceholder extends PlaceholderExpansion {
 				res = "No";
 			}
 
+		} else if (identifier.equals("player_event_name")) {
+
+			if (plugin.getMatchActive() != null
+					&& plugin.getMatchActive().getPlayerHandler().getPlayersObj().contains(p)) {
+				res = plugin.getMatchActive().getMatch().getName();
+			} else {
+				res = "NULL";
+			}
+
+		} else if (identifier.equals("player_event_type")) {
+
+			if (plugin.getMatchActive() != null
+					&& plugin.getMatchActive().getPlayerHandler().getPlayersObj().contains(p)) {
+				res = plugin.getMatchActive().getMatch().getMinigame().getMessage(plugin);
+			} else {
+				res = "NULL";
+			}
+
 		}
 
 		return res;

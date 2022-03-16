@@ -1,7 +1,9 @@
 package com.adri1711.randomevents;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,10 +15,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
@@ -24,8 +29,11 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import com.adri1711.api.API1711;
 import com.adri1711.randomevents.api.events.ReventSpawnEvent;
 import com.adri1711.randomevents.bbdd.HikariCP;
+import com.adri1711.randomevents.commands.CmdExecutor;
 import com.adri1711.randomevents.commands.Comandos;
 import com.adri1711.randomevents.commands.ComandosExecutor;
+import com.adri1711.randomevents.commands.CommandCompletion;
+import com.adri1711.randomevents.commands.GenericCommand;
 import com.adri1711.randomevents.config.Configuration;
 import com.adri1711.randomevents.config.ReventConfig;
 import com.adri1711.randomevents.language.LanguageMessages;
@@ -106,6 +114,10 @@ public class RandomEvents extends JavaPlugin {
 
 	private Scoreboard colorBoard;
 
+	private CmdExecutor cmdExecutor;
+	private static SimpleCommandMap scm;
+	private SimplePluginManager spm;
+
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
 
@@ -160,7 +172,8 @@ public class RandomEvents extends JavaPlugin {
 					if (match.getEnabled() == null || match.getEnabled()) {
 						matchesAvailable.add(match);
 					}
-					if (match.getEnabled() == null || (match.getEnabled() && match.getEnabledSchedule())) {
+					if (match.getEnabled() == null || match.getEnabledSchedule() == null
+							|| (match.getEnabled() && match.getEnabledSchedule())) {
 						matchesAvailableSchedule.add(match);
 					}
 				}
@@ -182,7 +195,60 @@ public class RandomEvents extends JavaPlugin {
 
 		ScoreboardManager manager = Bukkit.getScoreboardManager();
 		colorBoard = manager.getMainScoreboard();
+		CommandCompletion cmdCompletion = new CommandCompletion();
+		cmdExecutor = new CmdExecutor(this);
+		PluginCommand cmd1 = this.getCommand("randomevent");
+		PluginCommand cmd2 = this.getCommand("revent");
+		// PluginCommand cmd3 = this.getCommand("event");
+		// PluginCommand cmd4 = this.getCommand("events");
 
+		cmd1.setExecutor(cmdExecutor);
+		cmd1.setTabCompleter(cmdCompletion);
+		cmd2.setExecutor(cmdExecutor);
+		cmd2.setTabCompleter(cmdCompletion);
+
+		setupSimpleCommandMap();
+
+		for (String s : reventConfig.getCmdAlias()) {
+			GenericCommand gc = new GenericCommand(this, s, cmdExecutor, cmdCompletion);
+			registerCommands(gc);
+//			PluginCommand cmdgc = this.getCommand(s);
+//			cmdgc.setExecutor(cmdExecutor);
+//
+//			cmdgc.setTabCompleter(cmdCompletion);
+
+		}
+		// cmd3.setExecutor(cmdExecutor);
+		// cmd3.setTabCompleter(new CommandCompletion());
+		// cmd4.setExecutor(cmdExecutor);
+		// cmd4.setTabCompleter(new CommandCompletion());
+
+	}
+
+	private void registerCommands(GenericCommand... commands) {
+		Arrays.stream(commands).forEach(command -> scm.register("RandomEvents", command));// Register
+																							// the
+																							// plugin
+	}
+
+	private void setupSimpleCommandMap() {
+		spm = (SimplePluginManager) this.getServer().getPluginManager();
+		Field f = null;
+		try {
+			f = SimplePluginManager.class.getDeclaredField("commandMap");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		f.setAccessible(true);
+		try {
+			scm = (SimpleCommandMap) f.get(spm);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static SimpleCommandMap getCommandMap() {
+		return scm;
 	}
 
 	public void onDisable() {
@@ -308,49 +374,6 @@ public class RandomEvents extends JavaPlugin {
 		loadConfig();
 
 		inicializaVariables();
-	}
-
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		Player player = null;
-		if (sender instanceof Player) {
-			player = (Player) sender;
-		}
-		if (label.equalsIgnoreCase(Comandos.COMANDO_ALIASE1) || label.equalsIgnoreCase(Comandos.COMANDO_ALIASE2)) {
-			switch (args.length) {
-			case 0:
-				Comandos.muestraMenu(this, player);
-				break;
-			case 1:
-				Comandos.ejecutaComandoSimple(this, player, args);
-				break;
-			case 2:
-				Comandos.ejecutaComandoDosArgumentos(this, player, args);
-				break;
-			case 3:
-				Comandos.ejecutaComandoTresArgumentos(this, player, args);
-				break;
-			case 4:
-				Comandos.ejecutaComandoCuatroArgumentos(this, player, args);
-				break;
-			case 5:
-				Comandos.ejecutaComandoCincoArgumentos(this, player, args);
-				break;
-			default:
-				Comandos.ejecutaComandoInfinitoArgumentos(this, player, args);
-
-				// if (player != null) {
-				// player.sendMessage(getLanguage().getTagPlugin() +
-				// language.getInvalidCmd());
-				// } else {
-				// System.out.println(getLanguage().getTagPlugin() +
-				// language.getInvalidCmd());
-				// }
-				break;
-
-			}
-		}
-
-		return true;
 	}
 
 	public void loadConfiguration() {
@@ -678,6 +701,14 @@ public class RandomEvents extends JavaPlugin {
 
 	public void setColorBoard(Scoreboard colorBoard) {
 		this.colorBoard = colorBoard;
+	}
+
+	public CmdExecutor getCmdExecutor() {
+		return cmdExecutor;
+	}
+
+	public void setCmdExecutor(CmdExecutor cmdExecutor) {
+		this.cmdExecutor = cmdExecutor;
 	}
 
 }

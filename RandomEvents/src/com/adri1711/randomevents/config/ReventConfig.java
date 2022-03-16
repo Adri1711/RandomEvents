@@ -94,6 +94,9 @@ public class ReventConfig {
 	private boolean showBorders;
 
 	private boolean useParticles;
+	private boolean forceGamemodeSurvival;
+	private boolean showInfoMinigameOnJoin;
+	
 
 	private Double particleSize;
 
@@ -659,6 +662,9 @@ public class ReventConfig {
 		this.optionalTitles = plugin.getConfig().getBoolean("optionalTitles");
 		this.showBorders = plugin.getConfig().getBoolean("showBorders");
 		this.useParticles = plugin.getConfig().getBoolean("useParticles");
+		this.forceGamemodeSurvival = plugin.getConfig().getBoolean("forceGamemodeSurvival");
+		this.showInfoMinigameOnJoin = plugin.getConfig().getBoolean("showInfoMinigameOnJoin");
+		
 		this.useScoreboard = plugin.getConfig().getBoolean("useScoreboard");
 		this.setProbabilityPowerUp(Integer.valueOf(plugin.getConfig().getInt("probabilityPowerUp")));
 
@@ -1004,6 +1010,14 @@ public class ReventConfig {
 
 	public boolean isUseParticles() {
 		return useParticles;
+	}
+
+	public boolean isForceGamemodeSurvival() {
+		return forceGamemodeSurvival;
+	}
+
+	public void setForceGamemodeSurvival(boolean forceGamemodeSurvival) {
+		this.forceGamemodeSurvival = forceGamemodeSurvival;
 	}
 
 	public void setUseParticles(boolean useParticles) {
@@ -2008,6 +2022,14 @@ public class ReventConfig {
 
 	public void setTeamMatchRandomRespawn(Boolean teamMatchRandomRespawn) {
 		this.teamMatchRandomRespawn = teamMatchRandomRespawn;
+	}
+
+	public boolean isShowInfoMinigameOnJoin() {
+		return showInfoMinigameOnJoin;
+	}
+
+	public void setShowInfoMinigameOnJoin(boolean showInfoMinigameOnJoin) {
+		this.showInfoMinigameOnJoin = showInfoMinigameOnJoin;
 	}
 
 }

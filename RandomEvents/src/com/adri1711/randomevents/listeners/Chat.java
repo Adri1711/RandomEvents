@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -56,7 +57,7 @@ public class Chat implements Listener {
 
 		if (plugin.getReventConfig().getCmdAlias().contains(aliase.toLowerCase())) {
 			event.setCancelled(true);
-			plugin.onCommand(event.getPlayer(), null, "revent", campos.toArray(new String[campos.size()]));
+			plugin.getCmdExecutor().onCommand(event.getPlayer(), null, "randomevent", campos.toArray(new String[campos.size()]));
 		} else {
 
 			if (plugin.getMatchActive() != null
@@ -592,6 +593,12 @@ public class Chat implements Listener {
 						plugin.getPlayersCreation().remove(player.getName());
 
 						break;
+						
+					case PERMISSION_OPTIONAL:
+						match.setPermission(ChatColor.stripColor(message).trim());
+						plugin.getPlayersCreation().remove(player.getName());
+
+						break;
 
 					case AMOUNT_PLAYERS:
 						match.setAmountPlayers(Integer.valueOf(message.trim()));
@@ -618,6 +625,28 @@ public class Chat implements Listener {
 					case SPAWN_PLAYER:
 						if (message.equals(Constantes.DONE)) {
 							match.setPlayerSpawn(player.getLocation());
+							plugin.getPlayersCreation().remove(player.getName());
+
+						}
+						break;
+					case GAMEMODE:
+						if (message.equalsIgnoreCase("SURVIVAL")) {
+							match.setGamemode(GameMode.SURVIVAL);
+							plugin.getPlayersCreation().remove(player.getName());
+
+						} else if (message.equalsIgnoreCase("SPECTATOR")) {
+							match.setGamemode(GameMode.SPECTATOR);
+							plugin.getPlayersCreation().remove(player.getName());
+
+						} else if (message.equalsIgnoreCase("ADVENTURE")) {
+							match.setGamemode(GameMode.ADVENTURE);
+							plugin.getPlayersCreation().remove(player.getName());
+
+						} else if (message.equalsIgnoreCase("CREATIVE")) {
+							match.setGamemode(GameMode.CREATIVE);
+							plugin.getPlayersCreation().remove(player.getName());
+
+						} else if (message.equalsIgnoreCase("N")) {
 							plugin.getPlayersCreation().remove(player.getName());
 
 						}
@@ -1267,6 +1296,13 @@ public class Chat implements Listener {
 							case BATTLE_NAME:
 								match.setName(null);
 								break;
+								
+							case PERMISSION_OPTIONAL:
+								match.setPermission(null);
+								break;
+							case GAMEMODE:
+								match.setGamemode(null);
+								break;
 							case AMOUNT_PLAYERS:
 								match.setAmountPlayers(null);
 								break;
@@ -1343,7 +1379,7 @@ public class Chat implements Listener {
 							case ANOTHER_MATERIAL_SPLEEF:
 								match.setDatas(new ArrayList<MaterialData>());
 								break;
-							
+
 							default:
 								break;
 							}
@@ -1444,12 +1480,13 @@ public class Chat implements Listener {
 					break;
 				case USE_OWN_INVENTORY:
 					match.setUseOwnInventory(!match.getUseOwnInventory());
-					actua=true;
+					actua = true;
 					break;
 				case ALL_BLOCKS_ALLOWED:
 					match.setAllMaterialAllowed(!match.getAllMaterialAllowed());
-					actua=true;
+					actua = true;
 					break;
+
 				default:
 					player.sendMessage(c.getMessage(match));
 					plugin.getPlayersCreation().put(player.getName(), c.getPosition());

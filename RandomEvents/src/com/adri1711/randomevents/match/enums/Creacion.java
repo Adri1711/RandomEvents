@@ -12,131 +12,136 @@ public enum Creacion {
 	MINIGAME_TYPE(0, "§6§lChoose Minigame type (Put 0 in chat)", "ALLMINIGAMES"),
 
 	BATTLE_NAME(1, "§6§lYou began the creation of the RandomEvent. Write the match's name", "ALLMINIGAMES"),
+	
+	PERMISSION_OPTIONAL(2, "§6§ Write the match's permission", "ALLMINIGAMES"),
 
-	AMOUNT_PLAYERS(2, "§6§lWrite the number of players allowed to enter the RandomEvent", "ALLMINIGAMES"),
+	AMOUNT_PLAYERS(3, "§6§lWrite the number of players allowed to enter the RandomEvent", "ALLMINIGAMES"),
 
-	AMOUNT_PLAYERS_MIN(3, "§6§lWrite the minimum number of players to begin the RandomEvent", "ALLMINIGAMES"),
+	AMOUNT_PLAYERS_MIN(4, "§6§lWrite the minimum number of players to begin the RandomEvent", "ALLMINIGAMES"),
 
-	SPAWN_PLAYER(4, "§6§lGo to the arena you created and write 'Done' to set the lobby spawn for the players ",
+	SPAWN_PLAYER(5, "§6§lGo to the arena you created and write 'Done' to set the lobby spawn for the players ",
 			"ALLMINIGAMES"),
 
-	ARENA_SPAWNS(5,
+	ARENA_SPAWNS(6,
 			"§6§lGo to the arena you created and write 'Done' to set each spawn location for the players (%players%/%maxPlayers%) or 'Next' to end the spawns",
 			"ALLMINIGAMES", "PBALL,HOE,SPLATOON,TKLLTEAMS,BRTEAMS,TSGTEAMS,TSWTEAMS,PBALLTK"),
 
-	ANOTHER_ARENA_SPAWNS(6, "§6§lPut another player spawn, say 'Done' (%players%/%maxPlayers%) ", ""),
+	ANOTHER_ARENA_SPAWNS(7, "§6§lPut another player spawn, say 'Done' (%players%/%maxPlayers%) ", ""),
 
-	SPECTATOR_SPAWNS(7, "§6§lSay 'Done' to put a spectator spawn and 'Next' to go to the next step", "ALLMINIGAMES"),
+	SPECTATOR_SPAWNS(8, "§6§lSay 'Done' to put a spectator spawn and 'Next' to go to the next step", "ALLMINIGAMES"),
 
-	REWARDS(8,
+	REWARDS(9,
 			"§6§lWrite a command to reward the winners. Use %player% and it will be replaced for the player's name. Put reprob <probability from 1 to 100> before the command to set a prob to execute the reward",
 			"ALLMINIGAMES"),
 
-	ANOTHER_REWARDS(9, "§6§lPut another reward for the winners or just say 'Done' to begin the next step", ""),
+	ANOTHER_REWARDS(10, "§6§lPut another reward for the winners or just say 'Done' to begin the next step", ""),
 
-	KITS(10, "§6§lChoose a Kit to add to the match ", "ALLMINIGAMES"),
+	KITS(11, "§6§lChoose a Kit to add to the match ", "ALLMINIGAMES"),
 
-	TIMER_MOB_SPAWN(11, "§6§lWrite the number of seconds (it can have decimals) to respawn each mob", ""),
+	TIMER_MOB_SPAWN(12, "§6§lWrite the number of seconds (it can have decimals) to respawn each mob", ""),
 
-	MOB_NAME(12, "§6§lChoose Mob", ""),
+	MOB_NAME(13, "§6§lChoose Mob", ""),
 
-	MOB_SPAWN(13,
+	MOB_SPAWN(14,
 			"§6§lGo to the arena you created and write 'Done' to set the spawn location of the mob, 'New' to choose another mob or 'End' to end the creation of the RandomEvent",
 			""),
 
-	PLAY_TIME(14, "§6§lChoose the play time in seconds",
+	PLAY_TIME(15, "§6§lChoose the play time in seconds",
 			"TKLL,QUAKE,OITC,TKLLT2,KOTH,FISHSLAP,HOE,SPLATOON,TKLLTEAMS,PBALLTK"),
 
-	ARROW_LOCATION1(15, "§6§lSet the first location of the cuboid of spawn of arrows, say 'Done'", "EARR"),
+	ARROW_LOCATION1(16, "§6§lSet the first location of the cuboid of spawn of arrows, say 'Done'", "EARR"),
 
-	ARROW_LOCATION2(16, "§6§lSet the second location of the cuboid of spawn of arrows, say 'Done'", "EARR"),
+	ARROW_LOCATION2(17, "§6§lSet the second location of the cuboid of spawn of arrows, say 'Done'", "EARR"),
 
-	TIMER_ARROW_SPAWN(17, "§6§lWrite the number of seconds (it can have decimals) to respawn each arrow", "EARR"),
+	TIMER_ARROW_SPAWN(18, "§6§lWrite the number of seconds (it can have decimals) to respawn each arrow", "EARR"),
 
-	GEM_LOCATION1(18, "§6§lSet the first location of the cuboid of spawn of gems, say 'Done'", "GEMC"),
+	GEM_LOCATION1(19, "§6§lSet the first location of the cuboid of spawn of gems, say 'Done'", "GEMC"),
 
-	GEM_LOCATION2(19, "§6§lSet the second location of the cuboid of spawn of gems, say 'Done'", "GEMC"),
+	GEM_LOCATION2(20, "§6§lSet the second location of the cuboid of spawn of gems, say 'Done'", "GEMC"),
 
-	TIMER_GEM_SPAWN(20, "§6§lWrite the number of seconds (it can have decimals) to respawn each gem", "GEMC"),
+	TIMER_GEM_SPAWN(21, "§6§lWrite the number of seconds (it can have decimals) to respawn each gem", "GEMC"),
 
-	TIMER_BOMB(21, "§6§lWrite the number of seconds to fire the bomb", "BOMB,BOMBARDMENT"),
+	TIMER_BOMB(22, "§6§lWrite the number of seconds to fire the bomb", "BOMB,BOMBARDMENT"),
 
-	SECONDS_TO_SPAWN_BEAST(22, "§6§lWrite the number of seconds to spawn the beast", "ESCAPE_FROM_BEAST"),
+	SECONDS_TO_SPAWN_BEAST(23, "§6§lWrite the number of seconds to spawn the beast", "ESCAPE_FROM_BEAST"),
 
-	SPAWN_BEAST(23, "§6§lGo to the arena you created and write 'Done' to set the beast spawn.", "ESCAPE_FROM_BEAST"),
+	SPAWN_BEAST(24, "§6§lGo to the arena you created and write 'Done' to set the beast spawn.", "ESCAPE_FROM_BEAST"),
 
-	INVENTORY_BEAST(24, "§6§lTake the inventory for the beast and say 'Done' ", "ESCAPE_FROM_BEAST"),
+	INVENTORY_BEAST(25, "§6§lTake the inventory for the beast and say 'Done' ", "ESCAPE_FROM_BEAST"),
 
-	INVENTORY_RUNNERS(25, "§6§lTake the inventory for the players when they reach the goal and say 'Done' ",
+	INVENTORY_RUNNERS(26, "§6§lTake the inventory for the players when they reach the goal and say 'Done' ",
 			"ESCAPE_FROM_BEAST"),
 
-	ENTITY_SPAWNS(26,
+	ENTITY_SPAWNS(27,
 			"§6§lGo to the arena you created and write 'Done' to set each spawn location for the entities or 'Next' to make the entities appear on player location. (%entities%/%maxPlayers%)",
 			"BOAT_RUN,HORSE_RUN"),
 
-	ANOTHER_ENTITY_SPAWNS(27, "§6§lPut another entity spawn, say 'Done' . (%entities%/%maxPlayers%)", ""),
+	ANOTHER_ENTITY_SPAWNS(28, "§6§lPut another entity spawn, say 'Done' . (%entities%/%maxPlayers%)", ""),
 
-	GOAL_LOCATION1(28, "§6§lSet the first location of the cuboid of the goal, say 'Done'",
+	GOAL_LOCATION1(29, "§6§lSet the first location of the cuboid of the goal, say 'Done'",
 			"BOAT_RUN,HORSE_RUN,ESCAPE_FROM_BEAST,RACE,REDGREEN"),
 
-	GOAL_LOCATION2(29, "§6§lSet the second location of the cuboid of the goal, say 'Done'",
+	GOAL_LOCATION2(30, "§6§lSet the second location of the cuboid of the goal, say 'Done'",
 			"BOAT_RUN,HORSE_RUN,ESCAPE_FROM_BEAST,RACE,REDGREEN"),
 
-	MATERIAL_SPLEEF(30, "§6§lGet the block you want to set mineable for spleef on your hand and say 'Done'",
+	MATERIAL_SPLEEF(31, "§6§lGet the block you want to set mineable for spleef on your hand and say 'Done'",
 			"SPLEEF,SPLEGG,ANVIL_SPLEEF"),
 
-	ANOTHER_MATERIAL_SPLEEF(31,
+	ANOTHER_MATERIAL_SPLEEF(32,
 			"§6§lGet another block you want to set mineable for spleef on your hand and say 'Done' or say 'Next' to end the spleef materials",
 			""),
 
-	MAP_LOCATION1(32, "§6§lSet the first location of the cuboid of the map, say 'Done'",
+	MAP_LOCATION1(33, "§6§lSet the first location of the cuboid of the map, say 'Done'",
 			"SG,TSG,SW,TSW,TSGTEAMS,TSWTEAMS,ANVIL_SPLEEF"),
 
-	MAP_LOCATION2(33, "§6§lSet the second location of the cuboid of the map, say 'Done'",
+	MAP_LOCATION2(34, "§6§lSet the second location of the cuboid of the map, say 'Done'",
 			"SG,TSG,SW,TSW,TSGTEAMS,TSWTEAMS,ANVIL_SPLEEF"),
 
-	INVENTORY_CHESTS(34,
+	INVENTORY_CHESTS(35,
 			"§6§lTake the inventory that will have a probability to appear in chests and say 'Done' to set it or 'Add' to add the items",
 			"SG,TSG,SW,TSW,TSGTEAMS,TSWTEAMS"),
 
-	WARMUP_TIME(35, "§6§lChoose the warmup time in seconds", "SG,TSG,SW,TSW,TSGTEAMS,TSWTEAMS"),
+	WARMUP_TIME(36, "§6§lChoose the warmup time in seconds", "SG,TSG,SW,TSW,TSGTEAMS,TSWTEAMS"),
 
-	SHRINK_TIME(36, "§6§lChoose to shrink the border in seconds", "SG,TSG,TSGTEAMS"),
+	SHRINK_TIME(37, "§6§lChoose to shrink the border in seconds", "SG,TSG,TSGTEAMS"),
 
-	BLOCKS_ALLOWED(37, "§6§lPut in your hand a block allowed to break/place in the map and say 'Done'",
+	BLOCKS_ALLOWED(38, "§6§lPut in your hand a block allowed to break/place in the map and say 'Done'",
 			"SG,TSG,SW,TSW,HOE,SPLATOON,TSWTEAMS,TSGTEAMS"),
 
-	NO_MOVE_TIME(38, "§6§lChoose to allow players to move in seconds", "SG,TSG,SW,TSW,TSWTEAMS,TSGTEAMS,REDGREEN"),
+	NO_MOVE_TIME(39, "§6§lChoose to allow players to move in seconds", "SG,TSG,SW,TSW,TSWTEAMS,TSGTEAMS,REDGREEN"),
 
-	TIMER_ANVIL_SPAWN(39, "§6§lWrite the number of seconds (it can have decimals) to respawn each anvil",
+	TIMER_ANVIL_SPAWN(40, "§6§lWrite the number of seconds (it can have decimals) to respawn each anvil",
 			"ANVIL_SPLEEF"),
 
-	WATER_DROP_SCENES(40, "§6§lChoose a scene to add to the event", "WDROP"),
+	WATER_DROP_SCENES(41, "§6§lChoose a scene to add to the event", "WDROP"),
 
-	NUMBER_OF_TEAMS(41, "§6§lChoose a number of teams between 2 and 8",
+	NUMBER_OF_TEAMS(42, "§6§lChoose a number of teams between 2 and 8",
 			"PBALL,HOE,SPLATOON,TKLLTEAMS,BRTEAMS,TSGTEAMS,TSWTEAMS,PBALLTK"),
 
-	TEAM_SPAWNS(42,
+	TEAM_SPAWNS(43,
 			"§6§lGo to the arena you created and write 'Done' to set each spawn location for the team (%players%/%maxTeams%)",
 			"PBALL,HOE,SPLATOON,TKLLTEAMS,BRTEAMS,TSGTEAMS,TSWTEAMS,PBALLTK"),
 
-	ANOTHER_TEAM_SPAWNS(43, "§6§lPut another team spawn, say 'Done' (%players%/%maxTeams%) ", ""),
+	ANOTHER_TEAM_SPAWNS(44, "§6§lPut another team spawn, say 'Done' (%players%/%maxTeams%) ", ""),
 
-	KOTH_LOCATION1(44, "§6§lSet the first location of the cuboid of the Koth, say 'Done'", "KOTH,FISHSLAP"),
+	KOTH_LOCATION1(45, "§6§lSet the first location of the cuboid of the Koth, say 'Done'", "KOTH,FISHSLAP"),
 
-	KOTH_LOCATION2(45, "§6§lSet the second location of the cuboid of the Koth, say 'Done'", "KOTH,FISHSLAP"),
+	KOTH_LOCATION2(46, "§6§lSet the second location of the cuboid of the Koth, say 'Done'", "KOTH,FISHSLAP"),
 
-	CANNON_SPAWNS(46,
+	CANNON_SPAWNS(47,
 			"§6§lGo to the arena you created and write 'Done' to set each spawn location for cannons or 'Next' to stop. ",
 			"BOMBARDMENT,REDGREEN"),
 
-	TNT_TAG_HEAD(47, "§6§lTake the item to put in the head and say 'Done'. ", "BOMB"),
+	TNT_TAG_HEAD(48, "§6§lTake the item to put in the head and say 'Done'. ", "BOMB"),
 
-	ID_NPC(48, "§6§lPut the Citizens ID of the NPC for the game. ", "REDGREEN"),
+	ID_NPC(49, "§6§lPut the Citizens ID of the NPC for the game. ", "REDGREEN"),
 
-	USE_OWN_INVENTORY(49, "", "ALLMINIGAMES"),
+	USE_OWN_INVENTORY(50, "", "ALLMINIGAMES"),
 
-	ALL_BLOCKS_ALLOWED(50, "§6§lChanged blocks allowed", "SG,TSG,SW,TSW,HOE,SPLATOON,TSWTEAMS,TSGTEAMS"),
+	ALL_BLOCKS_ALLOWED(51, "§6§lChanged blocks allowed", "SG,TSG,SW,TSW,HOE,SPLATOON,TSWTEAMS,TSGTEAMS"),
+	
+	GAMEMODE(52, "§6§lPut the gamemode (SURVIVAL, CREATIVE, SPECTATOR, ADVENTURE) or put 'N'", "ALLMINIGAMES"),
+
 
 	SAVE(997, "§6§lYou are about to save a Random Event, put 'Y' to confirm or 'N' to continue creating",
 			"ALLMINIGAMES"),

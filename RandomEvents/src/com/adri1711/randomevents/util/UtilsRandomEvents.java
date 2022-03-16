@@ -396,6 +396,7 @@ public class UtilsRandomEvents {
 			}
 		}
 	}
+
 	public static void enableMatchSchedule(RandomEvents plugin, Match match, Player player) {
 		if (match.getEnabledSchedule() != null && !match.getEnabledSchedule()) {
 			plugin.getMatches().remove(match);
@@ -502,9 +503,6 @@ public class UtilsRandomEvents {
 			}
 		}
 	}
-	
-	
-	
 
 	public static void borraMatch(RandomEvents plugin, Match match, Player player) {
 		try {
@@ -606,6 +604,8 @@ public class UtilsRandomEvents {
 				inventario.setGamemode(player.getGameMode().toString());
 				inventario.setContents(arrayContenido);
 				inventario.setTotalExp(player.getExp());
+				inventario.setHunger(player.getFoodLevel());
+				inventario.setHealth(player.getHealth());
 				inventario.setLevel(player.getLevel());
 				inventario.setHelmet(player.getInventory().getHelmet());
 				inventario.setBoots(player.getInventory().getBoots());
@@ -677,7 +677,13 @@ public class UtilsRandomEvents {
 	public static void sacaInventario(RandomEvents plugin, Player player) {
 		if (plugin.getReventConfig().isInventoryManagement()
 				&& (plugin.getMatchActive() == null || !plugin.getMatchActive().getMatch().getUseOwnInventory())) {
+			if (player.getActivePotionEffects() != null) {
+				for (PotionEffect effect : player.getActivePotionEffects()) {
+					player.removePotionEffect(effect.getType());
+				}
 
+			}
+			player.updateInventory();
 			File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories");
 			File dataFolderOld = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventoriesold");
 			if (!dataFolder.exists()) {
@@ -744,6 +750,12 @@ public class UtilsRandomEvents {
 						}
 						if (inventario.getLevel() != -1) {
 							player.setLevel(inventario.getLevel());
+						}
+						if (inventario.getHealth() > 0) {
+							player.setHealth(inventario.getHealth());
+						}
+						if (inventario.getHunger() > 0) {
+							player.setFoodLevel(inventario.getHunger());
 						}
 						player.getInventory().setContents(inventario.getContents());
 						player.getInventory().setHelmet(inventario.getHelmet());
@@ -1553,6 +1565,9 @@ public class UtilsRandomEvents {
 			lore.add(plugin.getLanguage().getStatsTries() + tries);
 			lore.add(plugin.getLanguage().getStatsWinsRatio() + ratio.toPlainString());
 			itemMeta.setLore(lore);
+			itemMeta.getItemFlags().add(ItemFlag.HIDE_ATTRIBUTES);
+			itemMeta.getItemFlags().add(ItemFlag.HIDE_POTION_EFFECTS);
+			itemMeta.getItemFlags().add(ItemFlag.HIDE_ENCHANTS);
 			item.setItemMeta(itemMeta);
 			inv.setItem(position, item);
 		}
@@ -1863,6 +1878,12 @@ public class UtilsRandomEvents {
 						}
 
 						break;
+					case PERMISSION_OPTIONAL:
+						if (match.getPermission() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getPermission();
+						}
+
+						break;
 					case USE_OWN_INVENTORY:
 						if (match.getUseOwnInventory() != null) {
 							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
@@ -1877,6 +1898,14 @@ public class UtilsRandomEvents {
 						}
 
 						break;
+					case GAMEMODE:
+						if (match.getGamemode() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
+									+ match.getGamemode().toString();
+						}
+
+						break;
+
 					case AMOUNT_PLAYERS:
 						if (match.getAmountPlayers() != null) {
 							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getAmountPlayers();
@@ -3240,7 +3269,5 @@ public class UtilsRandomEvents {
 		}
 
 	}
-	
-	
 
 }

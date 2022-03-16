@@ -341,7 +341,9 @@ public class MatchActive {
 	private void procesoUnirPlayer(Player player) {
 		if (UtilsRandomEvents.guardaInventario(plugin, player)) {
 			hazComandosDeUnion(player);
-
+			if (plugin.getReventConfig().isShowInfoMinigameOnJoin()) {
+				mandaDescripcion();
+			}
 			UtilsRandomEvents.borraInventario(player, plugin);
 			if (UtilsRandomEvents.teleportaPlayer(player, match.getPlayerSpawn(), plugin)) {
 
@@ -1063,6 +1065,7 @@ public class MatchActive {
 	}
 
 	public void finalizaPartida(List<Player> ganadores, Boolean abrupto, Boolean cancelled) {
+		setPlaying(Boolean.FALSE);
 		if (tournamentObj == null) {
 
 			for (Player p : getPlayerHandler().getPlayersSpectators()) {
@@ -1263,7 +1266,9 @@ public class MatchActive {
 		// UtilsStats.aumentaStats(player.getName(), getMatch().getName(),
 		// StatsEnum.PARTIDAS_JUGADAS, plugin);
 		// }
-		mandaDescripcion();
+		if (!plugin.getReventConfig().isShowInfoMinigameOnJoin()) {
+			mandaDescripcion();
+		}
 		try {
 			Bukkit.getPluginManager().callEvent(new ReventBeginEvent(this));
 		} catch (Exception e) {
@@ -1514,7 +1519,7 @@ public class MatchActive {
 				public void run() {
 					if (!activated) {
 						for (Player pl : getPlayerHandler().getPlayersObj()) {
-							UtilsRandomEvents.queueTNT(plugin, plugin.getMatchActive(), pl.getLocation(), 1., true);
+							UtilsRandomEvents.queueTNT(plugin, plugin.getMatchActive(), pl.getLocation(), 0.01, true);
 						}
 					}
 					setActivated(true);
@@ -2151,7 +2156,9 @@ public class MatchActive {
 		}
 
 		for (Player p : getPlayerHandler().getPlayersObj()) {
-
+			if (getMatch().getGamemode() != null) {
+				p.setGameMode(getMatch().getGamemode());
+			}
 			prepareScoreboards(p);
 
 		}
@@ -3136,8 +3143,10 @@ public class MatchActive {
 
 	public void invincibility(Player p) {
 		if (plugin.getReventConfig().getInvincibleAfterRespawn() > 0) {
+			Long now = (new Date()).getTime();
+			now += plugin.getReventConfig().getInvincibleAfterRespawn() * 1000;
 
-			getPlayerHandler().getPlayersInvincible().add(p.getName());
+			getPlayerHandler().getPlayersInvincible().put(p.getName(), now);
 			Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
 
 				@Override
@@ -3151,15 +3160,17 @@ public class MatchActive {
 	}
 
 	private void reiniciaDefault(Player p) {
-		p.setGameMode(GameMode.SURVIVAL);
+		if (plugin.getReventConfig().isForceGamemodeSurvival())
+			p.setGameMode(GameMode.SURVIVAL);
 
 		Location loc2 = null;
-		
-		if(getPlayerHandler().getEquipos()!=null && !getPlayerHandler().getEquipos().isEmpty() && !plugin.getReventConfig().getTeamMatchRandomRespawn()){
-			loc2=match.getSpawns().get(getEquipo(p));
 
-		}else{
-			loc2=match.getSpawns().get(getRandom().nextInt(match.getSpawns().size()));
+		if (getPlayerHandler().getEquipos() != null && !getPlayerHandler().getEquipos().isEmpty()
+				&& !plugin.getReventConfig().getTeamMatchRandomRespawn()) {
+			loc2 = match.getSpawns().get(getEquipo(p));
+
+		} else {
+			loc2 = match.getSpawns().get(getRandom().nextInt(match.getSpawns().size()));
 		}
 		UtilsRandomEvents.teleportaPlayer(p, loc2, plugin);
 
@@ -3168,7 +3179,8 @@ public class MatchActive {
 	}
 
 	private void reiniciaGemCrawler(Player p) {
-		p.setGameMode(GameMode.SURVIVAL);
+		if (plugin.getReventConfig().isForceGamemodeSurvival())
+			p.setGameMode(GameMode.SURVIVAL);
 
 		Location loc = match.getSpawns().get(getRandom().nextInt(match.getSpawns().size()));
 		UtilsRandomEvents.teleportaPlayer(p, loc, plugin);
@@ -3278,7 +3290,8 @@ public class MatchActive {
 			}
 			if (getEquipo(p) != null)
 				p.getInventory().setChestplate(Petos.getPeto(getEquipo(p)).getPeto());
-			p.setGameMode(GameMode.SURVIVAL);
+			if (plugin.getReventConfig().isForceGamemodeSurvival())
+				p.setGameMode(GameMode.SURVIVAL);
 			p.updateInventory();
 			p.setHealth(p.getMaxHealth());
 			p.setFoodLevel(20);
@@ -3310,7 +3323,8 @@ public class MatchActive {
 			p.getInventory().setLeggings(match.getInventoryRunners().getLeggings());
 			p.getInventory().setBoots(match.getInventoryRunners().getBoots());
 			p.getInventory().setChestplate(match.getInventoryRunners().getChestplate());
-			p.setGameMode(GameMode.SURVIVAL);
+			if (plugin.getReventConfig().isForceGamemodeSurvival())
+				p.setGameMode(GameMode.SURVIVAL);
 			p.updateInventory();
 			p.setHealth(p.getMaxHealth());
 			p.setFoodLevel(20);
@@ -3331,7 +3345,8 @@ public class MatchActive {
 			p.getInventory().setLeggings(match.getInventoryBeast().getLeggings());
 			p.getInventory().setBoots(match.getInventoryBeast().getBoots());
 			p.getInventory().setChestplate(match.getInventoryBeast().getChestplate());
-			p.setGameMode(GameMode.SURVIVAL);
+			if (plugin.getReventConfig().isForceGamemodeSurvival())
+				p.setGameMode(GameMode.SURVIVAL);
 			p.updateInventory();
 			p.setHealth(p.getMaxHealth());
 			p.setFoodLevel(20);
@@ -3356,6 +3371,8 @@ public class MatchActive {
 					if (plugin.getReventConfig().isForcePlayersToEnter()) {
 						for (Player p : Bukkit.getOnlinePlayers()) {
 							if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())
+									&& (getMatch().getPermission() == null
+											|| p.hasPermission(getMatch().getPermission()))
 									&& !getPlayerHandler().getPlayersObj().contains(p)) {
 								plugin.getComandosExecutor().joinRandomEvent(plugin, p, getPassword());
 							}
@@ -3372,6 +3389,8 @@ public class MatchActive {
 									startTime.toString());
 							for (Player p : Bukkit.getOnlinePlayers()) {
 								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())
+										&& (getMatch().getPermission() == null
+												|| p.hasPermission(getMatch().getPermission()))
 										&& (!plugin.getReventConfig().getRestrictWorlds() || (p.getWorld() != null
 												&& p.getWorld().getName() != null && plugin.getReventConfig()
 														.getAllowedWorlds().contains(p.getWorld().getName())))) {
@@ -3448,6 +3467,8 @@ public class MatchActive {
 
 						for (Player p : Bukkit.getOnlinePlayers()) {
 							if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())
+									&& (getMatch().getPermission() == null
+											|| p.hasPermission(getMatch().getPermission()))
 									&& (!plugin.getReventConfig().getRestrictWorlds() || (p.getWorld() != null
 											&& p.getWorld().getName() != null && plugin.getReventConfig()
 													.getAllowedWorlds().contains(p.getWorld().getName())))) {
@@ -3494,6 +3515,8 @@ public class MatchActive {
 						if (plugin.getReventConfig().isForcePlayersToEnter()) {
 							for (Player p : Bukkit.getOnlinePlayers()) {
 								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())
+										&& (getMatch().getPermission() == null
+												|| p.hasPermission(getMatch().getPermission()))
 										&& !getPlayerHandler().getPlayersObj().contains(p)) {
 									plugin.getComandosExecutor().joinRandomEvent(plugin, p, getPassword());
 								}
@@ -3510,6 +3533,8 @@ public class MatchActive {
 										startTime.toString());
 								for (Player p : Bukkit.getOnlinePlayers()) {
 									if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())
+											&& (getMatch().getPermission() == null
+													|| p.hasPermission(getMatch().getPermission()))
 											&& (!plugin.getReventConfig().getRestrictWorlds() || (p.getWorld() != null
 													&& p.getWorld().getName() != null && plugin.getReventConfig()
 															.getAllowedWorlds().contains(p.getWorld().getName())))) {
@@ -3586,6 +3611,8 @@ public class MatchActive {
 
 							for (Player p : Bukkit.getOnlinePlayers()) {
 								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())
+										&& (getMatch().getPermission() == null
+												|| p.hasPermission(getMatch().getPermission()))
 										&& (!plugin.getReventConfig().getRestrictWorlds() || (p.getWorld() != null
 												&& p.getWorld().getName() != null && plugin.getReventConfig()
 														.getAllowedWorlds().contains(p.getWorld().getName())))) {

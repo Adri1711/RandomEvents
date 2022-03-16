@@ -131,6 +131,7 @@ public class LanguageMessages {
 	private String unban;
 	private String create;
 	private String edit;
+	private String tp;
 	private String cancel;
 	private String reload;
 	private String checkpoint;
@@ -1448,6 +1449,14 @@ public class LanguageMessages {
 
 	public void setEdit(String edit) {
 		this.edit = edit;
+	}
+
+	public String getTp() {
+		return tp.replaceAll("&", "§");
+	}
+
+	public void setTp(String tp) {
+		this.tp = tp;
 	}
 
 	public String getCancel() {

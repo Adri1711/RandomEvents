@@ -596,7 +596,7 @@ public class Use implements Listener {
 			}
 		}
 	}
-
+	@EventHandler
 	public void onEntityExplode(EntityExplodeEvent event) {
 		if (plugin.getMatchActive() != null) {
 			Entity ent = event.getEntity();
@@ -660,7 +660,7 @@ public class Use implements Listener {
 			}
 		}
 	}
-
+	@EventHandler
 	public void onExplosionPrime(ExplosionPrimeEvent event) {
 		if (plugin.getMatchActive() != null) {
 			Entity ent = event.getEntity();

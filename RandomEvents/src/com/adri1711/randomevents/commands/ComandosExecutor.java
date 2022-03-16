@@ -311,6 +311,7 @@ public class ComandosExecutor {
 		}
 
 	}
+
 	public void disableRandomEventSchedule(RandomEvents plugin, Player player, String number) {
 		try {
 			Match match = plugin.getMatches().get(Integer.valueOf(number));
@@ -519,6 +520,23 @@ public class ComandosExecutor {
 			plugin.getPlayerMatches().put(player.getName(), m);
 			plugin.getEditando().add(player.getName());
 			player.sendMessage(UtilsRandomEvents.enviaInfoCreacion(m, player, plugin));
+		} catch (Exception e) {
+			player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());
+
+		}
+
+	}
+
+	public void tpRandomEvent(RandomEvents plugin, Player player, String number) {
+		try {
+
+			Match m = plugin.getMatches().get(Integer.valueOf(number));
+			if (m.getSpawns().isEmpty()) {
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());
+
+			} else {
+				player.teleport(m.getSpawns().get(0));
+			}
 		} catch (Exception e) {
 			player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());
 

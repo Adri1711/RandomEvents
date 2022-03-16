@@ -88,6 +88,9 @@ skinDisguisePlayers: 'Dinnerbone'
 ##Highest priority level of events. Enable this to bypass damage protection of faction plugins for example.
 highestPriorityDamageEvents: false
 
+##If true this will show the description of the minigame on player join instead of on match begin
+showInfoMinigameOnJoin: true
+
 ##Optional titles for some messages such as the seconds remaining to begin a match, turn this to true if you want to see titles instead of messages in chat.
 optionalTitles: false
 
@@ -130,6 +133,9 @@ allowedWorlds:
 
 ##Show world border in some minigames
 showBorders: false
+
+##Force gamemode survival on minigames
+forceGamemodeSurvival: true
 
 ##Use scoreboard in some minigames
 useScoreboard: true
