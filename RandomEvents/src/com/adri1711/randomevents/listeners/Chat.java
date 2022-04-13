@@ -78,7 +78,7 @@ public class Chat implements Listener {
 
 		if (plugin.getPlayerWaterDrop().containsKey(player.getName())) {
 			if (plugin.getReventConfig().isDebugMode()) {
-				System.out.println("RandomEvents :: Message of creation: " + event.getMessage());
+				plugin.getLoggerP().info("RandomEvents :: Message of creation: " + event.getMessage());
 			}
 			checkMessageCreationWaterDrop(ChatColor.stripColor(event.getMessage().trim()), player,
 					plugin.getPlayersCreationWaterDrop().get(player.getName()));
@@ -87,7 +87,7 @@ public class Chat implements Listener {
 
 		} else if (plugin.getPlayerKit().containsKey(player.getName())) {
 			if (plugin.getReventConfig().isDebugMode()) {
-				System.out.println("RandomEvents :: Message of creation: " + event.getMessage());
+				plugin.getLoggerP().info("RandomEvents :: Message of creation: " + event.getMessage());
 			}
 
 			checkMessageCreationKit(ChatColor.stripColor(event.getMessage().trim()), player,
@@ -97,7 +97,7 @@ public class Chat implements Listener {
 
 		} else if (plugin.getPlayerMatches().containsKey(player.getName())) {
 			if (plugin.getReventConfig().isDebugMode()) {
-				System.out.println("RandomEvents :: Message of creation: " + event.getMessage());
+				plugin.getLoggerP().info("RandomEvents :: Message of creation: " + event.getMessage());
 			}
 
 			checkMessageCreation(ChatColor.stripColor(event.getMessage().trim()), player,

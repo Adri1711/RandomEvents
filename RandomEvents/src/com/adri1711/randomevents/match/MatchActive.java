@@ -117,6 +117,7 @@ public class MatchActive {
 	private Boolean activated;
 
 	private Boolean allowDamage;
+	private Boolean allowDamagePVP;
 
 	private Boolean allowMove;
 
@@ -133,6 +134,7 @@ public class MatchActive {
 		super();
 		this.mapHandler = new MatchMapDataHandler();
 		this.allowDamage = false;
+		this.allowDamagePVP = false;
 		this.allowMove = true;
 		this.match = match;
 		this.maximo = 0;
@@ -217,6 +219,7 @@ public class MatchActive {
 
 		this.mapHandler = new MatchMapDataHandler();
 		this.allowDamage = false;
+		this.allowDamagePVP = false;
 		this.allowMove = true;
 		this.playerHandler = new MatchPlayerHandler(players, playersGanadores, playersSpectators);
 
@@ -342,7 +345,7 @@ public class MatchActive {
 		if (UtilsRandomEvents.guardaInventario(plugin, player)) {
 			hazComandosDeUnion(player);
 			if (plugin.getReventConfig().isShowInfoMinigameOnJoin()) {
-				mandaDescripcion();
+				mandaDescripcion(player);
 			}
 			UtilsRandomEvents.borraInventario(player, plugin);
 			if (UtilsRandomEvents.teleportaPlayer(player, match.getPlayerSpawn(), plugin)) {
@@ -521,9 +524,9 @@ public class MatchActive {
 				player.setFireTicks(0);
 			} catch (Exception e) {
 				if (player != null) {
-					System.out.println("[RandomEvents] The player " + player.getName() + " failed on teleport");
+					plugin.getLoggerP().info("[RandomEvents] The player " + player.getName() + " failed on teleport");
 					if (plugin.getReventConfig().isDebugMode()) {
-						System.out.println("RandomEvents::DebugMode:: " + e);
+						plugin.getLoggerP().info("RandomEvents::DebugMode:: " + e);
 					}
 				}
 			}
@@ -1139,7 +1142,7 @@ public class MatchActive {
 			try {
 				Bukkit.getPluginManager().callEvent(new ReventEndEvent(this, ganadores));
 			} catch (Exception e) {
-				System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventEndEvent.");
+				plugin.getLoggerP().info("[RandomEvents] WARN :: Couldnt fire the ReventEndEvent.");
 			}
 			reiniciaValoresPartida();
 		}
@@ -1272,7 +1275,7 @@ public class MatchActive {
 		try {
 			Bukkit.getPluginManager().callEvent(new ReventBeginEvent(this));
 		} catch (Exception e) {
-			System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventBeginEvent.");
+			plugin.getLoggerP().info("[RandomEvents] WARN :: Couldnt fire the ReventBeginEvent.");
 		}
 		cuentaAtras(Boolean.TRUE);
 		if (plugin.getReventConfig().isRandomDisguisePlayers()) {
@@ -1289,6 +1292,15 @@ public class MatchActive {
 			for (String d : desc) {
 				p.sendMessage(d.replaceAll("&", "§"));
 			}
+		}
+
+	}
+
+	private void mandaDescripcion(Player p) {
+		List<String> desc = getField("minigameDescription" + match.getMinigame().getCodigo());
+
+		for (String d : desc) {
+			p.sendMessage(d.replaceAll("&", "§"));
 		}
 
 	}
@@ -1426,6 +1438,7 @@ public class MatchActive {
 			}
 
 			this.allowDamage = false;
+			this.allowDamagePVP = false;
 
 			UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersObj(),
 					plugin.getLanguage().getWarmupEnd().replaceAll("%time%", "" + 5), true);
@@ -1456,6 +1469,7 @@ public class MatchActive {
 
 				public void run() {
 					setAllowDamage(true);
+					setAllowDamagePVP(true);
 				}
 
 			}, 20 * 5);
@@ -1476,6 +1490,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 
 				iniciaPlayer(p);
@@ -1535,7 +1550,8 @@ public class MatchActive {
 					mandaSpectatorPlayer(p);
 				}
 			}
-			this.allowDamage = false;
+			this.allowDamage = true;
+			this.allowDamagePVP = false;
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				getStep().put(p, 0);
 				iniciaPlayer(p);
@@ -1553,6 +1569,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 
@@ -1575,6 +1592,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 			ItemStack item = new ItemStack(XMaterial.STONE_HOE.parseMaterial());
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
@@ -1592,6 +1610,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 			getPlayerHandler().setBeast(getPlayerHandler().getPlayersObj()
 					.get(plugin.getRandom().nextInt(getPlayerHandler().getPlayersObj().size())));
 			getPlayerHandler().setPlayerContador(getPlayerHandler().getBeast());
@@ -1613,6 +1632,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 				if (plugin.getReventConfig().isQuakeGiveDefaultWeapon()) {
@@ -1632,6 +1652,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 			}
@@ -1646,6 +1667,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 			this.allowMove = true;
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
@@ -1661,6 +1683,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				Integer indice = getPlayerHandler().getPlayersObj().indexOf(p);
 
@@ -1687,6 +1710,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				sortTeams(p);
 			}
@@ -1708,6 +1732,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				Integer indice = getPlayerHandler().getPlayersObj().indexOf(p);
 				iniciaPlayer(p);
@@ -1744,6 +1769,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				sortTeams(p);
 			}
@@ -1774,6 +1800,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				sortTeams(p);
 			}
@@ -1793,6 +1820,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				Integer indice = getPlayerHandler().getPlayersObj().indexOf(p);
 				iniciaPlayer(p);
@@ -1817,6 +1845,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				sortTeams(p);
 			}
@@ -1838,6 +1867,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				sortTeams(p);
@@ -1864,6 +1894,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				sortTeams(p);
 			}
@@ -1888,6 +1919,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				Integer indice = getPlayerHandler().getPlayersObj().indexOf(p);
 				iniciaPlayer(p);
@@ -1917,6 +1949,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
@@ -1956,6 +1989,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 
@@ -2022,6 +2056,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 
@@ -2050,6 +2085,7 @@ public class MatchActive {
 			}
 
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 				p.getInventory().addItem(plugin.getReventConfig().getCheckpointItem());
@@ -2066,6 +2102,7 @@ public class MatchActive {
 			}
 
 			this.allowDamage = false;
+			this.allowDamagePVP = false;
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 				p.updateInventory();
@@ -2084,6 +2121,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 			}
@@ -2096,6 +2134,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 			}
@@ -2108,6 +2147,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 			}
@@ -2120,6 +2160,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				iniciaPlayer(p);
 			}
@@ -2132,6 +2173,7 @@ public class MatchActive {
 				}
 			}
 			this.allowDamage = true;
+			this.allowDamagePVP = true;
 			for (Player p : getPlayerHandler().getPlayersObj()) {
 				teleportaPlayer(p);
 			}
@@ -2517,6 +2559,7 @@ public class MatchActive {
 					public void run() {
 
 						setAllowDamage(true);
+						setAllowDamagePVP(true);
 					}
 
 				}, 20 * getMatch().getSecondsMobSpawn().longValue());
@@ -3160,8 +3203,11 @@ public class MatchActive {
 	}
 
 	private void reiniciaDefault(Player p) {
-		if (plugin.getReventConfig().isForceGamemodeSurvival())
-			p.setGameMode(GameMode.SURVIVAL);
+		p.setGameMode(GameMode.SURVIVAL);
+		if (getMatch().getGamemode() != null) {
+			p.setGameMode(getMatch().getGamemode());
+
+		}
 
 		Location loc2 = null;
 
@@ -3179,9 +3225,11 @@ public class MatchActive {
 	}
 
 	private void reiniciaGemCrawler(Player p) {
-		if (plugin.getReventConfig().isForceGamemodeSurvival())
-			p.setGameMode(GameMode.SURVIVAL);
+		p.setGameMode(GameMode.SURVIVAL);
+		if (getMatch().getGamemode() != null) {
+			p.setGameMode(getMatch().getGamemode());
 
+		}
 		Location loc = match.getSpawns().get(getRandom().nextInt(match.getSpawns().size()));
 		UtilsRandomEvents.teleportaPlayer(p, loc, plugin);
 
@@ -3438,7 +3486,7 @@ public class MatchActive {
 								.replaceAll("%players%", "" + getPlayerHandler().getPlayers().size());
 
 						List<String> primerasPartes = Arrays.asList(firstPart.split("<jump>"));
-						// System.out.println(primerasPartes);
+						// plugin.getLoggerP().info(primerasPartes);
 
 						firstPart = primerasPartes.get(primerasPartes.size() - 1);
 
@@ -3456,7 +3504,7 @@ public class MatchActive {
 								.replaceAll("%players%", "" + getPlayerHandler().getPlayers().size());
 
 						List<String> ultimasPartes = Arrays.asList(lastPart.split("<jump>"));
-						// System.out.println(ultimasPartes);
+						// plugin.getLoggerP().info(ultimasPartes);
 
 						lastPart = ultimasPartes.get(0);
 
@@ -3582,7 +3630,7 @@ public class MatchActive {
 									.replaceAll("%players%", "" + getPlayerHandler().getPlayers().size());
 
 							List<String> primerasPartes = Arrays.asList(firstPart.split("<jump>"));
-							// System.out.println(primerasPartes);
+							// plugin.getLoggerP().info(primerasPartes);
 
 							firstPart = primerasPartes.get(primerasPartes.size() - 1);
 
@@ -3603,7 +3651,7 @@ public class MatchActive {
 									.replaceAll("%players%", "" + getPlayerHandler().getPlayers().size());
 
 							List<String> ultimasPartes = Arrays.asList(lastPart.split("<jump>"));
-							// System.out.println(ultimasPartes);
+							// plugin.getLoggerP().info(ultimasPartes);
 
 							lastPart = ultimasPartes.get(0);
 
@@ -3713,7 +3761,7 @@ public class MatchActive {
 				try {
 					fBoard.updateLines(UtilsRandomEvents.prepareLines(plugin, this, fBoard.getPlayer()));
 				} catch (Throwable e) {
-					System.out.println(e);
+					plugin.getLoggerP().info(e.toString());
 				}
 			}
 		}
@@ -4194,6 +4242,14 @@ public class MatchActive {
 
 	public void setTeams(Boolean teams) {
 		this.teams = teams;
+	}
+
+	public Boolean getAllowDamagePVP() {
+		return allowDamagePVP;
+	}
+
+	public void setAllowDamagePVP(Boolean allowDamagePVP) {
+		this.allowDamagePVP = allowDamagePVP;
 	}
 
 }

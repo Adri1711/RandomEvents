@@ -351,11 +351,11 @@ public class ComandosExecutor {
 
 				player.sendMessage(((m.getEnabled() == null || m.getEnabled()) ? "§6" : "§c") + "§l"
 						+ plugin.getMatches().indexOf(m) + " - " + m.getMinigame().getMessage(plugin) + " -> "
-						+ m.getName().replaceAll(" ", "_") + ""
+						+ m.getName().replaceAll(" ", "_")  + " ( Min: "+m.getAmountPlayersMin()+", Max: "+m.getAmountPlayers()+") "
 						+ ((m.getEnabledSchedule() == null || m.getEnabledSchedule()) ? "" : "§c(Schedule Disabled)"));
 			} else {
-				System.out.println(plugin.getMatches().indexOf(m) + " - " + m.getMinigame().getMessage(plugin) + " -> "
-						+ m.getName().replaceAll(" ", "_") + ""
+				plugin.getLoggerP().info(plugin.getMatches().indexOf(m) + " - " + m.getMinigame().getMessage(plugin) + " -> "
+						+ m.getName().replaceAll(" ", "_")  + " ( Min: "+m.getAmountPlayersMin()+", Max: "+m.getAmountPlayers()+") "
 						+ ((m.getEnabledSchedule() == null || m.getEnabledSchedule()) ? "" : "§c(Schedule Disabled)"));
 			}
 		}
@@ -369,7 +369,7 @@ public class ComandosExecutor {
 
 				player.sendMessage("§6§l" + plugin.getKits().indexOf(m) + " - " + m.getName());
 			} else {
-				System.out.println(plugin.getKits().indexOf(m) + " - " + m.getName());
+				plugin.getLoggerP().info(plugin.getKits().indexOf(m) + " - " + m.getName());
 			}
 		}
 
@@ -437,7 +437,7 @@ public class ComandosExecutor {
 			try {
 				Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(plugin.getMatchActive(), true));
 			} catch (Exception e) {
-				System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+				plugin.getLoggerP().info("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
 			}
 			if (player != null)
 				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getMatchBeginSoon());
@@ -472,7 +472,7 @@ public class ComandosExecutor {
 					try {
 						Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(plugin.getMatchActive(), true));
 					} catch (Exception e) {
-						System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+						plugin.getLoggerP().info("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
 					}
 					if (player != null)
 						player.sendMessage(

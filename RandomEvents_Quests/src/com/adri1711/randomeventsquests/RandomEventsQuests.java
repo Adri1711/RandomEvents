@@ -10,7 +10,7 @@ public class RandomEventsQuests extends JavaPlugin {
 		// if (getServer().getPluginManager().getPlugin("CrackShot") != null) {
 		// getServer().getPluginManager().registerEvents((Listener) new
 		// WeaponShoot(this), (Plugin) this);
-		// System.out.println("[RandomEvents] CrackShot hooked succesfully!");
+		// plugin.getLoggerP().info("[RandomEvents] CrackShot hooked succesfully!");
 		//
 		// }
 

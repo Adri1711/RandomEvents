@@ -164,12 +164,12 @@ public class UtilsRandomEvents {
 							plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getEndOfArenaCreation());
 				}
 			} else {
-				System.out.println("JSON was null.");
+				plugin.getLoggerP().info("JSON was null.");
 				if (player != null)
 					player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 			}
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			plugin.getLoggerP().info(e.getMessage());
 			if (player != null)
 				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 
@@ -211,11 +211,11 @@ public class UtilsRandomEvents {
 				plugin.getPlayerWaterDrop().remove(player.getName());
 				plugin.getWaterDrops().add(waterDrop);
 			} else {
-				System.out.println("JSON was null.");
+				plugin.getLoggerP().info("JSON was null.");
 				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 			}
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			plugin.getLoggerP().info(e.getMessage());
 			player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 
 		}
@@ -277,12 +277,12 @@ public class UtilsRandomEvents {
 							plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getEndOfKitCreation());
 				}
 			} else {
-				System.out.println("JSON was null.");
+				plugin.getLoggerP().info("JSON was null.");
 				if (player != null)
 					player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 			}
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			plugin.getLoggerP().info(e.getMessage());
 			if (player != null)
 				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 
@@ -329,13 +329,13 @@ public class UtilsRandomEvents {
 								plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getEventEnabled());
 					}
 				} else {
-					System.out.println("JSON was null.");
+					plugin.getLoggerP().info("JSON was null.");
 					if (player != null) {
 						player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 					}
 				}
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
+				plugin.getLoggerP().info(e.getMessage());
 				if (player != null) {
 					player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 				}
@@ -383,13 +383,13 @@ public class UtilsRandomEvents {
 								plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getEventDisabled());
 					}
 				} else {
-					System.out.println("JSON was null.");
+					plugin.getLoggerP().info("JSON was null.");
 					if (player != null) {
 						player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 					}
 				}
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
+				plugin.getLoggerP().info(e.getMessage());
 				if (player != null) {
 					player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 				}
@@ -436,13 +436,13 @@ public class UtilsRandomEvents {
 								plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getEventEnabled());
 					}
 				} else {
-					System.out.println("JSON was null.");
+					plugin.getLoggerP().info("JSON was null.");
 					if (player != null) {
 						player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 					}
 				}
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
+				plugin.getLoggerP().info(e.getMessage());
 				if (player != null) {
 					player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 				}
@@ -490,13 +490,13 @@ public class UtilsRandomEvents {
 								plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getEventDisabled());
 					}
 				} else {
-					System.out.println("JSON was null.");
+					plugin.getLoggerP().info("JSON was null.");
 					if (player != null) {
 						player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 					}
 				}
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
+				plugin.getLoggerP().info(e.getMessage());
 				if (player != null) {
 					player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 				}
@@ -526,7 +526,7 @@ public class UtilsRandomEvents {
 			}
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			plugin.getLoggerP().info(e.getMessage());
 			if (player != null) {
 				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 			}
@@ -562,11 +562,11 @@ public class UtilsRandomEvents {
 				player.sendMessage(
 						plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getEndOfScheduleCreation());
 			} else {
-				System.out.println("JSON was null.");
+				plugin.getLoggerP().info("JSON was null.");
 				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 			}
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			plugin.getLoggerP().info(e.getMessage());
 			player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 
 		}
@@ -648,17 +648,17 @@ public class UtilsRandomEvents {
 
 						pw.close();
 					} else {
-						System.out.println(
+						plugin.getLoggerP().info(
 								"[RandomEvents] Error :: The player " + player.getName() + " already has an inventory");
-						System.out.println(json);
+						plugin.getLoggerP().info(json);
 					}
 				} else {
 					exitoso = Boolean.FALSE;
 
-					System.out.println("JSON was null.");
+					plugin.getLoggerP().info("JSON was null.");
 				}
 			} catch (IOException e) {
-				System.out.println(e.getMessage());
+				plugin.getLoggerP().info(e.getMessage());
 				exitoso = Boolean.FALSE;
 				if (bossFile.exists()) {
 					bossFile.delete();
@@ -710,15 +710,15 @@ public class UtilsRandomEvents {
 
 						inventario = UtilidadesJson.fromJSONToInventory(plugin, br);
 					} catch (Exception e) {
-						System.out.println("[RandomEvents] Error al cargar el inventario de " + player.getName()
+						plugin.getLoggerP().info("[RandomEvents] Error al cargar el inventario de " + player.getName()
 								+ ", probablemente una leather armor con color");
-						System.out.println("[RandomEvents]" + br);
+						plugin.getLoggerP().info("[RandomEvents]" + br);
 
 					}
 
 				} catch (FileNotFoundException e) {
-					System.out.println("Error in sacaInventario catch 1");
-					System.out.println(e.getMessage());
+					plugin.getLoggerP().info("Error in sacaInventario catch 1");
+					plugin.getLoggerP().info(e.getMessage());
 				} finally {
 					try {
 						if (fr != null)
@@ -726,7 +726,7 @@ public class UtilsRandomEvents {
 						if (br != null)
 							br.close();
 					} catch (IOException e) {
-						System.out.println(e.getMessage());
+						plugin.getLoggerP().info(e.getMessage());
 					}
 				}
 
@@ -751,11 +751,19 @@ public class UtilsRandomEvents {
 						if (inventario.getLevel() != -1) {
 							player.setLevel(inventario.getLevel());
 						}
-						if (inventario.getHealth() > 0) {
-							player.setHealth(inventario.getHealth());
+						try {
+							if (inventario.getHealth() > 0 && inventario.getHealth() <= player.getMaxHealth()) {
+								player.setHealth(inventario.getHealth());
+							}
+						} catch (Exception e) {
+
 						}
-						if (inventario.getHunger() > 0) {
-							player.setFoodLevel(inventario.getHunger());
+						try {
+							if (inventario.getHunger() > 0) {
+								player.setFoodLevel(inventario.getHunger());
+							}
+						} catch (Exception e) {
+
 						}
 						player.getInventory().setContents(inventario.getContents());
 						player.getInventory().setHelmet(inventario.getHelmet());
@@ -791,8 +799,8 @@ public class UtilsRandomEvents {
 						}
 					}
 				} catch (Exception exc) {
-					System.out.println("Error in sacaInventario catch 2");
-					System.out.println(exc.getMessage());
+					plugin.getLoggerP().info("Error in sacaInventario catch 2");
+					plugin.getLoggerP().info(exc.getMessage());
 				}
 			}
 		}
@@ -815,12 +823,12 @@ public class UtilsRandomEvents {
 						Location loc2 = loc.clone();
 						if (loc2 != null) {
 							if (plugin.getReventConfig().isDebugMode())
-								System.out.println("Initial Loc ->" + loc2.toString());
+								plugin.getLoggerP().info("Initial Loc ->" + loc2.toString());
 						}
 						loc2.setWorld(Bukkit.getWorld(loc2.getWorld().getUID()));
 						if (loc2 != null) {
 							if (plugin.getReventConfig().isDebugMode())
-								System.out.println("Updated Loc ->" + loc2.toString());
+								plugin.getLoggerP().info("Updated Loc ->" + loc2.toString());
 						}
 						p.teleport(loc2);
 
@@ -829,19 +837,19 @@ public class UtilsRandomEvents {
 							Location loc2 = loc.clone();
 							if (loc2 != null) {
 								if (plugin.getReventConfig().isDebugMode())
-									System.out.println("Initial Loc ->" + loc2.toString());
+									plugin.getLoggerP().info("Initial Loc ->" + loc2.toString());
 							}
 							loc2.setWorld(Bukkit.getWorld(loc2.getWorld().getName()));
 							if (loc2 != null) {
 								if (plugin.getReventConfig().isDebugMode())
-									System.out.println("Updated Loc ->" + loc2.toString());
+									plugin.getLoggerP().info("Updated Loc ->" + loc2.toString());
 							}
 
 							p.teleport(loc2);
 
 						} catch (Exception e3) {
 							res = false;
-							System.out.println(e3);
+							plugin.getLoggerP().info(e3.toString());
 
 						}
 					}
@@ -877,7 +885,7 @@ public class UtilsRandomEvents {
 				}
 
 			} catch (FileNotFoundException e) {
-				System.out.println(e.getMessage());
+				plugin.getLoggerP().info(e.getMessage());
 			} finally {
 				try {
 					if (fr != null)
@@ -885,7 +893,7 @@ public class UtilsRandomEvents {
 					if (br != null)
 						br.close();
 				} catch (IOException e) {
-					System.out.println(e.getMessage());
+					plugin.getLoggerP().info(e.getMessage());
 				}
 			}
 
@@ -935,7 +943,7 @@ public class UtilsRandomEvents {
 					listaPartidas.add(match);
 
 			} catch (FileNotFoundException e) {
-				System.out.println(e.getMessage());
+				plugin.getLoggerP().info(e.getMessage());
 			} finally {
 				try {
 					if (fr != null)
@@ -943,7 +951,7 @@ public class UtilsRandomEvents {
 					if (br != null)
 						br.close();
 				} catch (IOException e) {
-					System.out.println(e.getMessage());
+					plugin.getLoggerP().info(e.getMessage());
 				}
 			}
 
@@ -1405,7 +1413,7 @@ public class UtilsRandomEvents {
 					loc = new Location(Bukkit.getWorld(matchActive.getMatch().getSpawns().get(0).getWorld().getName()),
 							cuboid.getMinX() + sumX, cuboid.getMinY() + sumY, cuboid.getMinZ() + sumZ);
 				} catch (Exception e3) {
-					System.out.println(e3);
+					plugin.getLoggerP().info(e3.toString());
 
 				}
 			}
@@ -1641,7 +1649,7 @@ public class UtilsRandomEvents {
 				banned = UtilidadesJson.fromJSONToBanned(plugin, br);
 
 			} catch (FileNotFoundException e) {
-				System.out.println(e.getMessage());
+				plugin.getLoggerP().info(e.getMessage());
 			} finally {
 				try {
 					if (fr != null)
@@ -1649,7 +1657,7 @@ public class UtilsRandomEvents {
 					if (br != null)
 						br.close();
 				} catch (IOException e) {
-					System.out.println(e.getMessage());
+					plugin.getLoggerP().info(e.getMessage());
 				}
 			}
 
@@ -1679,10 +1687,10 @@ public class UtilsRandomEvents {
 				pw.close();
 
 			} else {
-				System.out.println("JSON was null.");
+				plugin.getLoggerP().info("JSON was null.");
 			}
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			plugin.getLoggerP().info(e.getMessage());
 
 		}
 
@@ -2333,7 +2341,7 @@ public class UtilsRandomEvents {
 				}
 
 			} catch (Exception e) {
-				System.out.println("RandomEvents:: Particle failed to spawn");
+				plugin.getLoggerP().info("RandomEvents:: Particle failed to spawn");
 			}
 		}
 
@@ -2853,7 +2861,7 @@ public class UtilsRandomEvents {
 					listaPartidas.add(match);
 
 			} catch (FileNotFoundException e) {
-				System.out.println(e.getMessage());
+				plugin.getLoggerP().info(e.getMessage());
 			} finally {
 				try {
 					if (fr != null)
@@ -2861,7 +2869,7 @@ public class UtilsRandomEvents {
 					if (br != null)
 						br.close();
 				} catch (IOException e) {
-					System.out.println(e.getMessage());
+					plugin.getLoggerP().info(e.getMessage());
 				}
 			}
 
@@ -2886,7 +2894,7 @@ public class UtilsRandomEvents {
 					listaPartidas.add(match);
 
 			} catch (FileNotFoundException e) {
-				System.out.println(e.getMessage());
+				plugin.getLoggerP().info(e.getMessage());
 			} finally {
 				try {
 					if (fr != null)
@@ -2894,7 +2902,7 @@ public class UtilsRandomEvents {
 					if (br != null)
 						br.close();
 				} catch (IOException e) {
-					System.out.println(e.getMessage());
+					plugin.getLoggerP().info(e.getMessage());
 				}
 			}
 
@@ -3015,7 +3023,7 @@ public class UtilsRandomEvents {
 					cabezaMeta.setDisplayName(
 							plugin.getLanguage().getKitDefaultName().replaceAll("%kit_name%", kit.getName()));
 				}
-				// System.out.println(cabezaMeta.getDisplayName());
+				// plugin.getLoggerP().info(cabezaMeta.getDisplayName());
 				if (cabezaMeta.getLore() == null || cabezaMeta.getLore().isEmpty()) {
 					cabezaMeta.setLore(plugin.getLanguage().getKitDefaultLore());
 				}
@@ -3246,7 +3254,7 @@ public class UtilsRandomEvents {
 			try {
 				UtilsDisguises.addGlow(player, plugin);
 			} catch (Throwable e) {
-				System.out.println(e);
+				plugin.getLoggerP().info(e.toString());
 			}
 		}
 	}
@@ -3257,7 +3265,7 @@ public class UtilsRandomEvents {
 			try {
 				UtilsDisguises.removeGlow(player, plugin);
 			} catch (Throwable e) {
-				System.out.println(e);
+				plugin.getLoggerP().info(e.toString());
 			}
 		}
 	}

@@ -23,8 +23,8 @@ public class UtilidadesJson {
 			//
 			// resultado = jsonSerializer.serialize(match);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			System.out.println("Error :: Error at creating match");
+			plugin.getLoggerP().info(e.getMessage());
+			plugin.getLoggerP().info("Error :: Error at creating match");
 		}
 		return resultado;
 
@@ -37,8 +37,8 @@ public class UtilidadesJson {
 			UtilsRandomEvents.normalizaColorsMatch(match);
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			System.out.println("Error :: Error at loading match: " + br);
+			plugin.getLoggerP().info(e.getMessage());
+			plugin.getLoggerP().info("Error :: Error at loading match: " + br);
 		}
 		return match;
 	}
@@ -54,8 +54,8 @@ public class UtilidadesJson {
 			//
 			// resultado = jsonSerializer.serialize(match);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			System.out.println("Error :: Error at creating waterDrop");
+			plugin.getLoggerP().info(e.getMessage());
+			plugin.getLoggerP().info("Error :: Error at creating waterDrop");
 		}
 		return resultado;
 
@@ -68,8 +68,8 @@ public class UtilidadesJson {
 			UtilsRandomEvents.normalizaColorsWaterDrop(match);
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			System.out.println("Error :: Error at loading waterDrop: " + br);
+			plugin.getLoggerP().info(e.getMessage());
+			plugin.getLoggerP().info("Error :: Error at loading waterDrop: " + br);
 		}
 		return match;
 	}
@@ -85,8 +85,8 @@ public class UtilidadesJson {
 			//
 			// resultado = jsonSerializer.serialize(match);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			System.out.println("Error :: Error at creating Kit");
+			plugin.getLoggerP().info(e.getMessage());
+			plugin.getLoggerP().info("Error :: Error at creating Kit");
 		}
 		return resultado;
 
@@ -99,8 +99,8 @@ public class UtilidadesJson {
 			UtilsRandomEvents.normalizaColorsKit(match);
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			System.out.println("Error :: Error at loading Kit: " + br);
+			plugin.getLoggerP().info(e.getMessage());
+			plugin.getLoggerP().info("Error :: Error at loading Kit: " + br);
 		}
 		return match;
 	}
@@ -117,8 +117,8 @@ public class UtilidadesJson {
 			//
 			// resultado = jsonSerializer.serialize(match);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			System.out.println("Error :: Error at creating schedule");
+			plugin.getLoggerP().info(e.getMessage());
+			plugin.getLoggerP().info("Error :: Error at creating schedule");
 		}
 		return resultado;
 
@@ -130,8 +130,8 @@ public class UtilidadesJson {
 			match = (Schedule) plugin.getApi().fromJson(br, Schedule.class);
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			System.out.println("Error :: Error at loading schedule: " + br);
+			plugin.getLoggerP().info(e.getMessage());
+			plugin.getLoggerP().info("Error :: Error at loading schedule: " + br);
 		}
 		return match;
 	}
@@ -147,8 +147,8 @@ public class UtilidadesJson {
 			//
 			// resultado = jsonSerializer.serialize(match);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			System.out.println("Error :: Error at creating inventory");
+			plugin.getLoggerP().info(e.getMessage());
+			plugin.getLoggerP().info("Error :: Error at creating inventory");
 		}
 		return resultado;
 
@@ -160,8 +160,8 @@ public class UtilidadesJson {
 			inventory = (InventoryPers) plugin.getApi().fromJson(br, InventoryPers.class);
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			System.out.println("Error :: Error at loading inventory: " + br);
+			plugin.getLoggerP().info(e.getMessage());
+			plugin.getLoggerP().info("Error :: Error at loading inventory: " + br);
 		}
 		return inventory;
 	}
@@ -173,8 +173,8 @@ public class UtilidadesJson {
 			resultado = plugin.getApi().toJson(bp);
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			System.out.println("Error :: Error at creating banned players");
+			plugin.getLoggerP().info(e.getMessage());
+			plugin.getLoggerP().info("Error :: Error at creating banned players");
 		}
 		return resultado;
 
@@ -186,8 +186,8 @@ public class UtilidadesJson {
 			bp = (BannedPlayers) plugin.getApi().fromJson(br, BannedPlayers.class);
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			System.out.println("Error :: Error at loading banned players: " + br);
+			plugin.getLoggerP().info(e.getMessage());
+			plugin.getLoggerP().info("Error :: Error at loading banned players: " + br);
 		}
 		return bp;
 	}

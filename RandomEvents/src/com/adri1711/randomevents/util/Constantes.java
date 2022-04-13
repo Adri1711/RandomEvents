@@ -419,7 +419,7 @@ public class Constantes {
 
 		ITEM_SHOW_PLAYER("itemShowPlayer", "item.showPlayer", "&2&lShow players"),
 
-		KIT_GUI_NAME("kitGuiName", "kit.guiName", "&6&lKits"),
+		KIT_GUI_NAME("kitGuiName", "kit.guiName", "&6&lRandomEvents Kits"),
 
 		TEAM_GUI_NAME("teamGuiName", "team.guiName", "&6&lTeams"),
 

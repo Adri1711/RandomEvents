@@ -44,6 +44,9 @@ public class ReventConfig {
 	private Boolean useLastLocation;
 
 	private Integer numberOfTriesBeforeCancelling;
+	
+	private boolean avoidSnowballKnockback;
+	private boolean avoidEggKnockback;
 
 	private boolean mysqlEnabled;
 
@@ -346,7 +349,7 @@ public class ReventConfig {
 
 		if (plugin.getServer().getPluginManager().getPlugin("LibsDisguises") != null) {
 			setIsLibsDisguises(Boolean.TRUE);
-			System.out.println("[RandomEvents] LibsDisguises hooked succesfully!");
+			plugin.getLoggerP().info("[RandomEvents] LibsDisguises hooked succesfully!");
 
 		} else {
 			setIsLibsDisguises(Boolean.FALSE);
@@ -354,7 +357,7 @@ public class ReventConfig {
 		}
 		if (plugin.getServer().getPluginManager().getPlugin("Citizens") != null) {
 			setIsCitizens(Boolean.TRUE);
-			System.out.println("[RandomEvents] Citizens hooked succesfully!");
+			plugin.getLoggerP().info("[RandomEvents] Citizens hooked succesfully!");
 
 		} else {
 			setIsCitizens(Boolean.FALSE);
@@ -364,12 +367,12 @@ public class ReventConfig {
 		setIsNoteBlockAPI(Boolean.FALSE);
 		if (Bukkit.getPluginManager().isPluginEnabled("NoteBlockAPI")) {
 			setIsNoteBlockAPI(Boolean.TRUE);
-			System.out.println("[RandomEvents] NoteBlockAPI hooked succesfully!");
+			plugin.getLoggerP().info("[RandomEvents] NoteBlockAPI hooked succesfully!");
 		}
 
 		if (plugin.getServer().getPluginManager().getPlugin("ProtocolLib") != null) {
 			setIsProtocolLib(Boolean.TRUE);
-			System.out.println("[RandomEvents] ProtocolLib hooked succesfully!");
+			plugin.getLoggerP().info("[RandomEvents] ProtocolLib hooked succesfully!");
 
 		} else {
 			setIsProtocolLib(Boolean.FALSE);
@@ -423,6 +426,9 @@ public class ReventConfig {
 		this.needPasswordToJoin = plugin.getConfig().getBoolean("needPasswordToJoin");
 		this.globalCooldown = plugin.getConfig().getBoolean("globalCooldown");
 		this.inventoryManagement = plugin.getConfig().getBoolean("inventoryManagement");
+		this.avoidSnowballKnockback = plugin.getConfig().getBoolean("avoidSnowballKnockback");
+		this.avoidEggKnockback = plugin.getConfig().getBoolean("avoidEggKnockback");
+		
 		this.dropItemsAfterDie = plugin.getConfig().getBoolean("dropItemsAfterDie");
 		this.advancedSpectatorMode = plugin.getConfig().getBoolean("advancedSpectatorMode");
 
@@ -724,10 +730,10 @@ public class ReventConfig {
 			if (plugin.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
 				try {
 					new ReventPlaceholder(plugin).register();
-					System.out.println("[RandomEvents] PlaceholderAPI hooked succesfully!");
+					plugin.getLoggerP().info("[RandomEvents] PlaceholderAPI hooked succesfully!");
 
 				} catch (Exception e) {
-					System.out.println("[RandomEvents] PlaceholderAPI hook failed!");
+					plugin.getLoggerP().info("[RandomEvents] PlaceholderAPI hook failed!");
 				}
 			}
 		} catch (Throwable e) {
@@ -2030,6 +2036,22 @@ public class ReventConfig {
 
 	public void setShowInfoMinigameOnJoin(boolean showInfoMinigameOnJoin) {
 		this.showInfoMinigameOnJoin = showInfoMinigameOnJoin;
+	}
+
+	public boolean isAvoidSnowballKnockback() {
+		return avoidSnowballKnockback;
+	}
+
+	public void setAvoidSnowballKnockback(boolean avoidSnowballKnockback) {
+		this.avoidSnowballKnockback = avoidSnowballKnockback;
+	}
+
+	public boolean isAvoidEggKnockback() {
+		return avoidEggKnockback;
+	}
+
+	public void setAvoidEggKnockback(boolean avoidEggKnockback) {
+		this.avoidEggKnockback = avoidEggKnockback;
 	}
 
 }

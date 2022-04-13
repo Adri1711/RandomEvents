@@ -81,7 +81,7 @@ public class UtilsSQL {
 							}
 						});
 					} catch (SQLException e) {
-						System.out.println(e);
+						plugin.getLoggerP().info(e.toString());
 					}
 				} else {
 				}
@@ -110,7 +110,7 @@ public class UtilsSQL {
 							}
 						});
 					} catch (SQLException e) {
-						System.out.println(e);
+						plugin.getLoggerP().info(e.toString());
 					}
 				} else {
 				}
@@ -130,7 +130,7 @@ public class UtilsSQL {
 					if (thrown == null) {
 
 					} else {
-						System.out.println(thrown);
+						plugin.getLoggerP().info(thrown.toString());
 					}
 				}
 			}).runTaskAsynchronously(plugin);
@@ -150,7 +150,7 @@ public class UtilsSQL {
 					if (thrown == null) {
 
 					} else {
-						System.out.println(thrown);
+						plugin.getLoggerP().info(thrown.toString());
 					}
 				}
 			}).runTaskAsynchronously(plugin);
@@ -317,7 +317,7 @@ public class UtilsSQL {
 								}
 							});
 						} catch (SQLException e) {
-							System.out.println(e);
+							plugin.getLoggerP().info(e.toString());
 						}
 					} else {
 					}
@@ -360,7 +360,7 @@ public class UtilsSQL {
 								}
 							});
 						} catch (SQLException e) {
-							System.out.println(e);
+							plugin.getLoggerP().info(e.toString());
 						}
 					} else {
 					}
@@ -402,7 +402,7 @@ public class UtilsSQL {
 							}
 						});
 					} catch (SQLException e) {
-						System.out.println(e);
+						plugin.getLoggerP().info(e.toString());
 					}
 				} else {
 				}
@@ -423,7 +423,7 @@ public class UtilsSQL {
 					if (thrown == null) {
 
 					} else {
-						System.out.println(thrown);
+						plugin.getLoggerP().info(thrown.toString());
 					}
 				}
 			}).runTaskAsynchronously(plugin);
@@ -449,7 +449,7 @@ public class UtilsSQL {
 					if (thrown == null) {
 
 					} else {
-						System.out.println(thrown);
+						plugin.getLoggerP().info(thrown.toString());
 					}
 				}
 			}).runTaskAsynchronously(plugin);

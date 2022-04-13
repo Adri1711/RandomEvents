@@ -36,6 +36,7 @@ public class Death implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void damage(EntityDamageEvent ev) // Listens to EntityDamageEvent
 	{
+		Boolean cancelled = false;
 		Long now = (new Date()).getTime();
 		if (ev.getCause() != DamageCause.ENTITY_ATTACK && ev.getCause() != DamageCause.PROJECTILE) {
 
@@ -59,7 +60,12 @@ public class Death implements Listener {
 							plugin.getMatchActive().getPlayerHandler().getPlayersInvincible().remove(player.getName());
 						}
 						if (((player.getHealth() - ev.getFinalDamage()) <= 0)) {
-							ev.setCancelled(true);
+							if (!ev.isCancelled()) {
+								ev.setCancelled(true);
+
+							} else {
+								cancelled = true;
+							}
 							switch (plugin.getMatchActive().getMatch().getMinigame()) {
 							case SW:
 							case SG:
@@ -88,7 +94,7 @@ public class Death implements Listener {
 							case ANVIL_SPLEEF:
 							case BOMBARDMENT:
 							case SPLEGG:
-								if (!ev.isCancelled()) {
+								if (!cancelled) {
 									UtilsRandomEvents.mandaMensaje(plugin,
 											plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 											plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()),
@@ -98,7 +104,7 @@ public class Death implements Listener {
 								}
 								break;
 							case KNOCKBACK_DUEL:
-								if (!ev.isCancelled()) {
+								if (!cancelled) {
 									if (!plugin.getMatchActive().getAllowDamage()) {
 										ev.setCancelled(true);
 									} else {
@@ -172,6 +178,7 @@ public class Death implements Listener {
 						} else {
 							switch (plugin.getMatchActive().getMatch().getMinigame()) {
 							case WDROP:
+								ev.setCancelled(true);
 								plugin.getMatchActive().reiniciaPlayer(player);
 								UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 								break;
@@ -230,7 +237,7 @@ public class Death implements Listener {
 			if (plugin.getMatchActive() != null
 					&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())) {
 				plugin.getMatchActive().setDamageCounter(0);
-				if (!plugin.getMatchActive().getPlaying() || !plugin.getMatchActive().getAllowDamage()
+				if (!plugin.getMatchActive().getPlaying() || !plugin.getMatchActive().getAllowDamagePVP()
 						|| (plugin.getMatchActive().getPlayerHandler().getPlayersInvincible()
 								.containsKey(player.getName())
 								&& plugin.getMatchActive().getPlayerHandler().getPlayersInvincible()
@@ -320,7 +327,7 @@ public class Death implements Listener {
 			case TSW:
 			case TSG_REAL:
 			case TSW_REAL:
-				if (!plugin.getMatchActive().getAllowDamage()) {
+				if (!plugin.getMatchActive().getAllowDamagePVP()) {
 					ev.setCancelled(true);
 				} else {
 					UtilsRandomEvents.mandaMensaje(plugin,
@@ -366,7 +373,7 @@ public class Death implements Listener {
 			case KNOCKBACK_DUEL:
 			case BOMB_TAG:
 			case FISH_SLAP:
-				if (!plugin.getMatchActive().getAllowDamage()) {
+				if (!plugin.getMatchActive().getAllowDamagePVP()) {
 					ev.setCancelled(true);
 				} else {
 					ev.setDamage(0);
@@ -640,7 +647,7 @@ public class Death implements Listener {
 			case TSW:
 			case TSG_REAL:
 			case TSW_REAL:
-				if (!plugin.getMatchActive().getAllowDamage()) {
+				if (!plugin.getMatchActive().getAllowDamagePVP()) {
 					ev.setCancelled(true);
 				} else {
 					if (plugin.getReventConfig().isHighestPriorityDamageEvents()) {
@@ -669,7 +676,7 @@ public class Death implements Listener {
 			case KNOCKBACK_DUEL:
 			case BOMB_TAG:
 			case FISH_SLAP:
-				if (!plugin.getMatchActive().getAllowDamage()) {
+				if (!plugin.getMatchActive().getAllowDamagePVP()) {
 					ev.setCancelled(true);
 				} else {
 					ev.setDamage(0);
@@ -765,7 +772,11 @@ public class Death implements Listener {
 				ev.setDamage(plugin.getReventConfig().getSplatoonEggDamage());
 			}
 			break;
-
+		case SPLEGG:
+			if (plugin.getReventConfig().isAvoidEggKnockback()) {
+				ev.setCancelled(true);
+			}
+			break;
 		default:
 			checkOtherDamage(player, ev);
 			break;
@@ -792,7 +803,7 @@ public class Death implements Listener {
 					case TSW:
 					case TSG_REAL:
 					case TSW_REAL:
-						if (!plugin.getMatchActive().getAllowDamage()) {
+						if (!plugin.getMatchActive().getAllowDamagePVP()) {
 							ev.setCancelled(true);
 						} else {
 							UtilsRandomEvents.mandaMensaje(plugin,
@@ -827,7 +838,7 @@ public class Death implements Listener {
 						break;
 					case KNOCKBACK_DUEL:
 					case FISH_SLAP:
-						if (!plugin.getMatchActive().getAllowDamage()) {
+						if (!plugin.getMatchActive().getAllowDamagePVP()) {
 							ev.setCancelled(true);
 						} else {
 
@@ -835,7 +846,7 @@ public class Death implements Listener {
 						}
 						break;
 					case ESCAPE_ARROW:
-						if (!plugin.getMatchActive().getAllowDamage()) {
+						if (!plugin.getMatchActive().getAllowDamagePVP()) {
 							ev.setCancelled(true);
 						} else {
 
@@ -1019,7 +1030,7 @@ public class Death implements Listener {
 					case TSW:
 					case TSG_REAL:
 					case TSW_REAL:
-						if (!plugin.getMatchActive().getAllowDamage()) {
+						if (!plugin.getMatchActive().getAllowDamagePVP()) {
 							ev.setCancelled(true);
 						} else {
 							if (plugin.getReventConfig().isHighestPriorityDamageEvents()) {
@@ -1067,7 +1078,7 @@ public class Death implements Listener {
 					case ESCAPE_ARROW:
 					case FISH_SLAP:
 
-						if (!plugin.getMatchActive().getAllowDamage()) {
+						if (!plugin.getMatchActive().getAllowDamagePVP()) {
 							ev.setCancelled(true);
 						} else {
 							ev.setDamage(0);
@@ -1171,7 +1182,7 @@ public class Death implements Listener {
 					case TSW:
 					case TSG_REAL:
 					case TSW_REAL:
-						if (!plugin.getMatchActive().getAllowDamage()) {
+						if (!plugin.getMatchActive().getAllowDamagePVP()) {
 							ev.setCancelled(true);
 						} else {
 							UtilsRandomEvents.mandaMensaje(plugin,
@@ -1209,7 +1220,7 @@ public class Death implements Listener {
 					case KNOCKBACK_DUEL:
 					case FISH_SLAP:
 
-						if (!plugin.getMatchActive().getAllowDamage()) {
+						if (!plugin.getMatchActive().getAllowDamagePVP()) {
 							ev.setCancelled(true);
 						} else {
 
@@ -1217,7 +1228,7 @@ public class Death implements Listener {
 						}
 						break;
 					case ESCAPE_ARROW:
-						if (!plugin.getMatchActive().getAllowDamage()) {
+						if (!plugin.getMatchActive().getAllowDamagePVP()) {
 							ev.setCancelled(true);
 						} else {
 
@@ -1405,7 +1416,7 @@ public class Death implements Listener {
 					case TSW:
 					case TSG_REAL:
 					case TSW_REAL:
-						if (!plugin.getMatchActive().getAllowDamage()) {
+						if (!plugin.getMatchActive().getAllowDamagePVP()) {
 							ev.setCancelled(true);
 						} else {
 							if (plugin.getReventConfig().isHighestPriorityDamageEvents()) {
@@ -1423,7 +1434,7 @@ public class Death implements Listener {
 					case TOP_KILLER_TEAMS:
 					case PAINTBALL_TOP_KILL:
 					case KOTH:
-						if (!plugin.getMatchActive().getAllowDamage()) {
+						if (!plugin.getMatchActive().getAllowDamagePVP()) {
 							ev.setCancelled(true);
 						} else {
 							if (plugin.getReventConfig().isHighestPriorityDamageEvents()) {
@@ -1494,7 +1505,7 @@ public class Death implements Listener {
 					case KNOCKBACK_DUEL:
 					case ESCAPE_ARROW:
 					case FISH_SLAP:
-						if (!plugin.getMatchActive().getAllowDamage()) {
+						if (!plugin.getMatchActive().getAllowDamagePVP()) {
 							ev.setCancelled(true);
 						} else {
 							ev.setDamage(0);
@@ -1592,7 +1603,7 @@ public class Death implements Listener {
 					ev.setCancelled(true);
 					switch (plugin.getMatchActive().getMatch().getMinigame()) {
 					case PAINTBALL:
-						if (!plugin.getMatchActive().getAllowDamage()) {
+						if (!plugin.getMatchActive().getAllowDamagePVP()) {
 							ev.setCancelled(true);
 						} else {
 
@@ -1645,13 +1656,18 @@ public class Death implements Listener {
 							player.damage(plugin.getReventConfig().getSnowballsDamage() * 1.0);
 						}
 						break;
+					case SPLEEF:
+						if (plugin.getReventConfig().isAvoidSnowballKnockback()) {
+							ev.setCancelled(true);
+						}
+						break;
 					default:
 						break;
 					}
 				} else {
 					switch (plugin.getMatchActive().getMatch().getMinigame()) {
 					case PAINTBALL:
-						if (!plugin.getMatchActive().getAllowDamage()) {
+						if (!plugin.getMatchActive().getAllowDamagePVP()) {
 							ev.setCancelled(true);
 						} else {
 							if (((player.getHealth() - plugin.getReventConfig().getSnowballsDamage()) <= 0)) {
@@ -1674,8 +1690,13 @@ public class Death implements Listener {
 
 						}
 						break;
+					case SPLEEF:
+						if (plugin.getReventConfig().isAvoidSnowballKnockback()) {
+							ev.setCancelled(true);
+						}
+						break;
 					case PAINTBALL_TOP_KILL:
-						if (!plugin.getMatchActive().getAllowDamage()) {
+						if (!plugin.getMatchActive().getAllowDamagePVP()) {
 							ev.setCancelled(true);
 						} else {
 							if (((player.getHealth() - plugin.getReventConfig().getSnowballsDamage()) <= 0)) {

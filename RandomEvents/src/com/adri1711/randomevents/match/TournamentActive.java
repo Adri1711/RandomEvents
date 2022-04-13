@@ -208,7 +208,7 @@ public class TournamentActive {
 									try {
 										Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(plugin.getMatchActive(),false));
 									} catch (Exception e) {
-										System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+										plugin.getLoggerP().info("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
 									}
 								}
 							}
@@ -236,7 +236,7 @@ public class TournamentActive {
 								.replaceAll("%players%", "" + getPlayers().size());
 
 						List<String> primerasPartes = Arrays.asList(firstPart.split("<jump>"));
-						// System.out.println(primerasPartes);
+						// plugin.getLoggerP().info(primerasPartes);
 
 						firstPart = primerasPartes.get(primerasPartes.size() - 1);
 
@@ -252,7 +252,7 @@ public class TournamentActive {
 								.replaceAll("%players%", "" + getPlayers().size());
 
 						List<String> ultimasPartes = Arrays.asList(lastPart.split("<jump>"));
-						// System.out.println(ultimasPartes);
+						// plugin.getLoggerP().info(ultimasPartes);
 
 						lastPart = ultimasPartes.get(0);
 
@@ -345,7 +345,7 @@ public class TournamentActive {
 						try {
 							Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(plugin.getMatchActive(),false));
 						} catch (Exception e) {
-							System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+							plugin.getLoggerP().info("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
 						}
 
 						getPartida().matchBegin();
@@ -470,9 +470,9 @@ public class TournamentActive {
 				player.setFireTicks(0);
 			} catch (Exception e) {
 				if (player != null) {
-					System.out.println("[RandomEvents] The player " + player.getName() + " failed on teleport");
+					plugin.getLoggerP().info("[RandomEvents] The player " + player.getName() + " failed on teleport");
 					if (plugin.getReventConfig().isDebugMode()) {
-						System.out.println("RandomEvents::DebugMode:: " + e);
+						plugin.getLoggerP().info("RandomEvents::DebugMode:: " + e);
 					}
 				}
 			}

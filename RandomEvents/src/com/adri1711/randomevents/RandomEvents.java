@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -117,17 +118,19 @@ public class RandomEvents extends JavaPlugin {
 	private CmdExecutor cmdExecutor;
 	private static SimpleCommandMap scm;
 	private SimplePluginManager spm;
+	
+	private Logger logger;
 
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
-
+		logger=getLogger();
 		loadConfig();
 		this.editando = new ArrayList<String>();
 		this.comandosExecutor = new ComandosExecutor();
 		this.cooldowns = new HashMap<String, Date>();
 
 		inicializaVariables();
-
+		
 		if (getReventConfig().isMysqlEnabled()) {
 			hikari = new HikariCP(getReventConfig().getMysqlHost(), getReventConfig().getMysqlPort().toString(),
 					getReventConfig().getMysqlDatabase(), getReventConfig().getMysqlUsername(),
@@ -146,13 +149,13 @@ public class RandomEvents extends JavaPlugin {
 
 		if (getServer().getPluginManager().getPlugin("CrackShot") != null) {
 			getServer().getPluginManager().registerEvents((Listener) new WeaponShoot(this), (Plugin) this);
-			System.out.println("[RandomEvents] CrackShot hooked succesfully!");
+			getLoggerP().info("[RandomEvents] CrackShot hooked succesfully!");
 
 		}
 
 		if (getServer().getPluginManager().getPlugin("NametagEdit") != null) {
 			nametagHook = new NameTagHook(this);
-			System.out.println("[RandomEvents] NameTagEdit hooked succesfully!");
+			getLoggerP().info("[RandomEvents] NameTagEdit hooked succesfully!");
 
 		}
 
@@ -298,7 +301,7 @@ public class RandomEvents extends JavaPlugin {
 											Bukkit.getPluginManager()
 													.callEvent(new ReventSpawnEvent(matchActive, false));
 										} catch (Exception e) {
-											System.out.println(
+											getLoggerP().info(
 													"[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
 										}
 									}
@@ -319,7 +322,7 @@ public class RandomEvents extends JavaPlugin {
 														Bukkit.getPluginManager()
 																.callEvent(new ReventSpawnEvent(matchActive, false));
 													} catch (Exception e) {
-														System.out.println(
+														getLoggerP().info(
 																"[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
 													}
 												} else {
@@ -329,7 +332,7 @@ public class RandomEvents extends JavaPlugin {
 														Bukkit.getPluginManager()
 																.callEvent(new ReventSpawnEvent(matchActive, false));
 													} catch (Exception e) {
-														System.out.println(
+														getLoggerP().info(
 																"[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
 													}
 												}
@@ -340,7 +343,7 @@ public class RandomEvents extends JavaPlugin {
 													Bukkit.getPluginManager()
 															.callEvent(new ReventSpawnEvent(matchActive, false));
 												} catch (Exception e) {
-													System.out.println(
+													getLoggerP().info(
 															"[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
 												}
 											}
@@ -401,11 +404,11 @@ public class RandomEvents extends JavaPlugin {
 		// (new YamlConfiguration()).load(new File(getDataFolder() +
 		// File.separator + "config.yml"));
 		// } catch (Exception e) {
-		// System.out.println("--- --- RandomEvents --- ---");
-		// System.out.println("There was an error loading your configuration.");
-		// System.out.println("A detailed description of your error is shown
+		// plugin.getLoggerP().info("--- --- RandomEvents --- ---");
+		// plugin.getLoggerP().info("There was an error loading your configuration.");
+		// plugin.getLoggerP().info("A detailed description of your error is shown
 		// below.");
-		// System.out.println("--- --- --- ---");
+		// plugin.getLoggerP().info("--- --- --- ---");
 		// e.printStackTrace();
 		// Bukkit.getPluginManager().disablePlugin((Plugin) this);
 		//
@@ -709,6 +712,14 @@ public class RandomEvents extends JavaPlugin {
 
 	public void setCmdExecutor(CmdExecutor cmdExecutor) {
 		this.cmdExecutor = cmdExecutor;
+	}
+
+	public Logger getLoggerP() {
+		return logger;
+	}
+
+	public void setLogger(Logger logger) {
+		this.logger = logger;
 	}
 
 }

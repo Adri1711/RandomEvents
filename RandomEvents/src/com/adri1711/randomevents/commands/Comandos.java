@@ -49,7 +49,8 @@ public class Comandos {
 		if (player != null) {
 			player.sendMessage(menu);
 		} else {
-			System.out.println(menu);
+			plugin.getLoggerP().info(menu);
+			//plugin.getLoggerP().info(menu);
 		}
 	}
 
@@ -77,7 +78,7 @@ public class Comandos {
 			}
 
 		} catch (Throwable e) {
-			System.out.println(e);
+			plugin.getLoggerP().info(e.toString());
 			if (player != null)
 				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 		}
@@ -109,7 +110,7 @@ public class Comandos {
 			}
 
 		} catch (Throwable e) {
-			System.out.println(e);
+			plugin.getLoggerP().info(e.toString());
 			if (player != null)
 				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 		}
@@ -141,7 +142,7 @@ public class Comandos {
 			}
 
 		} catch (Throwable e) {
-			System.out.println(e);
+			plugin.getLoggerP().info(e.toString());
 			if (player != null)
 				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 		}
@@ -172,7 +173,7 @@ public class Comandos {
 			}
 
 		} catch (Throwable e) {
-			System.out.println(e);
+			plugin.getLoggerP().info(e.toString());
 			if (player != null)
 				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 		}
@@ -203,7 +204,7 @@ public class Comandos {
 			}
 
 		} catch (Throwable e) {
-			System.out.println(e);
+			plugin.getLoggerP().info(e.toString());
 			if (player != null)
 				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 		}
@@ -234,7 +235,7 @@ public class Comandos {
 			}
 
 		} catch (Throwable e) {
-			System.out.println(e);
+			plugin.getLoggerP().info(e.toString());
 			if (player != null)
 				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getError());
 		}

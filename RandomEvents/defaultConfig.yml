@@ -315,12 +315,18 @@ waterKillSpleef: false
 ##					   ANVIL SPLEEF		    	  	    		##
 ##################################################################
 
+##Enable this to disable knockback from snowballs 
+avoidSnowballKnockback: false
+
 ##Enable this to make a player lose when they fall into water in spleef minigames
 waterKillAnvilSpleef: false
 
 ##################################################################
 ##					      SPLEGG		    	  	    		##
 ##################################################################
+
+##Enable this to disable knockback from snowballs 
+avoidEggKnockback: false
 
 ##Enable this to make a player lose when they fall into water in splegg minigames
 waterKillSplegg: false

@@ -63,7 +63,7 @@ public class GUI implements Listener {
 					}
 				}
 			} catch (Throwable e) {
-				System.out.println(e);
+				plugin.getLoggerP().info(e.toString());
 			}
 		}
 
@@ -126,7 +126,7 @@ public class GUI implements Listener {
 										try {
 											Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(plugin.getMatchActive(),true));
 										} catch (Exception e) {
-											System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+											plugin.getLoggerP().info("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
 										}
 										p.closeInventory();
 
@@ -151,7 +151,7 @@ public class GUI implements Listener {
 												try {
 													Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(plugin.getMatchActive(),true));
 												} catch (Exception e) {
-													System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+													plugin.getLoggerP().info("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
 												}
 												p.closeInventory();
 												Calendar c = Calendar.getInstance();
@@ -210,7 +210,7 @@ public class GUI implements Listener {
 															try {
 																Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(plugin.getMatchActive(),true));
 															} catch (Exception e) {
-																System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+																plugin.getLoggerP().info("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
 															}
 															p.closeInventory();
 														}
@@ -234,7 +234,7 @@ public class GUI implements Listener {
 											try {
 												Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(plugin.getMatchActive(),true));
 											} catch (Exception e) {
-												System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+												plugin.getLoggerP().info("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
 											}
 											p.closeInventory();
 											Calendar c = Calendar.getInstance();
@@ -284,7 +284,7 @@ public class GUI implements Listener {
 										try {
 											Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(plugin.getMatchActive(),true));
 										} catch (Exception e) {
-											System.out.println("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+											plugin.getLoggerP().info("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
 										}
 										p.closeInventory();
 									}
@@ -294,7 +294,7 @@ public class GUI implements Listener {
 					}
 				}
 			} catch (Exception e) {
-				System.out.println(e);
+				plugin.getLoggerP().info(e.toString());
 			}
 		}
 
@@ -338,7 +338,7 @@ public class GUI implements Listener {
 					}
 				}
 			} catch (Exception e) {
-				System.out.println(e);
+				plugin.getLoggerP().info(e.toString());
 			}
 		}
 
@@ -387,7 +387,7 @@ public class GUI implements Listener {
 
 				}
 			} catch (Exception e) {
-				System.out.println(e);
+				plugin.getLoggerP().info(e.toString());
 			}
 		}
 
