@@ -35,11 +35,14 @@ public class ReventConfig {
 	private Integer probabilityRandomEventTournament;
 
 	private Integer probabilityPowerUp;
+	private Integer sgAreaShrinkBlocks;
 
 	private ItemStack powerUpItem;
 	private ItemStack checkpointItem;
 
 	private Integer invincibleAfterGame;
+	
+	private Boolean avoidSpectatorTp;
 
 	private Boolean useLastLocation;
 
@@ -662,9 +665,12 @@ public class ReventConfig {
 
 		this.multipleKillOnExplosion = plugin.getConfig().getBoolean("multipleKillOnExplosion");
 		this.radiusOfTNTTagExplosion = Integer.valueOf(plugin.getConfig().getInt("radiusOfTNTTagExplosion"));
+		this.sgAreaShrinkBlocks = Integer.valueOf(plugin.getConfig().getInt("sgAreaShrinkBlocks"));
 
 		this.randomDisguisePlayers = plugin.getConfig().getBoolean("randomDisguisePlayers");
 		this.useLastLocation = plugin.getConfig().getBoolean("useLastLocation");
+		this.avoidSpectatorTp = plugin.getConfig().getBoolean("avoidSpectatorTp");
+		
 		this.optionalTitles = plugin.getConfig().getBoolean("optionalTitles");
 		this.showBorders = plugin.getConfig().getBoolean("showBorders");
 		this.useParticles = plugin.getConfig().getBoolean("useParticles");
@@ -673,7 +679,7 @@ public class ReventConfig {
 		
 		this.useScoreboard = plugin.getConfig().getBoolean("useScoreboard");
 		this.setProbabilityPowerUp(Integer.valueOf(plugin.getConfig().getInt("probabilityPowerUp")));
-
+		
 		plugin.setWaterDrops(UtilsRandomEvents.cargarWaterDrops(plugin));
 		plugin.setKits(UtilsRandomEvents.cargarKits(plugin));
 		plugin.setMatches(UtilsRandomEvents.cargarPartidas(plugin));
@@ -2052,6 +2058,22 @@ public class ReventConfig {
 
 	public void setAvoidEggKnockback(boolean avoidEggKnockback) {
 		this.avoidEggKnockback = avoidEggKnockback;
+	}
+
+	public Boolean getAvoidSpectatorTp() {
+		return avoidSpectatorTp;
+	}
+
+	public void setAvoidSpectatorTp(Boolean avoidSpectatorTp) {
+		this.avoidSpectatorTp = avoidSpectatorTp;
+	}
+
+	public Integer getSgAreaShrinkBlocks() {
+		return sgAreaShrinkBlocks;
+	}
+
+	public void setSgAreaShrinkBlocks(Integer sgAreaShrinkBlocks) {
+		this.sgAreaShrinkBlocks = sgAreaShrinkBlocks;
 	}
 
 }

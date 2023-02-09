@@ -135,7 +135,7 @@ public class Constantes {
 
 		CMD_ENABLE("enable", "menu.admin.enable",
 				"   &6/revent enable <number>:\n          &e-> Enables a Random Event"),
-		
+
 		CMD_DISABLE_SCHEDULE("disableSchedule", "menu.admin.disableschedule",
 				"   &6/revent disableschedule <number>:\n          &e-> Disables a Random Event on Schedule"),
 
@@ -143,11 +143,44 @@ public class Constantes {
 				"   &6/revent enableschedule <number>:\n          &e-> Enables a Random Event on Schedule"),
 
 		CMD_EDIT("edit", "menu.admin.edit", "   &6/revent edit <number>:\n          &e-> Edits a Random Event"),
-		
+
 		CMD_TP("tp", "menu.admin.tp", "   &6/revent tp <number>:\n          &e-> Teleport to a Random Event"),
 
 		CMD_CANCEL("cancel", "menu.admin.cancel",
 				"   &6/revent cancel:\n          &e-> Cancels the creation of a Random Event"),
+
+		CMD_RESET_COINS("resetCoins", "menu.admin.resetCoins",
+				"   &6/revent resetcredits:\n          &e-> Reset all credits "),
+
+		CMD_RESET_COINS_PLAYER("resetCoinsPlayerCMD", "menu.admin.resetCoinsPlayer",
+				"   &6/revent resetcredits <player>:\n          &e-> Reset all credits for a player "),
+
+		CMD_RESET_TRIES("resetTries", "menu.admin.resetTries",
+				"   &6/revent resettries:\n          &e-> Reset all tries "),
+
+		CMD_RESET_TRIES_PLAYER("resetTriesPlayerCMD", "menu.admin.resetTriesPlayer",
+				"   &6/revent resettries <player>:\n          &e-> Reset all tries for a player "),
+
+		CMD_RESET_TRIES_GAME("resetTriesGame", "menu.admin.resetTriesGame",
+				"   &6/revent resettriesgame <game>:\n          &e-> Reset all tries for a game "),
+
+		CMD_RESET_TRIES_GAME_PLAYER("resetTriesGamePlayer", "menu.admin.resetTriesGamePlayer",
+				"   &6/revent resettries <game> <player>:\n          &e-> Reset all tries for a game and a player "),
+
+		CMD_RESET_WINS("resetWins", "menu.admin.resetWins",
+				"   &6/revent resetwins:\n          &e-> Reset all wins "),
+
+		CMD_RESET_WINS_PLAYER("resetWinsPlayerCMD", "menu.admin.resetWinsPlayer",
+				"   &6/revent resetwins <player>:\n          &e-> Reset all wins for a player "),
+
+		CMD_RESET_WINS_GAME("resetWinsGame", "menu.admin.resetWinsGame",
+				"   &6/revent resetwinsgame <game>:\n          &e-> Reset all wins for a game "),
+
+		CMD_RESET_WINS_GAME_PLAYER("resetWinsGamePlayer", "menu.admin.resetWinsGamePlayer",
+				"   &6/revent resetwins <game> <player>:\n          &e-> Reset all wins for a game and a player "),
+
+		
+		
 
 		CMD_RELOAD("reload", "menu.admin.reload", "   &6/revent reload:\n          &e-> Reload the plugin"),
 
@@ -234,6 +267,10 @@ public class Constantes {
 		SPAWN_SET("spawnSet", "comun.spawnSet", "&6&lYou have set the spawn succesfully"),
 
 		NOT_IN_MATCH("notInMatch", "match.notInMatch", "&c&lYou are not in an event"),
+		
+		MATCH_JOIN("matchJoin", "match.matchJoin", "&6&l[+] %player%"),
+		
+		MATCH_LEAVE("matchLeave", "match.matchLeave", "&c&l[-] %player%"),
 
 		WIN_RANDOM_EVENTS("winRandomEvents", "match.winRandomEvents", "&6&lCongratulations! You won the event"),
 
@@ -287,18 +324,14 @@ public class Constantes {
 
 		CLEAR_INVENTORY("clearInventory", "comun.clearInventory",
 				"&c&lClear the inventory before joining the RandomEvent"),
-		
-		DAYS_FORMAT("daysFormat", "comun.daysFormat",
-				"&6&l%days% h"),
-		
-		HOURS_FORMAT("hoursFormat", "comun.hoursFormat",
-				"&6&l%hours% h"),
-		
-		MINUTES_FORMAT("minutesFormat", "comun.minutesFormat",
-				"&6&l%minutes% m"),
-		
-		SECONDS_FORMAT("secondsFormat", "comun.secondsFormat",
-				"&6&l%seconds% s"),
+
+		DAYS_FORMAT("daysFormat", "comun.daysFormat", "&6&l%days% h"),
+
+		HOURS_FORMAT("hoursFormat", "comun.hoursFormat", "&6&l%hours% h"),
+
+		MINUTES_FORMAT("minutesFormat", "comun.minutesFormat", "&6&l%minutes% m"),
+
+		SECONDS_FORMAT("secondsFormat", "comun.secondsFormat", "&6&l%seconds% s"),
 
 		SHOW_ALONE("showAlone", "match.showAlone", "&6&lYou are playing alone, good luck!"),
 
@@ -315,11 +348,10 @@ public class Constantes {
 		MATCH_BEGIN_SOON("matchBeginSoon", "match.matchBeginSoon", "&6&lThe Random Event will begin soon"),
 
 		LOST_GEMS("lostGems", "match.lostGems", "&e&l%player% &6&llost all gems"),
-		
-		GREEN_RED_LIGHT_MOVE("greenRedLightMove", "match.greenRedLightMove", "&a&lMOVE"),
-		
-		GREEN_RED_LIGHT_STOP("greenRedLightStop", "match.greenRedLightStop", "&c&lSTOP"),
 
+		GREEN_RED_LIGHT_MOVE("greenRedLightMove", "match.greenRedLightMove", "&a&lMOVE"),
+
+		GREEN_RED_LIGHT_STOP("greenRedLightStop", "match.greenRedLightStop", "&c&lSTOP"),
 
 		PLAYER_WINNING("playerWinning", "match.playerWinning",
 				"&6&lThe player &e&l%player% &6&lhas enough gems, kill him or the match will end"),
@@ -413,6 +445,18 @@ public class Constantes {
 
 		EVENT_INVALID("eventInvalid", "comun.eventInvalid", "&c&lThe RandomEvents is invalid!"),
 
+		RESET_COINS("resetCoinsAll", "comun.resetCoinsAll", "&6&lThe coins have been deleted for all players"),
+
+		RESET_TRIES("resetTriesAll", "comun.resetTriesAll", "&6&lThe tries have been deleted for all players"),
+
+		RESET_WINS("resetWinsAll", "comun.resetWinsAll", "&6&lThe wins have been deleted for all players"),
+
+		RESET_COINS_PLAYER("resetCoinsPlayer", "comun.resetCoinsPlayer", "&6&lThe coins have been deleted for %player%"),
+
+		RESET_TRIES_PLAYER("resetTriesPlayer", "comun.resetTriesPlayer", "&6&lThe tries have been deleted for %player%"),
+
+		RESET_WINS_PLAYER("resetWinsPlayer", "comun.resetWinsPlayer", "&6&lThe wins have been deleted for %player%"),
+
 		ITEM_RETURN_CHECKPOINT("itemReturnCheckpoint", "item.returnCheckpoint", "&2&lReturn to checkpoint"),
 
 		ITEM_HIDE_PLAYER("itemHidePlayer", "item.hidePlayer", "&c&lHide players"),
@@ -482,7 +526,7 @@ public class Constantes {
 		NAME_QUAKECRAFT("nameQuakeCraft", "minigameName.QuakeCraft", "Quake Craft"),
 
 		NAME_PAINTBALL("namePaintball", "minigameName.Paintball", "Paintball"),
-		
+
 		NAME_PAINTBALLTOPKILLER("namePaintballTopKill", "minigameName.PaintballTopKill", "Paintball Top Kill"),
 
 		NAME_KINGHILL("nameKingHill", "minigameName.KingHill", "King of the Hill"),
@@ -494,7 +538,7 @@ public class Constantes {
 		NAME_SPLATOON("nameSplatoon", "minigameName.Splatoon", "Splatoon"),
 
 		NAME_BOMBARDMENT("nameBombardment", "minigameName.Bombardment", "Bombardment"),
-		
+
 		NAME_REDGREEN_LIGHT("nameRedGreenLight", "minigameName.RedGreenLight", "Red Light-Green Light"),
 
 		NAME_REALTEAMBATTLEROYALE("nameRealTeamBattleRoyale", "minigameName.TeamBattleRoyale", "Team Battle Royale"),
@@ -602,13 +646,13 @@ public class Constantes {
 
 		MINIGAME_DESC_TKLLTEAMS("minigameDescriptionTKLLTEAMS", "minigame.description.TKLLTEAMS",
 				"&eOnly the most powerful assasin can win this event, kill players to get points,;&e the team with more points will get the rewards"),
-		
+
 		MINIGAME_DESC_PBALLTK("minigameDescriptionPBALLTK", "minigame.description.PBALLTK",
 				"&eThrow snowballs to your enemies;&eOnly the most powerful assasin can win this event, kill players to get points,;&e the team with more points will get the rewards"),
-		
+
 		MINIGAME_DESC_BRTEAMS("minigameDescriptionBRTEAMS", "minigame.description.BRTEAMS",
 				"&eA fierce battle where just 1 player;&e or team can remain alive."),
-		
+
 		MINIGAME_DESC_REDGREEN("minigameDescriptionREDGREEN", "minigame.description.REDGREEN",
 				"&eBe the first to reach the goal, but watch out;&e just walk when the music is on."),
 

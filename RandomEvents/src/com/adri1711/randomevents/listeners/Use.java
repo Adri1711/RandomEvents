@@ -183,10 +183,12 @@ public class Use implements Listener {
 																.getContents().length)));
 							}
 							for (int i = 0; i < objetos; i++) {
-								chest.getBlockInventory()
-										.addItem(plugin.getMatchActive().getMatch().getInventoryChests()
-												.getContents()[plugin.getRandom().nextInt(plugin.getMatchActive()
-														.getMatch().getInventoryChests().getContents().length)]);
+								Integer position = plugin.getRandom().nextInt(chest.getBlockInventory().getSize());
+
+								chest.getBlockInventory().setItem(position,
+										plugin.getMatchActive().getMatch().getInventoryChests().getContents()[plugin
+												.getRandom().nextInt(plugin.getMatchActive().getMatch()
+														.getInventoryChests().getContents().length)]);
 							}
 						}
 					}
@@ -292,7 +294,7 @@ public class Use implements Listener {
 																		"" + Double.valueOf(pLoc.distance(playerLoc))
 																				.intValue())
 																.replaceAll("%killer%", player.getName()),
-														false);
+														false, false, false);
 												UtilsRandomEvents.doCommandsKill(player, plugin);
 												plugin.getMatchActive().reiniciaPlayer(hitted);
 												UtilsRandomEvents.playSound(plugin, hitted,
@@ -596,6 +598,7 @@ public class Use implements Listener {
 			}
 		}
 	}
+
 	@EventHandler
 	public void onEntityExplode(EntityExplodeEvent event) {
 		if (plugin.getMatchActive() != null) {
@@ -603,23 +606,21 @@ public class Use implements Listener {
 			if (plugin.getMatchActive().getMapHandler() != null
 					&& plugin.getMatchActive().getMapHandler().getCuboid() != null
 					&& plugin.getMatchActive().getMapHandler().getCuboid().contains(ent.getLocation())) {
-				List<Block> blockList=new ArrayList<Block>();
+				List<Block> blockList = new ArrayList<Block>();
 				blockList.addAll(event.blockList());
 				for (Block block : blockList) {
-					if (plugin.getMatchActive().getMapHandler().getBlockPlaced()
-							.containsKey(block.getLocation())) {
+					if (plugin.getMatchActive().getMapHandler().getBlockPlaced().containsKey(block.getLocation())) {
 						plugin.getMatchActive().getMapHandler().getBlockPlaced().remove(block.getLocation());
 					} else if (plugin.getMatchActive().getMatch().getMaterial() != null
 
-							&& block.getType() != null && block.getType().toString()
-									.equals(plugin.getMatchActive().getMatch().getMaterial())) {
+							&& block.getType() != null
+							&& block.getType().toString().equals(plugin.getMatchActive().getMatch().getMaterial())) {
 						try {
-							plugin.getMatchActive().getMapHandler().getBlockDisappeared().put(
-									block.getLocation(),
+							plugin.getMatchActive().getMapHandler().getBlockDisappeared().put(block.getLocation(),
 									new MaterialData(block.getType(), block.getData()));
 						} catch (Throwable eb) {
-							plugin.getMatchActive().getMapHandler().getBlockDisappeared()
-									.put(block.getLocation(), block.getState().getData().clone());
+							plugin.getMatchActive().getMapHandler().getBlockDisappeared().put(block.getLocation(),
+									block.getState().getData().clone());
 						}
 
 						if (plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEEF)) {
@@ -634,12 +635,11 @@ public class Use implements Listener {
 									&& UtilsRandomEvents.contieneMaterialData(block,
 											plugin.getMatchActive().getMatch()))) {
 						try {
-							plugin.getMatchActive().getMapHandler().getBlockDisappeared().put(
-									block.getLocation(),
+							plugin.getMatchActive().getMapHandler().getBlockDisappeared().put(block.getLocation(),
 									new MaterialData(block.getType(), block.getData()));
 						} catch (Throwable eb) {
-							plugin.getMatchActive().getMapHandler().getBlockDisappeared()
-									.put(block.getLocation(), block.getState().getData().clone());
+							plugin.getMatchActive().getMapHandler().getBlockDisappeared().put(block.getLocation(),
+									block.getState().getData().clone());
 						}
 						if (plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLEEF)) {
 							event.blockList().remove(block);
@@ -660,6 +660,7 @@ public class Use implements Listener {
 			}
 		}
 	}
+
 	@EventHandler
 	public void onExplosionPrime(ExplosionPrimeEvent event) {
 		if (plugin.getMatchActive() != null) {

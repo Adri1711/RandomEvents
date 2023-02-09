@@ -124,19 +124,24 @@ public class RandomEvents extends JavaPlugin {
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
 		logger=getLogger();
+		logger.info("Loading config...");
 		loadConfig();
 		this.editando = new ArrayList<String>();
 		this.comandosExecutor = new ComandosExecutor();
 		this.cooldowns = new HashMap<String, Date>();
+		logger.info("Loading variables...");
 
 		inicializaVariables();
 		
 		if (getReventConfig().isMysqlEnabled()) {
+			logger.info("Enabling mysql...");
+
 			hikari = new HikariCP(getReventConfig().getMysqlHost(), getReventConfig().getMysqlPort().toString(),
 					getReventConfig().getMysqlDatabase(), getReventConfig().getMysqlUsername(),
 					getReventConfig().getMysqlPassword(), getReventConfig().getMysqlMaxLifeTime());
 			UtilsSQL.checkTables(this);
 		}
+		logger.info("Registering events...");
 
 		getServer().getPluginManager().registerEvents((Listener) new Quit(this), (Plugin) this);
 		getServer().getPluginManager().registerEvents((Listener) new Chat(this), (Plugin) this);
@@ -160,7 +165,8 @@ public class RandomEvents extends JavaPlugin {
 		}
 
 		getLogger().info(" Author adri1711- activado");
-		comienzaTemporizador();
+		
+		logger.info("Running task...");
 
 		Bukkit.getServer().getScheduler().runTaskLaterAsynchronously((Plugin) this, new Runnable() {
 
@@ -195,6 +201,7 @@ public class RandomEvents extends JavaPlugin {
 			}
 
 		}, 1200);
+		logger.info("Loading scoreboard...");
 
 		ScoreboardManager manager = Bukkit.getScoreboardManager();
 		colorBoard = manager.getMainScoreboard();
@@ -211,6 +218,8 @@ public class RandomEvents extends JavaPlugin {
 		cmd2.setTabCompleter(cmdCompletion);
 
 		setupSimpleCommandMap();
+		
+		logger.info("Registering commands...");
 
 		for (String s : reventConfig.getCmdAlias()) {
 			GenericCommand gc = new GenericCommand(this, s, cmdExecutor, cmdCompletion);
@@ -221,6 +230,10 @@ public class RandomEvents extends JavaPlugin {
 //			cmdgc.setTabCompleter(cmdCompletion);
 
 		}
+		
+		logger.info("Timer began...");
+
+		comienzaTemporizador();
 		// cmd3.setExecutor(cmdExecutor);
 		// cmd3.setTabCompleter(new CommandCompletion());
 		// cmd4.setExecutor(cmdExecutor);

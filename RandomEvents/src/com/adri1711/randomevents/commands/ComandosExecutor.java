@@ -351,11 +351,13 @@ public class ComandosExecutor {
 
 				player.sendMessage(((m.getEnabled() == null || m.getEnabled()) ? "§6" : "§c") + "§l"
 						+ plugin.getMatches().indexOf(m) + " - " + m.getMinigame().getMessage(plugin) + " -> "
-						+ m.getName().replaceAll(" ", "_")  + " ( Min: "+m.getAmountPlayersMin()+", Max: "+m.getAmountPlayers()+") "
+						+ m.getName().replaceAll(" ", "_") + " ( Min: " + m.getAmountPlayersMin() + ", Max: "
+						+ m.getAmountPlayers() + ") "
 						+ ((m.getEnabledSchedule() == null || m.getEnabledSchedule()) ? "" : "§c(Schedule Disabled)"));
 			} else {
-				plugin.getLoggerP().info(plugin.getMatches().indexOf(m) + " - " + m.getMinigame().getMessage(plugin) + " -> "
-						+ m.getName().replaceAll(" ", "_")  + " ( Min: "+m.getAmountPlayersMin()+", Max: "+m.getAmountPlayers()+") "
+				plugin.getLoggerP().info(plugin.getMatches().indexOf(m) + " - " + m.getMinigame().getMessage(plugin)
+						+ " -> " + m.getName().replaceAll(" ", "_") + " ( Min: " + m.getAmountPlayersMin() + ", Max: "
+						+ m.getAmountPlayers() + ") "
 						+ ((m.getEnabledSchedule() == null || m.getEnabledSchedule()) ? "" : "§c(Schedule Disabled)"));
 			}
 		}
@@ -762,6 +764,106 @@ public class ComandosExecutor {
 					player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getPlayerOffline());
 
 			}
+		} catch (Exception e) {
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());
+		}
+	}
+
+	public void resetWins(RandomEvents plugin, Player player) {
+		try {
+			UtilsSQL.resetWins(player, plugin);
+
+		} catch (Exception e) {
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());
+		}
+	}
+
+	public void resetWins(RandomEvents plugin, Player player, String p) {
+		try {
+			UtilsSQL.resetWinsPlayer(player, p, plugin);
+
+		} catch (Exception e) {
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());
+		}
+	}
+
+	public void resetWins(RandomEvents plugin, Player player, String game, String p) {
+		try {
+			UtilsSQL.resetWinsPlayerGame(player, p, game, plugin);
+
+		} catch (Exception e) {
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());
+		}
+	}
+
+	public void resetWinsGame(RandomEvents plugin, Player player, String p) {
+		try {
+			UtilsSQL.resetWinsGame(player, p, plugin);
+
+		} catch (Exception e) {
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());
+		}
+	}
+
+	public void resetCoins(RandomEvents plugin, Player player) {
+		try {
+			UtilsSQL.resetCredits(player, plugin);
+
+		} catch (Exception e) {
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());
+		}
+	}
+
+	public void resetCoins(RandomEvents plugin, Player player, String p) {
+		try {
+			UtilsSQL.resetCreditsPlayer(player, p, plugin);
+
+		} catch (Exception e) {
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());
+		}
+	}
+
+	public void resetTries(RandomEvents plugin, Player player) {
+		try {
+			UtilsSQL.resetTries(player, plugin);
+
+		} catch (Exception e) {
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());
+		}
+	}
+
+	public void resetTries(RandomEvents plugin, Player player, String p) {
+		try {
+			UtilsSQL.resetTriesPlayer(player, p, plugin);
+
+		} catch (Exception e) {
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());
+		}
+	}
+
+	public void resetTries(RandomEvents plugin, Player player, String game, String p) {
+		try {
+			UtilsSQL.resetTriesPlayerGame(player, p, game, plugin);
+
+		} catch (Exception e) {
+			if (player != null)
+				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());
+		}
+	}
+
+	public void resetTriesGame(RandomEvents plugin, Player player, String p) {
+		try {
+			UtilsSQL.resetTriesGame(player, p, plugin);
+
 		} catch (Exception e) {
 			if (player != null)
 				player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());

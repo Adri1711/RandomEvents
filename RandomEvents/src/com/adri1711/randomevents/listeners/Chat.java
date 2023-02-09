@@ -57,7 +57,8 @@ public class Chat implements Listener {
 
 		if (plugin.getReventConfig().getCmdAlias().contains(aliase.toLowerCase())) {
 			event.setCancelled(true);
-			plugin.getCmdExecutor().onCommand(event.getPlayer(), null, "randomevent", campos.toArray(new String[campos.size()]));
+			plugin.getCmdExecutor().onCommand(event.getPlayer(), null, "randomevent",
+					campos.toArray(new String[campos.size()]));
 		} else {
 
 			if (plugin.getMatchActive() != null
@@ -161,13 +162,13 @@ public class Chat implements Listener {
 
 						break;
 					case ITEM_DESCRIPTIVE:
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 							kit.setItem(player.getItemInHand());
 							plugin.getPlayersCreationKit().remove(player.getName());
 						}
 						break;
 					case INVENTORY:
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 
 							ItemStack[] contenido = player.getInventory().getContents();
 							List<ItemStack> contenidoList = Arrays.asList(contenido);
@@ -385,20 +386,20 @@ public class Chat implements Listener {
 						break;
 
 					case SPAWN:
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 							waterDrop.setSpawn(player.getLocation());
 							plugin.getPlayersCreationWaterDrop().remove(player.getName());
 
 						}
 						break;
 					case GOAL_LOCATION1:
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 							waterDrop.setGoalLoc1(player.getLocation());
 							plugin.getPlayersCreationWaterDrop().remove(player.getName());
 						}
 						break;
 					case GOAL_LOCATION2:
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 							waterDrop.setGoalLoc2(player.getLocation());
 							plugin.getPlayersCreationWaterDrop().remove(player.getName());
 						}
@@ -593,7 +594,7 @@ public class Chat implements Listener {
 						plugin.getPlayersCreation().remove(player.getName());
 
 						break;
-						
+
 					case PERMISSION_OPTIONAL:
 						match.setPermission(ChatColor.stripColor(message).trim());
 						plugin.getPlayersCreation().remove(player.getName());
@@ -623,7 +624,7 @@ public class Chat implements Listener {
 
 						break;
 					case SPAWN_PLAYER:
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 							match.setPlayerSpawn(player.getLocation());
 							plugin.getPlayersCreation().remove(player.getName());
 
@@ -652,14 +653,14 @@ public class Chat implements Listener {
 						}
 						break;
 					case SPAWN_BEAST:
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 							match.setBeastSpawn(player.getLocation());
 							plugin.getPlayersCreation().remove(player.getName());
 
 						}
 						break;
 					case ARENA_SPAWNS:
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 							if (match.getSpawns().size() != match.getAmountPlayers()) {
 
 								match.getSpawns().add(player.getLocation());
@@ -672,12 +673,12 @@ public class Chat implements Listener {
 									actua = Boolean.FALSE;
 								}
 							}
-						} else if (message.equals(Constantes.NEXT)) {
+						} else if (message.equalsIgnoreCase(Constantes.NEXT)) {
 							plugin.getPlayersCreation().remove(player.getName());
 						}
 						break;
 					case TEAM_SPAWNS:
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 							if (match.getSpawns().size() != match.getNumberOfTeams()) {
 
 								match.getSpawns().add(player.getLocation());
@@ -693,12 +694,12 @@ public class Chat implements Listener {
 						}
 						break;
 					case CANNON_SPAWNS:
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 
 							match.getEntitySpawns().add(player.getLocation());
 							actua = Boolean.FALSE;
 
-						} else if (message.equals(Constantes.NEXT)) {
+						} else if (message.equalsIgnoreCase(Constantes.NEXT)) {
 
 							plugin.getPlayersCreation().remove(player.getName());
 
@@ -706,7 +707,7 @@ public class Chat implements Listener {
 
 						break;
 					case ENTITY_SPAWNS:
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 							if (match.getEntitySpawns().size() != match.getAmountPlayers()) {
 
 								match.getEntitySpawns().add(player.getLocation());
@@ -720,19 +721,20 @@ public class Chat implements Listener {
 
 								}
 							}
-						} else if (message.equals(Constantes.NEXT)) {
+						} else if (message.equalsIgnoreCase(Constantes.NEXT)) {
 
 							plugin.getPlayersCreation().remove(player.getName());
 
 						}
 						break;
 					case ANOTHER_ENTITY_SPAWNS:
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 							match.getEntitySpawns().add(player.getLocation());
 							if (match.getEntitySpawns().size() == match.getAmountPlayers()) {
 								plugin.getPlayersCreation().remove(player.getName());
 
 							} else {
+
 								plugin.getPlayersCreation().put(player.getName(),
 										Creacion.ANOTHER_ENTITY_SPAWNS.getPosition());
 								actua = Boolean.FALSE;
@@ -740,8 +742,17 @@ public class Chat implements Listener {
 							}
 						}
 						break;
+					case COMMANDS_ON_START:
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
+							plugin.getPlayersCreation().remove(player.getName());
+						} else {
+							match.getCommandsOnStart().add(message);
+							plugin.getPlayersCreation().put(player.getName(), Creacion.COMMANDS_ON_START.getPosition());
+							actua = Boolean.FALSE;
+						}
+						break;
 					case ANOTHER_ARENA_SPAWNS:
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 							match.getSpawns().add(player.getLocation());
 							if (match.getSpawns().size() == match.getAmountPlayers()) {
 								plugin.getPlayersCreation().remove(player.getName());
@@ -753,13 +764,13 @@ public class Chat implements Listener {
 								actua = Boolean.FALSE;
 
 							}
-						} else if (message.equals(Constantes.NEXT)) {
+						} else if (message.equalsIgnoreCase(Constantes.NEXT)) {
 							plugin.getPlayersCreation().remove(player.getName());
 						}
 						break;
 
 					case ANOTHER_TEAM_SPAWNS:
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 							match.getSpawns().add(player.getLocation());
 							if (match.getSpawns().size() == match.getNumberOfTeams()) {
 								plugin.getPlayersCreation().remove(player.getName());
@@ -775,10 +786,10 @@ public class Chat implements Listener {
 						break;
 					case SPECTATOR_SPAWNS:
 
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 							match.getSpectatorSpawns().add(player.getLocation());
 							actua = Boolean.FALSE;
-						} else if (message.equals(Constantes.NEXT)) {
+						} else if (message.equalsIgnoreCase(Constantes.NEXT)) {
 							plugin.getPlayersCreation().remove(player.getName());
 
 						}
@@ -806,7 +817,7 @@ public class Chat implements Listener {
 
 						break;
 					case TNT_TAG_HEAD:
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 
 							match.setHead(player.getItemInHand());
 
@@ -834,7 +845,7 @@ public class Chat implements Listener {
 						break;
 
 					case INVENTORY_BEAST:
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 
 							ItemStack[] contenido = player.getInventory().getContents();
 							List<ItemStack> contenidoList = Arrays.asList(contenido);
@@ -862,7 +873,7 @@ public class Chat implements Listener {
 						}
 						break;
 					case INVENTORY_RUNNERS:
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 
 							ItemStack[] contenido = player.getInventory().getContents();
 							List<ItemStack> contenidoList = Arrays.asList(contenido);
@@ -891,7 +902,7 @@ public class Chat implements Listener {
 						}
 						break;
 					case INVENTORY_CHESTS:
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 
 							ItemStack[] contenido = player.getInventory().getContents();
 							List<ItemStack> contenidoList = new ArrayList<ItemStack>();
@@ -915,7 +926,7 @@ public class Chat implements Listener {
 
 							plugin.getPlayersCreation().remove(player.getName());
 
-						} else if (message.equals(Constantes.ADD)) {
+						} else if (message.equalsIgnoreCase(Constantes.ADD)) {
 							ItemStack[] contenido = player.getInventory().getContents();
 							List<ItemStack> contenidoList = new ArrayList<ItemStack>();
 							for (ItemStack item : contenido) {
@@ -951,7 +962,7 @@ public class Chat implements Listener {
 						// position + 1, match);
 						break;
 					case ANOTHER_REWARDS:
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 							plugin.getPlayersCreation().remove(player.getName());
 
 							// actualiza =
@@ -1015,13 +1026,18 @@ public class Chat implements Listener {
 						plugin.getPlayersCreation().remove(player.getName());
 
 						break;
+					case SHRINK_BLOCKS:
+						match.setShrinkBlocks(Integer.valueOf(message.trim()));
+						plugin.getPlayersCreation().remove(player.getName());
+
+						break;
 					case NO_MOVE_TIME:
 						match.setSecondsToBegin(Integer.valueOf(message.trim()));
 						plugin.getPlayersCreation().remove(player.getName());
 
 						break;
 					case ARROW_LOCATION1:
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 							match.setLocation1(player.getLocation());
 							match.setMob(EntityType.ARROW);
 							plugin.getPlayersCreation().remove(player.getName());
@@ -1035,7 +1051,7 @@ public class Chat implements Listener {
 					case KOTH_LOCATION1:
 					case GOAL_LOCATION1:
 					case MAP_LOCATION1:
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 							match.setLocation1(player.getLocation());
 							plugin.getPlayersCreation().remove(player.getName());
 
@@ -1050,7 +1066,7 @@ public class Chat implements Listener {
 					case MAP_LOCATION2:
 					case GOAL_LOCATION2:
 
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 							match.setLocation2(player.getLocation());
 							plugin.getPlayersCreation().remove(player.getName());
 
@@ -1060,7 +1076,7 @@ public class Chat implements Listener {
 						}
 						break;
 					case BLOCKS_ALLOWED:
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 							if (player.getItemInHand() != null
 									&& player.getItemInHand().getType() != (XMaterial.AIR.parseMaterial())) {
 								try {
@@ -1079,7 +1095,7 @@ public class Chat implements Listener {
 						}
 						break;
 					case MATERIAL_SPLEEF:
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 
 							if (player.getItemInHand() != null
 									&& player.getItemInHand().getType() != (XMaterial.AIR.parseMaterial())) {
@@ -1111,7 +1127,7 @@ public class Chat implements Listener {
 						}
 						break;
 					case ANOTHER_MATERIAL_SPLEEF:
-						if (message.equals(Constantes.DONE)) {
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
 
 							if (player.getItemInHand() != null
 									&& player.getItemInHand().getType() != (XMaterial.AIR.parseMaterial())) {
@@ -1137,7 +1153,7 @@ public class Chat implements Listener {
 								// UtilsRandomEvents.pasaACreation(plugin,
 								// player, position, match);
 							}
-						} else if (message.equals(Constantes.NEXT)) {
+						} else if (message.equalsIgnoreCase(Constantes.NEXT)) {
 							plugin.getPlayersCreation().remove(player.getName());
 
 							// actualiza =
@@ -1296,7 +1312,7 @@ public class Chat implements Listener {
 							case BATTLE_NAME:
 								match.setName(null);
 								break;
-								
+
 							case PERMISSION_OPTIONAL:
 								match.setPermission(null);
 								break;
@@ -1379,7 +1395,9 @@ public class Chat implements Listener {
 							case ANOTHER_MATERIAL_SPLEEF:
 								match.setDatas(new ArrayList<MaterialData>());
 								break;
-
+							case SHRINK_BLOCKS:
+								match.setShrinkBlocks(null);
+								break;
 							default:
 								break;
 							}

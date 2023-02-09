@@ -29,12 +29,14 @@ public class Move implements Listener {
 
 	@EventHandler
 	public void onTp(PlayerTeleportEvent evt) {
-		if (evt.getCause() == TeleportCause.SPECTATE) {
-			if (evt.getPlayer() != null) {
-				Player p = evt.getPlayer();
-				if (plugin.getMatchActive() != null
-						&& plugin.getMatchActive().getPlayerHandler().getPlayersSpectators().contains(p)) {
-					evt.setCancelled(true);
+		if (plugin.getReventConfig().getAvoidSpectatorTp()) {
+			if (evt.getCause() == TeleportCause.SPECTATE) {
+				if (evt.getPlayer() != null) {
+					Player p = evt.getPlayer();
+					if (plugin.getMatchActive() != null
+							&& plugin.getMatchActive().getPlayerHandler().getPlayersSpectators().contains(p)) {
+						evt.setCancelled(true);
+					}
 				}
 			}
 		}

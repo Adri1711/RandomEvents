@@ -42,6 +42,20 @@ public class Queries {
 
 	public static String INSERT_UPDATE_ADD_CREDITS = "insert into revent_credits(UUID,name,event,credits) values('%field_UUID%','%field_name%','%field_event%', %field_credits%) ON DUPLICATE KEY UPDATE credits=credits+(%field_credits%)";
 
+	public static String RESET_TRIES = "UPDATE revent_stats SET tries=0 where tries<>0";
+	public static String RESET_WINS = "UPDATE revent_stats SET wins=0 where wins <> 0";
+	public static String RESET_CREDITS = "UPDATE revent_credits SET credits=0 where credits<>0";
+
+	public static String RESET_TRIES_PLAYER = "UPDATE revent_stats SET tries=0 where name='%field_name%' and tries<>0";
+	public static String RESET_WINS_PLAYER = "UPDATE revent_stats SET wins=0 where name='%field_name%' and wins <> 0";
+	public static String RESET_CREDITS_PLAYER = "UPDATE revent_credits SET credits=0 where name='%field_name%' and credits<>0";
+
+	public static String RESET_TRIES_GAME = "UPDATE revent_stats SET tries=0 where game='%field_game%' and tries<>0";
+	public static String RESET_WINS_GAME = "UPDATE revent_stats SET wins=0 where game='%field_game%' and wins <> 0";
+
+	public static String RESET_TRIES_GAME_PLAYER = "UPDATE revent_stats SET tries=0 where name='%field_name%' and game='%field_game%' and tries<>0";
+	public static String RESET_WINS_GAME_PLAYER = "UPDATE revent_stats SET wins=0 where name='%field_name%' and game='%field_game%' and wins <> 0";
+
 	public static String UPDATE_REMOVE_CREDITS_NAME_MODE = "UPDATE revent_credits SET credits=credits-1 where name='%field_name%' and event='%field_event%' and credits <> 0 limit 1";
 
 	public static String UPDATE_REMOVE_CREDITS_UUID_MODE = "UPDATE revent_credits SET credits=credits-1 where UUID='%field_UUID%' and event='%field_event%' and credits <> 0 limit 1";

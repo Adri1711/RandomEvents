@@ -20,6 +20,9 @@ cmdAlias: 'revent;event'
 ##Deactivate all sounds of the plugin
 deactivateSounds: false
 
+##Deactivate teleport on spectator for players
+avoidSpectatorTp: true
+
 ##Ticks invincible after game
 invincibleAfterGame: 0
 
@@ -254,6 +257,9 @@ waterKillSW: false
 
 ##Survival Games Area damage
 sgAreaDamage: 1
+
+##Survival Games Blocks per Shrink
+sgAreaShrinkBlocks: 100
 
 ##Enable this to make a player lose when they fall into water in survival games minigames
 waterKillSG: false

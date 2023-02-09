@@ -92,7 +92,27 @@ public enum ComandosEnum {
 	CMD_TP("tp", 2, "randomevent.admin.teleport", "getTp", "tpRandomEvent", true, true),
 
 	CMD_CANCEL("cancel", 1, "randomevent.admin.cancel", "getCancel", "cancelCreationRandomEvent", true, false),
-
+	
+	CMD_RESET_COINS("resetcredits", 1, "randomevent.admin.resetcredits", "getResetCoins", "resetCoins", true, true),
+	
+	CMD_RESET_COINS_PLAYER("resetcredits", 2, "randomevent.admin.resetcredits", "getResetCoinsPlayerCMD", "resetCoins", true, true),
+	
+	CMD_RESET_TRIES("resettries", 1, "randomevent.admin.resettries", "getResetTries", "resetTries", true, true),
+	
+	CMD_RESET_TRIES_PLAYER("resettries", 2, "randomevent.admin.resettries", "getResetTriesPlayerCMD", "resetTries", true, true),
+	
+	CMD_RESET_TRIES_GAME("resettriesgame", 2, "randomevent.admin.resettries", "getResetTriesGame", "resetTriesGame", true, true),
+	
+	CMD_RESET_TRIES_GAME_PLAYER("resettries", 3, "randomevent.admin.resettries", "getResetTriesGamePlayer", "resetTries", true, true),
+	
+	CMD_RESET_WINS("resetwins", 1, "randomevent.admin.resetwins", "getResetWins", "resetWins", true, true),
+	
+	CMD_RESET_WINS_PLAYER("resetwins", 2, "randomevent.admin.resetwins", "getResetWinsPlayerCMD", "resetWins", true, true),
+	
+	CMD_RESET_WINS_GAME("resetwinsgame", 2, "randomevent.admin.resetwins", "getResetWinsGame", "resetWinsGame", true, true),
+	
+	CMD_RESET_WINS_GAME_PLAYER("resetwins", 3, "randomevent.admin.resetwins", "getResetWinsGamePlayer", "resetWins", true, true),
+	
 	CMD_RELOAD("reload", 1, "randomevent.admin.reload", "getReload", "reloadPlugin", true, true);
 
 	private String aliase;

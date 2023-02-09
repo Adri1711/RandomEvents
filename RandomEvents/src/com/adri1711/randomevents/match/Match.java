@@ -69,12 +69,15 @@ public class Match implements Comparable<Match> {
 	private List<String> scenes;
 	
 	private List<String> kits;
+	private List<String> commandsOnStart;
 
 	private Boolean enabled;
 	private Boolean enabledSchedule;
 	
 	private Integer numberOfTeams;
 	private Integer NPCId;
+	
+	private Integer shrinkBlocks;
 	
 	private GameMode gamemode;
 	
@@ -91,6 +94,7 @@ public class Match implements Comparable<Match> {
 		this.datas = new ArrayList<MaterialData>();
 		this.scenes = new ArrayList<String>();
 		this.kits = new ArrayList<String>();
+		this.commandsOnStart = new ArrayList<String>();
 		this.useOwnInventory=false;
 		this.allMaterialAllowed=false;
 	}
@@ -526,6 +530,22 @@ public class Match implements Comparable<Match> {
 
 	public void setPermission(String permission) {
 		this.permission = permission;
+	}
+
+	public List<String> getCommandsOnStart() {
+		return commandsOnStart;
+	}
+
+	public void setCommandsOnStart(List<String> commandsOnStart) {
+		this.commandsOnStart = commandsOnStart;
+	}
+
+	public Integer getShrinkBlocks() {
+		return shrinkBlocks;
+	}
+
+	public void setShrinkBlocks(Integer shrinkBlocks) {
+		this.shrinkBlocks = shrinkBlocks;
 	}
 
 	

@@ -164,11 +164,11 @@ public class TournamentActive {
 	public void dejarPartida(Player player, Boolean muerto) {
 		if (!getPlaying()) {
 			if (!getPlayersObj().remove(player)) {
-				UtilsRandomEvents.borraPlayerPorName(getPlayersObj(), player);
+				setPlayersObj(UtilsRandomEvents.borraPlayerPorName(getPlayersObj(), player));
 			}
 
 			if (!getPlayersSpectators().remove(player)) {
-				UtilsRandomEvents.borraPlayerPorName(getPlayersSpectators(), player);
+				setPlayersSpectators(UtilsRandomEvents.borraPlayerPorName(getPlayersSpectators(), player));
 			}
 
 			getPlayers().remove(player.getName());

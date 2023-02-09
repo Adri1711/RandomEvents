@@ -30,6 +30,8 @@ public class MatchPlayerHandler {
 
 	private List<Player> playersVanish;
 	
+	private List<Location>  locationsBeforeExitting;
+	
 	private Map<String,Long> playersInvincible;
 
 	private Player beast;
@@ -76,10 +78,12 @@ public class MatchPlayerHandler {
 		this.playerKits = new HashMap<Player, Kit>();
 		this.playersContadores = new HashMap<Player, Long>();
 		this.paintedLocations = new HashMap<Player, Set<Location>>();
+		this.locationsBeforeExitting=new ArrayList<Location>();
 	}
 
 	public MatchPlayerHandler(List<String> players, List<Player> playersGanadores, List<Player> playersSpectators) {
 		this.playersInvincible = new HashMap<String,Long>();
+		this.locationsBeforeExitting=new ArrayList<Location>();
 
 		this.players = players;
 		this.playersTotal = new ArrayList<String>();
@@ -273,6 +277,14 @@ public class MatchPlayerHandler {
 
 	public void setPlayersInvincible(Map<String,Long> playersInvincible) {
 		this.playersInvincible = playersInvincible;
+	}
+
+	public List<Location> getLocationsBeforeExitting() {
+		return locationsBeforeExitting;
+	}
+
+	public void setLocationsBeforeExitting(List<Location> locationsBeforeExitting) {
+		this.locationsBeforeExitting = locationsBeforeExitting;
 	}
 	
 

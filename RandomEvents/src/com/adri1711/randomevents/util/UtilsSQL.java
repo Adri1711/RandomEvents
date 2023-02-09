@@ -328,6 +328,7 @@ public class UtilsSQL {
 
 		}
 	}
+
 	public static void getCreditsGUI(Player p, Integer page, RandomEvents plugin) {
 		Map<String, Integer> creditos = new HashMap<String, Integer>();
 
@@ -422,6 +423,196 @@ public class UtilsSQL {
 				public void call(Integer resultSet, SQLException thrown) {
 					if (thrown == null) {
 
+					} else {
+						plugin.getLoggerP().info(thrown.toString());
+					}
+				}
+			}).runTaskAsynchronously(plugin);
+		}
+	}
+
+	public static void resetCredits(Player p, RandomEvents plugin) {
+		String query = "";
+		if (plugin.getReventConfig().isMysqlEnabled()) {
+			query = Queries.RESET_CREDITS;
+
+			new UpdateBukkitRunnable(plugin.getHikari().getHikari(), query, new Callback<Integer, SQLException>() {
+				@Override
+				public void call(Integer resultSet, SQLException thrown) {
+					if (thrown == null) {
+						if(p!=null)
+						p.sendMessage(plugin.getLanguage().getResetCoinsAll());
+					} else {
+						plugin.getLoggerP().info(thrown.toString());
+					}
+				}
+			}).runTaskAsynchronously(plugin);
+		}
+	}
+
+	public static void resetCreditsPlayer(Player p, String player, RandomEvents plugin) {
+		String query = "";
+		if (plugin.getReventConfig().isMysqlEnabled()) {
+			query = Queries.RESET_CREDITS_PLAYER.replaceAll(Queries.NAME, player);
+
+			new UpdateBukkitRunnable(plugin.getHikari().getHikari(), query, new Callback<Integer, SQLException>() {
+				@Override
+				public void call(Integer resultSet, SQLException thrown) {
+					if (thrown == null) {
+						if(p!=null)
+						p.sendMessage(plugin.getLanguage().getResetCoinsPlayer().replaceAll("%player%", player));
+					} else {
+						plugin.getLoggerP().info(thrown.toString());
+					}
+				}
+			}).runTaskAsynchronously(plugin);
+		}
+	}
+
+	public static void resetWins(Player p, RandomEvents plugin) {
+		String query = "";
+		if (plugin.getReventConfig().isMysqlEnabled()) {
+			query = Queries.RESET_WINS;
+
+			new UpdateBukkitRunnable(plugin.getHikari().getHikari(), query, new Callback<Integer, SQLException>() {
+				@Override
+				public void call(Integer resultSet, SQLException thrown) {
+					if (thrown == null) {
+						if(p!=null)
+						p.sendMessage(plugin.getLanguage().getResetWinsAll());
+					} else {
+						plugin.getLoggerP().info(thrown.toString());
+					}
+				}
+			}).runTaskAsynchronously(plugin);
+		}
+	}
+
+	public static void resetWinsPlayer(Player p, String player, RandomEvents plugin) {
+		String query = "";
+		if (plugin.getReventConfig().isMysqlEnabled()) {
+			query = Queries.RESET_WINS_PLAYER.replaceAll(Queries.NAME, player);
+
+			new UpdateBukkitRunnable(plugin.getHikari().getHikari(), query, new Callback<Integer, SQLException>() {
+				@Override
+				public void call(Integer resultSet, SQLException thrown) {
+					if (thrown == null) {
+						if(p!=null)
+						p.sendMessage(plugin.getLanguage().getResetWinsPlayer().replaceAll("%player%", player));
+					} else {
+						plugin.getLoggerP().info(thrown.toString());
+					}
+				}
+			}).runTaskAsynchronously(plugin);
+		}
+	}
+
+	public static void resetWinsGame(Player p, String game, RandomEvents plugin) {
+		String query = "";
+		if (plugin.getReventConfig().isMysqlEnabled()) {
+			query = Queries.RESET_WINS_GAME.replaceAll(Queries.GAME, game);
+
+			new UpdateBukkitRunnable(plugin.getHikari().getHikari(), query, new Callback<Integer, SQLException>() {
+				@Override
+				public void call(Integer resultSet, SQLException thrown) {
+					if (thrown == null) {
+						if(p!=null)
+						p.sendMessage(plugin.getLanguage().getResetWinsAll());
+					} else {
+						plugin.getLoggerP().info(thrown.toString());
+					}
+				}
+			}).runTaskAsynchronously(plugin);
+		}
+	}
+
+	public static void resetTries(Player p, RandomEvents plugin) {
+		String query = "";
+		if (plugin.getReventConfig().isMysqlEnabled()) {
+			query = Queries.RESET_TRIES;
+
+			new UpdateBukkitRunnable(plugin.getHikari().getHikari(), query, new Callback<Integer, SQLException>() {
+				@Override
+				public void call(Integer resultSet, SQLException thrown) {
+					if (thrown == null) {
+						if(p!=null)
+						p.sendMessage(plugin.getLanguage().getResetTriesAll());
+					} else {
+						plugin.getLoggerP().info(thrown.toString());
+					}
+				}
+			}).runTaskAsynchronously(plugin);
+		}
+	}
+
+	public static void resetTriesPlayer(Player p, String player, RandomEvents plugin) {
+		String query = "";
+		if (plugin.getReventConfig().isMysqlEnabled()) {
+			query = Queries.RESET_TRIES_PLAYER.replaceAll(Queries.NAME, player);
+
+			new UpdateBukkitRunnable(plugin.getHikari().getHikari(), query, new Callback<Integer, SQLException>() {
+				@Override
+				public void call(Integer resultSet, SQLException thrown) {
+					if (thrown == null) {
+						if(p!=null)
+						p.sendMessage(plugin.getLanguage().getResetTriesPlayer().replaceAll("%player%", player));
+					} else {
+						plugin.getLoggerP().info(thrown.toString());
+					}
+				}
+			}).runTaskAsynchronously(plugin);
+		}
+	}
+
+	public static void resetTriesGame(Player p, String game, RandomEvents plugin) {
+		String query = "";
+		if (plugin.getReventConfig().isMysqlEnabled()) {
+			query = Queries.RESET_TRIES_GAME.replaceAll(Queries.GAME, game);
+
+			new UpdateBukkitRunnable(plugin.getHikari().getHikari(), query, new Callback<Integer, SQLException>() {
+				@Override
+				public void call(Integer resultSet, SQLException thrown) {
+					if (thrown == null) {
+						if(p!=null)
+						p.sendMessage(plugin.getLanguage().getResetWinsAll());
+					} else {
+						plugin.getLoggerP().info(thrown.toString());
+					}
+				}
+			}).runTaskAsynchronously(plugin);
+		}
+	}
+
+	public static void resetTriesPlayerGame(Player p, String player, String game, RandomEvents plugin) {
+		String query = "";
+		if (plugin.getReventConfig().isMysqlEnabled()) {
+			query = Queries.RESET_TRIES_GAME_PLAYER.replaceAll(Queries.NAME, player).replaceAll(Queries.GAME, game);
+
+			new UpdateBukkitRunnable(plugin.getHikari().getHikari(), query, new Callback<Integer, SQLException>() {
+				@Override
+				public void call(Integer resultSet, SQLException thrown) {
+					if (thrown == null) {
+						if(p!=null)
+						p.sendMessage(plugin.getLanguage().getResetTriesPlayer().replaceAll("%player%", player));
+					} else {
+						plugin.getLoggerP().info(thrown.toString());
+					}
+				}
+			}).runTaskAsynchronously(plugin);
+		}
+	}
+
+	public static void resetWinsPlayerGame(Player p, String player, String game, RandomEvents plugin) {
+		String query = "";
+		if (plugin.getReventConfig().isMysqlEnabled()) {
+			query = Queries.RESET_WINS_GAME_PLAYER.replaceAll(Queries.NAME, player).replaceAll(Queries.GAME, game);
+
+			new UpdateBukkitRunnable(plugin.getHikari().getHikari(), query, new Callback<Integer, SQLException>() {
+				@Override
+				public void call(Integer resultSet, SQLException thrown) {
+					if (thrown == null) {
+						if(p!=null)
+						p.sendMessage(plugin.getLanguage().getResetWinsPlayer().replaceAll("%player%", player));
 					} else {
 						plugin.getLoggerP().info(thrown.toString());
 					}

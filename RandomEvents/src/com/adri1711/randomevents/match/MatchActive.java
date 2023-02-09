@@ -12,14 +12,18 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.Chest;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Boat;
+import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Fireball;
@@ -32,12 +36,12 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.api.events.ReventBeginEvent;
+import com.adri1711.randomevents.api.events.ReventCountdownEvent;
 import com.adri1711.randomevents.api.events.ReventEndEvent;
 import com.adri1711.randomevents.commands.ComandosEnum;
 import com.adri1711.randomevents.match.data.MatchMapDataHandler;
@@ -57,6 +61,8 @@ import com.adri1711.util.FastBoard;
 import com.adri1711.util.enums.Particle1711;
 import com.adri1711.util.enums.XMaterial;
 import com.adri1711.util.enums.XSound;
+
+import me.libraryaddict.disguise.disguisetypes.watchers.DroppedItemWatcher;
 
 public class MatchActive {
 
@@ -83,6 +89,8 @@ public class MatchActive {
 	private Map<Player, Integer> step;
 
 	private Boolean playing;
+
+	private Boolean started;
 
 	private Random random;
 
@@ -170,6 +178,7 @@ public class MatchActive {
 			getMapHandler().setCuboid(new Cuboid(match.getLocation1(), match.getLocation2()));
 		this.limitPlayers = 1;
 		this.playing = Boolean.FALSE;
+		this.started = Boolean.FALSE;
 		this.canBreak = Boolean.FALSE;
 		this.activated = Boolean.FALSE;
 		this.password = "" + random.nextInt(10000);
@@ -257,6 +266,7 @@ public class MatchActive {
 			break;
 		}
 		this.playing = Boolean.FALSE;
+		this.started = Boolean.FALSE;
 		this.canBreak = Boolean.FALSE;
 		this.activated = Boolean.FALSE;
 		this.password = "" + random.nextInt(10000);
@@ -352,8 +362,11 @@ public class MatchActive {
 
 				getPlayerHandler().getPlayers().add(player.getName());
 				getPlayerHandler().getPlayersObj().add(player);
-				getPlayerHandler().getPlayersSpectators().add(player);
 				UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_BAT_HURT);
+				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
+						plugin.getLanguage().getMatchJoin().replace("%player%", player.getName()), false);
+				getPlayerHandler().getPlayersSpectators().add(player);
+
 				List<Kit> kits = UtilsRandomEvents.kitsAvailable(player, match.getKits(), plugin);
 				if (kits.size() > 1) {
 
@@ -401,7 +414,8 @@ public class MatchActive {
 				if (UtilsRandomEvents.teleportaPlayer(player, loc, plugin)) {
 
 					hazComandosDeUnion(player);
-
+					UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
+							plugin.getLanguage().getMatchJoin().replace("%player%", player.getName()), false);
 					getPlayerHandler().getPlayersSpectators().add(player);
 					if (plugin.getReventConfig().isAdvancedSpectatorMode()) {
 						player.setGameMode(GameMode.SPECTATOR);
@@ -462,6 +476,7 @@ public class MatchActive {
 	public void echaDePartida(Player player, Boolean comprueba, Boolean sacaInv, Boolean sacaSpectator,
 			Boolean compruebaSpectator, Boolean forzado) {
 		Location lastLocation = player.getLocation();
+		getPlayerHandler().getLocationsBeforeExitting().add(lastLocation);
 		dropItems(player, forzado);
 		unregisterTeam(player);
 		if (plugin.getReventConfig().getIsNoteBlockAPI())
@@ -469,12 +484,28 @@ public class MatchActive {
 		if (plugin.getReventConfig().isRandomDisguisePlayers()) {
 			UtilsDisguises.undisguisePlayer(player, plugin);
 		}
-		if (getPlayerHandler().getPlayersSpectators().contains(player)) {
+		if (plugin.getReventConfig().isDebugMode()) {
+			plugin.getLogger().info("Testing to kick from match: " + player.getName());
+
+		}
+		if (getPlayerHandler().getPlayersSpectators().contains(player)
+				|| getPlayerHandler().getPlayers().contains(player.getName())) {
+			if (plugin.getReventConfig().isDebugMode()) {
+				plugin.getLogger().info("Kicking from match: " + player.getName());
+
+			}
 			if (comprueba) {
-				if (!getPlayerHandler().getPlayersObj().remove(player)) {
-					UtilsRandomEvents.borraPlayerPorName(getPlayerHandler().getPlayersObj(), player);
-				}
+				getPlayerHandler().getPlayersObj().remove(player);
+				getPlayerHandler().setPlayersObj(
+						UtilsRandomEvents.borraPlayerPorName(getPlayerHandler().getPlayersObj(), player));
+
 				getPlayerHandler().getPlayers().remove(player.getName());
+				if (plugin.getReventConfig().isDebugMode()) {
+					plugin.getLogger().info("Already kicked from match: " + player.getName());
+					for (Player pl : getPlayerHandler().getPlayersObj()) {
+						plugin.getLogger().info("    - " + pl.getName());
+					}
+				}
 
 			}
 			for (Player p : getPlayerHandler().getPlayersVanish()) {
@@ -483,9 +514,12 @@ public class MatchActive {
 
 			if (compruebaSpectator
 					&& (sacaSpectator || match.getSpectatorSpawns() == null || match.getSpectatorSpawns().isEmpty())) {
-				if (!getPlayerHandler().getPlayersSpectators().remove(player)) {
-					UtilsRandomEvents.borraPlayerPorName(getPlayerHandler().getPlayersSpectators(), player);
-				}
+				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
+						plugin.getLanguage().getMatchLeave().replace("%player%", player.getName()), false);
+				getPlayerHandler().getPlayersSpectators().remove(player);
+				getPlayerHandler().setPlayersSpectators(
+						UtilsRandomEvents.borraPlayerPorName(getPlayerHandler().getPlayersSpectators(), player));
+
 			}
 			UtilsRandomEvents.borraInventario(player, plugin);
 			Boolean res = true;
@@ -564,10 +598,13 @@ public class MatchActive {
 		if (comprueba) {
 			if (!getPlayerHandler().getPlayersObj().remove(players)) {
 				for (Player p : players) {
-					UtilsRandomEvents.borraPlayerPorName(getPlayerHandler().getPlayersObj(), p);
+					getPlayerHandler()
+							.setPlayersObj(UtilsRandomEvents.borraPlayerPorName(getPlayerHandler().getPlayersObj(), p));
 				}
 			}
 			for (Player p : players) {
+				getPlayerHandler().getLocationsBeforeExitting().add(p.getLocation());
+
 				if (plugin.getReventConfig().isShowBorders() && (getMatch().getMinigame().equals(MinigameType.SG)
 						|| getMatch().getMinigame().equals(MinigameType.TSG)
 						|| getMatch().getMinigame().equals(MinigameType.TSG_REAL))) {
@@ -592,7 +629,8 @@ public class MatchActive {
 			if (compruebaSpectator
 					&& (sacaSpectator || match.getSpectatorSpawns() == null || match.getSpectatorSpawns().isEmpty())) {
 				if (!getPlayerHandler().getPlayersSpectators().remove(player)) {
-					UtilsRandomEvents.borraPlayerPorName(getPlayerHandler().getPlayersSpectators(), player);
+					getPlayerHandler().setPlayersSpectators(
+							UtilsRandomEvents.borraPlayerPorName(getPlayerHandler().getPlayersSpectators(), player));
 				}
 			}
 
@@ -840,11 +878,13 @@ public class MatchActive {
 	public void dejarPartida(Player player, Boolean muerto) {
 		if (!getPlaying()) {
 			if (!getPlayerHandler().getPlayersObj().remove(player)) {
-				UtilsRandomEvents.borraPlayerPorName(getPlayerHandler().getPlayersObj(), player);
+				getPlayerHandler().setPlayersObj(
+						UtilsRandomEvents.borraPlayerPorName(getPlayerHandler().getPlayersObj(), player));
 			}
 
 			if (!getPlayerHandler().getPlayersSpectators().remove(player)) {
-				UtilsRandomEvents.borraPlayerPorName(getPlayerHandler().getPlayersSpectators(), player);
+				getPlayerHandler().setPlayersSpectators(
+						UtilsRandomEvents.borraPlayerPorName(getPlayerHandler().getPlayersSpectators(), player));
 			}
 
 			getPlayerHandler().getPlayers().remove(player.getName());
@@ -1079,7 +1119,9 @@ public class MatchActive {
 							plugin.getReventConfig().getDistanceClearEntities() * 1.0);
 					if (entities != null) {
 						for (Entity e : entities) {
-							if (e != null && (e instanceof Horse || e instanceof Boat)) {
+							if (e != null && (e instanceof Horse || e instanceof Boat)
+									|| (getPlugin().getApi().isCraftBoat(e) || getPlugin().getApi().isCraftEnderPearl(e)
+											|| getPlugin().getApi().isCraftHorse(e))) {
 								e.remove();
 							}
 						}
@@ -1194,10 +1236,12 @@ public class MatchActive {
 				if (center != null) {
 
 					Collection<Entity> entities = center.getWorld().getNearbyEntities(center,
-							center.distance(match.getLocation1()), 60, center.distance(match.getLocation1()));
+							center.distance(match.getLocation1()), 400, center.distance(match.getLocation1()));
 					for (Entity e : entities) {
 						if (e != null) {
-							if (!(e instanceof Player)) {
+							if ((e instanceof EnderPearl || e instanceof Item || e instanceof Boat || e instanceof Horse
+									|| getPlugin().getApi().isCraftBoat(e) || getPlugin().getApi().isCraftEnderPearl(e)
+									|| getPlugin().getApi().isCraftHorse(e) || getPlugin().getApi().isCraftItem(e))) {
 								e.remove();
 							}
 						}
@@ -1205,12 +1249,25 @@ public class MatchActive {
 
 				}
 			}
-			for (Player p : getPlayerHandler().getPlayersObj()) {
-				Entity entity = p;
-				entity.getNearbyEntities(plugin.getReventConfig().getDistanceClearEntities(),
-						plugin.getReventConfig().getDistanceClearEntities(),
-						plugin.getReventConfig().getDistanceClearEntities()).stream()
-						.filter(entstream -> entstream instanceof Item).map(Item.class::cast).forEach(Item::remove);
+			for (Location p : getPlayerHandler().getLocationsBeforeExitting()) {
+				try {
+					Collection<Entity> entities = p.getWorld().getNearbyEntities(p,
+							plugin.getReventConfig().getDistanceClearEntities() * 1.0,
+							plugin.getReventConfig().getDistanceClearEntities() * 1.0,
+							plugin.getReventConfig().getDistanceClearEntities() * 1.0);
+					if (entities != null) {
+						for (Entity e : entities) {
+							if (e != null && (e instanceof EnderPearl || e instanceof Item
+									|| getPlugin().getApi().isCraftBoat(e) || getPlugin().getApi().isCraftEnderPearl(e)
+									|| getPlugin().getApi().isCraftHorse(e) || getPlugin().getApi().isCraftItem(e))) {
+								e.remove();
+							}
+						}
+					}
+				} catch (Exception e) {
+
+				}
+
 			}
 			break;
 		case RED_GREEN_LIGHT:
@@ -1264,7 +1321,7 @@ public class MatchActive {
 	}
 
 	public void matchBegin() {
-		setPlaying(Boolean.TRUE);
+
 		// for (Player player : getPlayersVivos()) {
 		// UtilsStats.aumentaStats(player.getName(), getMatch().getName(),
 		// StatsEnum.PARTIDAS_JUGADAS, plugin);
@@ -1287,10 +1344,27 @@ public class MatchActive {
 
 	private void mandaDescripcion() {
 		List<String> desc = getField("minigameDescription" + match.getMinigame().getCodigo());
+		Pattern pattern = Pattern.compile("&#[a-fA-F0-9]{6}");
 
 		for (Player p : getPlayerHandler().getPlayersSpectators()) {
-			for (String d : desc) {
-				p.sendMessage(d.replaceAll("&", "§"));
+			for (String s : desc) {
+				try {
+					Matcher match = pattern.matcher(s);
+					Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+					while (match.find()) {
+						String color = s.substring(match.start() + 1, match.end());
+						Method method = ChatColor.class.getMethod("of", String.class);
+						ChatColor chatc = (ChatColor) method.invoke(null, color);
+						mapa.put("&" + color, chatc);
+					}
+					for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+						s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+					}
+					s = ChatColor.translateAlternateColorCodes('&', s);
+				} catch (Exception e) {
+					s = s.replaceAll("&", "§");
+				}
+				p.sendMessage(s);
 			}
 		}
 
@@ -1298,9 +1372,27 @@ public class MatchActive {
 
 	private void mandaDescripcion(Player p) {
 		List<String> desc = getField("minigameDescription" + match.getMinigame().getCodigo());
+		Pattern pattern = Pattern.compile("&#[a-fA-F0-9]{6}");
+		for (String s : desc) {
 
-		for (String d : desc) {
-			p.sendMessage(d.replaceAll("&", "§"));
+			try {
+				Matcher match = pattern.matcher(s);
+				Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+				while (match.find()) {
+					String color = s.substring(match.start() + 1, match.end());
+					Method method = ChatColor.class.getMethod("of", String.class);
+					ChatColor chatc = (ChatColor) method.invoke(null, color);
+					mapa.put("&" + color, chatc);
+				}
+				for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+					s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+				}
+				s = ChatColor.translateAlternateColorCodes('&', s);
+
+			} catch (Exception e) {
+				s = s.replaceAll("&", "§");
+			}
+			p.sendMessage(s);
 		}
 
 	}
@@ -1372,12 +1464,17 @@ public class MatchActive {
 	}
 
 	public void comienzaPartida() {
+		setPlaying(Boolean.TRUE);
+		setStarted(Boolean.TRUE);
 		getPlayerHandler().getPlayersTotal().clear();
 		getPlayerHandler().getPlayersTotal().addAll(getPlayerHandler().getPlayers());
 		getPlayerHandler().getPlayersTotalObj().clear();
 		getPlayerHandler().getPlayersTotalObj().addAll(getPlayerHandler().getPlayersObj());
+		hazComandosDeStart(null);
+
 		for (Player p : getPlayerHandler().getPlayersObj()) {
 			hazComandosDeComienzo(p);
+			hazComandosDeStart(p);
 			puntuacion.put(p.getName(), 0);
 
 		}
@@ -2219,6 +2316,19 @@ public class MatchActive {
 
 	}
 
+	private void hazComandosDeStart(Player player) {
+		for (String cmd : match.getCommandsOnStart()) {
+			if (player != null && cmd.contains("%player%")) {
+				Bukkit.dispatchCommand((CommandSender) Bukkit.getConsoleSender(),
+						cmd.replaceAll("%player%", player.getName()));
+			} else if (player == null && !cmd.contains("%player%")) {
+				Bukkit.dispatchCommand((CommandSender) Bukkit.getConsoleSender(), cmd);
+			}
+
+		}
+
+	}
+
 	private void partidaRedGreen(int i) {
 
 		if (getPlaying()) {
@@ -2437,7 +2547,10 @@ public class MatchActive {
 			if (dif <= 0) {
 				endDate = new Date().getTime() + 1000 * getTiempoPartida();
 				Cuboid cubo = new Cuboid(getMapHandler().getActualCuboid());
-				cubo.shrink(0.2);
+				if (match.getShrinkBlocks() != null)
+					cubo.withdraw(1.0 * match.getShrinkBlocks());
+				else
+					cubo.shrink(0.2);
 				shrinkMap(cubo);
 
 			} else if (dif == 1) {
@@ -3413,16 +3526,20 @@ public class MatchActive {
 	}
 
 	public void matchWaitingPlayers() {
-		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
+		Bukkit.getServer().getScheduler().runTaskLaterAsynchronously((Plugin) getPlugin(), new Runnable() {
 			public void run() {
-				if (!getPlaying()) {
+				if (!getStarted()) {
 					if (plugin.getReventConfig().isForcePlayersToEnter()) {
 						for (Player p : Bukkit.getOnlinePlayers()) {
 							if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())
 									&& (getMatch().getPermission() == null
 											|| p.hasPermission(getMatch().getPermission()))
 									&& !getPlayerHandler().getPlayersObj().contains(p)) {
-								plugin.getComandosExecutor().joinRandomEvent(plugin, p, getPassword());
+								Bukkit.getServer().getScheduler().runTask((Plugin) getPlugin(), new Runnable() {
+									public void run() {
+										plugin.getComandosExecutor().joinRandomEvent(plugin, p, getPassword());
+									}
+								});
 							}
 						}
 					}
@@ -3431,7 +3548,7 @@ public class MatchActive {
 
 					if (tries > plugin.getReventConfig().getMinNumberOfTriesBeforeBeginning()
 							&& match.getAmountPlayersMin() <= (getPlayerHandler().getPlayers().size())) {
-						if (!getPlaying()) {
+						if (!getStarted()) {
 							Integer startTime = plugin.getReventConfig().getSecondsToStartMatch() + 3;
 							String startingMatch = plugin.getLanguage().getStartingMatch().replaceAll("%time%",
 									startTime.toString());
@@ -3521,7 +3638,11 @@ public class MatchActive {
 											&& p.getWorld().getName() != null && plugin.getReventConfig()
 													.getAllowedWorlds().contains(p.getWorld().getName())))) {
 								if (playSound) {
-									UtilsRandomEvents.playSound(plugin, p, XSound.ENTITY_VILLAGER_HURT);
+									Bukkit.getServer().getScheduler().runTask((Plugin) getPlugin(), new Runnable() {
+										public void run() {
+											UtilsRandomEvents.playSound(plugin, p, XSound.ENTITY_VILLAGER_HURT);
+										}
+									});
 								}
 								for (String pri : primerasPartes) {
 									p.sendMessage(pri);
@@ -3542,9 +3663,21 @@ public class MatchActive {
 							}
 						}
 						if (tries <= plugin.getReventConfig().getNumberOfTriesBeforeCancelling()) {
+							Bukkit.getServer().getScheduler().runTask((Plugin) getPlugin(), new Runnable() {
+								@Override
+								public void run() {
+									Bukkit.getPluginManager()
+											.callEvent(new ReventCountdownEvent(getMatchActive(), getForzada()));
+								}
+							});
+
 							matchWaitingPlayers(true);
 						} else {
-							finalizaPartida(new ArrayList<Player>(), Boolean.FALSE, Boolean.TRUE);
+							Bukkit.getServer().getScheduler().runTask((Plugin) getPlugin(), new Runnable() {
+								public void run() {
+									finalizaPartida(new ArrayList<Player>(), Boolean.FALSE, Boolean.TRUE);
+								}
+							});
 
 						}
 					}
@@ -3556,17 +3689,21 @@ public class MatchActive {
 
 	public void matchWaitingPlayers(Boolean segundo) {
 
-		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
+		Bukkit.getServer().getScheduler().runTaskLaterAsynchronously((Plugin) getPlugin(), new Runnable() {
 			public void run() {
 				if (plugin.getMatchActive() != null && plugin.getMatchActive().getPassword().equals(getPassword())) {
-					if (!getPlaying()) {
+					if (!getStarted()) {
 						if (plugin.getReventConfig().isForcePlayersToEnter()) {
 							for (Player p : Bukkit.getOnlinePlayers()) {
 								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())
 										&& (getMatch().getPermission() == null
 												|| p.hasPermission(getMatch().getPermission()))
 										&& !getPlayerHandler().getPlayersObj().contains(p)) {
-									plugin.getComandosExecutor().joinRandomEvent(plugin, p, getPassword());
+									Bukkit.getServer().getScheduler().runTask((Plugin) getPlugin(), new Runnable() {
+										public void run() {
+											plugin.getComandosExecutor().joinRandomEvent(plugin, p, getPassword());
+										}
+									});
 								}
 							}
 						}
@@ -3575,7 +3712,7 @@ public class MatchActive {
 
 						if (tries > plugin.getReventConfig().getMinNumberOfTriesBeforeBeginning()
 								&& match.getAmountPlayersMin() <= (getPlayerHandler().getPlayers().size())) {
-							if (!getPlaying()) {
+							if (!getStarted()) {
 								Integer startTime = plugin.getReventConfig().getSecondsToStartMatch() + 3;
 								String startingMatch = plugin.getLanguage().getStartingMatch().replaceAll("%time%",
 										startTime.toString());
@@ -3594,6 +3731,7 @@ public class MatchActive {
 
 									@Override
 									public void run() {
+
 										matchBegin();
 
 									}
@@ -3665,7 +3803,11 @@ public class MatchActive {
 												&& p.getWorld().getName() != null && plugin.getReventConfig()
 														.getAllowedWorlds().contains(p.getWorld().getName())))) {
 									if (playSound) {
-										UtilsRandomEvents.playSound(plugin, p, XSound.ENTITY_VILLAGER_HURT);
+										Bukkit.getServer().getScheduler().runTask((Plugin) getPlugin(), new Runnable() {
+											public void run() {
+												UtilsRandomEvents.playSound(plugin, p, XSound.ENTITY_VILLAGER_HURT);
+											}
+										});
 									}
 									for (String pri : primerasPartes) {
 										p.sendMessage(pri);
@@ -3691,7 +3833,11 @@ public class MatchActive {
 							if (tries <= plugin.getReventConfig().getNumberOfTriesBeforeCancelling()) {
 								matchWaitingPlayers(true);
 							} else {
-								finalizaPartida(new ArrayList<Player>(), Boolean.FALSE, Boolean.TRUE);
+								Bukkit.getServer().getScheduler().runTask((Plugin) getPlugin(), new Runnable() {
+									public void run() {
+										finalizaPartida(new ArrayList<Player>(), Boolean.FALSE, Boolean.TRUE);
+									}
+								});
 
 							}
 						}
@@ -3986,6 +4132,14 @@ public class MatchActive {
 
 	public String getPassword() {
 		return password;
+	}
+
+	public Boolean getStarted() {
+		return started;
+	}
+
+	public void setStarted(Boolean started) {
+		this.started = started;
 	}
 
 	public void setPassword(String password) {

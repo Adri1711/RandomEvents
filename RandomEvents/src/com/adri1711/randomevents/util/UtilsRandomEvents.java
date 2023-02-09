@@ -30,6 +30,8 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.core.Core;
 import org.bukkit.Bukkit;
@@ -677,12 +679,7 @@ public class UtilsRandomEvents {
 	public static void sacaInventario(RandomEvents plugin, Player player) {
 		if (plugin.getReventConfig().isInventoryManagement()
 				&& (plugin.getMatchActive() == null || !plugin.getMatchActive().getMatch().getUseOwnInventory())) {
-			if (player.getActivePotionEffects() != null) {
-				for (PotionEffect effect : player.getActivePotionEffects()) {
-					player.removePotionEffect(effect.getType());
-				}
-
-			}
+			
 			player.updateInventory();
 			File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories");
 			File dataFolderOld = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventoriesold");
@@ -698,6 +695,12 @@ public class UtilsRandomEvents {
 					player.getName() + ".json");
 			InventoryPers inventario = null;
 			if (bossFile.exists()) {
+				if (player.getActivePotionEffects() != null) {
+					for (PotionEffect effect : player.getActivePotionEffects()) {
+						player.removePotionEffect(effect.getType());
+					}
+
+				}
 				BufferedReader br = null;
 				FileInputStream fr = null;
 				try {
@@ -961,9 +964,32 @@ public class UtilsRandomEvents {
 
 	public static String preparaNombrePartida(MatchActive match) {
 		String resultado = "";
+		String s = match.getMatch().getName();
+		Pattern pattern = Pattern.compile("&#[a-fA-F0-9]{6}");
+		try {
+			Matcher matcher = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (matcher.find()) {
+				String color = s.substring(matcher.start() + 1, matcher.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
 
-		resultado = match.getMatch().getName().replaceAll("&", "§") + " ( "
-				+ match.getPlayerHandler().getPlayers().size() + " / " + match.getMatch().getAmountPlayers() + " )";
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		// try {
+		// s = ChatColor.translateAlternateColorCodes('&', s);
+		// } catch (Exception e) {
+		// s = s.replaceAll("&", "§");
+		// }
+		resultado = s + " ( " + match.getPlayerHandler().getPlayers().size() + " / "
+				+ match.getMatch().getAmountPlayers() + " )";
 		return resultado;
 	}
 
@@ -1189,7 +1215,7 @@ public class UtilsRandomEvents {
 
 	}
 
-	public static void borraPlayerPorName(List<Player> players, Player player) {
+	public static List<Player> borraPlayerPorName(List<Player> players, Player player) {
 		Player p = null;
 		for (Player jugador : players) {
 			if (jugador.getName().equals(player.getName())) {
@@ -1199,6 +1225,7 @@ public class UtilsRandomEvents {
 		if (p != null) {
 			players.remove(p);
 		}
+		return players;
 
 	}
 
@@ -1913,6 +1940,14 @@ public class UtilsRandomEvents {
 						}
 
 						break;
+					case COMMANDS_ON_START:
+						if (match.getCommandsOnStart() != null && !match.getCommandsOnStart().isEmpty()) {
+							for (String s : match.getCommandsOnStart()) {
+								info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + s;
+							}
+						}
+
+						break;
 
 					case AMOUNT_PLAYERS:
 						if (match.getAmountPlayers() != null) {
@@ -2004,6 +2039,11 @@ public class UtilsRandomEvents {
 					case SHRINK_TIME:
 						if (match.getTiempoPartida() != null) {
 							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getTiempoPartida();
+						}
+						break;
+					case SHRINK_BLOCKS:
+						if (match.getShrinkBlocks() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getShrinkBlocks();
 						}
 						break;
 					case NO_MOVE_TIME:

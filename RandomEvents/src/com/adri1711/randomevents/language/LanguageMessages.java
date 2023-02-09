@@ -4,7 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -14,10 +19,13 @@ import com.adri1711.randomevents.util.Constantes;
 import com.adri1711.randomevents.util.Constantes.Messages;
 import com.google.common.io.Files;
 
+import net.md_5.bungee.api.ChatColor;
+
 public class LanguageMessages {
 	private File file;
 	private FileConfiguration fileConfig;
 	private RandomEvents plugin;
+	private Pattern pattern = Pattern.compile("&#[a-fA-F0-9]{6}");
 
 	private String tagChat;
 	private String invalidInput;
@@ -73,6 +81,12 @@ public class LanguageMessages {
 	private String eventCancelled;
 	private String eventStopped;
 	private String tournamentCancelled;
+	private String resetCoinsAll;
+	private String resetTriesAll;
+	private String resetWinsAll;
+	private String resetCoinsPlayer;
+	private String resetTriesPlayer;
+	private String resetWinsPlayer;
 
 	private String statsWins;
 	private String statsTries;
@@ -103,6 +117,8 @@ public class LanguageMessages {
 	private String startingMatch;
 	private String cancelOfMatchCreation;
 
+	private String matchJoin;
+	private String matchLeave;
 	private String lacksInfoCreation;
 	private String shrink;
 	private String warmupEnd;
@@ -163,6 +179,17 @@ public class LanguageMessages {
 	private String scoreboardPointsTeam;
 	private String scoreboardTeamPoints;
 
+	private String resetCoins;
+	private String resetCoinsPlayerCMD;
+	private String resetTries;
+	private String resetTriesPlayerCMD;
+	private String resetTriesGame;
+	private String resetTriesGamePlayer;
+	private String resetWins;
+	private String resetWinsPlayerCMD;
+	private String resetWinsGame;
+	private String resetWinsGamePlayer;
+
 	private String pvpDeath;
 	private String pvpKill;
 	private String bowKill;
@@ -177,7 +204,7 @@ public class LanguageMessages {
 	private String enable;
 	private String disableSchedule;
 	private String enableSchedule;
-	
+
 	private String creditsAddedOther;
 	private String creditsAdded;
 	private String creditsBal;
@@ -191,7 +218,7 @@ public class LanguageMessages {
 	private String playerOffline;
 	private String eventInvalid;
 	private String creditsEventRunning;
-	
+
 	private String greenRedLightMove;
 	private String greenRedLightStop;
 
@@ -456,7 +483,25 @@ public class LanguageMessages {
 	}
 
 	public String getInvalidInput() {
-		return invalidInput.replaceAll("&", "§");
+		String s = invalidInput;
+		try {
+
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setInvalidInput(String invalidInput) {
@@ -464,7 +509,24 @@ public class LanguageMessages {
 	}
 
 	public String getError() {
-		return error.replaceAll("&", "§");
+		String s = error;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setError(String error) {
@@ -472,7 +534,24 @@ public class LanguageMessages {
 	}
 
 	public String getInvalidCmd() {
-		return invalidCmd.replaceAll("&", "§");
+		String s = invalidCmd;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setInvalidCmd(String invalidCmd) {
@@ -480,7 +559,24 @@ public class LanguageMessages {
 	}
 
 	public String getNoPermission() {
-		return noPermission.replaceAll("&", "§");
+		String s = noPermission;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setNoPermission(String noPermission) {
@@ -488,7 +584,24 @@ public class LanguageMessages {
 	}
 
 	public String getEndOfKitCreation() {
-		return endOfKitCreation.replaceAll("&", "§");
+		String s = endOfKitCreation;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setEndOfKitCreation(String endOfKitCreation) {
@@ -496,7 +609,24 @@ public class LanguageMessages {
 	}
 
 	public String getEndOfArenaCreation() {
-		return endOfArenaCreation.replaceAll("&", "§");
+		String s = endOfArenaCreation;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setEndOfArenaCreation(String endOfArenaCreation) {
@@ -504,7 +634,24 @@ public class LanguageMessages {
 	}
 
 	public String getCancelOfArenaCreation() {
-		return cancelOfArenaCreation.replaceAll("&", "§");
+		String s = cancelOfArenaCreation;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setCancelOfArenaCreation(String cancelOfArenaCreation) {
@@ -512,7 +659,24 @@ public class LanguageMessages {
 	}
 
 	public String getPluginReload() {
-		return pluginReload.replaceAll("&", "§");
+		String s = pluginReload;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setPluginReload(String pluginReload) {
@@ -520,7 +684,24 @@ public class LanguageMessages {
 	}
 
 	public String getMatchFull() {
-		return matchFull.replaceAll("&", "§");
+		String s = matchFull;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setMatchFull(String matchFull) {
@@ -528,7 +709,24 @@ public class LanguageMessages {
 	}
 
 	public String getAlreadyPlayingMatch() {
-		return alreadyPlayingMatch.replaceAll("&", "§");
+		String s = alreadyPlayingMatch;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setAlreadyPlayingMatch(String alreadyPlayingMatch) {
@@ -536,7 +734,24 @@ public class LanguageMessages {
 	}
 
 	public String getMatchBegun() {
-		return matchBegun.replaceAll("&", "§");
+		String s = matchBegun;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setMatchBegun(String matchBegun) {
@@ -544,7 +759,25 @@ public class LanguageMessages {
 	}
 
 	public String getMatches() {
-		return matches.replaceAll("&", "§");
+		String s = matches;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setMatches(String matches) {
@@ -552,7 +785,24 @@ public class LanguageMessages {
 	}
 
 	public String getAlreadyMatch() {
-		return alreadyMatch.replaceAll("&", "§");
+		String s = alreadyMatch;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setAlreadyMatch(String alreadyMatch) {
@@ -560,7 +810,24 @@ public class LanguageMessages {
 	}
 
 	public String getWaitingForPlayers() {
-		return waitingForPlayers.replaceAll("&", "§");
+		String s = waitingForPlayers;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setWaitingForPlayers(String waitingForPlayers) {
@@ -568,7 +835,24 @@ public class LanguageMessages {
 	}
 
 	public String getSpawnSet() {
-		return spawnSet.replaceAll("&", "§");
+		String s = spawnSet;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setSpawnSet(String spawnSet) {
@@ -576,7 +860,24 @@ public class LanguageMessages {
 	}
 
 	public String getNotInMatch() {
-		return notInMatch.replaceAll("&", "§");
+		String s = notInMatch;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setNotInMatch(String notInMatch) {
@@ -584,7 +885,24 @@ public class LanguageMessages {
 	}
 
 	public String getWinRandomEvents() {
-		return winRandomEvents.replaceAll("&", "§");
+		String s = winRandomEvents;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setWinRandomEvents(String winRandomEvents) {
@@ -592,7 +910,24 @@ public class LanguageMessages {
 	}
 
 	public String getEventAnnounce() {
-		return eventAnnounce.replaceAll("&", "§");
+		String s = eventAnnounce;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setEventAnnounce(String eventAnnounce) {
@@ -600,7 +935,24 @@ public class LanguageMessages {
 	}
 
 	public String getInvalidPassword() {
-		return invalidPassword.replaceAll("&", "§");
+		String s = invalidPassword;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setInvalidPassword(String invalidPassword) {
@@ -608,7 +960,24 @@ public class LanguageMessages {
 	}
 
 	public String getFirstAnnounce() {
-		return firstAnnounce.replaceAll("&", "§");
+		String s = firstAnnounce;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setFirstAnnounce(String firstAnnounce) {
@@ -616,7 +985,24 @@ public class LanguageMessages {
 	}
 
 	public String getNextAnnounce() {
-		return nextAnnounce.replaceAll("&", "§");
+		String s = nextAnnounce;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setNextAnnounce(String nextAnnounce) {
@@ -624,7 +1010,24 @@ public class LanguageMessages {
 	}
 
 	public String getClickHere() {
-		return clickHere.replaceAll("&", "§");
+		String s = clickHere;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setClickHere(String clickHere) {
@@ -632,7 +1035,24 @@ public class LanguageMessages {
 	}
 
 	public String getLastPart() {
-		return lastPart.replaceAll("&", "§");
+		String s = lastPart;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setLastPart(String lastPart) {
@@ -640,7 +1060,24 @@ public class LanguageMessages {
 	}
 
 	public String getWinners() {
-		return winners.replaceAll("&", "§");
+		String s = winners;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setWinners(String winners) {
@@ -648,7 +1085,24 @@ public class LanguageMessages {
 	}
 
 	public String getWinnersPoints() {
-		return winnersPoints.replaceAll("&", "§");
+		String s = winnersPoints;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setWinnersPoints(String winnersPoints) {
@@ -656,7 +1110,24 @@ public class LanguageMessages {
 	}
 
 	public String getDisposeLeatherItems() {
-		return disposeLeatherItems.replaceAll("&", "§");
+		String s = disposeLeatherItems;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setDisposeLeatherItems(String disposeLeatherItems) {
@@ -664,7 +1135,24 @@ public class LanguageMessages {
 	}
 
 	public String getShowAlone() {
-		return showAlone.replaceAll("&", "§");
+		String s = showAlone;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setShowAlone(String showAlone) {
@@ -672,7 +1160,24 @@ public class LanguageMessages {
 	}
 
 	public String getShowTeam() {
-		return showTeam.replaceAll("&", "§");
+		String s = showTeam;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setShowTeam(String showTeam) {
@@ -680,7 +1185,24 @@ public class LanguageMessages {
 	}
 
 	public String getTimeRemaining() {
-		return timeRemaining.replaceAll("&", "§");
+		String s = timeRemaining;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setTimeRemaining(String timeRemaining) {
@@ -688,7 +1210,24 @@ public class LanguageMessages {
 	}
 
 	public String getNowPoints() {
-		return nowPoints.replaceAll("&", "§");
+		String s = nowPoints;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setNowPoints(String nowPoints) {
@@ -696,7 +1235,24 @@ public class LanguageMessages {
 	}
 
 	public String getNowGems() {
-		return nowGems.replaceAll("&", "§");
+		String s = nowGems;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setNowGems(String nowGems) {
@@ -704,7 +1260,24 @@ public class LanguageMessages {
 	}
 
 	public String getNowProtected() {
-		return nowProtected.replaceAll("&", "§");
+		String s = nowProtected;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setNowProtected(String nowProtected) {
@@ -712,7 +1285,24 @@ public class LanguageMessages {
 	}
 
 	public String getMatchBeginSoon() {
-		return matchBeginSoon.replaceAll("&", "§");
+		String s = matchBeginSoon;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setMatchBeginSoon(String matchBeginSoon) {
@@ -720,7 +1310,24 @@ public class LanguageMessages {
 	}
 
 	public String getLostGems() {
-		return lostGems.replaceAll("&", "§");
+		String s = lostGems;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setLostGems(String lostGems) {
@@ -728,7 +1335,24 @@ public class LanguageMessages {
 	}
 
 	public String getPlayerWinning() {
-		return playerWinning.replaceAll("&", "§");
+		String s = playerWinning;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setPlayerWinning(String playerWinning) {
@@ -736,7 +1360,24 @@ public class LanguageMessages {
 	}
 
 	public String getPlayerWinningSeconds() {
-		return playerWinningSeconds.replaceAll("&", "§");
+		String s = playerWinningSeconds;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setPlayerWinningSeconds(String playerWinningSeconds) {
@@ -744,7 +1385,24 @@ public class LanguageMessages {
 	}
 
 	public String getBombSeconds() {
-		return bombSeconds.replaceAll("&", "§");
+		String s = bombSeconds;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setBombSeconds(String bombSeconds) {
@@ -752,7 +1410,24 @@ public class LanguageMessages {
 	}
 
 	public String getPlayerHasBomb() {
-		return playerHasBomb.replaceAll("&", "§");
+		String s = playerHasBomb;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setPlayerHasBomb(String playerHasBomb) {
@@ -760,7 +1435,24 @@ public class LanguageMessages {
 	}
 
 	public String getBombExplode() {
-		return bombExplode.replaceAll("&", "§");
+		String s = bombExplode;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setBombExplode(String bombExplode) {
@@ -768,7 +1460,24 @@ public class LanguageMessages {
 	}
 
 	public String getLeaveCommand() {
-		return leaveCommand.replaceAll("&", "§");
+		String s = leaveCommand;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setLeaveCommand(String leaveCommand) {
@@ -776,7 +1485,24 @@ public class LanguageMessages {
 	}
 
 	public String getErrorSavingInventory() {
-		return errorSavingInventory.replaceAll("&", "§");
+		String s = errorSavingInventory;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setErrorSavingInventory(String errorSavingInventory) {
@@ -788,7 +1514,24 @@ public class LanguageMessages {
 	}
 
 	public String getLastPartTournament() {
-		return lastPartTournament.replaceAll("&", "§");
+		String s = lastPartTournament;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setLastPartTournament(String lastPartTournament) {
@@ -796,7 +1539,24 @@ public class LanguageMessages {
 	}
 
 	public String getFirstAnnounceTournament() {
-		return firstAnnounceTournament.replaceAll("&", "§");
+		String s = firstAnnounceTournament;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setFirstAnnounceTournament(String firstAnnounceTournament) {
@@ -804,7 +1564,24 @@ public class LanguageMessages {
 	}
 
 	public String getNextAnnounceTournament() {
-		return nextAnnounceTournament.replaceAll("&", "§");
+		String s = nextAnnounceTournament;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setNextAnnounceTournament(String nextAnnounceTournament) {
@@ -812,7 +1589,24 @@ public class LanguageMessages {
 	}
 
 	public String getRaceTournament() {
-		return raceTournament.replaceAll("&", "§");
+		String s = raceTournament;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setRaceTournament(String raceTournament) {
@@ -820,7 +1614,24 @@ public class LanguageMessages {
 	}
 
 	public String getWinnersTournament() {
-		return winnersTournament.replaceAll("&", "§");
+		String s = winnersTournament;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setWinnersTournament(String winnersTournament) {
@@ -828,7 +1639,24 @@ public class LanguageMessages {
 	}
 
 	public String getTournamentAlive() {
-		return tournamentAlive.replaceAll("&", "§");
+		String s = tournamentAlive;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setTournamentAlive(String tournamentAlive) {
@@ -836,7 +1664,24 @@ public class LanguageMessages {
 	}
 
 	public String getYouBeast() {
-		return youBeast.replaceAll("&", "§");
+		String s = youBeast;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setYouBeast(String youBeast) {
@@ -844,15 +1689,259 @@ public class LanguageMessages {
 	}
 
 	public String getEndOfScheduleCreation() {
-		return endOfScheduleCreation.replaceAll("&", "§");
+		String s = endOfScheduleCreation;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setEndOfScheduleCreation(String endOfScheduleCreation) {
 		this.endOfScheduleCreation = endOfScheduleCreation;
 	}
 
+	public String getResetCoins() {
+		String s = resetCoins;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
+	}
+
+	public String getResetCoinsPlayerCMD() {
+		String s = resetCoinsPlayerCMD;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
+	}
+
+	public String getResetTries() {
+		String s = resetTries;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
+	}
+
+	public String getResetTriesPlayerCMD() {
+		String s = resetTriesPlayerCMD;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
+	}
+
+	public String getResetTriesGame() {
+		String s = resetTriesGame;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
+	}
+
+	public String getResetTriesGamePlayer() {
+		String s = resetTriesGamePlayer;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
+	}
+
+	public String getResetWins() {
+		String s = resetWins;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
+	}
+
+	public String getResetWinsPlayerCMD() {
+		String s = resetWinsPlayerCMD;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
+	}
+
+	public String getResetWinsGame() {
+		String s = resetWinsGame;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
+	}
+
+	public String getResetWinsGamePlayer() {
+		String s = resetWinsGamePlayer;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
+	}
+
 	public String getTagPlugin() {
-		return tagPlugin.replaceAll("&", "§");
+		String s = tagPlugin;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setTagPlugin(String tagPlugin) {
@@ -860,7 +1949,24 @@ public class LanguageMessages {
 	}
 
 	public String getEventCancelled() {
-		return eventCancelled.replaceAll("&", "§");
+		String s = eventCancelled;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setEventCancelled(String eventCancelled) {
@@ -868,7 +1974,24 @@ public class LanguageMessages {
 	}
 
 	public String getTournamentCancelled() {
-		return tournamentCancelled.replaceAll("&", "§");
+		String s = tournamentCancelled;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setTournamentCancelled(String tournamentCancelled) {
@@ -876,7 +1999,24 @@ public class LanguageMessages {
 	}
 
 	public String getCmdNotAllowed() {
-		return cmdNotAllowed.replaceAll("&", "§");
+		String s = cmdNotAllowed;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setCmdNotAllowed(String cmdNotAllowed) {
@@ -884,7 +2024,24 @@ public class LanguageMessages {
 	}
 
 	public String getStatsWins() {
-		return statsWins.replaceAll("&", "§");
+		String s = statsWins;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setStatsWins(String statsWins) {
@@ -892,7 +2049,24 @@ public class LanguageMessages {
 	}
 
 	public String getStatsTries() {
-		return statsTries.replaceAll("&", "§");
+		String s = statsTries;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setStatsTries(String statsTries) {
@@ -900,7 +2074,154 @@ public class LanguageMessages {
 	}
 
 	public String getStatsDisabled() {
-		return statsDisabled.replaceAll("&", "§");
+		String s = statsDisabled;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
+	}
+
+	public Pattern getPattern() {
+		return pattern;
+	}
+
+	public String getResetCoinsAll() {
+		String s = resetCoinsAll;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
+	}
+
+	public String getResetTriesAll() {
+		String s = resetTriesAll;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
+	}
+
+	public String getResetWinsAll() {
+		String s = resetWinsAll;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
+	}
+
+	public String getResetCoinsPlayer() {
+		String s = resetCoinsPlayer;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
+	}
+
+	public String getResetTriesPlayer() {
+		String s = resetTriesPlayer;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
+	}
+
+	public String getResetWinsPlayer() {
+		String s = resetWinsPlayer;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setStatsDisabled(String statsDisabled) {
@@ -908,7 +2229,24 @@ public class LanguageMessages {
 	}
 
 	public String getDisableSchedule() {
-		return disableSchedule.replaceAll("&", "§");
+		String s = disableSchedule;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setDisableSchedule(String disableSchedule) {
@@ -916,7 +2254,24 @@ public class LanguageMessages {
 	}
 
 	public String getEnableSchedule() {
-		return enableSchedule.replaceAll("&", "§");
+		String s = enableSchedule;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setEnableSchedule(String enableSchedule) {
@@ -924,7 +2279,24 @@ public class LanguageMessages {
 	}
 
 	public String getStatsWinsRatio() {
-		return statsWinsRatio.replaceAll("&", "§");
+		String s = statsWinsRatio;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setStatsWinsRatio(String statsWinsRatio) {
@@ -1068,7 +2440,24 @@ public class LanguageMessages {
 	}
 
 	public String getEventStopped() {
-		return eventStopped.replaceAll("&", "§");
+		String s = eventStopped;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setEventStopped(String eventStopped) {
@@ -1076,7 +2465,24 @@ public class LanguageMessages {
 	}
 
 	public String getClearInventory() {
-		return clearInventory.replaceAll("&", "§");
+		String s = clearInventory;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setClearInventory(String clearInventory) {
@@ -1084,7 +2490,24 @@ public class LanguageMessages {
 	}
 
 	public String getSecondsRemaining3() {
-		return secondsRemaining3.replaceAll("&", "§");
+		String s = secondsRemaining3;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setSecondsRemaining3(String secondsRemaining3) {
@@ -1092,7 +2515,24 @@ public class LanguageMessages {
 	}
 
 	public String getSecondsRemaining2() {
-		return secondsRemaining2.replaceAll("&", "§");
+		String s = secondsRemaining2;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setSecondsRemaining2(String secondsRemaining2) {
@@ -1100,7 +2540,24 @@ public class LanguageMessages {
 	}
 
 	public String getSecondsRemaining1() {
-		return secondsRemaining1.replaceAll("&", "§");
+		String s = secondsRemaining1;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setSecondsRemaining1(String secondsRemaining1) {
@@ -1108,7 +2565,24 @@ public class LanguageMessages {
 	}
 
 	public String getYouAreBanned() {
-		return youAreBanned.replaceAll("&", "§");
+		String s = youAreBanned;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setYouAreBanned(String youAreBanned) {
@@ -1116,7 +2590,24 @@ public class LanguageMessages {
 	}
 
 	public String getBanPlayer() {
-		return banPlayer.replaceAll("&", "§");
+		String s = banPlayer;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setBanPlayer(String banPlayer) {
@@ -1124,7 +2615,24 @@ public class LanguageMessages {
 	}
 
 	public String getUnbanPlayer() {
-		return unbanPlayer.replaceAll("&", "§");
+		String s = unbanPlayer;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setUnbanPlayer(String unbanPlayer) {
@@ -1132,7 +2640,24 @@ public class LanguageMessages {
 	}
 
 	public String getPlayerNotBanned() {
-		return playerNotBanned.replaceAll("&", "§");
+		String s = playerNotBanned;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setPlayerNotBanned(String playerNotBanned) {
@@ -1140,7 +2665,24 @@ public class LanguageMessages {
 	}
 
 	public String getIdleDamage() {
-		return idleDamage.replaceAll("&", "§");
+		String s = idleDamage;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setIdleDamage(String idleDamage) {
@@ -1148,7 +2690,24 @@ public class LanguageMessages {
 	}
 
 	public String getNoScheduledEvents() {
-		return noScheduledEvents.replaceAll("&", "§");
+		String s = noScheduledEvents;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setNoScheduledEvents(String noScheduledEvents) {
@@ -1156,7 +2715,24 @@ public class LanguageMessages {
 	}
 
 	public String getNextEvent() {
-		return nextEvent.replaceAll("&", "§");
+		String s = nextEvent;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setNextEvent(String nextEvent) {
@@ -1164,7 +2740,24 @@ public class LanguageMessages {
 	}
 
 	public String getNextEventIsRandom() {
-		return nextEventIsRandom.replaceAll("&", "§");
+		String s = nextEventIsRandom;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setNextEventIsRandom(String nextEventIsRandom) {
@@ -1172,7 +2765,24 @@ public class LanguageMessages {
 	}
 
 	public String getNextEventName() {
-		return nextEventName.replaceAll("&", "§");
+		String s = nextEventName;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setNextEventName(String nextEventName) {
@@ -1180,7 +2790,24 @@ public class LanguageMessages {
 	}
 
 	public String getStartingMatch() {
-		return startingMatch.replaceAll("&", "§");
+		String s = startingMatch;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setStartingMatch(String startingMatch) {
@@ -1188,7 +2815,24 @@ public class LanguageMessages {
 	}
 
 	public String getCancelOfMatchCreation() {
-		return cancelOfMatchCreation.replaceAll("&", "§");
+		String s = cancelOfMatchCreation;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setCancelOfMatchCreation(String cancelOfMatchCreation) {
@@ -1196,7 +2840,24 @@ public class LanguageMessages {
 	}
 
 	public String getLacksInfoCreation() {
-		return lacksInfoCreation.replaceAll("&", "§");
+		String s = lacksInfoCreation;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setLacksInfoCreation(String lacksInfoCreation) {
@@ -1204,7 +2865,24 @@ public class LanguageMessages {
 	}
 
 	public String getShrink() {
-		return shrink.replaceAll("&", "§");
+		String s = shrink;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setShrink(String shrink) {
@@ -1252,7 +2930,24 @@ public class LanguageMessages {
 	}
 
 	public String getWarmupEnd() {
-		return warmupEnd.replaceAll("&", "§");
+		String s = warmupEnd;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setWarmupEnd(String warmupEnd) {
@@ -1260,7 +2955,24 @@ public class LanguageMessages {
 	}
 
 	public String getPlayersMove() {
-		return playersMove.replaceAll("&", "§");
+		String s = playersMove;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setPlayersMove(String playersMove) {
@@ -1268,7 +2980,24 @@ public class LanguageMessages {
 	}
 
 	public String getHelpMenu() {
-		return helpMenu.replaceAll("&", "§");
+		String s = helpMenu;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setHelpMenu(String helpMenu) {
@@ -1276,7 +3005,24 @@ public class LanguageMessages {
 	}
 
 	public String getShowMenu() {
-		return showMenu.replaceAll("&", "§");
+		String s = showMenu;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setShowMenu(String showMenu) {
@@ -1284,7 +3030,24 @@ public class LanguageMessages {
 	}
 
 	public String getJoin() {
-		return join.replaceAll("&", "§");
+		String s = join;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setJoin(String join) {
@@ -1292,7 +3055,24 @@ public class LanguageMessages {
 	}
 
 	public String getTjoin() {
-		return tjoin.replaceAll("&", "§");
+		String s = tjoin;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setTjoin(String tjoin) {
@@ -1300,7 +3080,24 @@ public class LanguageMessages {
 	}
 
 	public String getLeave() {
-		return leave.replaceAll("&", "§");
+		String s = leave;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setLeave(String leave) {
@@ -1308,7 +3105,24 @@ public class LanguageMessages {
 	}
 
 	public String getTleave() {
-		return tleave.replaceAll("&", "§");
+		String s = tleave;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setTleave(String tleave) {
@@ -1316,7 +3130,24 @@ public class LanguageMessages {
 	}
 
 	public String getStats() {
-		return stats.replaceAll("&", "§");
+		String s = stats;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setStats(String stats) {
@@ -1324,7 +3155,24 @@ public class LanguageMessages {
 	}
 
 	public String getStatsOther() {
-		return statsOther.replaceAll("&", "§");
+		String s = statsOther;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setStatsOther(String statsOther) {
@@ -1332,7 +3180,24 @@ public class LanguageMessages {
 	}
 
 	public String getForcestop() {
-		return forcestop.replaceAll("&", "§");
+		String s = forcestop;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setForcestop(String forcestop) {
@@ -1340,7 +3205,24 @@ public class LanguageMessages {
 	}
 
 	public String getSpawnset() {
-		return spawnset.replaceAll("&", "§");
+		String s = spawnset;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setSpawnset(String spawnset) {
@@ -1348,7 +3230,24 @@ public class LanguageMessages {
 	}
 
 	public String getTspawnset() {
-		return tspawnset.replaceAll("&", "§");
+		String s = tspawnset;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setTspawnset(String tspawnset) {
@@ -1356,7 +3255,24 @@ public class LanguageMessages {
 	}
 
 	public String getMenuMatches() {
-		return menuMatches.replaceAll("&", "§");
+		String s = menuMatches;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setMenuMatches(String menuMatches) {
@@ -1364,7 +3280,24 @@ public class LanguageMessages {
 	}
 
 	public String getNext() {
-		return next.replaceAll("&", "§");
+		String s = next;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setNext(String next) {
@@ -1372,7 +3305,24 @@ public class LanguageMessages {
 	}
 
 	public String getDate() {
-		return date.replaceAll("&", "§");
+		String s = date;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setDate(String date) {
@@ -1380,7 +3330,24 @@ public class LanguageMessages {
 	}
 
 	public String getSchedule() {
-		return schedule.replaceAll("&", "§");
+		String s = schedule;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setSchedule(String schedule) {
@@ -1388,7 +3355,24 @@ public class LanguageMessages {
 	}
 
 	public String getScheduleSpecific() {
-		return scheduleSpecific.replaceAll("&", "§");
+		String s = scheduleSpecific;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setScheduleSpecific(String scheduleSpecific) {
@@ -1396,7 +3380,24 @@ public class LanguageMessages {
 	}
 
 	public String getBegin() {
-		return begin.replaceAll("&", "§");
+		String s = begin;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setBegin(String begin) {
@@ -1404,7 +3405,24 @@ public class LanguageMessages {
 	}
 
 	public String getTbegin() {
-		return tbegin.replaceAll("&", "§");
+		String s = tbegin;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setTbegin(String tbegin) {
@@ -1412,7 +3430,24 @@ public class LanguageMessages {
 	}
 
 	public String getBeginSpecific() {
-		return beginSpecific.replaceAll("&", "§");
+		String s = beginSpecific;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setBeginSpecific(String beginSpecific) {
@@ -1420,7 +3455,24 @@ public class LanguageMessages {
 	}
 
 	public String getBan() {
-		return ban.replaceAll("&", "§");
+		String s = ban;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setBan(String ban) {
@@ -1428,7 +3480,24 @@ public class LanguageMessages {
 	}
 
 	public String getUnban() {
-		return unban.replaceAll("&", "§");
+		String s = unban;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setUnban(String unban) {
@@ -1436,7 +3505,24 @@ public class LanguageMessages {
 	}
 
 	public String getCreate() {
-		return create.replaceAll("&", "§");
+		String s = create;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setCreate(String create) {
@@ -1444,7 +3530,24 @@ public class LanguageMessages {
 	}
 
 	public String getEdit() {
-		return edit.replaceAll("&", "§");
+		String s = edit;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setEdit(String edit) {
@@ -1452,7 +3555,24 @@ public class LanguageMessages {
 	}
 
 	public String getTp() {
-		return tp.replaceAll("&", "§");
+		String s = tp;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setTp(String tp) {
@@ -1460,7 +3580,24 @@ public class LanguageMessages {
 	}
 
 	public String getCancel() {
-		return cancel.replaceAll("&", "§");
+		String s = cancel;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setCancel(String cancel) {
@@ -1468,7 +3605,24 @@ public class LanguageMessages {
 	}
 
 	public String getReload() {
-		return reload.replaceAll("&", "§");
+		String s = reload;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setReload(String reload) {
@@ -1476,7 +3630,24 @@ public class LanguageMessages {
 	}
 
 	public String getCheckpoint() {
-		return checkpoint.replaceAll("&", "§");
+		String s = checkpoint;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setCheckpoint(String checkpoint) {
@@ -1484,7 +3655,24 @@ public class LanguageMessages {
 	}
 
 	public String getScoreboardTitle() {
-		return scoreboardTitle.replaceAll("&", "§");
+		String s = scoreboardTitle;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setScoreboardTitle(String scoreboardTitle) {
@@ -1492,7 +3680,24 @@ public class LanguageMessages {
 	}
 
 	public String getScoreboardPoints() {
-		return scoreboardPoints.replaceAll("&", "§");
+		String s = scoreboardPoints;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setScoreboardPoints(String scoreboardPoints) {
@@ -1500,7 +3705,24 @@ public class LanguageMessages {
 	}
 
 	public String getScoreboardAlive() {
-		return scoreboardAlive.replaceAll("&", "§");
+		String s = scoreboardAlive;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setScoreboardAlive(String scoreboardAlive) {
@@ -1508,7 +3730,24 @@ public class LanguageMessages {
 	}
 
 	public String getScoreboardDeath() {
-		return scoreboardDeath.replaceAll("&", "§");
+		String s = scoreboardDeath;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setScoreboardDeath(String scoreboardDeath) {
@@ -1516,7 +3755,24 @@ public class LanguageMessages {
 	}
 
 	public String getScoreboardTeammate() {
-		return scoreboardTeammate.replaceAll("&", "§");
+		String s = scoreboardTeammate;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setScoreboardTeammate(String scoreboardTeammate) {
@@ -1524,7 +3780,24 @@ public class LanguageMessages {
 	}
 
 	public String getScoreboardTeamAlive() {
-		return scoreboardTeamAlive.replaceAll("&", "§");
+		String s = scoreboardTeamAlive;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setScoreboardTeamAlive(String scoreboardTeamAlive) {
@@ -1532,7 +3805,24 @@ public class LanguageMessages {
 	}
 
 	public String getScoreboardTeamDeath() {
-		return scoreboardTeamDeath.replaceAll("&", "§");
+		String s = scoreboardTeamDeath;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setScoreboardTeamDeath(String scoreboardTeamDeath) {
@@ -1540,7 +3830,24 @@ public class LanguageMessages {
 	}
 
 	public String getScoreboardTeam() {
-		return scoreboardTeam.replaceAll("&", "§");
+		String s = scoreboardTeam;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setScoreboardTeam(String scoreboardTeam) {
@@ -1548,7 +3855,24 @@ public class LanguageMessages {
 	}
 
 	public String getScoreboardTime() {
-		return scoreboardTime.replaceAll("&", "§");
+		String s = scoreboardTime;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setScoreboardTime(String scoreboardTime) {
@@ -1556,7 +3880,24 @@ public class LanguageMessages {
 	}
 
 	public String getScoreboardBeast() {
-		return scoreboardBeast.replaceAll("&", "§");
+		String s = scoreboardBeast;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setScoreboardBeast(String scoreboardBeast) {
@@ -1564,7 +3905,24 @@ public class LanguageMessages {
 	}
 
 	public String getScoreboardHolder() {
-		return scoreboardHolder.replaceAll("&", "§");
+		String s = scoreboardHolder;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setScoreboardHolder(String scoreboardHolder) {
@@ -1572,7 +3930,24 @@ public class LanguageMessages {
 	}
 
 	public String getPvpDeath() {
-		return pvpDeath.replaceAll("&", "§");
+		String s = pvpDeath;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setPvpDeath(String pvpDeath) {
@@ -1580,7 +3955,24 @@ public class LanguageMessages {
 	}
 
 	public String getPvpKill() {
-		return pvpKill.replaceAll("&", "§");
+		String s = pvpKill;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setPvpKill(String pvpKill) {
@@ -1588,7 +3980,24 @@ public class LanguageMessages {
 	}
 
 	public String getForcebegin() {
-		return forcebegin.replaceAll("&", "§");
+		String s = forcebegin;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setForcebegin(String forcebegin) {
@@ -1596,7 +4005,24 @@ public class LanguageMessages {
 	}
 
 	public String getKitsCmd() {
-		return kitsCmd.replaceAll("&", "§");
+		String s = kitsCmd;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setKitsCmd(String kitsCmd) {
@@ -1604,7 +4030,24 @@ public class LanguageMessages {
 	}
 
 	public String getKitsEditCmd() {
-		return kitsEditCmd.replaceAll("&", "§");
+		String s = kitsEditCmd;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setKitsEditCmd(String kitsEditCmd) {
@@ -1612,7 +4055,24 @@ public class LanguageMessages {
 	}
 
 	public String getEventDeleted() {
-		return eventDeleted.replaceAll("&", "§");
+		String s = eventDeleted;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setEventDeleted(String eventDeleted) {
@@ -1620,7 +4080,24 @@ public class LanguageMessages {
 	}
 
 	public String getEventDisabled() {
-		return eventDisabled.replaceAll("&", "§");
+		String s = eventDisabled;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setEventDisabled(String eventDisabled) {
@@ -1628,7 +4105,24 @@ public class LanguageMessages {
 	}
 
 	public String getEventEnabled() {
-		return eventEnabled.replaceAll("&", "§");
+		String s = eventEnabled;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setEventEnabled(String eventEnabled) {
@@ -1636,7 +4130,24 @@ public class LanguageMessages {
 	}
 
 	public String getEventIsDisabled() {
-		return eventIsDisabled.replaceAll("&", "§");
+		String s = eventIsDisabled;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setEventIsDisabled(String eventIsDisabled) {
@@ -1644,7 +4155,24 @@ public class LanguageMessages {
 	}
 
 	public String getDelete() {
-		return delete.replaceAll("&", "§");
+		String s = delete;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setDelete(String delete) {
@@ -1652,7 +4180,24 @@ public class LanguageMessages {
 	}
 
 	public String getDisable() {
-		return disable.replaceAll("&", "§");
+		String s = disable;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setDisable(String disable) {
@@ -1660,7 +4205,24 @@ public class LanguageMessages {
 	}
 
 	public String getEnable() {
-		return enable.replaceAll("&", "§");
+		String s = enable;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setEnable(String enable) {
@@ -1668,15 +4230,139 @@ public class LanguageMessages {
 	}
 
 	public String getStatsGuiName() {
-		return statsGuiName.replaceAll("&", "§");
+		String s = statsGuiName;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setStatsGuiName(String statsGuiName) {
 		this.statsGuiName = statsGuiName;
 	}
 
+	public void setMatchJoin(String matchJoin) {
+		this.matchJoin = matchJoin;
+	}
+
+	public void setMatchLeave(String matchLeave) {
+		this.matchLeave = matchLeave;
+	}
+
+	public void setResetCoins(String resetCoins) {
+		this.resetCoins = resetCoins;
+	}
+
+	public void setResetCoinsPlayerCMD(String resetCoinsPlayerCMD) {
+		this.resetCoinsPlayerCMD = resetCoinsPlayerCMD;
+	}
+
+	public void setResetTries(String resetTries) {
+		this.resetTries = resetTries;
+	}
+
+	public void setResetTriesPlayerCMD(String resetTriesPlayerCMD) {
+		this.resetTriesPlayerCMD = resetTriesPlayerCMD;
+	}
+
+	public void setResetTriesGame(String resetTriesGame) {
+		this.resetTriesGame = resetTriesGame;
+	}
+
+	public void setResetTriesGamePlayer(String resetTriesGamePlayer) {
+		this.resetTriesGamePlayer = resetTriesGamePlayer;
+	}
+
+	public void setResetWins(String resetWins) {
+		this.resetWins = resetWins;
+	}
+
+	public void setResetWinsPlayerCMD(String resetWinsPlayerCMD) {
+		this.resetWinsPlayerCMD = resetWinsPlayerCMD;
+	}
+
+	public void setResetWinsGame(String resetWinsGame) {
+		this.resetWinsGame = resetWinsGame;
+	}
+
+	public void setResetWinsGamePlayer(String resetWinsGamePlayer) {
+		this.resetWinsGamePlayer = resetWinsGamePlayer;
+	}
+
+	public String getMatchJoin() {
+		String s = matchJoin;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
+	}
+
+	public String getMatchLeave() {
+		String s = matchLeave;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
+	}
+
 	public String getCreditsGuiName() {
-		return creditsGuiName.replaceAll("&", "§");
+		String s = creditsGuiName;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setCreditsGuiName(String creditsGuiName) {
@@ -1684,7 +4370,24 @@ public class LanguageMessages {
 	}
 
 	public String getAnnounceFirst() {
-		return announceFirst.replaceAll("&", "§");
+		String s = announceFirst;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setAnnounceFirst(String announceFirst) {
@@ -1692,7 +4395,24 @@ public class LanguageMessages {
 	}
 
 	public String getAnnounceNext() {
-		return announceNext.replaceAll("&", "§");
+		String s = announceNext;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setAnnounceNext(String announceNext) {
@@ -1700,7 +4420,24 @@ public class LanguageMessages {
 	}
 
 	public String getAnnounceFirstTournament() {
-		return announceFirstTournament.replaceAll("&", "§");
+		String s = announceFirstTournament;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setAnnounceFirstTournament(String announceFirstTournament) {
@@ -1708,7 +4445,24 @@ public class LanguageMessages {
 	}
 
 	public String getAnnounceNextTournament() {
-		return announceNextTournament.replaceAll("&", "§");
+		String s = announceNextTournament;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setAnnounceNextTournament(String announceNextTournament) {
@@ -1716,7 +4470,24 @@ public class LanguageMessages {
 	}
 
 	public String getScoreboardStep() {
-		return scoreboardStep.replaceAll("&", "§");
+		String s = scoreboardStep;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setScoreboardStep(String scoreboardStep) {
@@ -1732,7 +4503,24 @@ public class LanguageMessages {
 	}
 
 	public String getBowKill() {
-		return bowKill.replaceAll("&", "§");
+		String s = bowKill;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setBowKill(String bowKill) {
@@ -1740,27 +4528,129 @@ public class LanguageMessages {
 	}
 
 	public String getGiveCreditsSpecific() {
-		return giveCreditsSpecific.replaceAll("&", "§");
+		String s = giveCreditsSpecific;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getGiveCreditsRandom() {
-		return giveCreditsRandom.replaceAll("&", "§");
+		String s = giveCreditsRandom;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getCreditsBalOther() {
-		return creditsBalOther.replaceAll("&", "§");
+		String s = creditsBalOther;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getCreditsBalOwn() {
-		return creditsBalOwn.replaceAll("&", "§");
+		String s = creditsBalOwn;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getPlayerOffline() {
-		return playerOffline.replaceAll("&", "§");
+		String s = playerOffline;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getEventInvalid() {
-		return eventInvalid.replaceAll("&", "§");
+		String s = eventInvalid;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setGiveCreditsSpecific(String giveCreditsSpecific) {
@@ -1788,23 +4678,108 @@ public class LanguageMessages {
 	}
 
 	public String getCreditsAddedOther() {
-		return creditsAddedOther.replaceAll("&", "§");
+		String s = creditsAddedOther;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getCreditsAdded() {
-		return creditsAdded.replaceAll("&", "§");
+		String s = creditsAdded;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getCreditsBal() {
-		return creditsBal.replaceAll("&", "§");
+		String s = creditsBal;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getCreditsCooldown() {
-		return creditsCooldown.replaceAll("&", "§");
+		String s = creditsCooldown;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getCreditsReady() {
-		return creditsReady.replaceAll("&", "§");
+		String s = creditsReady;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setCreditsAddedOther(String creditsAddedOther) {
@@ -1828,7 +4803,24 @@ public class LanguageMessages {
 	}
 
 	public String getCreditsEventRunning() {
-		return creditsEventRunning.replaceAll("&", "§");
+		String s = creditsEventRunning;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setCreditsEventRunning(String creditsEventRunning) {
@@ -1836,7 +4828,24 @@ public class LanguageMessages {
 	}
 
 	public String getGuiCMD() {
-		return guiCMD.replaceAll("&", "§");
+		String s = guiCMD;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setGuiCMD(String guiCMD) {
@@ -1844,7 +4853,24 @@ public class LanguageMessages {
 	}
 
 	public String getCreditsGuiPage() {
-		return creditsGuiPage.replaceAll("&", "§");
+		String s = creditsGuiPage;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setCreditsGuiPage(String creditsGuiPage) {
@@ -1852,7 +4878,24 @@ public class LanguageMessages {
 	}
 
 	public String getSpec() {
-		return spec.replaceAll("&", "§");
+		String s = spec;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setSpec(String spec) {
@@ -1860,7 +4903,24 @@ public class LanguageMessages {
 	}
 
 	public String getItemReturnCheckpoint() {
-		return itemReturnCheckpoint.replaceAll("&", "§");
+		String s = itemReturnCheckpoint;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setItemReturnCheckpoint(String itemReturnCheckpoint) {
@@ -1868,7 +4928,24 @@ public class LanguageMessages {
 	}
 
 	public String getScoreboardTeamPoints() {
-		return scoreboardTeamPoints.replaceAll("&", "§");
+		String s = scoreboardTeamPoints;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setScoreboardTeamPoints(String scoreboardTeamPoints) {
@@ -1876,7 +4953,24 @@ public class LanguageMessages {
 	}
 
 	public String getItemHidePlayer() {
-		return itemHidePlayer.replaceAll("&", "§");
+		String s = itemHidePlayer;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setItemHidePlayer(String itemHidePlayer) {
@@ -1884,7 +4978,24 @@ public class LanguageMessages {
 	}
 
 	public String getItemShowPlayer() {
-		return itemShowPlayer.replaceAll("&", "§");
+		String s = itemShowPlayer;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setItemShowPlayer(String itemShowPlayer) {
@@ -1892,7 +5003,24 @@ public class LanguageMessages {
 	}
 
 	public String getKitItemName() {
-		return kitItemName.replaceAll("&", "§");
+		String s = kitItemName;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setKitItemName(String kitItemName) {
@@ -1900,7 +5028,24 @@ public class LanguageMessages {
 	}
 
 	public String getKitDefaultName() {
-		return kitDefaultName.replaceAll("&", "§");
+		String s = kitDefaultName;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setKitDefaultName(String kitDefaultName) {
@@ -1910,7 +5055,23 @@ public class LanguageMessages {
 	public List<String> getKitDefaultLore() {
 		List<String> defaultLore = new ArrayList<String>();
 		for (String s : kitDefaultLore) {
-			defaultLore.add(s.replaceAll("&", "§"));
+			try {
+				Matcher match = pattern.matcher(s);
+				Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+				while (match.find()) {
+					String color = s.substring(match.start() + 1, match.end());
+					Method method = ChatColor.class.getMethod("of", String.class);
+					ChatColor chatc = (ChatColor) method.invoke(null, color);
+					mapa.put("&" + color, chatc);
+				}
+				for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+					s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+				}
+				s = ChatColor.translateAlternateColorCodes('&', s);
+			} catch (Exception e) {
+				s = s.replaceAll("&", "§");
+			}
+			defaultLore.add(s);
 		}
 		return defaultLore;
 	}
@@ -1920,7 +5081,24 @@ public class LanguageMessages {
 	}
 
 	public String getKitGuiName() {
-		return kitGuiName.replaceAll("&", "§");
+		String s = kitGuiName;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setKitGuiName(String kitGuiName) {
@@ -1928,15 +5106,66 @@ public class LanguageMessages {
 	}
 
 	public String getKitChosen() {
-		return kitChosen.replaceAll("&", "§");
+		String s = kitChosen;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getScoreboardPointsTeam() {
-		return scoreboardPointsTeam.replaceAll("&", "§");
+		String s = scoreboardPointsTeam;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getTagChat() {
-		return tagChat.replaceAll("&", "§");
+		String s = tagChat;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setTagChat(String tagChat) {
@@ -2008,7 +5237,24 @@ public class LanguageMessages {
 	}
 
 	public String getTeamItemName() {
-		return teamItemName.replaceAll("&", "§");
+		String s = teamItemName;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setTeamItemName(String teamItemName) {
@@ -2016,7 +5262,24 @@ public class LanguageMessages {
 	}
 
 	public String getTeamGuiName() {
-		return teamGuiName.replaceAll("&", "§");
+		String s = teamGuiName;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setTeamGuiName(String teamGuiName) {
@@ -2024,107 +5287,549 @@ public class LanguageMessages {
 	}
 
 	public String getNameBattleRoyale() {
-		return nameBattleRoyale.replaceAll("&", "§");
+		String s = nameBattleRoyale;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameTeamBattleRoyale() {
-		return nameTeamBattleRoyale.replaceAll("&", "§");
+		String s = nameTeamBattleRoyale;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameKnightsBattle() {
-		return nameKnightsBattle.replaceAll("&", "§");
+		String s = nameKnightsBattle;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameTopKiller() {
-		return nameTopKiller.replaceAll("&", "§");
+		String s = nameTopKiller;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameTeamTopKiller() {
-		return nameTeamTopKiller.replaceAll("&", "§");
+		String s = nameTeamTopKiller;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameKnockbackDuel() {
-		return nameKnockbackDuel.replaceAll("&", "§");
+		String s = nameKnockbackDuel;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameArrowRain() {
-		return nameArrowRain.replaceAll("&", "§");
+		String s = nameArrowRain;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameAnvilSpleef() {
-		return nameAnvilSpleef.replaceAll("&", "§");
+		String s = nameAnvilSpleef;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameGemCarrier() {
-		return nameGemCarrier.replaceAll("&", "§");
+		String s = nameGemCarrier;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameTNTTag() {
-		return nameTNTTag.replaceAll("&", "§");
+		String s = nameTNTTag;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameBoatRace() {
-		return nameBoatRace.replaceAll("&", "§");
+		String s = nameBoatRace;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameHorseRace() {
-		return nameHorseRace.replaceAll("&", "§");
+		String s = nameHorseRace;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameEscapeBeast() {
-		return nameEscapeBeast.replaceAll("&", "§");
+		String s = nameEscapeBeast;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameRace() {
-		return nameRace.replaceAll("&", "§");
+		String s = nameRace;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameTNTRun() {
-		return nameTNTRun.replaceAll("&", "§");
+		String s = nameTNTRun;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameSpleef() {
-		return nameSpleef.replaceAll("&", "§");
+		String s = nameSpleef;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameSplegg() {
-		return nameSplegg.replaceAll("&", "§");
+		String s = nameSplegg;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameOITC() {
-		return nameOITC.replaceAll("&", "§");
+		String s = nameOITC;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameSurvivalGames() {
-		return nameSurvivalGames.replaceAll("&", "§");
+		String s = nameSurvivalGames;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameTeamSurvivalGames() {
-		return nameTeamSurvivalGames.replaceAll("&", "§");
+		String s = nameTeamSurvivalGames;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameSkywars() {
-		return nameSkywars.replaceAll("&", "§");
+		String s = nameSkywars;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameTeamSkywars() {
-		return nameTeamSkywars.replaceAll("&", "§");
+		String s = nameTeamSkywars;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameWaterDrop() {
-		return nameWaterDrop.replaceAll("&", "§");
+		String s = nameWaterDrop;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameQuakeCraft() {
-		return nameQuakeCraft.replaceAll("&", "§");
+		String s = nameQuakeCraft;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNamePaintball() {
-		return namePaintball.replaceAll("&", "§");
+		String s = namePaintball;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNamePaintballTopKill() {
-		return namePaintballTopKill.replaceAll("&", "§");
+		String s = namePaintballTopKill;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setNamePaintballTopKill(String namePaintballTopKill) {
@@ -2132,27 +5837,129 @@ public class LanguageMessages {
 	}
 
 	public String getNameKingHill() {
-		return nameKingHill.replaceAll("&", "§");
+		String s = nameKingHill;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameFishSlap() {
-		return nameFishSlap.replaceAll("&", "§");
+		String s = nameFishSlap;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameHoehoehoe() {
-		return nameHoehoehoe.replaceAll("&", "§");
+		String s = nameHoehoehoe;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameSplatoon() {
-		return nameSplatoon.replaceAll("&", "§");
+		String s = nameSplatoon;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameBombardment() {
-		return nameBombardment.replaceAll("&", "§");
+		String s = nameBombardment;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameRedGreenLight() {
-		return nameRedGreenLight.replaceAll("&", "§");
+		String s = nameRedGreenLight;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setNameRedGreenLight(String nameRedGreenLight) {
@@ -2160,27 +5967,129 @@ public class LanguageMessages {
 	}
 
 	public String getNameRealTeamBattleRoyale() {
-		return nameRealTeamBattleRoyale.replaceAll("&", "§");
+		String s = nameRealTeamBattleRoyale;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameRealTeamTopKiller() {
-		return nameRealTeamTopKiller.replaceAll("&", "§");
+		String s = nameRealTeamTopKiller;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameRealTeamSkywars() {
-		return nameRealTeamSkywars.replaceAll("&", "§");
+		String s = nameRealTeamSkywars;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getNameRealTeamSurvivalGames() {
-		return nameRealTeamSurvivalGames.replaceAll("&", "§");
+		String s = nameRealTeamSurvivalGames;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getHoursFormat() {
-		return hoursFormat.replaceAll("&", "§");
+		String s = hoursFormat;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getDaysFormat() {
-		return daysFormat.replaceAll("&", "§");
+		String s = daysFormat;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setDaysFormat(String daysFormat) {
@@ -2188,11 +6097,45 @@ public class LanguageMessages {
 	}
 
 	public String getMinutesFormat() {
-		return minutesFormat.replaceAll("&", "§");
+		String s = minutesFormat;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public String getSecondsFormat() {
-		return secondsFormat.replaceAll("&", "§");
+		String s = secondsFormat;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public List<String> getMinigameDescriptionTSGTEAMS() {
@@ -2390,9 +6333,26 @@ public class LanguageMessages {
 	public void setMinigameDescriptionREDGREEN(List<String> minigameDescriptionREDGREEN) {
 		this.minigameDescriptionREDGREEN = minigameDescriptionREDGREEN;
 	}
-	
+
 	public String getGreenRedLightMove() {
-		return greenRedLightMove.replaceAll("&", "§");
+		String s = greenRedLightMove;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setGreenRedLightMove(String greenRedLightMove) {
@@ -2400,12 +6360,57 @@ public class LanguageMessages {
 	}
 
 	public String getGreenRedLightStop() {
-		return greenRedLightStop.replaceAll("&", "§");
+		String s = greenRedLightStop;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		return s;
 	}
 
 	public void setGreenRedLightStop(String greenRedLightStop) {
 		this.greenRedLightStop = greenRedLightStop;
 	}
-	
+
+	public void setPattern(Pattern pattern) {
+		this.pattern = pattern;
+	}
+
+	public void setResetCoinsAll(String resetCoinsAll) {
+		this.resetCoinsAll = resetCoinsAll;
+	}
+
+	public void setResetTriesAll(String resetTriesAll) {
+		this.resetTriesAll = resetTriesAll;
+	}
+
+	public void setResetWinsAll(String resetWinsAll) {
+		this.resetWinsAll = resetWinsAll;
+	}
+
+	public void setResetCoinsPlayer(String resetCoinsPlayer) {
+		this.resetCoinsPlayer = resetCoinsPlayer;
+	}
+
+	public void setResetTriesPlayer(String resetTriesPlayer) {
+		this.resetTriesPlayer = resetTriesPlayer;
+	}
+
+	public void setResetWinsPlayer(String resetWinsPlayer) {
+		this.resetWinsPlayer = resetWinsPlayer;
+	}
 
 }

@@ -1152,6 +1152,9 @@ public class Death implements Listener {
 					}
 				}
 			} else {
+				if (plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())) {
+					ev.setCancelled(true);
+				}
 				if (plugin.getMatchActive().getPlayerHandler().getPlayersSpectators().contains(damager)) {
 					ev.setCancelled(true);
 				}

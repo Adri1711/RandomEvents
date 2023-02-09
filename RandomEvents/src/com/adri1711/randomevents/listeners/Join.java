@@ -24,7 +24,39 @@ public class Join implements Listener {
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent evt) {
 		Player player = evt.getPlayer();
-		UtilsRandomEvents.sacaInventario(plugin, player);
+		if (plugin.getReventConfig().isDebugMode()) {
+			if (plugin.getMatchActive() != null) {
+				plugin.getLogger().info("Match found: " + plugin.getMatchActive().getMatch().getName());
+				plugin.getLogger().info("Players: ");
+				for (String p : plugin.getMatchActive().getPlayerHandler().getPlayers()) {
+
+					plugin.getLogger().info("    - " + p);
+
+				}
+				plugin.getLogger().info("Spectators: ");
+				for (Player p : plugin.getMatchActive().getPlayerHandler().getPlayersSpectators()) {
+
+					plugin.getLogger().info("    - " + p.getName());
+
+				}
+			} else {
+				plugin.getLogger().info("No Match");
+
+			}
+		}
+		if (plugin.getMatchActive() != null
+				&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(player.getName())) {
+			if (plugin.getReventConfig().isDebugMode()) {
+				plugin.getLogger().info("Detected player, kicking from match: "+player.getName());
+
+			}
+			
+			plugin.getMatchActive().echaDePartida(player, true, true, true);
+			
+		} else {
+
+			UtilsRandomEvents.sacaInventario(plugin, player);
+		}
 		if (plugin.getMatchActive() != null && plugin.getReventConfig().isForcePlayersToSpectate()) {
 
 			if (plugin.getMatchActive().getPlaying()) {

@@ -141,7 +141,10 @@ public enum Creacion {
 	ALL_BLOCKS_ALLOWED(51, "§6§lChanged blocks allowed", "SG,TSG,SW,TSW,HOE,SPLATOON,TSWTEAMS,TSGTEAMS"),
 	
 	GAMEMODE(52, "§6§lPut the gamemode (SURVIVAL, CREATIVE, SPECTATOR, ADVENTURE) or put 'N'", "ALLMINIGAMES"),
+	
+	COMMANDS_ON_START(53, "§6§lSet a command for the start of the game or just put 'Done' to stop setting commands", "ALLMINIGAMES"),
 
+	SHRINK_BLOCKS(54, "§6§lChoose how many blocks to shrink each time", "SG,TSG,TSGTEAMS"),
 
 	SAVE(997, "§6§lYou are about to save a Random Event, put 'Y' to confirm or 'N' to continue creating",
 			"ALLMINIGAMES"),
