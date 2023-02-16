@@ -49,6 +49,8 @@ public class Match implements Comparable<Match> {
 	private List<String> rewards;
 
 	private Integer tiempoPartida;
+	
+	private Integer timeRefill;
 
 	private InventoryPers inventoryBeast;
 
@@ -202,6 +204,14 @@ public class Match implements Comparable<Match> {
 
 	public void setTiempoPartida(Integer tiempoPartida) {
 		this.tiempoPartida = tiempoPartida;
+	}
+
+	public Integer getTimeRefill() {
+		return timeRefill;
+	}
+
+	public void setTimeRefill(Integer timeRefill) {
+		this.timeRefill = timeRefill;
 	}
 
 	public Location getLocation1() {
@@ -388,6 +398,7 @@ public class Match implements Comparable<Match> {
 		result = prime * result + ((spawns == null) ? 0 : spawns.hashCode());
 		result = prime * result + ((spectatorSpawns == null) ? 0 : spectatorSpawns.hashCode());
 		result = prime * result + ((tiempoPartida == null) ? 0 : tiempoPartida.hashCode());
+		result = prime * result + ((timeRefill == null) ? 0 : timeRefill.hashCode());
 		return result;
 	}
 

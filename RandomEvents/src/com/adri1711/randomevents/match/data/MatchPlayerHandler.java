@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 
@@ -29,10 +30,12 @@ public class MatchPlayerHandler {
 	private List<Player> playersSpectators;
 
 	private List<Player> playersVanish;
-	
-	private List<Location>  locationsBeforeExitting;
-	
-	private Map<String,Long> playersInvincible;
+
+	private Map<Player, List<Entity>> enderpearlsFlying;
+
+	private List<Location> locationsBeforeExitting;
+
+	private Map<String, Long> playersInvincible;
 
 	private Player beast;
 
@@ -59,7 +62,8 @@ public class MatchPlayerHandler {
 	private Map<Integer, Set<Player>> teamsCopy;
 
 	public MatchPlayerHandler() {
-		this.playersInvincible = new HashMap<String,Long>();
+		this.enderpearlsFlying = new HashMap<Player, List<Entity>>();
+		this.playersInvincible = new HashMap<String, Long>();
 		this.players = new ArrayList<String>();
 		this.playersTotal = new ArrayList<String>();
 		this.playersPrefix = new HashMap<String, String>();
@@ -78,16 +82,18 @@ public class MatchPlayerHandler {
 		this.playerKits = new HashMap<Player, Kit>();
 		this.playersContadores = new HashMap<Player, Long>();
 		this.paintedLocations = new HashMap<Player, Set<Location>>();
-		this.locationsBeforeExitting=new ArrayList<Location>();
+		this.locationsBeforeExitting = new ArrayList<Location>();
 	}
 
 	public MatchPlayerHandler(List<String> players, List<Player> playersGanadores, List<Player> playersSpectators) {
-		this.playersInvincible = new HashMap<String,Long>();
-		this.locationsBeforeExitting=new ArrayList<Location>();
+		this.enderpearlsFlying = new HashMap<Player, List<Entity>>();
+
+		this.playersInvincible = new HashMap<String, Long>();
+		this.locationsBeforeExitting = new ArrayList<Location>();
 
 		this.players = players;
 		this.playersTotal = new ArrayList<String>();
-		this.playersObj=new ArrayList<Player>();
+		this.playersObj = new ArrayList<Player>();
 		playersTotal.addAll(players);
 		this.playersTotalObj = new ArrayList<Player>();
 		this.playersObj = playersGanadores;
@@ -96,7 +102,7 @@ public class MatchPlayerHandler {
 		this.playersSpectators = playersSpectators;
 		this.playersVanish = new ArrayList<Player>();
 		this.paintPlayers = new HashSet<Player>();
-		this.playerToKill=new HashSet<Player>();
+		this.playerToKill = new HashSet<Player>();
 		this.playersPrefix = new HashMap<String, String>();
 
 		this.equipos = new HashMap<Integer, Set<Player>>();
@@ -109,6 +115,14 @@ public class MatchPlayerHandler {
 		this.playersContadores = new HashMap<Player, Long>();
 		this.paintedLocations = new HashMap<Player, Set<Location>>();
 
+	}
+
+	public Map<Player, List<Entity>> getEnderpearlsFlying() {
+		return enderpearlsFlying;
+	}
+
+	public void setEnderpearlsFlying(Map<Player, List<Entity>> enderpearlsFlying) {
+		this.enderpearlsFlying = enderpearlsFlying;
 	}
 
 	public List<String> getPlayers() {
@@ -271,11 +285,11 @@ public class MatchPlayerHandler {
 		this.playersPrefix = playersPrefix;
 	}
 
-	public Map<String,Long> getPlayersInvincible() {
+	public Map<String, Long> getPlayersInvincible() {
 		return playersInvincible;
 	}
 
-	public void setPlayersInvincible(Map<String,Long> playersInvincible) {
+	public void setPlayersInvincible(Map<String, Long> playersInvincible) {
 		this.playersInvincible = playersInvincible;
 	}
 
@@ -286,6 +300,5 @@ public class MatchPlayerHandler {
 	public void setLocationsBeforeExitting(List<Location> locationsBeforeExitting) {
 		this.locationsBeforeExitting = locationsBeforeExitting;
 	}
-	
 
 }

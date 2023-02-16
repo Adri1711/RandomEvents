@@ -1,5 +1,7 @@
 package com.adri1711.randomevents.listeners;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Date;
 
 import org.bukkit.Location;
@@ -16,6 +18,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -66,45 +69,54 @@ public class Death implements Listener {
 							} else {
 								cancelled = true;
 							}
-							switch (plugin.getMatchActive().getMatch().getMinigame()) {
-							case SW:
-							case SG:
-							case TSG:
-							case TSW:
-							case TSG_REAL:
-							case TSW_REAL:
-								if (!plugin.getMatchActive().getAllowDamage()) {
-									ev.setCancelled(true);
+							Boolean totem = false;
+							if (plugin.getMatchActive().getAllowDamage()) {
+								if (player.getInventory().getItemInHand() != null && player.getInventory()
+										.getItemInHand().getType() == (XMaterial.TOTEM_OF_UNDYING.parseMaterial())) {
+									player.getInventory().setItemInHand(null);
+									player.updateInventory();
+									totem = true;
 								} else {
-									UtilsRandomEvents.mandaMensaje(plugin,
-											plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
-											plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()),
-											false, false, false);
-									plugin.getMatchActive().echaDePartida(player, true, true, false, true, true);
-									UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
+									try {
+										Method method = player.getInventory().getClass()
+												.getDeclaredMethod("getItemInOffHand");
+										if (method != null) {
+
+											ItemStack item = (ItemStack) method.invoke(player.getInventory());
+											if (item != null
+													&& item.getType() == (XMaterial.TOTEM_OF_UNDYING.parseMaterial())) {
+												Method method2 = player.getInventory().getClass()
+														.getDeclaredMethod("setItemInOffHand", ItemStack.class);
+												method2.invoke(player.getInventory(), XMaterial.AIR.parseItem());
+												player.updateInventory();
+												totem = true;
+											}
+
+										}
+									} catch (IllegalAccessException | IllegalArgumentException
+											| InvocationTargetException | NoSuchMethodException | SecurityException e) {
+
+									}
 								}
-								break;
-							case BATTLE_ROYALE:
-							case BATTLE_ROYALE_CABALLO:
-							case BATTLE_ROYALE_TEAM_2:
-							case BATTLE_ROYALE_TEAMS:
-							case PAINTBALL:
-							case TNT_RUN:
-							case SPLEEF:
-							case ANVIL_SPLEEF:
-							case BOMBARDMENT:
-							case SPLEGG:
-								if (!cancelled) {
-									UtilsRandomEvents.mandaMensaje(plugin,
-											plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
-											plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()),
-											false, false, false);
-									plugin.getMatchActive().echaDePartida(player, true, true, false);
-									UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
-								}
-								break;
-							case KNOCKBACK_DUEL:
-								if (!cancelled) {
+							}
+							if (totem) {
+								UtilsRandomEvents.playSound(plugin, player, XSound.ITEM_TOTEM_USE);
+								
+								player.setHealth(1);
+								player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 20 * 4, 1));
+								player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 45, 1));
+								player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 20 * 40, 0));
+
+								ev.setDamage(0);
+							} else {
+
+								switch (plugin.getMatchActive().getMatch().getMinigame()) {
+								case SW:
+								case SG:
+								case TSG:
+								case TSW:
+								case TSG_REAL:
+								case TSW_REAL:
 									if (!plugin.getMatchActive().getAllowDamage()) {
 										ev.setCancelled(true);
 									} else {
@@ -113,66 +125,101 @@ public class Death implements Listener {
 												plugin.getLanguage().getPvpDeath().replaceAll("%victim%",
 														player.getName()),
 												false, false, false);
+										plugin.getMatchActive().echaDePartida(player, true, true, false, true, true);
+										UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
+									}
+									break;
+								case BATTLE_ROYALE:
+								case BATTLE_ROYALE_CABALLO:
+								case BATTLE_ROYALE_TEAM_2:
+								case BATTLE_ROYALE_TEAMS:
+								case PAINTBALL:
+								case TNT_RUN:
+								case SPLEEF:
+								case ANVIL_SPLEEF:
+								case BOMBARDMENT:
+								case SPLEGG:
+									if (!cancelled) {
+										UtilsRandomEvents.mandaMensaje(plugin,
+												plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+												plugin.getLanguage().getPvpDeath().replaceAll("%victim%",
+														player.getName()),
+												false, false, false);
 										plugin.getMatchActive().echaDePartida(player, true, true, false);
 										UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
-
 									}
+									break;
+								case KNOCKBACK_DUEL:
+									if (!cancelled) {
+										if (!plugin.getMatchActive().getAllowDamage()) {
+											ev.setCancelled(true);
+										} else {
+											UtilsRandomEvents.mandaMensaje(plugin,
+													plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+													plugin.getLanguage().getPvpDeath().replaceAll("%victim%",
+															player.getName()),
+													false, false, false);
+											plugin.getMatchActive().echaDePartida(player, true, true, false);
+											UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
+
+										}
+									}
+									break;
+								case FISH_SLAP:
+									ev.setCancelled(true);
+									break;
+								case ESCAPE_FROM_BEAST:
+
+									ev.setCancelled(true);
+
+									break;
+								case OITC:
+								case TOP_KILLER:
+								case TOP_KILLER_TEAM_2:
+								case TOP_KILLER_TEAMS:
+								case PAINTBALL_TOP_KILL:
+								case KOTH:
+
+									UtilsRandomEvents.mandaMensaje(plugin,
+											plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+											plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()),
+											false, false, false);
+									plugin.getMatchActive().reiniciaPlayer(player);
+									UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
+
+									break;
+								case GEM_CRAWLER:
+									UtilsRandomEvents.mandaMensaje(plugin,
+											plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+											plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()),
+											false, false, false);
+									plugin.getMatchActive().reiniciaPlayer(player);
+									UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
+									break;
+								case WDROP:
+									plugin.getMatchActive().reiniciaPlayer(player);
+									UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_BAT_HURT);
+									break;
+								case BOMB_TAG:
+									ev.setDamage(0);
+									break;
+								case BOAT_RUN:
+								case HORSE_RUN:
+									ev.setCancelled(true);
+									break;
+								case RACE:
+								case RED_GREEN_LIGHT:
+									ev.setCancelled(true);
+
+									break;
+								case QUAKECRAFT:
+								case HOEHOEHOE:
+								case SPLATOON:
+									ev.setCancelled(true);
+									break;
+								default:
+									break;
 								}
-								break;
-							case FISH_SLAP:
-								ev.setCancelled(true);
-								break;
-							case ESCAPE_FROM_BEAST:
-
-								ev.setCancelled(true);
-
-								break;
-							case OITC:
-							case TOP_KILLER:
-							case TOP_KILLER_TEAM_2:
-							case TOP_KILLER_TEAMS:
-							case PAINTBALL_TOP_KILL:
-							case KOTH:
-
-								UtilsRandomEvents.mandaMensaje(plugin,
-										plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
-										plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()),
-										false, false, false);
-								plugin.getMatchActive().reiniciaPlayer(player);
-								UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
-
-								break;
-							case GEM_CRAWLER:
-								UtilsRandomEvents.mandaMensaje(plugin,
-										plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
-										plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()),
-										false, false, false);
-								plugin.getMatchActive().reiniciaPlayer(player);
-								UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
-								break;
-							case WDROP:
-								plugin.getMatchActive().reiniciaPlayer(player);
-								UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_BAT_HURT);
-								break;
-							case BOMB_TAG:
-								ev.setDamage(0);
-								break;
-							case BOAT_RUN:
-							case HORSE_RUN:
-								ev.setCancelled(true);
-								break;
-							case RACE:
-							case RED_GREEN_LIGHT:
-								ev.setCancelled(true);
-
-								break;
-							case QUAKECRAFT:
-							case HOEHOEHOE:
-							case SPLATOON:
-								ev.setCancelled(true);
-								break;
-							default:
-								break;
 							}
 
 						} else {
@@ -210,6 +257,8 @@ public class Death implements Listener {
 							case HOEHOEHOE:
 							case SPLATOON:
 							case QUAKECRAFT:
+							case BOAT_RUN:
+							case HORSE_RUN:
 								ev.setCancelled(true);
 								break;
 							default:

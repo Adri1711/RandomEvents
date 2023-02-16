@@ -145,6 +145,9 @@ public enum Creacion {
 	COMMANDS_ON_START(53, "§6§lSet a command for the start of the game or just put 'Done' to stop setting commands", "ALLMINIGAMES"),
 
 	SHRINK_BLOCKS(54, "§6§lChoose how many blocks to shrink each time", "SG,TSG,TSGTEAMS"),
+	
+	REFILL_CHEST(55, "§6§lChoose time to refill chests in seconds", "SG,TSG,TSGTEAMS,SW,TSW,TSWTEAMS"),
+
 
 	SAVE(997, "§6§lYou are about to save a Random Event, put 'Y' to confirm or 'N' to continue creating",
 			"ALLMINIGAMES"),

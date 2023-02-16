@@ -133,6 +133,7 @@ public class MatchActive {
 	private Map<Player, Long> cooldownShoot;
 
 	private long endDate;
+	private long refillDate;
 
 	private long checkDate;
 
@@ -494,6 +495,20 @@ public class MatchActive {
 				plugin.getLogger().info("Kicking from match: " + player.getName());
 
 			}
+			if (playerHandler.getEnderpearlsFlying().containsKey(player)) {
+				List<Entity> pearls = playerHandler.getEnderpearlsFlying().get(player);
+				if (pearls != null) {
+					for (Entity e : pearls) {
+						if (e != null) {
+							try {
+								e.remove();
+							} catch (Exception e1) {
+
+							}
+						}
+					}
+				}
+			}
 			if (comprueba) {
 				getPlayerHandler().getPlayersObj().remove(player);
 				getPlayerHandler().setPlayersObj(
@@ -625,6 +640,18 @@ public class MatchActive {
 			}
 			for (Player pla : getPlayerHandler().getPlayersVanish()) {
 				pla.showPlayer(player);
+			}
+			if (playerHandler.getEnderpearlsFlying().containsKey(player)) {
+				List<Entity> pearls = playerHandler.getEnderpearlsFlying().get(player);
+				for (Entity e : pearls) {
+					if (e != null) {
+						try {
+							e.remove();
+						} catch (Exception e1) {
+
+						}
+					}
+				}
 			}
 			if (compruebaSpectator
 					&& (sacaSpectator || match.getSpectatorSpawns() == null || match.getSpectatorSpawns().isEmpty())) {
@@ -1521,6 +1548,8 @@ public class MatchActive {
 			}
 			doMoveAndWarmup();
 
+			partidaSW();
+
 			break;
 		case BATTLE_ROYALE:
 		case KNOCKBACK_DUEL:
@@ -2316,6 +2345,21 @@ public class MatchActive {
 
 	}
 
+	private void partidaSW() {
+		if (getMatch().getTimeRefill() != null && getMatch().getTimeRefill() > 0) {
+			refillDate = new Date().getTime() + 1000 * getMatch().getTimeRefill();
+
+			task = new BukkitRunnable() {
+				public void run() {
+					updateScoreboards();
+					checkRefill();
+				}
+			};
+			task.runTaskTimerAsynchronously(plugin, 20L, 20L);
+		}
+
+	}
+
 	private void hazComandosDeStart(Player player) {
 		for (String cmd : match.getCommandsOnStart()) {
 			if (player != null && cmd.contains("%player%")) {
@@ -2496,6 +2540,9 @@ public class MatchActive {
 
 	private void partidaSG() {
 		endDate = new Date().getTime() + 1000 * getTiempoPartida();
+		if (getMatch().getTimeRefill() != null && getMatch().getTimeRefill() > 0) {
+			refillDate = new Date().getTime() + 1000 * getMatch().getTimeRefill();
+		}
 
 		squareMap();
 
@@ -2503,6 +2550,9 @@ public class MatchActive {
 			public void run() {
 				updateScoreboards();
 				checkSG();
+				if (getMatch().getTimeRefill() != null && getMatch().getTimeRefill() > 0) {
+					checkRefill();
+				}
 			}
 		};
 		task.runTaskTimerAsynchronously(plugin, 20L, 20L);
@@ -2544,6 +2594,7 @@ public class MatchActive {
 		if (getPlaying()) {
 			Date now = new Date();
 			long dif = (endDate - now.getTime()) / 1000;
+
 			if (dif <= 0) {
 				endDate = new Date().getTime() + 1000 * getTiempoPartida();
 				Cuboid cubo = new Cuboid(getMapHandler().getActualCuboid());
@@ -2569,8 +2620,27 @@ public class MatchActive {
 				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersObj(),
 						plugin.getLanguage().getShrink().replaceAll("%time%", "5"), true);
 			}
+
 		}
 
+	}
+
+	public void checkRefill() {
+		if (getPlaying()) {
+			Date now = new Date();
+			long dif2 = (refillDate - now.getTime()) / 1000;
+
+			if (dif2 <= 0) {
+				refillDate = new Date().getTime() + 1000 * getMatch().getTimeRefill();
+				if (getMapHandler().getChests() != null) {
+					getMapHandler().getChests().clear();
+				}
+				UtilsRandomEvents.mandaMensaje(plugin,
+						plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+						plugin.getLanguage().getRefill(), false);
+
+			}
+		}
 	}
 
 	private void shrinkMap(Cuboid cubo) {
@@ -4404,6 +4474,14 @@ public class MatchActive {
 
 	public void setAllowDamagePVP(Boolean allowDamagePVP) {
 		this.allowDamagePVP = allowDamagePVP;
+	}
+
+	public long getRefillDate() {
+		return refillDate;
+	}
+
+	public void setRefillDate(long refillDate) {
+		this.refillDate = refillDate;
 	}
 
 }

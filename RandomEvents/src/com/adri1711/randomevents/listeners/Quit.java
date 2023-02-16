@@ -47,6 +47,8 @@ public class Quit implements Listener {
 						&& plugin.getMatchActive().getPlayerHandler().getPlayersObj().contains(p)) {
 					switch (plugin.getMatchActive().getMatch().getMinigame()) {
 					case BATTLE_ROYALE_CABALLO:
+					case BOAT_RUN:
+					case HORSE_RUN:
 
 						Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 

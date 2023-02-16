@@ -18,6 +18,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
+import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
@@ -421,9 +422,25 @@ public class Use implements Listener {
 						}
 					}
 				}
+			} else if (evt.getEntity() instanceof EnderPearl) {
+				EnderPearl ep = (EnderPearl) evt.getEntity();
+				List<Entity> pearls = new ArrayList<Entity>();
+				if (ep.getShooter() != null) {
+					Player p = (Player) ep.getShooter();
+
+					if (plugin.getMatchActive().getPlayerHandler().getPlayers().contains(p.getName())) {
+						pearls = plugin.getMatchActive().getPlayerHandler().getEnderpearlsFlying().get(p);
+					}
+
+					pearls.add(ep);
+					plugin.getMatchActive().getPlayerHandler().getEnderpearlsFlying().put(p, pearls);
+				}
+
 			}
 		}
 	}
+
+	
 
 	@EventHandler
 	public void onPlayerEggThrow(PlayerEggThrowEvent evt) {
@@ -739,6 +756,8 @@ public class Use implements Listener {
 				if (plugin.getMatchActive().getPlaying()) {
 					if (plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.ANVIL_SPLEEF)
 							|| plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLATOON)
+							|| plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.BOAT_RUN)
+							|| plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.HORSE_RUN)
 							|| plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.HOEHOEHOE)
 							|| plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.PAINTBALL)) {
 						evt.setCancelled(true);

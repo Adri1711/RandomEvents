@@ -1026,6 +1026,11 @@ public class Chat implements Listener {
 						plugin.getPlayersCreation().remove(player.getName());
 
 						break;
+					case REFILL_CHEST:
+						match.setTimeRefill(Integer.valueOf(message.trim()));
+						plugin.getPlayersCreation().remove(player.getName());
+
+						break;
 					case SHRINK_BLOCKS:
 						match.setShrinkBlocks(Integer.valueOf(message.trim()));
 						plugin.getPlayersCreation().remove(player.getName());

@@ -216,6 +216,13 @@ public class Constantes {
 				"&c&lEvent cant be created, it lacks information, check the fields again "),
 
 		SHRINK("shrink", "comun.shrink", "&c&lMap border shrinking in %time% seconds"),
+		
+		
+		REFILL("refill", "comun.refill", "&e&lChest have been refilled."),
+		
+		REFILL_TIME("refillTime", "comun.refillTime", "&a&lRefill time:"),
+		
+		SHRINK_TIME("shrinkTime", "comun.shrinkTime", "&a&lShrink time:"),
 
 		WARMUP_END("warmupEnd", "comun.warmupEnd", "&c&lWarmup end in %time% seconds"),
 

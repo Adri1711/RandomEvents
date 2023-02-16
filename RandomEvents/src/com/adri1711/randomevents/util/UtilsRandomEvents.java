@@ -679,7 +679,7 @@ public class UtilsRandomEvents {
 	public static void sacaInventario(RandomEvents plugin, Player player) {
 		if (plugin.getReventConfig().isInventoryManagement()
 				&& (plugin.getMatchActive() == null || !plugin.getMatchActive().getMatch().getUseOwnInventory())) {
-			
+
 			player.updateInventory();
 			File dataFolder = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventories");
 			File dataFolderOld = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//inventoriesold");
@@ -2041,6 +2041,11 @@ public class UtilsRandomEvents {
 							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getTiempoPartida();
 						}
 						break;
+					case REFILL_CHEST:
+						if (match.getTimeRefill() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getTimeRefill();
+						}
+						break;
 					case SHRINK_BLOCKS:
 						if (match.getShrinkBlocks() != null) {
 							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getShrinkBlocks();
@@ -2405,6 +2410,7 @@ public class UtilsRandomEvents {
 
 			lines = prepareLinesTeam(lines, matchActive, plugin, player);
 			lines.add("");
+			lines = prepareLinesTimeRefill(lines, plugin, matchActive);
 			lines = prepareLinesDeadAliveTeam(lines, matchActive, plugin, playersDeadObj);
 
 			break;
@@ -2413,6 +2419,7 @@ public class UtilsRandomEvents {
 
 			lines = prepareLinesTeammate(lines, matchActive, plugin, player);
 			lines.add("");
+			lines = prepareLinesTimeRefill(lines, plugin, matchActive);
 			lines = prepareLinesDeadAlive(lines, matchActive, plugin, playersDead);
 
 			break;
@@ -2429,6 +2436,8 @@ public class UtilsRandomEvents {
 			lines.add("");
 			lines = prepareLinesTime(lines, plugin, matchActive);
 			lines.add("");
+			lines = prepareLinesTimeRefill(lines, plugin, matchActive);
+
 			lines = prepareLinesDeadAliveTeam(lines, matchActive, plugin, playersDeadObj);
 			break;
 		case TSG:
@@ -2436,11 +2445,15 @@ public class UtilsRandomEvents {
 			lines.add("");
 			lines = prepareLinesTime(lines, plugin, matchActive);
 			lines.add("");
+			lines = prepareLinesTimeRefill(lines, plugin, matchActive);
+
 			lines = prepareLinesDeadAlive(lines, matchActive, plugin, playersDead);
 			break;
 		case SG:
 			lines = prepareLinesTime(lines, plugin, matchActive);
 			lines.add("");
+			lines = prepareLinesTimeRefill(lines, plugin, matchActive);
+
 			lines = prepareLinesDeadAlive(lines, matchActive, plugin, playersDead);
 			break;
 		case BATTLE_ROYALE:
@@ -2455,6 +2468,8 @@ public class UtilsRandomEvents {
 		case TNT_RUN:
 		case RACE:
 		case RED_GREEN_LIGHT:
+			lines = prepareLinesTimeRefill(lines, plugin, matchActive);
+
 			lines = prepareLinesDeadAlive(lines, matchActive, plugin, playersDead);
 			break;
 
@@ -2589,6 +2604,17 @@ public class UtilsRandomEvents {
 		return lines;
 	}
 
+	private static List<String> prepareLinesTimeRefill(List<String> lines, RandomEvents plugin,
+			MatchActive matchActive) {
+		if (matchActive.getMatch().getTimeRefill() != null && matchActive.getMatch().getTimeRefill() > 0) {
+			long seconds = (matchActive.getRefillDate() - new Date().getTime()) / 1000;
+			lines.add(plugin.getLanguage().getRefillTime());
+			lines.add(plugin.getLanguage().getScoreboardTime().replaceAll("%time%", calculateTimeTwoPoints(seconds)));
+			lines.add("");
+		}
+		return lines;
+	}
+
 	private static Player getPlayer(List<Player> playersTotalObj, String key) {
 		Player player = null;
 		for (Player p : playersTotalObj) {
@@ -2636,6 +2662,15 @@ public class UtilsRandomEvents {
 
 	private static List<String> prepareLinesTime(List<String> lines, RandomEvents plugin, MatchActive matchActive) {
 		long seconds = (matchActive.getEndDate() - new Date().getTime()) / 1000;
+		switch (matchActive.getMatch().getMinigame()) {
+		case TSG:
+		case SG:
+		case TSG_REAL:
+			lines.add(plugin.getLanguage().getShrinkTime());
+			break;
+		default:
+			break;
+		}
 		lines.add(plugin.getLanguage().getScoreboardTime().replaceAll("%time%", calculateTimeTwoPoints(seconds)));
 		return lines;
 	}
