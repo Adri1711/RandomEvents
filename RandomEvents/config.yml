@@ -170,6 +170,8 @@ forceNonEmptyTeams: true
 ##Seconds that a player is invincible after respawning in a top kill event (Put 0 to disable)
 invincibleAfterRespawn: 2
 
+##Flag to allow using glow on certains events
+activateGlow: false
 
 ##################################################################
 ##					    KNOCKBACK DUEL 		    				##
@@ -316,6 +318,9 @@ snowballSpleef: false
 
 ##Enable this to make a player lose when they fall into water in spleef minigames
 waterKillSpleef: false
+
+##Activate Idle damage on spleef to avoid afk camping
+activateIdleDamageSpleef: false
 
 ##################################################################
 ##					   ANVIL SPLEEF		    	  	    		##

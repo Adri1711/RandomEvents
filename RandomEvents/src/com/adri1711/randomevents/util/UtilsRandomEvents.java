@@ -815,8 +815,21 @@ public class UtilsRandomEvents {
 
 	public static Boolean teleportaPlayer(Player p, Location loc, RandomEvents plugin, Boolean comprueba) {
 		Boolean res = true;
+		if (plugin.getReventConfig().isDebugMode()) {
+			plugin.getLogger().info("Teleporting clauses 1: " + (comprueba ? "S" : "N"));
+			plugin.getLogger()
+					.info("Teleporting clauses 2: " + (plugin.getReventConfig().getUseLastLocation() ? "S" : "N"));
+
+		}
 		if (!comprueba || !plugin.getReventConfig().getUseLastLocation()) {
+
 			if (loc != null) {
+				if (plugin.getReventConfig().isDebugMode()) {
+					plugin.getLogger()
+							.info("Teleporting to: X:" + loc.getX() + ", Y: " + loc.getY() + ", Z: " + loc.getZ()
+									+ ", World: " + loc.getWorld() + ", World Name: " + loc.getWorld() == null
+											? "NullWorld" : loc.getWorld().getName());
+				}
 				p.setVelocity(new Vector(0, 0, 0));
 				try {
 					p.teleport(loc);
@@ -3325,7 +3338,7 @@ public class UtilsRandomEvents {
 
 	public static void addGlow(RandomEvents plugin, Player player, List<Player> receivers) {
 		if (plugin != null && plugin.getReventConfig() != null && plugin.getReventConfig().getIsLibsDisguises() != null
-				&& plugin.getReventConfig().getIsLibsDisguises()) {
+				&& plugin.getReventConfig().getIsLibsDisguises() && plugin.getReventConfig().isActivateGlow()) {
 			try {
 				UtilsDisguises.addGlow(player, plugin);
 			} catch (Throwable e) {
@@ -3336,7 +3349,7 @@ public class UtilsRandomEvents {
 
 	public static void removeGlow(RandomEvents plugin, Player player, List<Player> receivers) {
 		if (plugin != null && plugin.getReventConfig() != null && plugin.getReventConfig().getIsLibsDisguises() != null
-				&& plugin.getReventConfig().getIsLibsDisguises()) {
+				&& plugin.getReventConfig().getIsLibsDisguises() && plugin.getReventConfig().isActivateGlow()) {
 			try {
 				UtilsDisguises.removeGlow(player, plugin);
 			} catch (Throwable e) {

@@ -18,6 +18,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -62,7 +64,7 @@ public class Death implements Listener {
 										.get(player.getName()) <= now) {
 							plugin.getMatchActive().getPlayerHandler().getPlayersInvincible().remove(player.getName());
 						}
-						if (((player.getHealth() - ev.getFinalDamage()) <= 0)) {
+						if (((player.getHealth() - ev.getDamage()) <= 0)) {
 							if (!ev.isCancelled()) {
 								ev.setCancelled(true);
 
@@ -363,10 +365,11 @@ public class Death implements Listener {
 			}
 		}
 	}
+	
 
 	private void checkOtherDamage(Player player, EntityDamageByEntityEvent ev) {
 
-		if (((player.getHealth() - ev.getFinalDamage()) <= 0)) {
+		if (((player.getHealth() - ev.getDamage()) <= 0)) {
 
 			ev.setCancelled(true);
 			switch (plugin.getMatchActive().getMatch().getMinigame()) {
@@ -842,7 +845,7 @@ public class Death implements Listener {
 		} else {
 			if (plugin.getMatchActive().getPlayerHandler().getPlayers().contains(damager.getName())) {
 
-				if (((player.getHealth() - ev.getFinalDamage()) <= 0)) {
+				if (((player.getHealth() - ev.getDamage()) <= 0)) {
 
 					ev.setCancelled(true);
 					switch (plugin.getMatchActive().getMatch().getMinigame()) {
@@ -1223,8 +1226,8 @@ public class Death implements Listener {
 			ev.setCancelled(true);
 		} else {
 			if (plugin.getMatchActive().getPlayerHandler().getPlayers().contains(damager.getName())) {
-
-				if (((player.getHealth() - ev.getFinalDamage()) <= 0)) {
+				
+				if (((player.getHealth() - ev.getDamage()) <= 0)) {
 
 					ev.setCancelled(true);
 					switch (plugin.getMatchActive().getMatch().getMinigame()) {
@@ -1650,7 +1653,7 @@ public class Death implements Listener {
 		} else {
 			if (plugin.getMatchActive().getPlayerHandler().getPlayers().contains(damager.getName())) {
 
-				if (((player.getHealth() - ev.getFinalDamage()) <= 0)) {
+				if (((player.getHealth() - ev.getDamage()) <= 0)) {
 
 					ev.setCancelled(true);
 					switch (plugin.getMatchActive().getMatch().getMinigame()) {

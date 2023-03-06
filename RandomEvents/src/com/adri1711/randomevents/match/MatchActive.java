@@ -20,6 +20,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Chest;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Boat;
@@ -61,8 +62,6 @@ import com.adri1711.util.FastBoard;
 import com.adri1711.util.enums.Particle1711;
 import com.adri1711.util.enums.XMaterial;
 import com.adri1711.util.enums.XSound;
-
-import me.libraryaddict.disguise.disguisetypes.watchers.DroppedItemWatcher;
 
 public class MatchActive {
 
@@ -510,6 +509,7 @@ public class MatchActive {
 				}
 			}
 			if (comprueba) {
+
 				getPlayerHandler().getPlayersObj().remove(player);
 				getPlayerHandler().setPlayersObj(
 						UtilsRandomEvents.borraPlayerPorName(getPlayerHandler().getPlayersObj(), player));
@@ -549,6 +549,10 @@ public class MatchActive {
 				}
 			}
 			try {
+				if (plugin.getReventConfig().isDebugMode()) {
+					plugin.getLogger().info("Teleporting players.");
+				}
+
 				if (sacaSpectator || match.getSpectatorSpawns() == null || match.getSpectatorSpawns().isEmpty()) {
 					UtilsRandomEvents.invinciblePlayer(player, plugin);
 					res = UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin, true);
@@ -579,6 +583,7 @@ public class MatchActive {
 					}
 				}
 			}
+
 			if (sacaInv
 					&& (sacaSpectator || match.getSpectatorSpawns() == null || match.getSpectatorSpawns().isEmpty())) {
 				hazComandosDeSalir(player);
@@ -1136,6 +1141,7 @@ public class MatchActive {
 
 	public void finalizaPartida(List<Player> ganadores, Boolean abrupto, Boolean cancelled) {
 		setPlaying(Boolean.FALSE);
+		setCanBreak(Boolean.FALSE);
 		if (tournamentObj == null) {
 
 			for (Player p : getPlayerHandler().getPlayersSpectators()) {
@@ -1306,6 +1312,10 @@ public class MatchActive {
 
 		for (Entry<Location, MaterialData> entrada : getMapHandler().getBlockDisappeared().entrySet()) {
 			plugin.getApi().convertBlock(entrada.getKey(), entrada.getValue());
+		}
+
+		for (Entry<Location, Material> entrada : getMapHandler().getBlockDisappearedType().entrySet()) {
+			entrada.getKey().getBlock().setType(entrada.getValue());
 		}
 
 		hazComandosDeFin();
@@ -1710,6 +1720,15 @@ public class MatchActive {
 				}
 			};
 			task.runTaskTimer(plugin, 0, 120L);
+			if (plugin.getReventConfig().isActivateIdleDamageSpleef()) {
+				task2 = new BukkitRunnable() {
+					public void run() {
+
+						UtilsRandomEvents.checkDamageCounter(plugin, getMatchActive());
+					}
+				};
+				task2.runTaskTimer(plugin, 100L, 20L);
+			}
 			break;
 		case SPLEGG:
 			for (Player p : getPlayerHandler().getPlayersSpectators()) {
@@ -3424,10 +3443,22 @@ public class MatchActive {
 		Location location = p.getLocation();
 
 		if (plugin.getReventConfig().isDropItemsAfterDie() || forzar) {
+			List<ItemStack> contents = new ArrayList<ItemStack>();
+
 			for (ItemStack s : p.getInventory().getContents()) {
 				if (s != null) {
+					contents.add(s);
 					location.getWorld().dropItemNaturally(location, s);
 				}
+			}
+			try {
+				for (ItemStack s : p.getInventory().getArmorContents()) {
+					if (s != null && !contents.contains(s)) {
+						location.getWorld().dropItemNaturally(location, s);
+					}
+				}
+			} catch (Exception e) {
+
 			}
 		}
 

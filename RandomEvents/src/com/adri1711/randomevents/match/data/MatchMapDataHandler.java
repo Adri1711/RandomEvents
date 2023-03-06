@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Fireball;
 import org.bukkit.material.MaterialData;
 
@@ -27,6 +28,8 @@ public class MatchMapDataHandler {
 
 	private Map<Location, MaterialData> blockDisappeared;
 
+	private Map<Location, Material> blockDisappearedType;
+
 	private Map<Location, MaterialData> blockPlaced;
 
 	private Set<Fireball> fireballs;
@@ -35,6 +38,7 @@ public class MatchMapDataHandler {
 		super();
 		this.blockDisappear = new HashMap<Location, Long>();
 		this.blockDisappeared = new HashMap<Location, MaterialData>();
+		this.blockDisappearedType = new HashMap<Location, Material>();
 		this.blockPlaced = new HashMap<Location, MaterialData>();
 		this.checkpoints = new HashMap<String, Location>();
 		this.chests = new ArrayList<Location>();
@@ -96,6 +100,14 @@ public class MatchMapDataHandler {
 
 	public void setBlockDisappeared(Map<Location, MaterialData> blockDisappeared) {
 		this.blockDisappeared = blockDisappeared;
+	}
+
+	public Map<Location, Material> getBlockDisappearedType() {
+		return blockDisappearedType;
+	}
+
+	public void setBlockDisappearedType(Map<Location, Material> blockDisappearedType) {
+		this.blockDisappearedType = blockDisappearedType;
 	}
 
 	public Map<Location, MaterialData> getBlockPlaced() {

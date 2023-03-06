@@ -440,8 +440,6 @@ public class Use implements Listener {
 		}
 	}
 
-	
-
 	@EventHandler
 	public void onPlayerEggThrow(PlayerEggThrowEvent evt) {
 		Player player = evt.getPlayer();
@@ -587,8 +585,15 @@ public class Use implements Listener {
 						}
 						if (peto != null) {
 							if (addDisappear) {
-								plugin.getMatchActive().getMapHandler().getBlockDisappeared().put(loc,
-										loc.getBlock().getState().getData().clone());
+								if (!loc.getBlock().getState().getData().getItemType().toString().equals("LEGACY_AIR")
+										&& !loc.getBlock().getState().getData().getItemType().toString()
+												.equals("AIR")) {
+									plugin.getMatchActive().getMapHandler().getBlockDisappeared().put(loc,
+											loc.getBlock().getState().getData().clone());
+								} else {
+									plugin.getMatchActive().getMapHandler().getBlockDisappearedType().put(loc,
+											loc.getBlock().getType());
+								}
 							}
 							loc.getBlock().setType(peto.getWool().parseMaterial());
 							try {

@@ -41,13 +41,13 @@ public class ReventConfig {
 	private ItemStack checkpointItem;
 
 	private Integer invincibleAfterGame;
-	
+
 	private Boolean avoidSpectatorTp;
 
 	private Boolean useLastLocation;
 
 	private Integer numberOfTriesBeforeCancelling;
-	
+
 	private boolean avoidSnowballKnockback;
 	private boolean avoidEggKnockback;
 
@@ -102,7 +102,6 @@ public class ReventConfig {
 	private boolean useParticles;
 	private boolean forceGamemodeSurvival;
 	private boolean showInfoMinigameOnJoin;
-	
 
 	private Double particleSize;
 
@@ -340,8 +339,12 @@ public class ReventConfig {
 	private Boolean restrictWorlds;
 
 	private List<String> allowedWorlds;
-	
+
 	private Boolean teamMatchRandomRespawn;
+
+	private boolean activateGlow;
+
+	private boolean activateIdleDamageSpleef;
 
 	public ReventConfig(RandomEvents plugin) {
 		super();
@@ -420,7 +423,7 @@ public class ReventConfig {
 		this.sgAreaDamage = Double.valueOf(plugin.getConfig().getDouble("sgAreaDamage"));
 		this.restrictWorlds = plugin.getConfig().getBoolean("restrictWorlds");
 		this.teamMatchRandomRespawn = plugin.getConfig().getBoolean("teamMatchRandomRespawn");
-		
+
 		this.allowedWorlds = plugin.getConfig().getStringList("allowedWorlds");
 		this.bombardmentBombSpeed = Double.valueOf(plugin.getConfig().getDouble("bombardmentBombSpeed"));
 		this.bombardmentBombDirection = Double.valueOf(plugin.getConfig().getDouble("bombardmentBombDirection"));
@@ -431,7 +434,7 @@ public class ReventConfig {
 		this.inventoryManagement = plugin.getConfig().getBoolean("inventoryManagement");
 		this.avoidSnowballKnockback = plugin.getConfig().getBoolean("avoidSnowballKnockback");
 		this.avoidEggKnockback = plugin.getConfig().getBoolean("avoidEggKnockback");
-		
+
 		this.dropItemsAfterDie = plugin.getConfig().getBoolean("dropItemsAfterDie");
 		this.advancedSpectatorMode = plugin.getConfig().getBoolean("advancedSpectatorMode");
 
@@ -450,6 +453,8 @@ public class ReventConfig {
 		this.paintGiveDefaultWeapon = plugin.getConfig().getBoolean("paintGiveDefaultWeapon");
 		this.matchPrivateMatch = plugin.getConfig().getBoolean("matchPrivateMatch");
 		this.waterKillBombardment = plugin.getConfig().getBoolean("waterKillBombardment");
+		this.activateGlow = plugin.getConfig().getBoolean("activateGlow");
+		this.activateIdleDamageSpleef = plugin.getConfig().getBoolean("activateIdleDamageSpleef");
 		this.waterKillSpleef = plugin.getConfig().getBoolean("waterKillSpleef");
 		this.waterKillSplegg = plugin.getConfig().getBoolean("waterKillSplegg");
 		this.waterKillTNTRun = plugin.getConfig().getBoolean("waterKillTNTRun");
@@ -670,16 +675,16 @@ public class ReventConfig {
 		this.randomDisguisePlayers = plugin.getConfig().getBoolean("randomDisguisePlayers");
 		this.useLastLocation = plugin.getConfig().getBoolean("useLastLocation");
 		this.avoidSpectatorTp = plugin.getConfig().getBoolean("avoidSpectatorTp");
-		
+
 		this.optionalTitles = plugin.getConfig().getBoolean("optionalTitles");
 		this.showBorders = plugin.getConfig().getBoolean("showBorders");
 		this.useParticles = plugin.getConfig().getBoolean("useParticles");
 		this.forceGamemodeSurvival = plugin.getConfig().getBoolean("forceGamemodeSurvival");
 		this.showInfoMinigameOnJoin = plugin.getConfig().getBoolean("showInfoMinigameOnJoin");
-		
+
 		this.useScoreboard = plugin.getConfig().getBoolean("useScoreboard");
 		this.setProbabilityPowerUp(Integer.valueOf(plugin.getConfig().getInt("probabilityPowerUp")));
-		
+
 		plugin.setWaterDrops(UtilsRandomEvents.cargarWaterDrops(plugin));
 		plugin.setKits(UtilsRandomEvents.cargarKits(plugin));
 		plugin.setMatches(UtilsRandomEvents.cargarPartidas(plugin));
@@ -1746,6 +1751,22 @@ public class ReventConfig {
 
 	public void setWaterKillBombardment(boolean waterKillBombardment) {
 		this.waterKillBombardment = waterKillBombardment;
+	}
+
+	public boolean isActivateGlow() {
+		return activateGlow;
+	}
+
+	public void setActivateGlow(boolean activateGlow) {
+		this.activateGlow = activateGlow;
+	}
+
+	public boolean isActivateIdleDamageSpleef() {
+		return activateIdleDamageSpleef;
+	}
+
+	public void setActivateIdleDamageSpleef(boolean activateIdleDamageSpleef) {
+		this.activateIdleDamageSpleef = activateIdleDamageSpleef;
 	}
 
 	public int getOffSetYBombardment() {

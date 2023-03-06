@@ -9,6 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
+import org.spigotmc.event.entity.EntityDismountEvent;
 
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.match.enums.MinigameType;
@@ -35,6 +36,43 @@ public class Quit implements Listener {
 
 	}
 
+//	@EventHandler
+//	public void onExit(EntityDismountEvent e) {
+//		if (e.getDismounted() instanceof Horse || e.getDismounted() instanceof Boat) {
+//
+//			if (e.getEntity() instanceof Player) {
+//				Player p = (Player) e.getEntity();
+//
+//				if (plugin.getMatchActive() != null
+//						&& plugin.getMatchActive().getPlayerHandler().getPlayersObj().contains(p)) {
+//					switch (plugin.getMatchActive().getMatch().getMinigame()) {
+//					case BATTLE_ROYALE_CABALLO:
+//					case BOAT_RUN:
+//					case HORSE_RUN:
+//
+//						e.getDismounted().setPassenger(p);
+//						Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+//
+//							@Override
+//							public void run() {
+//								System.out.println("aaa-" + e.getDismounted().getPassenger());
+//								if (e.getDismounted().getPassenger() == null)
+//									e.getDismounted().setPassenger(p);
+//
+//							}
+//
+//						}, 2);
+//
+//						break;
+//					default:
+//						break;
+//					}
+//
+//				}
+//			}
+//		}
+//	}
+
 	@EventHandler
 	public void onExit(VehicleExitEvent e) {
 
@@ -49,17 +87,19 @@ public class Quit implements Listener {
 					case BATTLE_ROYALE_CABALLO:
 					case BOAT_RUN:
 					case HORSE_RUN:
-
+						e.setCancelled(true);
+						e.getVehicle().setPassenger(p);
 						Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 
 							@Override
 							public void run() {
 								if (e.getVehicle().getPassenger() == null)
-									e.getVehicle().setPassenger(e.getExited());
+									e.getVehicle().setPassenger(p);
 
 							}
 
 						}, 2);
+
 						break;
 					default:
 						break;
