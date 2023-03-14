@@ -623,6 +623,14 @@ public class Chat implements Listener {
 						}
 
 						break;
+						
+					case NUMBER_OF_SEEKERS:
+						Integer number2 = Integer.valueOf(message.trim());
+							match.setNumberOfSeekers(number2);
+							plugin.getPlayersCreation().remove(player.getName());
+						
+
+						break;
 					case SPAWN_PLAYER:
 						if (message.equalsIgnoreCase(Constantes.DONE)) {
 							match.setPlayerSpawn(player.getLocation());
@@ -742,12 +750,33 @@ public class Chat implements Listener {
 							}
 						}
 						break;
-					case COMMANDS_ON_START:
+					case COMMANDS_ON_START_OPTIONAL:
 						if (message.equalsIgnoreCase(Constantes.DONE)) {
 							plugin.getPlayersCreation().remove(player.getName());
 						} else {
 							match.getCommandsOnStart().add(message);
-							plugin.getPlayersCreation().put(player.getName(), Creacion.COMMANDS_ON_START.getPosition());
+							plugin.getPlayersCreation().put(player.getName(),
+									Creacion.COMMANDS_ON_START_OPTIONAL.getPosition());
+							actua = Boolean.FALSE;
+						}
+						break;
+					case COMMANDS_ON_KILL_OPTIONAL:
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
+							plugin.getPlayersCreation().remove(player.getName());
+						} else {
+							match.getCommandsOnKill().add(message);
+							plugin.getPlayersCreation().put(player.getName(),
+									Creacion.COMMANDS_ON_KILL_OPTIONAL.getPosition());
+							actua = Boolean.FALSE;
+						}
+						break;
+					case COMMANDS_ON_ELIMINATION_OPTIONAL:
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
+							plugin.getPlayersCreation().remove(player.getName());
+						} else {
+							match.getCommandsOnElimination().add(message);
+							plugin.getPlayersCreation().put(player.getName(),
+									Creacion.COMMANDS_ON_ELIMINATION_OPTIONAL.getPosition());
 							actua = Boolean.FALSE;
 						}
 						break;
@@ -1028,6 +1057,26 @@ public class Chat implements Listener {
 						break;
 					case REFILL_CHEST:
 						match.setTimeRefill(Integer.valueOf(message.trim()));
+						plugin.getPlayersCreation().remove(player.getName());
+
+						break;
+					case TIMER_BLOCK_DISAPPEAR:
+						match.setBlockTimer(Integer.valueOf(message.trim()));
+						plugin.getPlayersCreation().remove(player.getName());
+
+						break;
+					case TIMER_DECREASE_TIME:
+						match.setBlockDecreaseTimer(Integer.valueOf(message.trim()));
+						plugin.getPlayersCreation().remove(player.getName());
+
+						break;
+					case COLOR_APPEAR_TIME:
+						match.setColorTimer(Integer.valueOf(message.trim()));
+						plugin.getPlayersCreation().remove(player.getName());
+
+						break;
+					case COLOR_APPEAR_DECREASE_TIME:
+						match.setColorDecreaseTimer(Integer.valueOf(message.trim()));
 						plugin.getPlayersCreation().remove(player.getName());
 
 						break;

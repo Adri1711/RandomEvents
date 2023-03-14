@@ -59,6 +59,7 @@ public class Move implements Listener {
 							UtilsRandomEvents.mandaMensaje(plugin,
 									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
+							plugin.getMatchActive().hazComandosDeMuerte(null,player);
 							plugin.getMatchActive().echaDePartida(player, true, true, false);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 						}
@@ -72,6 +73,7 @@ public class Move implements Listener {
 							UtilsRandomEvents.mandaMensaje(plugin,
 									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
+							plugin.getMatchActive().hazComandosDeMuerte(null,player);
 							plugin.getMatchActive().echaDePartida(player, true, true, false);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 						}
@@ -85,6 +87,7 @@ public class Move implements Listener {
 							UtilsRandomEvents.mandaMensaje(plugin,
 									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
+							plugin.getMatchActive().hazComandosDeMuerte(null,player);
 							plugin.getMatchActive().echaDePartida(player, true, true, false);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 						}
@@ -98,6 +101,7 @@ public class Move implements Listener {
 							UtilsRandomEvents.mandaMensaje(plugin,
 									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
+							plugin.getMatchActive().hazComandosDeMuerte(null,player);
 							plugin.getMatchActive().echaDePartida(player, true, true, false);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 						}
@@ -112,6 +116,7 @@ public class Move implements Listener {
 							UtilsRandomEvents.mandaMensaje(plugin,
 									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
+							plugin.getMatchActive().hazComandosDeMuerte(null,player);
 							plugin.getMatchActive().echaDePartida(player, true, true, false);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 						}
@@ -128,6 +133,7 @@ public class Move implements Listener {
 							UtilsRandomEvents.mandaMensaje(plugin,
 									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
+							plugin.getMatchActive().hazComandosDeMuerte(null,player);
 							plugin.getMatchActive().echaDePartida(player, true, true, false);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 						}
@@ -143,6 +149,7 @@ public class Move implements Listener {
 							UtilsRandomEvents.mandaMensaje(plugin,
 									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
+							plugin.getMatchActive().hazComandosDeMuerte(null,player);
 							plugin.getMatchActive().echaDePartida(player, true, true, false);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 						}
@@ -240,6 +247,7 @@ public class Move implements Listener {
 							UtilsRandomEvents.mandaMensaje(plugin,
 									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
+							plugin.getMatchActive().hazComandosDeMuerte(null,player);
 							plugin.getMatchActive().echaDePartida(player, true, true, false);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 						}
@@ -312,6 +320,7 @@ public class Move implements Listener {
 							plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false, false,
 							false);
 					plugin.getMatchActive().getPlayerHandler().getPlayerToKill().remove(player);
+					plugin.getMatchActive().hazComandosDeMuerte(null,player);
 					plugin.getMatchActive().echaDePartida(player, true, true, false);
 					UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 

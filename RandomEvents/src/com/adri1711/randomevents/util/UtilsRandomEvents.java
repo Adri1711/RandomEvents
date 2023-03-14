@@ -23,6 +23,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,6 +85,38 @@ import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.google.common.io.Files;
 
 public class UtilsRandomEvents {
+
+	public static List<Location> getBlocksLocation(Location start, Location end, RandomEvents plugin) {
+		Set<Location> resetBlocks = new HashSet<Location>();
+
+		int topBlockX = (start.getBlockX() < end.getBlockX() ? end.getBlockX() : start.getBlockX());
+		int bottomBlockX = (start.getBlockX() > end.getBlockX() ? end.getBlockX() : start.getBlockX());
+
+		int topBlockY = (start.getBlockY() < end.getBlockY() ? end.getBlockY() : start.getBlockY());
+		int bottomBlockY = (start.getBlockY() > end.getBlockY() ? end.getBlockY() : start.getBlockY());
+
+		int topBlockZ = (start.getBlockZ() < end.getBlockZ() ? end.getBlockZ() : start.getBlockZ());
+		int bottomBlockZ = (start.getBlockZ() > end.getBlockZ() ? end.getBlockZ() : start.getBlockZ());
+
+		// mine.getAirBlocks().clear();
+
+		for (int x = bottomBlockX; x <= topBlockX; x++) {
+			for (int z = bottomBlockZ; z <= topBlockZ; z++) {
+				for (int y = bottomBlockY; y <= topBlockY; y++) {
+					Block block = start.getWorld().getBlockAt(x, y, z);
+					if (block != null && block.getType() != null
+							&& block.getType() == plugin.getReventConfig().getMaterialBlockParty()) {
+
+						resetBlocks.add(block.getLocation());
+					}
+
+				}
+			}
+		}
+		List<Location> listaResetBlocks = new ArrayList<Location>(resetBlocks);
+
+		return listaResetBlocks;
+	}
 
 	public static String preparaStringTiempo(Integer tiempo, RandomEvents plugin) {
 
@@ -1853,6 +1886,7 @@ public class UtilsRandomEvents {
 			matchActive.setDamageCounter(matchActive.getDamageCounter() + 1);
 		}
 		for (Player p : playerMuertos) {
+			plugin.getMatchActive().hazComandosDeMuerte(null, p);
 			matchActive.echaDePartida(p, true, true, false);
 		}
 
@@ -1910,7 +1944,7 @@ public class UtilsRandomEvents {
 			for (Creacion c : Creacion.getCreaciones(match)) {
 				if (!match.getMinigame().equals(MinigameType.WDROP)
 						|| (match.getMinigame().equals(MinigameType.WDROP) && !c.equals(Creacion.ARENA_SPAWNS))) {
-					info += Constantes.SALTO_LINEA + "§e§l " + c.getPosition() + " - " + c.toString();
+					info += Constantes.SALTO_LINEA + "§e§l " + c.getPosition() + " - " + c.getName();
 
 					switch (c) {
 
@@ -1953,9 +1987,25 @@ public class UtilsRandomEvents {
 						}
 
 						break;
-					case COMMANDS_ON_START:
+					case COMMANDS_ON_START_OPTIONAL:
 						if (match.getCommandsOnStart() != null && !match.getCommandsOnStart().isEmpty()) {
 							for (String s : match.getCommandsOnStart()) {
+								info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + s;
+							}
+						}
+
+						break;
+					case COMMANDS_ON_KILL_OPTIONAL:
+						if (match.getCommandsOnKill() != null && !match.getCommandsOnKill().isEmpty()) {
+							for (String s : match.getCommandsOnKill()) {
+								info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + s;
+							}
+						}
+
+						break;
+					case COMMANDS_ON_ELIMINATION_OPTIONAL:
+						if (match.getCommandsOnElimination() != null && !match.getCommandsOnElimination().isEmpty()) {
+							for (String s : match.getCommandsOnElimination()) {
 								info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + s;
 							}
 						}
@@ -1977,6 +2027,11 @@ public class UtilsRandomEvents {
 					case NUMBER_OF_TEAMS:
 						if (match.getNumberOfTeams() != null) {
 							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getNumberOfTeams();
+						}
+						break;
+					case NUMBER_OF_SEEKERS:
+						if (match.getNumberOfSeekers() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getNumberOfSeekers();
 						}
 						break;
 					case ID_NPC:
@@ -2057,6 +2112,28 @@ public class UtilsRandomEvents {
 					case REFILL_CHEST:
 						if (match.getTimeRefill() != null) {
 							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getTimeRefill();
+						}
+						break;
+					case TIMER_BLOCK_DISAPPEAR:
+						if (match.getBlockTimer() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getBlockTimer();
+						}
+						break;
+					case TIMER_DECREASE_TIME:
+						if (match.getBlockDecreaseTimer() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
+									+ match.getBlockDecreaseTimer();
+						}
+						break;
+					case COLOR_APPEAR_TIME:
+						if (match.getColorTimer() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 " + match.getColorTimer();
+						}
+						break;
+					case COLOR_APPEAR_DECREASE_TIME:
+						if (match.getColorDecreaseTimer() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
+									+ match.getColorDecreaseTimer();
 						}
 						break;
 					case SHRINK_BLOCKS:
@@ -2185,6 +2262,12 @@ public class UtilsRandomEvents {
 					res = Boolean.FALSE;
 				}
 				break;
+			case NUMBER_OF_SEEKERS:
+				if (match.getNumberOfSeekers() == null) {
+					res = Boolean.FALSE;
+				}
+				break;
+
 			case SPAWN_PLAYER:
 				if (match.getPlayerSpawn() == null) {
 					res = Boolean.FALSE;
@@ -2261,6 +2344,7 @@ public class UtilsRandomEvents {
 
 				}
 				break;
+
 			case ARROW_LOCATION2:
 			case GEM_LOCATION2:
 			case KOTH_LOCATION2:
@@ -2300,6 +2384,26 @@ public class UtilsRandomEvents {
 				break;
 			case WATER_DROP_SCENES:
 				if (match.getScenes() == null || match.getScenes().isEmpty()) {
+					res = Boolean.FALSE;
+				}
+				break;
+			case TIMER_BLOCK_DISAPPEAR:
+				if (match.getBlockTimer() == null) {
+					res = Boolean.FALSE;
+				}
+				break;
+			case TIMER_DECREASE_TIME:
+				if (match.getBlockDecreaseTimer() == null) {
+					res = Boolean.FALSE;
+				}
+				break;
+			case COLOR_APPEAR_TIME:
+				if (match.getColorTimer() == null) {
+					res = Boolean.FALSE;
+				}
+				break;
+			case COLOR_APPEAR_DECREASE_TIME:
+				if (match.getColorDecreaseTimer() == null) {
 					res = Boolean.FALSE;
 				}
 				break;
@@ -2469,6 +2573,14 @@ public class UtilsRandomEvents {
 
 			lines = prepareLinesDeadAlive(lines, matchActive, plugin, playersDead);
 			break;
+		case BLOCK_PARTY:
+			lines = prepareLinesRounds(lines, plugin, matchActive);
+			lines.add("");
+			lines = prepareLinesTime(lines, plugin, matchActive);
+			lines.add("");
+
+			lines = prepareLinesDeadAlive(lines, matchActive, plugin, playersDead);
+			break;
 		case BATTLE_ROYALE:
 		case BATTLE_ROYALE_CABALLO:
 		case ESCAPE_ARROW:
@@ -2488,6 +2600,13 @@ public class UtilsRandomEvents {
 
 		case ESCAPE_FROM_BEAST:
 			lines = prepareLinesBeast(lines, matchActive, plugin, player);
+			lines.add("");
+			lines = prepareLinesDeadAlive(lines, matchActive, plugin, playersDead);
+			break;
+		case HIDE_AND_SEEK:
+			lines = prepareLinesSeekers(lines, matchActive, plugin, player);
+			lines.add("");
+			lines = prepareLinesTime(lines, plugin, matchActive);
 			lines.add("");
 			lines = prepareLinesDeadAlive(lines, matchActive, plugin, playersDead);
 			break;
@@ -2614,6 +2733,25 @@ public class UtilsRandomEvents {
 			}
 		}
 		lines = linesFormated;
+		return lines;
+	}
+
+	private static List<String> prepareLinesRounds(List<String> lines, RandomEvents plugin, MatchActive matchActive) {
+		lines.add(plugin.getLanguage().getScoreboardRound().replaceAll("%round%", ""+matchActive.getRounds()));
+		return lines;
+	}
+
+	private static List<String> prepareLinesSeekers(List<String> lines, MatchActive matchActive, RandomEvents plugin,
+			Player player) {
+		if (matchActive.getPlayerHandler().getEquipos() == null
+				|| matchActive.getPlayerHandler().getEquipos().size() < 2) {
+			lines.add(plugin.getLanguage().getScoreboardSeekers().replaceAll("%name%", "-"));
+		} else {
+			for (Player p : matchActive.getPlayerHandler().getEquipos().get(0)) {
+				lines.add(plugin.getLanguage().getScoreboardSeekers().replaceAll("%name%", p.getName()));
+			}
+
+		}
 		return lines;
 	}
 
@@ -3337,8 +3475,11 @@ public class UtilsRandomEvents {
 	}
 
 	public static void addGlow(RandomEvents plugin, Player player, List<Player> receivers) {
-		if (plugin != null && plugin.getReventConfig() != null && plugin.getReventConfig().getIsLibsDisguises() != null
-				&& plugin.getReventConfig().getIsLibsDisguises() && plugin.getReventConfig().isActivateGlow()) {
+		// if (plugin != null && plugin.getReventConfig() != null &&
+		// plugin.getReventConfig().getIsLibsDisguises() != null
+		// && plugin.getReventConfig().getIsLibsDisguises() &&
+		// plugin.getReventConfig().isActivateGlow()) {
+		if (plugin.getReventConfig().isActivateGlow()) {
 			try {
 				UtilsDisguises.addGlow(player, plugin);
 			} catch (Throwable e) {
@@ -3348,8 +3489,12 @@ public class UtilsRandomEvents {
 	}
 
 	public static void removeGlow(RandomEvents plugin, Player player, List<Player> receivers) {
-		if (plugin != null && plugin.getReventConfig() != null && plugin.getReventConfig().getIsLibsDisguises() != null
-				&& plugin.getReventConfig().getIsLibsDisguises() && plugin.getReventConfig().isActivateGlow()) {
+		// if (plugin != null && plugin.getReventConfig() != null &&
+		// plugin.getReventConfig().getIsLibsDisguises() != null
+		// && plugin.getReventConfig().getIsLibsDisguises() &&
+		// plugin.getReventConfig().isActivateGlow()) {
+		if (plugin.getReventConfig().isActivateGlow()) {
+
 			try {
 				UtilsDisguises.removeGlow(player, plugin);
 			} catch (Throwable e) {
@@ -3362,6 +3507,47 @@ public class UtilsRandomEvents {
 		if (plugin.getReventConfig().getInvincibleAfterGame() > 0) {
 			player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,
 					plugin.getReventConfig().getInvincibleAfterGame(), 20));
+		}
+
+	}
+
+	public static Map<XMaterial, List<Location>> replaceAllBlocks(List<Location> blockPartyBlocks,
+			List<XMaterial> blocksBlockParty) {
+		Random r = new Random();
+		Map<XMaterial, List<Location>> mapa = new HashMap<XMaterial, List<Location>>();
+		for (Location l : blockPartyBlocks) {
+			XMaterial xmat = blocksBlockParty.get(r.nextInt(blocksBlockParty.size()));
+			try {
+				l.getBlock().setType(xmat.parseMaterial());
+				l.getBlock().setData(xmat.getData());
+			} catch (Exception | NoSuchMethodError e) {
+				try {
+					l.getBlock().getState().setData(new MaterialData(xmat.parseMaterial()));
+				} catch (Exception | NoSuchMethodError e2) {
+					l.getBlock().setType(xmat.parseMaterial());
+
+				}
+			}
+			List<Location> locations = new ArrayList<Location>();
+			if (mapa.containsKey(xmat)) {
+				locations = mapa.get(xmat);
+			}
+			locations.add(l);
+			mapa.put(xmat, locations);
+
+		}
+
+		return mapa;
+	}
+
+	public static void replaceAirBlocks(List<Location> blockPartyBlocks) {
+		for (Location l : blockPartyBlocks) {
+			try {
+				l.getBlock().setType(Material.AIR);
+			} catch (Exception e) {
+				l.getBlock().getState().setData(new MaterialData(Material.AIR));
+			}
+
 		}
 
 	}

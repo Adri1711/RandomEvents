@@ -346,6 +346,11 @@ public class ReventConfig {
 
 	private boolean activateIdleDamageSpleef;
 
+	private Material materialBlockParty;
+	private List<XMaterial> blocksBlockParty;
+
+	private XMaterial waitItemPartyMaterial;
+
 	public ReventConfig(RandomEvents plugin) {
 		super();
 		this.plugin = plugin;
@@ -425,6 +430,17 @@ public class ReventConfig {
 		this.teamMatchRandomRespawn = plugin.getConfig().getBoolean("teamMatchRandomRespawn");
 
 		this.allowedWorlds = plugin.getConfig().getStringList("allowedWorlds");
+		blocksBlockParty = new ArrayList<XMaterial>();
+		List<String> bpBlocks = plugin.getConfig().getStringList("blockPartyBlocks");
+		if (bpBlocks != null) {
+			for (String s : bpBlocks) {
+				XMaterial xmat = XMaterial.valueOf(s);
+				if (xmat != null) {
+					blocksBlockParty.add(xmat);
+				}
+			}
+		}
+
 		this.bombardmentBombSpeed = Double.valueOf(plugin.getConfig().getDouble("bombardmentBombSpeed"));
 		this.bombardmentBombDirection = Double.valueOf(plugin.getConfig().getDouble("bombardmentBombDirection"));
 
@@ -437,7 +453,8 @@ public class ReventConfig {
 
 		this.dropItemsAfterDie = plugin.getConfig().getBoolean("dropItemsAfterDie");
 		this.advancedSpectatorMode = plugin.getConfig().getBoolean("advancedSpectatorMode");
-
+		this.materialBlockParty = Material.getMaterial(plugin.getConfig().getString("blockPartyMaterial"));
+		this.waitItemPartyMaterial = XMaterial.valueOf(plugin.getConfig().getString("waitItemPartyMaterial"));
 		this.commandsOnEventFire = (List<String>) plugin.getConfig().getStringList("commandsOnEventFire");
 		this.commandsOnUserJoin = (List<String>) plugin.getConfig().getStringList("commandsOnUserJoin");
 		this.commandsOnKill = (List<String>) plugin.getConfig().getStringList("commandsOnKill");
@@ -2096,5 +2113,30 @@ public class ReventConfig {
 	public void setSgAreaShrinkBlocks(Integer sgAreaShrinkBlocks) {
 		this.sgAreaShrinkBlocks = sgAreaShrinkBlocks;
 	}
+
+	public Material getMaterialBlockParty() {
+		return materialBlockParty;
+	}
+
+	public void setMaterialBlockParty(Material materialBlockParty) {
+		this.materialBlockParty = materialBlockParty;
+	}
+
+	public List<XMaterial> getBlocksBlockParty() {
+		return blocksBlockParty;
+	}
+
+	public void setBlocksBlockParty(List<XMaterial> blocksBlockParty) {
+		this.blocksBlockParty = blocksBlockParty;
+	}
+
+	public XMaterial getWaitItemPartyMaterial() {
+		return waitItemPartyMaterial;
+	}
+
+	public void setWaitItemPartyMaterial(XMaterial waitItemPartyMaterial) {
+		this.waitItemPartyMaterial = waitItemPartyMaterial;
+	}
+	
 
 }

@@ -71,6 +71,7 @@ public class WeaponShoot implements Listener {
 											UtilsRandomEvents.doCommandsKill(damager,plugin);
 											UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_VILLAGER_DEATH);
 											UtilsRandomEvents.playSound(plugin,damager, XSound.ENTITY_PLAYER_LEVELUP);
+											plugin.getMatchActive().hazComandosDeMuerte(damager,player);
 											plugin.getMatchActive().echaDePartida(player, true, true, false, true,
 													true);
 											player.setHealth(player.getMaxHealth());
@@ -81,6 +82,7 @@ public class WeaponShoot implements Listener {
 									case BATTLE_ROYALE_CABALLO:
 									case BATTLE_ROYALE_TEAM_2:
 									case BATTLE_ROYALE_TEAMS:
+									case HIDE_AND_SEEK:
 									case PAINTBALL:
 										UtilsRandomEvents.mandaMensaje(plugin,
 												plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
@@ -91,6 +93,7 @@ public class WeaponShoot implements Listener {
 										UtilsRandomEvents.doCommandsKill(damager,plugin);
 										UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_VILLAGER_DEATH);
 										UtilsRandomEvents.playSound(plugin,damager, XSound.ENTITY_PLAYER_LEVELUP);
+										plugin.getMatchActive().hazComandosDeMuerte(damager,player);
 										plugin.getMatchActive().echaDePartida(player, true, true, false);
 										player.setHealth(player.getMaxHealth());
 
@@ -258,6 +261,7 @@ public class WeaponShoot implements Listener {
 												UtilsRandomEvents.doCommandsKill(damager,plugin);
 												UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_VILLAGER_DEATH);
 												UtilsRandomEvents.playSound(plugin,damager, XSound.ENTITY_PLAYER_LEVELUP);
+												plugin.getMatchActive().hazComandosDeMuerte(damager,player);
 												plugin.getMatchActive().echaDePartida(player, true, true, false);
 												player.setHealth(player.getMaxHealth());
 
@@ -295,6 +299,7 @@ public class WeaponShoot implements Listener {
 									case BATTLE_ROYALE_CABALLO:
 									case BATTLE_ROYALE_TEAM_2:
 									case BATTLE_ROYALE_TEAMS:
+									case HIDE_AND_SEEK:
 									case PAINTBALL:
 									case TOP_KILLER:
 									case TOP_KILLER_TEAM_2:
@@ -421,7 +426,7 @@ public class WeaponShoot implements Listener {
 											false);
 
 									UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_VILLAGER_DEATH);
-
+									plugin.getMatchActive().hazComandosDeMuerte(null,player);
 									plugin.getMatchActive().echaDePartida(player, true, true, false, true, true);
 									player.setHealth(player.getMaxHealth());
 								}
@@ -431,6 +436,7 @@ public class WeaponShoot implements Listener {
 							case BATTLE_ROYALE_CABALLO:
 							case BATTLE_ROYALE_TEAM_2:
 							case BATTLE_ROYALE_TEAMS:
+							case HIDE_AND_SEEK:
 							case PAINTBALL:
 							case ESCAPE_ARROW:
 							case ANVIL_SPLEEF:
@@ -441,6 +447,7 @@ public class WeaponShoot implements Listener {
 										plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 										plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()),
 										false);
+								plugin.getMatchActive().hazComandosDeMuerte(null,player);
 								plugin.getMatchActive().echaDePartida(player, true, true, false);
 								player.setHealth(player.getMaxHealth());
 
@@ -452,6 +459,7 @@ public class WeaponShoot implements Listener {
 										plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 										plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()),
 										false);
+								plugin.getMatchActive().hazComandosDeMuerte(null,player);
 								plugin.getMatchActive().echaDePartida(player, true, true, false);
 								player.setHealth(player.getMaxHealth());
 								break;
@@ -752,6 +760,7 @@ public class WeaponShoot implements Listener {
 							case BATTLE_ROYALE_CABALLO:
 							case BATTLE_ROYALE_TEAM_2:
 							case BATTLE_ROYALE_TEAMS:
+							case HIDE_AND_SEEK:
 							case PAINTBALL:
 							case TOP_KILLER:
 							case TOP_KILLER_TEAM_2:
@@ -791,6 +800,7 @@ public class WeaponShoot implements Listener {
 											plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 											plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()),
 											false);
+									plugin.getMatchActive().hazComandosDeMuerte(null,player);
 									plugin.getMatchActive().echaDePartida(player, true, true, false);
 									player.setHealth(player.getMaxHealth());
 								} else {

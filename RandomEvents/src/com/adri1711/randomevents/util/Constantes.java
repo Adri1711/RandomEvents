@@ -167,8 +167,7 @@ public class Constantes {
 		CMD_RESET_TRIES_GAME_PLAYER("resetTriesGamePlayer", "menu.admin.resetTriesGamePlayer",
 				"   &6/revent resettries <game> <player>:\n          &e-> Reset all tries for a game and a player "),
 
-		CMD_RESET_WINS("resetWins", "menu.admin.resetWins",
-				"   &6/revent resetwins:\n          &e-> Reset all wins "),
+		CMD_RESET_WINS("resetWins", "menu.admin.resetWins", "   &6/revent resetwins:\n          &e-> Reset all wins "),
 
 		CMD_RESET_WINS_PLAYER("resetWinsPlayerCMD", "menu.admin.resetWinsPlayer",
 				"   &6/revent resetwins <player>:\n          &e-> Reset all wins for a player "),
@@ -178,9 +177,6 @@ public class Constantes {
 
 		CMD_RESET_WINS_GAME_PLAYER("resetWinsGamePlayer", "menu.admin.resetWinsGamePlayer",
 				"   &6/revent resetwins <game> <player>:\n          &e-> Reset all wins for a game and a player "),
-
-		
-		
 
 		CMD_RELOAD("reload", "menu.admin.reload", "   &6/revent reload:\n          &e-> Reload the plugin"),
 
@@ -216,12 +212,11 @@ public class Constantes {
 				"&c&lEvent cant be created, it lacks information, check the fields again "),
 
 		SHRINK("shrink", "comun.shrink", "&c&lMap border shrinking in %time% seconds"),
-		
-		
+
 		REFILL("refill", "comun.refill", "&e&lChest have been refilled."),
-		
+
 		REFILL_TIME("refillTime", "comun.refillTime", "&a&lRefill time:"),
-		
+
 		SHRINK_TIME("shrinkTime", "comun.shrinkTime", "&a&lShrink time:"),
 
 		WARMUP_END("warmupEnd", "comun.warmupEnd", "&c&lWarmup end in %time% seconds"),
@@ -274,9 +269,9 @@ public class Constantes {
 		SPAWN_SET("spawnSet", "comun.spawnSet", "&6&lYou have set the spawn succesfully"),
 
 		NOT_IN_MATCH("notInMatch", "match.notInMatch", "&c&lYou are not in an event"),
-		
+
 		MATCH_JOIN("matchJoin", "match.matchJoin", "&6&l[+] %player%"),
-		
+
 		MATCH_LEAVE("matchLeave", "match.matchLeave", "&c&l[-] %player%"),
 
 		WIN_RANDOM_EVENTS("winRandomEvents", "match.winRandomEvents", "&6&lCongratulations! You won the event"),
@@ -417,7 +412,11 @@ public class Constantes {
 
 		SCOREBOARD_BEAST_FORMAT("scoreboardBeast", "scoreboard.beast", "&6Beast: &e%name%"),
 
+		SCOREBOARD_SEEKERS_FORMAT("scoreboardSeekers", "scoreboard.seekers", "&6Seeker: &e%name%"),
+
 		SCOREBOARD_HOLDER_FORMAT("scoreboardHolder", "scoreboard.holder", "&6Holder: &e%name%"),
+
+		SCOREBOARD_ROUND_FORMAT("scoreboardRound", "scoreboard.round", "&3Round: &e%round%"),
 
 		SCOREBOARD_TIME_FORMAT("scoreboardTime", "scoreboard.time", "&b%time%"),
 
@@ -458,9 +457,11 @@ public class Constantes {
 
 		RESET_WINS("resetWinsAll", "comun.resetWinsAll", "&6&lThe wins have been deleted for all players"),
 
-		RESET_COINS_PLAYER("resetCoinsPlayer", "comun.resetCoinsPlayer", "&6&lThe coins have been deleted for %player%"),
+		RESET_COINS_PLAYER("resetCoinsPlayer", "comun.resetCoinsPlayer",
+				"&6&lThe coins have been deleted for %player%"),
 
-		RESET_TRIES_PLAYER("resetTriesPlayer", "comun.resetTriesPlayer", "&6&lThe tries have been deleted for %player%"),
+		RESET_TRIES_PLAYER("resetTriesPlayer", "comun.resetTriesPlayer",
+				"&6&lThe tries have been deleted for %player%"),
 
 		RESET_WINS_PLAYER("resetWinsPlayer", "comun.resetWinsPlayer", "&6&lThe wins have been deleted for %player%"),
 
@@ -556,6 +557,10 @@ public class Constantes {
 
 		NAME_REALTEAMSURVIVALGAMES("nameRealTeamSurvivalGames", "minigameName.TeamSurvivalGames",
 				"Team Survival Games"),
+
+		NAME_BLOCKPARTY("nameBlockParty", "minigameName.BlockParty", "Block Party"),
+
+		NAME_HIDEANDSEEK("nameHideAndSeek", "minigameName.HideAndSeek", "Hide and Seek"),
 
 		MINIGAME_DESC_BR("minigameDescriptionBR", "minigame.description.BR",
 				"&eA fierce battle where just 1 player;&e or team can remain alive."),
@@ -664,7 +669,13 @@ public class Constantes {
 				"&eBe the first to reach the goal, but watch out;&e just walk when the music is on."),
 
 		MINIGAME_DESC_BOMBARDMENT("minigameDescriptionBOMBARDMENT", "minigame.description.BOMBARDMENT",
-				"&eAvoid;&e the fireballs to win the match!");
+				"&eAvoid;&e the fireballs to win the match!"),
+
+		MINIGAME_DESC__BLOCKPARTY("minigameDescriptionBLOCKPARTY", "minigame.description.BLOCKPARTY",
+				"&eTry not to fall when the blocks disappear;&eSearch the block with the correct colors and stay alive;&e until your win!"),
+
+		MINIGAME_DESC__HIDEANDSEEK("minigameDescriptionHIDEANDSEEK", "minigame.description.HIDEANDSEEK",
+				"&eHide from the seekers or maybe be;&ethe seeker to kill every hider on the map;&e to win your match!");
 
 		private String javaField;
 		private String ymlField;

@@ -174,6 +174,7 @@ public class LanguageMessages {
 	private String scoreboardTeammate;
 	private String scoreboardTime;
 	private String scoreboardBeast;
+	private String scoreboardSeekers;
 	private String scoreboardHolder;
 	private String scoreboardStep;
 	private String scoreboardTeamAlive;
@@ -245,6 +246,7 @@ public class LanguageMessages {
 	private String minutesFormat;
 	private String secondsFormat;
 
+	private String scoreboardRound;
 	private String nameBattleRoyale;
 	private String nameTeamBattleRoyale;
 	private String nameKnightsBattle;
@@ -274,6 +276,8 @@ public class LanguageMessages {
 	private String nameKingHill;
 	private String nameFishSlap;
 	private String nameHoehoehoe;
+	private String nameBlockParty;
+	private String nameHideAndSeek;
 	private String nameSplatoon;
 	private String nameBombardment;
 	private String nameRedGreenLight;
@@ -321,6 +325,8 @@ public class LanguageMessages {
 	private List<String> minigameDescriptionTKLLTEAMS;
 	private List<String> minigameDescriptionBRTEAMS;
 	private List<String> minigameDescriptionPBALLTK;
+	private List<String> minigameDescriptionBLOCKPARTY;
+	private List<String> minigameDescriptionHIDEANDSEEK;
 
 	public LanguageMessages(RandomEvents plugin) {
 		this.file = new File(plugin.getDataFolder(), "messages.yml");
@@ -4122,6 +4128,32 @@ public class LanguageMessages {
 		this.scoreboardBeast = scoreboardBeast;
 	}
 
+	public String getScoreboardSeekers() {
+		String s = scoreboardSeekers;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		s = s.replaceAll("\\\\n", Constantes.SALTO_LINEA);
+		return s;
+	}
+
+	public void setScoreboardSeekers(String scoreboardSeekers) {
+		this.scoreboardSeekers = scoreboardSeekers;
+	}
+
 	public String getScoreboardHolder() {
 		String s = scoreboardHolder;
 		try {
@@ -6424,6 +6456,32 @@ public class LanguageMessages {
 		return s;
 	}
 
+	public String getScoreboardRound() {
+		String s = scoreboardRound;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		s = s.replaceAll("\\\\n", Constantes.SALTO_LINEA);
+		return s;
+	}
+
+	public void setScoreboardRound(String scoreboardRound) {
+		this.scoreboardRound = scoreboardRound;
+	}
+
 	public String getSecondsFormat() {
 		String s = secondsFormat;
 		try {
@@ -6634,6 +6692,22 @@ public class LanguageMessages {
 		this.minigameDescriptionPBALLTK = minigameDescriptionPBALLTK;
 	}
 
+	public List<String> getMinigameDescriptionBLOCKPARTY() {
+		return minigameDescriptionBLOCKPARTY;
+	}
+
+	public void setMinigameDescriptionBLOCKPARTY(List<String> minigameDescriptionBLOCKPARTY) {
+		this.minigameDescriptionBLOCKPARTY = minigameDescriptionBLOCKPARTY;
+	}
+
+	public List<String> getMinigameDescriptionHIDEANDSEEK() {
+		return minigameDescriptionHIDEANDSEEK;
+	}
+
+	public void setMinigameDescriptionHIDEANDSEEK(List<String> minigameDescriptionHIDEANDSEEK) {
+		this.minigameDescriptionHIDEANDSEEK = minigameDescriptionHIDEANDSEEK;
+	}
+
 	public List<String> getMinigameDescriptionREDGREEN() {
 		return minigameDescriptionREDGREEN;
 	}
@@ -6662,6 +6736,58 @@ public class LanguageMessages {
 		}
 		s = s.replaceAll("\\\\n", Constantes.SALTO_LINEA);
 		return s;
+	}
+
+	public String getNameBlockParty() {
+		String s = nameBlockParty;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		s = s.replaceAll("\\\\n", Constantes.SALTO_LINEA);
+		return s;
+	}
+
+	public String getNameHideAndSeek() {
+		String s = nameHideAndSeek;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		s = s.replaceAll("\\\\n", Constantes.SALTO_LINEA);
+		return s;
+	}
+
+	public void setNameBlockParty(String nameBlockParty) {
+		this.nameBlockParty = nameBlockParty;
+	}
+
+	public void setNameHideAndSeek(String nameHideAndSeek) {
+		this.nameHideAndSeek = nameHideAndSeek;
 	}
 
 	public void setGreenRedLightMove(String greenRedLightMove) {

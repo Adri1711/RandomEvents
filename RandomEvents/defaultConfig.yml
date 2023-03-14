@@ -366,6 +366,30 @@ splatoonRadius: 2
 splatoonEggDamage: 5
 
 ##################################################################
+##					     BLOCK PARTY	    	  	    		##
+##################################################################
+
+##Material on the map that will be replaced by the blockPartyBlocks
+blockPartyMaterial: 'WHITE_WOOL'
+
+##Material for the wait item
+waitItemPartyMaterial: 'TERRACOTTA'
+
+##Blocks to use in BlockParty as colors
+blockPartyBlocks:
+    - 'BLUE_TERRACOTTA'
+    - 'BROWN_TERRACOTTA'
+    - 'CYAN_TERRACOTTA'
+    - 'GREEN_TERRACOTTA'  
+    - 'LIGHT_BLUE_TERRACOTTA'
+    - 'LIME_TERRACOTTA'
+    - 'MAGENTA_TERRACOTTA'
+    - 'ORANGE_TERRACOTTA'
+    - 'PINK_TERRACOTTA'
+    - 'PURPLE_TERRACOTTA'
+    - 'RED_TERRACOTTA'
+
+##################################################################
 ##					 GREEN LIGHT RED LIGHT 	    				##
 ##################################################################
 
@@ -492,6 +516,8 @@ statsmenu:
   TSGTEAMS: 51
   TSWTEAMS: 52
   REDGREEN: 49
+  BLOCKPARTY: -1
+  HIDEANDSEEK: -1
 
 ##################################################################
 ##					     MYSQL CONFIG   	    				##

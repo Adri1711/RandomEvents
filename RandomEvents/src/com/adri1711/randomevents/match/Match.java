@@ -72,11 +72,14 @@ public class Match implements Comparable<Match> {
 	
 	private List<String> kits;
 	private List<String> commandsOnStart;
+	private List<String> commandsOnKill;
+	private List<String> commandsOnElimination;
 
 	private Boolean enabled;
 	private Boolean enabledSchedule;
 	
 	private Integer numberOfTeams;
+	private Integer numberOfSeekers;
 	private Integer NPCId;
 	
 	private Integer shrinkBlocks;
@@ -84,6 +87,11 @@ public class Match implements Comparable<Match> {
 	private GameMode gamemode;
 	
 	private ItemStack head;
+	
+	private Integer blockTimer;
+	private Integer blockDecreaseTimer;
+	private Integer colorTimer;
+	private Integer colorDecreaseTimer;
 
 	public Match() {
 		super();
@@ -97,6 +105,8 @@ public class Match implements Comparable<Match> {
 		this.scenes = new ArrayList<String>();
 		this.kits = new ArrayList<String>();
 		this.commandsOnStart = new ArrayList<String>();
+		this.commandsOnKill = new ArrayList<String>();
+		this.commandsOnElimination = new ArrayList<String>();
 		this.useOwnInventory=false;
 		this.allMaterialAllowed=false;
 	}
@@ -519,6 +529,15 @@ public class Match implements Comparable<Match> {
 		this.numberOfTeams = numberOfTeams;
 	}
 
+	
+	public Integer getNumberOfSeekers() {
+		return numberOfSeekers;
+	}
+
+	public void setNumberOfSeekers(Integer numberOfSeekers) {
+		this.numberOfSeekers = numberOfSeekers;
+	}
+
 	public ItemStack getHead() {
 		return head;
 	}
@@ -551,12 +570,60 @@ public class Match implements Comparable<Match> {
 		this.commandsOnStart = commandsOnStart;
 	}
 
+	public List<String> getCommandsOnKill() {
+		return commandsOnKill;
+	}
+
+	public void setCommandsOnKill(List<String> commandsOnKill) {
+		this.commandsOnKill = commandsOnKill;
+	}
+
+	public List<String> getCommandsOnElimination() {
+		return commandsOnElimination;
+	}
+
+	public void setCommandsOnElimination(List<String> commandsOnElimination) {
+		this.commandsOnElimination = commandsOnElimination;
+	}
+
 	public Integer getShrinkBlocks() {
 		return shrinkBlocks;
 	}
 
 	public void setShrinkBlocks(Integer shrinkBlocks) {
 		this.shrinkBlocks = shrinkBlocks;
+	}
+
+	public Integer getBlockTimer() {
+		return blockTimer;
+	}
+
+	public void setBlockTimer(Integer blockTimer) {
+		this.blockTimer = blockTimer;
+	}
+
+	public Integer getBlockDecreaseTimer() {
+		return blockDecreaseTimer;
+	}
+
+	public void setBlockDecreaseTimer(Integer blockDecreaseTimer) {
+		this.blockDecreaseTimer = blockDecreaseTimer;
+	}
+
+	public Integer getColorTimer() {
+		return colorTimer;
+	}
+
+	public void setColorTimer(Integer colorTimer) {
+		this.colorTimer = colorTimer;
+	}
+
+	public Integer getColorDecreaseTimer() {
+		return colorDecreaseTimer;
+	}
+
+	public void setColorDecreaseTimer(Integer colorDecreaseTimer) {
+		this.colorDecreaseTimer = colorDecreaseTimer;
 	}
 
 	

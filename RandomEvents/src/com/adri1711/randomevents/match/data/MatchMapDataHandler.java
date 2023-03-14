@@ -34,6 +34,8 @@ public class MatchMapDataHandler {
 
 	private Set<Fireball> fireballs;
 
+	private List<Location> blockPartyBlocks;
+
 	public MatchMapDataHandler() {
 		super();
 		this.blockDisappear = new HashMap<Location, Long>();
@@ -43,6 +45,7 @@ public class MatchMapDataHandler {
 		this.checkpoints = new HashMap<String, Location>();
 		this.chests = new ArrayList<Location>();
 		this.fireballs = new HashSet<Fireball>();
+		this.blockPartyBlocks = new ArrayList<Location>();
 
 	}
 
@@ -116,6 +119,15 @@ public class MatchMapDataHandler {
 
 	public void setBlockPlaced(Map<Location, MaterialData> blockPlaced) {
 		this.blockPlaced = blockPlaced;
+	}
+
+	public void setBlockPartyBlocks(List<Location> blocksLocation) {
+		this.blockPartyBlocks = new ArrayList<Location>(blocksLocation);
+
+	}
+
+	public List<Location> getBlockPartyBlocks() {
+		return blockPartyBlocks;
 	}
 
 }
