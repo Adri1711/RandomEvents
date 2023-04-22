@@ -98,6 +98,7 @@ public class WeaponShoot implements Listener {
 										player.setHealth(player.getMaxHealth());
 
 										break;
+									case GLASS_WALK:
 									case KNOCKBACK_DUEL:
 									case ESCAPE_ARROW:
 
@@ -332,6 +333,7 @@ public class WeaponShoot implements Listener {
 										}
 
 										break;
+									case GLASS_WALK:
 									case KNOCKBACK_DUEL:
 									case ESCAPE_ARROW:
 										ev.setDamage(0);
@@ -463,6 +465,7 @@ public class WeaponShoot implements Listener {
 								plugin.getMatchActive().echaDePartida(player, true, true, false);
 								player.setHealth(player.getMaxHealth());
 								break;
+							case GLASS_WALK:
 							case KNOCKBACK_DUEL:
 							case BOMB_TAG:
 								ev.setDamage(0);
@@ -774,6 +777,7 @@ public class WeaponShoot implements Listener {
 								}
 								break;
 
+							case GLASS_WALK:
 							case KNOCKBACK_DUEL:
 							case BOMB_TAG:
 								ev.setDamage(0);

@@ -2,6 +2,8 @@ package com.adri1711.randomevents.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -59,7 +61,7 @@ public class Move implements Listener {
 							UtilsRandomEvents.mandaMensaje(plugin,
 									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
-							plugin.getMatchActive().hazComandosDeMuerte(null,player);
+							plugin.getMatchActive().hazComandosDeMuerte(null, player);
 							plugin.getMatchActive().echaDePartida(player, true, true, false);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 						}
@@ -73,7 +75,7 @@ public class Move implements Listener {
 							UtilsRandomEvents.mandaMensaje(plugin,
 									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
-							plugin.getMatchActive().hazComandosDeMuerte(null,player);
+							plugin.getMatchActive().hazComandosDeMuerte(null, player);
 							plugin.getMatchActive().echaDePartida(player, true, true, false);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 						}
@@ -87,7 +89,7 @@ public class Move implements Listener {
 							UtilsRandomEvents.mandaMensaje(plugin,
 									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
-							plugin.getMatchActive().hazComandosDeMuerte(null,player);
+							plugin.getMatchActive().hazComandosDeMuerte(null, player);
 							plugin.getMatchActive().echaDePartida(player, true, true, false);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 						}
@@ -101,7 +103,7 @@ public class Move implements Listener {
 							UtilsRandomEvents.mandaMensaje(plugin,
 									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
-							plugin.getMatchActive().hazComandosDeMuerte(null,player);
+							plugin.getMatchActive().hazComandosDeMuerte(null, player);
 							plugin.getMatchActive().echaDePartida(player, true, true, false);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 						}
@@ -116,7 +118,7 @@ public class Move implements Listener {
 							UtilsRandomEvents.mandaMensaje(plugin,
 									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
-							plugin.getMatchActive().hazComandosDeMuerte(null,player);
+							plugin.getMatchActive().hazComandosDeMuerte(null, player);
 							plugin.getMatchActive().echaDePartida(player, true, true, false);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 						}
@@ -133,7 +135,7 @@ public class Move implements Listener {
 							UtilsRandomEvents.mandaMensaje(plugin,
 									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
-							plugin.getMatchActive().hazComandosDeMuerte(null,player);
+							plugin.getMatchActive().hazComandosDeMuerte(null, player);
 							plugin.getMatchActive().echaDePartida(player, true, true, false);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 						}
@@ -149,7 +151,7 @@ public class Move implements Listener {
 							UtilsRandomEvents.mandaMensaje(plugin,
 									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
-							plugin.getMatchActive().hazComandosDeMuerte(null,player);
+							plugin.getMatchActive().hazComandosDeMuerte(null, player);
 							plugin.getMatchActive().echaDePartida(player, true, true, false);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 						}
@@ -181,6 +183,120 @@ public class Move implements Listener {
 							}
 						}
 					}
+					break;
+				case GLASS_WALK:
+					Block glass = null;
+					if (evt.getTo().getBlock() != null && evt.getTo().getBlock().getType() != null) {
+						glass = evt.getTo().getBlock().getRelative(BlockFace.DOWN, 1);
+					}
+					int i = 0;
+					Block glassAux = glass;
+					while ((glassAux == null || glassAux.getType() == null
+							|| glassAux.getType() != XMaterial.GLASS.parseMaterial()) && i < 16) {
+						switch (i) {
+						case 0:
+							glassAux = glass.getRelative(BlockFace.EAST, 1);
+							break;
+						case 1:
+							glassAux = glass.getRelative(BlockFace.EAST_NORTH_EAST, 1);
+							break;
+						case 2:
+							glassAux = glass.getRelative(BlockFace.EAST_SOUTH_EAST, 1);
+							break;
+						case 3:
+							glassAux = glass.getRelative(BlockFace.NORTH, 1);
+							break;
+						case 4:
+							glassAux = glass.getRelative(BlockFace.NORTH_EAST, 1);
+							break;
+						case 5:
+							glassAux = glass.getRelative(BlockFace.NORTH_NORTH_EAST, 1);
+							break;
+						case 6:
+							glassAux = glass.getRelative(BlockFace.NORTH_NORTH_WEST, 1);
+							break;
+						case 7:
+							glassAux = glass.getRelative(BlockFace.NORTH_WEST, 1);
+							break;
+						case 8:
+							glassAux = glass.getRelative(BlockFace.SOUTH, 1);
+							break;
+						case 9:
+							glassAux = glass.getRelative(BlockFace.SOUTH_EAST, 1);
+							break;
+						case 10:
+							glassAux = glass.getRelative(BlockFace.SOUTH_SOUTH_EAST, 1);
+							break;
+						case 11:
+							glassAux = glass.getRelative(BlockFace.SOUTH_SOUTH_WEST, 1);
+							break;
+						case 12:
+							glassAux = glass.getRelative(BlockFace.SOUTH_WEST, 1);
+							break;
+						case 13:
+							glassAux = glass.getRelative(BlockFace.WEST, 1);
+							break;
+						case 14:
+							glassAux = glass.getRelative(BlockFace.WEST_NORTH_WEST, 1);
+							break;
+						case 15:
+							glassAux = glass.getRelative(BlockFace.WEST_SOUTH_WEST, 1);
+							break;
+						}
+						i++;
+
+					}
+					glass = glassAux;
+					if (plugin.getMatchActive().getMapHandler().getCuboid().contains(player.getLocation())) {
+
+						plugin.getMatchActive().getPlayerHandler().setPlayerContador(player);
+						if (plugin.getTournamentActive() == null) {
+							plugin.getMatchActive().daRecompensas(false);
+						} else {
+							if (!plugin.getMatchActive().getPlayerHandler().getPlayersGanadores().contains(player)) {
+								plugin.getMatchActive().getPlayerHandler().getPlayersGanadores().add(player);
+								for (Player p : plugin.getMatchActive().getPlayerHandler().getPlayersSpectators()) {
+									p.sendMessage(plugin.getLanguage().getTagPlugin() + " "
+											+ plugin.getLanguage().getRaceTournament()
+													.replaceAll("%player%", player.getName())
+													.replaceAll("%players%",
+															"" + plugin.getMatchActive().getPlayerHandler()
+																	.getPlayersGanadores().size())
+													.replaceAll("%neededPlayers%",
+															plugin.getMatchActive().getLimitPlayers().toString()));
+								}
+								plugin.getMatchActive().compruebaPartida();
+							}
+						}
+					} else if (evt.getTo().getBlock() != null && evt.getTo().getBlock().getType() != null
+							&& (evt.getTo().getBlock().getType() == XMaterial.GLASS.parseMaterial())) {
+						if (!plugin.getMatchActive().getMapHandler().getLocationsGlasses()
+								.contains(evt.getTo().getBlock().getLocation()))
+							evt.getTo().getBlock().breakNaturally();
+						UtilsRandomEvents.mandaMensaje(plugin,
+								plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+								plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
+						plugin.getMatchActive().hazComandosDeMuerte(null, player);
+						plugin.getMatchActive().echaDePartida(player, true, true, false);
+						UtilsRandomEvents.playSound(plugin, player, XSound.BLOCK_GLASS_BREAK);
+					} else if (glass != null && glass.getType() != null
+							&& (glass.getType() == XMaterial.GLASS.parseMaterial())
+							&& player.getVelocity().length() < 1.5) {
+						if (!plugin.getMatchActive().getMapHandler().getLocationsGlasses()
+								.contains(glass.getLocation())) {
+							glass.breakNaturally();
+							// UtilsRandomEvents.mandaMensaje(plugin,
+							// plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
+							// plugin.getLanguage().getPvpDeath().replaceAll("%victim%",
+							// player.getName()), false);
+							// plugin.getMatchActive().hazComandosDeMuerte(null,
+							// player);
+							// plugin.getMatchActive().echaDePartida(player,
+							// true, true, false);
+							UtilsRandomEvents.playSound(plugin, player, XSound.BLOCK_GLASS_BREAK);
+						}
+					}
+
 					break;
 				case RED_GREEN_LIGHT:
 
@@ -247,7 +363,7 @@ public class Move implements Listener {
 							UtilsRandomEvents.mandaMensaje(plugin,
 									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
-							plugin.getMatchActive().hazComandosDeMuerte(null,player);
+							plugin.getMatchActive().hazComandosDeMuerte(null, player);
 							plugin.getMatchActive().echaDePartida(player, true, true, false);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 						}
@@ -320,7 +436,7 @@ public class Move implements Listener {
 							plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false, false,
 							false);
 					plugin.getMatchActive().getPlayerHandler().getPlayerToKill().remove(player);
-					plugin.getMatchActive().hazComandosDeMuerte(null,player);
+					plugin.getMatchActive().hazComandosDeMuerte(null, player);
 					plugin.getMatchActive().echaDePartida(player, true, true, false);
 					UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 

@@ -324,6 +324,10 @@ public class ReventConfig {
 
 	private int statsTSWTEAMS;
 
+	private int statsBLOCKPARTY;
+
+	private int statsHIDEANDSEEK;
+
 	private int statsPBALLTK;
 
 	private int distanceClearEntities;
@@ -350,6 +354,8 @@ public class ReventConfig {
 	private List<XMaterial> blocksBlockParty;
 
 	private XMaterial waitItemPartyMaterial;
+
+	private int statsGLASSWALK;
 
 	public ReventConfig(RandomEvents plugin) {
 		super();
@@ -635,8 +641,11 @@ public class ReventConfig {
 		this.statsTKLLTEAMS = plugin.getConfig().getInt("statsmenu.TKLLTEAMS");
 		this.statsTSGTEAMS = plugin.getConfig().getInt("statsmenu.TSGTEAMS");
 		this.statsTSWTEAMS = plugin.getConfig().getInt("statsmenu.TSWTEAMS");
+		this.statsBLOCKPARTY = plugin.getConfig().getInt("statsmenu.BLOCKPARTY");
+		this.statsHIDEANDSEEK = plugin.getConfig().getInt("statsmenu.HIDEANDSEEK");
 		this.statsPBALLTK = plugin.getConfig().getInt("statsmenu.PBALLTK");
 		this.statsREDGREEN = plugin.getConfig().getInt("statsmenu.REDGREEN");
+		this.statsGLASSWALK = plugin.getConfig().getInt("statsmenu.GLASSWALK");
 		this.distanceClearEntities = plugin.getConfig().getInt("distanceClearEntities");
 		this.statsSize = plugin.getConfig().getInt("statsmenu.size");
 
@@ -1966,8 +1975,28 @@ public class ReventConfig {
 		return statsTSWTEAMS;
 	}
 
+	public int getStatsGLASSWALK() {
+		return statsGLASSWALK;
+	}
+
 	public void setStatsTSWTEAMS(int statsTSWTEAMS) {
 		this.statsTSWTEAMS = statsTSWTEAMS;
+	}
+
+	public int getStatsBLOCKPARTY() {
+		return statsBLOCKPARTY;
+	}
+
+	public void setStatsBLOCKPARTY(int statsBLOCKPARTY) {
+		this.statsBLOCKPARTY = statsBLOCKPARTY;
+	}
+
+	public int getStatsHIDEANDSEEK() {
+		return statsHIDEANDSEEK;
+	}
+
+	public void setStatsHIDEANDSEEK(int statsHIDEANDSEEK) {
+		this.statsHIDEANDSEEK = statsHIDEANDSEEK;
 	}
 
 	public int getStatsPBALLTK() {
@@ -2137,6 +2166,9 @@ public class ReventConfig {
 	public void setWaitItemPartyMaterial(XMaterial waitItemPartyMaterial) {
 		this.waitItemPartyMaterial = waitItemPartyMaterial;
 	}
-	
+
+	public void setStatsGLASSWALK(int statsGLASSWALK) {
+		this.statsGLASSWALK = statsGLASSWALK;
+	}
 
 }

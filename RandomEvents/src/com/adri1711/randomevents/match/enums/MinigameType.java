@@ -83,7 +83,9 @@ public enum MinigameType {
 
 	HIDE_AND_SEEK("HIDEANDSEEK", XMaterial.MAP.parseMaterial(), "getNameHideAndSeek"),
 	
-	RED_GREEN_LIGHT("REDGREEN", XMaterial.EMERALD_BLOCK.parseMaterial(), "getNameRedGreenLight")
+	RED_GREEN_LIGHT("REDGREEN", XMaterial.EMERALD_BLOCK.parseMaterial(), "getNameRedGreenLight"),
+	
+	GLASS_WALK("GLASSWALK", XMaterial.GLASS.parseMaterial(), "getNameGlassWalk")
 	
 	;
 

@@ -562,6 +562,11 @@ public class Constantes {
 
 		NAME_HIDEANDSEEK("nameHideAndSeek", "minigameName.HideAndSeek", "Hide and Seek"),
 
+		NAME_GLASSWALK("nameGlassWalk", "minigameName.GlassWalk", "Glass Walk"),
+
+		MINIGAME_DESC_GLASSWALK("minigameDescriptionGLASSWALK", "minigame.description.GLASSWALK",
+				"&eWatch out the fake glass, be the one to reach;&e the goal before the times hits 0 ;&eor you will all die."),
+		
 		MINIGAME_DESC_BR("minigameDescriptionBR", "minigame.description.BR",
 				"&eA fierce battle where just 1 player;&e or team can remain alive."),
 

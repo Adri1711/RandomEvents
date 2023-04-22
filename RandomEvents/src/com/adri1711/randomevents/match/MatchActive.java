@@ -649,9 +649,12 @@ public class MatchActive {
 
 			if (player != null && cmd.contains("%player%")) {
 				cmd = cmd.replaceAll("%player%", player.getName());
-			} else if (victim != null && cmd.contains("%victim%")) {
+			}
+
+			if (victim != null && cmd.contains("%victim%")) {
 				cmd = cmd.replaceAll("%victim%", victim.getName());
 			}
+
 			Bukkit.dispatchCommand((CommandSender) Bukkit.getConsoleSender(), cmd);
 
 		}
@@ -1050,6 +1053,11 @@ public class MatchActive {
 				ganadores.add(getPlayerHandler().getPlayerContador());
 			}
 			break;
+		case GLASS_WALK:
+			if (getPlayerHandler().getPlayerContador() != null) {
+				ganadores.add(getPlayerHandler().getPlayerContador());
+			}
+			break;
 		case BOAT_RUN:
 		case HORSE_RUN:
 		case RACE:
@@ -1091,7 +1099,7 @@ public class MatchActive {
 			}
 		}
 		for (Player play : Bukkit.getOnlinePlayers()) {
-			if (tiempo && match.getMinigame()!=MinigameType.HIDE_AND_SEEK) {
+			if (tiempo && match.getMinigame() != MinigameType.HIDE_AND_SEEK && match.getMinigame() != MinigameType.GLASS_WALK) {
 				play.sendMessage(plugin.getLanguage().getTagPlugin() + " "
 						+ plugin.getLanguage().getWinnersPoints().replace("%points%", maximo.toString())
 								.replace("%type%", match.getMinigame().getMessage(plugin))
@@ -2107,6 +2115,21 @@ public class MatchActive {
 			partidaPorTiempo();
 
 			break;
+		case GLASS_WALK:
+			this.allowDamage = true;
+			this.allowDamagePVP = true;
+			for (Player p : getPlayerHandler().getPlayersSpectators()) {
+				if (!getPlayerHandler().getPlayersObj().contains(p)) {
+					mandaSpectatorPlayer(p);
+				}
+			}
+			for (Player p : getPlayerHandler().getPlayersObj()) {
+				iniciaPlayer(p);
+
+			}
+
+			partidaGlassWalk();
+			break;
 		case HIDE_AND_SEEK:
 			for (Player p : getPlayerHandler().getPlayersSpectators()) {
 				if (!getPlayerHandler().getPlayersObj().contains(p)) {
@@ -2474,6 +2497,27 @@ public class MatchActive {
 
 	}
 
+	private void partidaGlassWalk() {
+
+		Map<String, List<Location>> glasses = UtilsRandomEvents.getGlassLocation(getMatch().getAuxLocation1(),
+				getMatch().getAuxLocation2(), plugin);
+		for (List<Location> loc : glasses.values()) {
+			for (Location l : loc) {
+				try {
+					getMapHandler().getBlockDisappeared().put(l.getBlock().getLocation(),
+							new MaterialData(l.getBlock().getType(), l.getBlock().getData()));
+				} catch (Throwable eb) {
+					getMapHandler().getBlockDisappeared().put(l.getBlock().getLocation(),
+							l.getBlock().getState().getData().clone());
+				}
+				l.getBlock().setType(XMaterial.GLASS.parseMaterial());
+			}
+			getMapHandler().getLocationsGlasses().add(loc.get(plugin.getRandom().nextInt(loc.size())));
+		}
+
+		partidaPorTiempo();
+	}
+
 	private void partidaBlockParty() {
 
 		checkDate = new Date().getTime() + 1000 * getMatch().getBlockTimer();
@@ -2530,6 +2574,7 @@ public class MatchActive {
 			materiales.addAll(mapaMateriales.keySet());
 			material = materiales.get(random.nextInt(materiales.size()));
 			Bukkit.getScheduler().runTask(plugin, new Runnable() {
+
 				public void run() {
 					UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
 							XSound.ENTITY_PLAYER_LEVELUP);
@@ -2549,7 +2594,9 @@ public class MatchActive {
 			});
 			itemAppear = true;
 		} else if (endDate < now && !blocksDisappear) {
-			for (Entry<XMaterial, List<Location>> mapa2 : mapaMateriales.entrySet()) {
+			for (
+
+			Entry<XMaterial, List<Location>> mapa2 : mapaMateriales.entrySet()) {
 				if (material != null && material.parseMaterial() != mapa2.getKey().parseMaterial()) {
 					Bukkit.getScheduler().runTask(plugin, new Runnable() {
 						public void run() {
@@ -3169,6 +3216,7 @@ public class MatchActive {
 								});
 							}
 						}
+
 					}
 
 					partidaAnvilSpleef();
@@ -3270,10 +3318,59 @@ public class MatchActive {
 
 		task2 = new BukkitRunnable() {
 			public void run() {
-				checkTimeMatch();
+				switch (getMatch().getMinigame()) {
+				case GLASS_WALK:
+					// TODO
+					checkGlassWalk();
+					break;
+				default:
+					checkTimeMatch();
+					break;
+				}
 			}
 		};
 		task2.runTaskTimer(plugin, 0, 20L);
+
+	}
+
+	public void checkGlassWalk() {
+
+		if (getPlaying()) {
+			Date now = new Date();
+			long nowLong = now.getTime();
+			long dif = (endDate - now.getTime()) / 1000;
+
+			if (dif <= 0) {
+
+				if (getTournament()) {
+					List<String> jugadores = new ArrayList<String>();
+					for (Player p : getPlayerHandler().getPlayersGanadores()) {
+						jugadores.add(p.getName());
+					}
+					tournamentObj.nextGame(getCopia(jugadores), getCopiaP(getPlayerHandler().getPlayersGanadores()),
+							getCopiaP(getPlayerHandler().getPlayersSpectators()));
+				} else {
+					daRecompensas(true);
+				}
+				// spawnMobs(bWave.getMobs(), getPlugin());
+
+			} else if (dif == 1) {
+				UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
+						XSound.ENTITY_PLAYER_LEVELUP);
+				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
+						plugin.getLanguage().getSecondsRemaining1(), Boolean.FALSE, true, true);
+			} else if (dif == 2) {
+				UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
+						XSound.ENTITY_PLAYER_LEVELUP);
+				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
+						plugin.getLanguage().getSecondsRemaining2(), Boolean.FALSE, true, true);
+			} else if (dif == 3) {
+				UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
+						XSound.ENTITY_PLAYER_LEVELUP);
+				UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersSpectators(),
+						plugin.getLanguage().getSecondsRemaining3(), Boolean.FALSE, true, true);
+			}
+		}
 
 	}
 
@@ -3559,6 +3656,7 @@ public class MatchActive {
 
 				}, 20L * plugin.getReventConfig().getCooldownAfterDeathSeconds());
 			} else {
+
 				reiniciaDefault(p);
 				invincibility(p);
 
@@ -3572,6 +3670,7 @@ public class MatchActive {
 			}
 
 			break;
+
 		default:
 			outKoth(p);
 			dropItems(p);
@@ -3600,6 +3699,7 @@ public class MatchActive {
 
 			break;
 		}
+
 		updateScoreboards();
 
 	}
@@ -3892,6 +3992,7 @@ public class MatchActive {
 							}, 20 * plugin.getReventConfig().getSecondsToStartMatch());
 						}
 					} else {
+
 						// if (!getPlayerHandler().getPlayers().isEmpty()) {
 						// String waiting = Constantes.WAITING_FOR_PLAYERS;
 						// UtilsRandomEvents
@@ -3937,7 +4038,9 @@ public class MatchActive {
 								.replaceAll("\\n", "<jump>")
 								.replaceAll("%neededPlayers%", match.getAmountPlayersMin().toString())
 								.replaceAll("%maxPlayers%", match.getAmountPlayers().toString())
-								.replaceAll("%players%", "" + getPlayerHandler().getPlayers().size());
+								.replaceAll("%players%", "" +
+
+										getPlayerHandler().getPlayers().size());
 
 						List<String> ultimasPartes = Arrays.asList(lastPart.split("<jump>"));
 						// plugin.getLoggerP().info(ultimasPartes);
@@ -3983,6 +4086,7 @@ public class MatchActive {
 						}
 						if (tries <= plugin.getReventConfig().getNumberOfTriesBeforeCancelling()) {
 							Bukkit.getServer().getScheduler().runTask((Plugin) getPlugin(), new Runnable() {
+
 								@Override
 								public void run() {
 									Bukkit.getPluginManager()
@@ -3999,6 +4103,7 @@ public class MatchActive {
 							});
 
 						}
+
 					}
 				}
 			}
@@ -4057,6 +4162,7 @@ public class MatchActive {
 								}, 20 * plugin.getReventConfig().getSecondsToStartMatch());
 							}
 						} else {
+
 							// if (!getPlayerHandler().getPlayers().isEmpty()) {
 							// String waiting = Constantes.WAITING_FOR_PLAYERS;
 							// UtilsRandomEvents
@@ -4115,9 +4221,9 @@ public class MatchActive {
 							// ultimasPartes.remove(0);
 
 							for (Player p : Bukkit.getOnlinePlayers()) {
-								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())
-										&& (getMatch().getPermission() == null
-												|| p.hasPermission(getMatch().getPermission()))
+								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission()) && (
+
+								getMatch().getPermission() == null || p.hasPermission(getMatch().getPermission()))
 										&& (!plugin.getReventConfig().getRestrictWorlds() || (p.getWorld() != null
 												&& p.getWorld().getName() != null && plugin.getReventConfig()
 														.getAllowedWorlds().contains(p.getWorld().getName())))) {
@@ -4150,15 +4256,19 @@ public class MatchActive {
 								}
 							}
 							if (tries <= plugin.getReventConfig().getNumberOfTriesBeforeCancelling()) {
+
 								matchWaitingPlayers(true);
 							} else {
-								Bukkit.getServer().getScheduler().runTask((Plugin) getPlugin(), new Runnable() {
+								Bukkit.getServer().getScheduler().runTask((Plugin)
+
+								getPlugin(), new Runnable() {
 									public void run() {
 										finalizaPartida(new ArrayList<Player>(), Boolean.FALSE, Boolean.TRUE);
 									}
 								});
 
 							}
+
 						}
 
 					}
@@ -4205,6 +4315,7 @@ public class MatchActive {
 			case PAINTBALL:
 			case BLOCK_PARTY:
 			case HIDE_AND_SEEK:
+			case GLASS_WALK:
 				getPlayerHandler().getOldScoreboards().put(p.getName(), p.getScoreboard());
 				FastBoard fBoard = plugin.getApi().createFastBoard(p);
 

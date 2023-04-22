@@ -346,6 +346,7 @@ public class Use implements Listener {
 							&& evt.getClickedBlock().getType() == XMaterial.STONE_PRESSURE_PLATE.parseMaterial()) {
 						plugin.getMatchActive().getMapHandler().getCheckpoints().put(player.getName(),
 								player.getLocation());
+						evt.setCancelled(true);
 
 					}
 				}

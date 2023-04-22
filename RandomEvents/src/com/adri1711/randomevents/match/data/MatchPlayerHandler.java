@@ -35,6 +35,7 @@ public class MatchPlayerHandler {
 
 	private List<Location> locationsBeforeExitting;
 
+
 	private Map<String, Long> playersInvincible;
 
 	private Player beast;
@@ -136,6 +137,7 @@ public class MatchPlayerHandler {
 	public List<Player> getPlayersObj() {
 		return playersObj;
 	}
+
 
 	public void setPlayersObj(List<Player> playersObj) {
 		this.playersObj = playersObj;

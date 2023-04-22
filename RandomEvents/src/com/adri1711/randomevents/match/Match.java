@@ -41,6 +41,10 @@ public class Match implements Comparable<Match> {
 	private Location location1;
 
 	private Location location2;
+	
+	private Location auxLocation1;
+
+	private Location auxLocation2;
 
 	private EntityType mob;
 
@@ -398,6 +402,8 @@ public class Match implements Comparable<Match> {
 		result = prime * result + ((inventoryRunners == null) ? 0 : inventoryRunners.hashCode());
 		result = prime * result + ((location1 == null) ? 0 : location1.hashCode());
 		result = prime * result + ((location2 == null) ? 0 : location2.hashCode());
+		result = prime * result + ((auxLocation1 == null) ? 0 : auxLocation1.hashCode());
+		result = prime * result + ((auxLocation2 == null) ? 0 : auxLocation2.hashCode());
 		result = prime * result + ((material == null) ? 0 : material.hashCode());
 		result = prime * result + ((minigame == null) ? 0 : minigame.hashCode());
 		result = prime * result + ((mob == null) ? 0 : mob.hashCode());
@@ -624,6 +630,22 @@ public class Match implements Comparable<Match> {
 
 	public void setColorDecreaseTimer(Integer colorDecreaseTimer) {
 		this.colorDecreaseTimer = colorDecreaseTimer;
+	}
+
+	public Location getAuxLocation1() {
+		return auxLocation1;
+	}
+
+	public void setAuxLocation1(Location auxLocation1) {
+		this.auxLocation1 = auxLocation1;
+	}
+
+	public Location getAuxLocation2() {
+		return auxLocation2;
+	}
+
+	public void setAuxLocation2(Location auxLocation2) {
+		this.auxLocation2 = auxLocation2;
 	}
 
 	

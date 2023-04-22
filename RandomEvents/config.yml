@@ -518,6 +518,7 @@ statsmenu:
   REDGREEN: 49
   BLOCKPARTY: -1
   HIDEANDSEEK: -1
+  GLASSWALK: -1
 
 ##################################################################
 ##					     MYSQL CONFIG   	    				##

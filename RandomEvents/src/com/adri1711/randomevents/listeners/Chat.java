@@ -623,12 +623,11 @@ public class Chat implements Listener {
 						}
 
 						break;
-						
+
 					case NUMBER_OF_SEEKERS:
 						Integer number2 = Integer.valueOf(message.trim());
-							match.setNumberOfSeekers(number2);
-							plugin.getPlayersCreation().remove(player.getName());
-						
+						match.setNumberOfSeekers(number2);
+						plugin.getPlayersCreation().remove(player.getName());
 
 						break;
 					case SPAWN_PLAYER:
@@ -1114,6 +1113,18 @@ public class Chat implements Listener {
 							// player, position + 1, match);
 						}
 						break;
+					case GLASS_LOCATION1:
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
+							match.setAuxLocation1(player.getLocation());
+							plugin.getPlayersCreation().remove(player.getName());
+						}
+						break;
+					case GLASS_LOCATION2:
+						if (message.equalsIgnoreCase(Constantes.DONE)) {
+							match.setAuxLocation2(player.getLocation());
+							plugin.getPlayersCreation().remove(player.getName());
+						}
+						break;
 					case ARROW_LOCATION2:
 					case KOTH_LOCATION2:
 					case GEM_LOCATION2:
@@ -1423,6 +1434,12 @@ public class Chat implements Listener {
 							case GOAL_LOCATION1:
 							case MAP_LOCATION1:
 								match.setLocation1(null);
+								break;
+							case GLASS_LOCATION1:
+								match.setAuxLocation1(null);
+								break;
+							case GLASS_LOCATION2:
+								match.setAuxLocation2(null);
 								break;
 							case ARROW_LOCATION2:
 							case GEM_LOCATION2:

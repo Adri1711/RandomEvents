@@ -154,6 +154,7 @@ public class Death implements Listener {
 										UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 									}
 									break;
+								case GLASS_WALK:
 								case KNOCKBACK_DUEL:
 								case BLOCK_PARTY:
 									if (!cancelled) {
@@ -191,6 +192,7 @@ public class Death implements Listener {
 											plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 											plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()),
 											false, false, false);
+									plugin.getMatchActive().hazComandosDeMuerte(null, player);
 									plugin.getMatchActive().reiniciaPlayer(player);
 									UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 
@@ -200,10 +202,12 @@ public class Death implements Listener {
 											plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 											plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()),
 											false, false, false);
+									plugin.getMatchActive().hazComandosDeMuerte(null, player);
 									plugin.getMatchActive().reiniciaPlayer(player);
 									UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 									break;
 								case WDROP:
+									plugin.getMatchActive().hazComandosDeMuerte(null, player);
 									plugin.getMatchActive().reiniciaPlayer(player);
 									UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_BAT_HURT);
 									break;
@@ -233,6 +237,7 @@ public class Death implements Listener {
 							switch (plugin.getMatchActive().getMatch().getMinigame()) {
 							case WDROP:
 								ev.setCancelled(true);
+								plugin.getMatchActive().hazComandosDeMuerte(null, player);
 								plugin.getMatchActive().reiniciaPlayer(player);
 								UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 								break;
@@ -418,7 +423,7 @@ public class Death implements Listener {
 	private void checkOtherDamage(Player player, EntityDamageByEntityEvent ev) {
 
 		if (((player.getHealth() - ev.getFinalDamage()) <= 0)) {
-
+			ev.setDamage(0);
 			ev.setCancelled(true);
 			switch (plugin.getMatchActive().getMatch().getMinigame()) {
 			case SG:
@@ -473,6 +478,7 @@ public class Death implements Listener {
 				plugin.getMatchActive().echaDePartida(player, true, true, false);
 				player.setHealth(player.getMaxHealth());
 				break;
+			case GLASS_WALK:
 			case KNOCKBACK_DUEL:
 			case BOMB_TAG:
 			case FISH_SLAP:
@@ -513,6 +519,7 @@ public class Death implements Listener {
 											.replaceAll("%killer%", p.getName()),
 									false, false, false);
 							UtilsRandomEvents.doCommandsKill(p, plugin);
+							plugin.getMatchActive().hazComandosDeMuerte(p, player);
 
 							UtilsRandomEvents.playSound(plugin, p, XSound.ENTITY_PLAYER_LEVELUP);
 							plugin.getMatchActive().reiniciaPlayer(player);
@@ -535,6 +542,7 @@ public class Death implements Listener {
 						}
 					} else {
 						UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
+						plugin.getMatchActive().hazComandosDeMuerte(null, player);
 						UtilsRandomEvents.mandaMensaje(plugin,
 								plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 								plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false,
@@ -547,6 +555,7 @@ public class Death implements Listener {
 							plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 							plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false, false,
 							false);
+					plugin.getMatchActive().hazComandosDeMuerte(null, player);
 				}
 				plugin.getMatchActive().reiniciaPlayer(player);
 
@@ -581,6 +590,7 @@ public class Death implements Listener {
 											.replaceAll("%killer%", damager.getName()),
 									false, false, false);
 							UtilsRandomEvents.doCommandsKill(damager, plugin);
+							plugin.getMatchActive().hazComandosDeMuerte(damager, player);
 							damager.sendMessage(plugin.getLanguage().getTagPlugin() + " "
 									+ plugin.getLanguage().getNowPoints().replace("%points%",
 											plugin.getMatchActive().getPuntuacion().get(damager.getName()).toString()));
@@ -593,6 +603,7 @@ public class Death implements Listener {
 									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false,
 									false, false);
+							plugin.getMatchActive().hazComandosDeMuerte(damager, player);
 							plugin.getMatchActive().reiniciaPlayer(player);
 						}
 					} else {
@@ -601,6 +612,7 @@ public class Death implements Listener {
 								plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 								plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false,
 								false, false);
+						plugin.getMatchActive().hazComandosDeMuerte(null, player);
 						plugin.getMatchActive().reiniciaPlayer(player);
 					}
 				} else {
@@ -609,6 +621,7 @@ public class Death implements Listener {
 							plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 							plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false, false,
 							false);
+					plugin.getMatchActive().hazComandosDeMuerte(null, player);
 					plugin.getMatchActive().reiniciaPlayer(player);
 
 				}
@@ -634,12 +647,14 @@ public class Death implements Listener {
 											.replaceAll("%killer%", damager.getName()),
 									false, false, false);
 							UtilsRandomEvents.doCommandsKill(damager, plugin);
+							plugin.getMatchActive().hazComandosDeMuerte(damager, player);
 						} else {
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 							UtilsRandomEvents.mandaMensaje(plugin,
 									plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false,
 									false, false);
+							plugin.getMatchActive().hazComandosDeMuerte(damager, player);
 							plugin.getMatchActive().reiniciaPlayer(player);
 						}
 					} else {
@@ -648,6 +663,7 @@ public class Death implements Listener {
 								plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 								plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false,
 								false, false);
+						plugin.getMatchActive().hazComandosDeMuerte(null, player);
 						plugin.getMatchActive().reiniciaPlayer(player);
 					}
 				} else {
@@ -656,6 +672,7 @@ public class Death implements Listener {
 							plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 							plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false, false,
 							false);
+					plugin.getMatchActive().hazComandosDeMuerte(null, player);
 					plugin.getMatchActive().reiniciaPlayer(player);
 
 				}
@@ -667,6 +684,7 @@ public class Death implements Listener {
 						plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 						plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false, false,
 						false);
+				plugin.getMatchActive().hazComandosDeMuerte(null, player);
 				plugin.getMatchActive().reiniciaPlayer(player);
 
 				break;
@@ -712,6 +730,7 @@ public class Death implements Listener {
 											.replaceAll("%killer%", p.getName()),
 									false, false, false);
 							UtilsRandomEvents.doCommandsKill(p, plugin);
+							plugin.getMatchActive().hazComandosDeMuerte(p, player);
 							plugin.getMatchActive().reiniciaPlayer(player);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 							UtilsRandomEvents.playSound(plugin, p, XSound.ENTITY_PLAYER_LEVELUP);
@@ -777,6 +796,7 @@ public class Death implements Listener {
 				}
 				break;
 
+			case GLASS_WALK:
 			case KNOCKBACK_DUEL:
 			case BOMB_TAG:
 			case FISH_SLAP:
@@ -861,6 +881,7 @@ public class Death implements Listener {
 				Location playerLoc = player.getLocation();
 				pLoc.setWorld(playerLoc.getWorld());
 				Integer distancia = Double.valueOf(pLoc.distance(playerLoc)).intValue();
+				plugin.getMatchActive().hazComandosDeMuerte(damager, player);
 				plugin.getMatchActive().reiniciaPlayer(player);
 				UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 
@@ -939,7 +960,8 @@ public class Death implements Listener {
 						ev.setDamage(0);
 						ev.setCancelled(true);
 					} else {
-
+						ev.setDamage(0);
+						ev.setCancelled(true);
 						switch (plugin.getMatchActive().getMatch().getMinigame()) {
 						case SG:
 						case SW:
@@ -983,6 +1005,7 @@ public class Death implements Listener {
 							player.setHealth(player.getMaxHealth());
 
 							break;
+						case GLASS_WALK:
 						case KNOCKBACK_DUEL:
 						case FISH_SLAP:
 							if (!plugin.getMatchActive().getAllowDamagePVP()) {
@@ -1026,6 +1049,7 @@ public class Death implements Listener {
 											.replaceAll("%killer%", damager.getName()),
 									false, false, false);
 							UtilsRandomEvents.doCommandsKill(damager, plugin);
+							plugin.getMatchActive().hazComandosDeMuerte(damager, player);
 							damager.sendMessage(plugin.getLanguage().getTagPlugin() + " "
 									+ plugin.getLanguage().getNowPoints().replace("%points%",
 											plugin.getMatchActive().getPuntuacion().get(damager.getName()).toString()));
@@ -1039,6 +1063,7 @@ public class Death implements Listener {
 						case TOP_KILLER_TEAM_2:
 						case TOP_KILLER_TEAMS:
 							plugin.getMatchActive().reiniciaPlayer(player);
+							
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 
 							UtilsRandomEvents.playSound(plugin, damager, XSound.ENTITY_PLAYER_LEVELUP);
@@ -1055,6 +1080,7 @@ public class Death implements Listener {
 											.replaceAll("%killer%", damager.getName()),
 									false, false, false);
 							UtilsRandomEvents.doCommandsKill(damager, plugin);
+							plugin.getMatchActive().hazComandosDeMuerte(damager, player);
 							damager.sendMessage(plugin.getLanguage().getTagPlugin() + " "
 									+ plugin.getLanguage().getNowPoints().replace("%points%",
 											plugin.getMatchActive().getPuntuacion().get(damager.getName()).toString()));
@@ -1074,6 +1100,7 @@ public class Death implements Listener {
 											.replaceAll("%killer%", damager.getName()),
 									false, false, false);
 							UtilsRandomEvents.doCommandsKill(damager, plugin);
+							plugin.getMatchActive().hazComandosDeMuerte(damager, player);
 							break;
 
 						case GEM_CRAWLER:
@@ -1083,6 +1110,7 @@ public class Death implements Listener {
 											.replaceAll("%killer%", damager.getName()),
 									false, false, false);
 							UtilsRandomEvents.doCommandsKill(damager, plugin);
+							plugin.getMatchActive().hazComandosDeMuerte(damager, player);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 
 							UtilsRandomEvents.playSound(plugin, damager, XSound.ENTITY_PLAYER_LEVELUP);
@@ -1224,6 +1252,7 @@ public class Death implements Listener {
 						}
 
 						break;
+					case GLASS_WALK:
 					case KNOCKBACK_DUEL:
 					case ESCAPE_ARROW:
 					case FISH_SLAP:
@@ -1374,6 +1403,7 @@ public class Death implements Listener {
 
 						break;
 					case KNOCKBACK_DUEL:
+					case GLASS_WALK:
 					case FISH_SLAP:
 
 						if (!plugin.getMatchActive().getAllowDamagePVP()) {
@@ -1418,6 +1448,7 @@ public class Death implements Listener {
 										.replaceAll("%killer%", damager.getName()),
 								false, false, false);
 						UtilsRandomEvents.doCommandsKill(damager, plugin);
+						plugin.getMatchActive().hazComandosDeMuerte(damager, player);
 						damager.sendMessage(plugin.getLanguage().getTagPlugin() + " "
 								+ plugin.getLanguage().getNowPoints().replace("%points%",
 										plugin.getMatchActive().getPuntuacion().get(damager.getName()).toString()));
@@ -1448,6 +1479,7 @@ public class Death implements Listener {
 										.replaceAll("%killer%", damager.getName()),
 								false, false, false);
 						UtilsRandomEvents.doCommandsKill(damager, plugin);
+						plugin.getMatchActive().hazComandosDeMuerte(damager, player);
 						damager.sendMessage(plugin.getLanguage().getTagPlugin() + " "
 								+ plugin.getLanguage().getNowPoints().replace("%points%",
 										plugin.getMatchActive().getPuntuacion().get(damager.getName()).toString()));
@@ -1468,6 +1500,7 @@ public class Death implements Listener {
 										.replaceAll("%killer%", damager.getName()),
 								false, false, false);
 						UtilsRandomEvents.doCommandsKill(damager, plugin);
+						plugin.getMatchActive().hazComandosDeMuerte(damager, player);
 						break;
 
 					case GEM_CRAWLER:
@@ -1478,6 +1511,7 @@ public class Death implements Listener {
 										.replaceAll("%killer%", damager.getName()),
 								false, false, false);
 						UtilsRandomEvents.doCommandsKill(damager, plugin);
+						plugin.getMatchActive().hazComandosDeMuerte(damager, player);
 						UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 
 						UtilsRandomEvents.playSound(plugin, damager, XSound.ENTITY_PLAYER_LEVELUP);
@@ -1618,6 +1652,7 @@ public class Death implements Listener {
 											.replaceAll("%killer%", damager.getName()),
 									false, false, false);
 							UtilsRandomEvents.doCommandsKill(damager, plugin);
+							plugin.getMatchActive().hazComandosDeMuerte(damager, player);
 							UtilsRandomEvents.playSound(plugin, damager, XSound.ENTITY_PLAYER_LEVELUP);
 							plugin.getMatchActive().reiniciaPlayer(player);
 							if (plugin.getMatchActive().getPuntuacion().containsKey(damager.getName())) {
@@ -1660,6 +1695,7 @@ public class Death implements Listener {
 						}
 
 						break;
+					case GLASS_WALK:
 					case KNOCKBACK_DUEL:
 					case ESCAPE_ARROW:
 					case FISH_SLAP:
@@ -1804,6 +1840,7 @@ public class Death implements Listener {
 											.replaceAll("%killer%", damager.getName()),
 									false, false, false);
 							UtilsRandomEvents.doCommandsKill(damager, plugin);
+							plugin.getMatchActive().hazComandosDeMuerte(damager, player);
 							damager.sendMessage(plugin.getLanguage().getTagPlugin() + " "
 									+ plugin.getLanguage().getNowPoints().replace("%points%",
 											plugin.getMatchActive().getPuntuacion().get(damager.getName()).toString()));
@@ -1877,6 +1914,7 @@ public class Death implements Listener {
 												.replaceAll("%killer%", damager.getName()),
 										false, false, false);
 								UtilsRandomEvents.doCommandsKill(damager, plugin);
+								plugin.getMatchActive().hazComandosDeMuerte(damager, player);
 								damager.sendMessage(plugin.getLanguage().getTagPlugin() + " "
 										+ plugin.getLanguage().getNowPoints().replace("%points%", plugin
 												.getMatchActive().getPuntuacion().get(damager.getName()).toString()));

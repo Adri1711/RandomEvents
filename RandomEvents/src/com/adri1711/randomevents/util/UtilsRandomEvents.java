@@ -2157,6 +2157,20 @@ public class UtilsRandomEvents {
 									+ match.getLocation1().getY() + ", " + match.getLocation1().getZ();
 						}
 						break;
+					case GLASS_LOCATION1:
+						if (match.getAuxLocation1() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
+									+ match.getAuxLocation1().getWorld().getName() + match.getAuxLocation1().getX()
+									+ ", " + match.getAuxLocation1().getY() + ", " + match.getAuxLocation1().getZ();
+						}
+						break;
+					case GLASS_LOCATION2:
+						if (match.getAuxLocation2() != null) {
+							info += Constantes.SALTO_LINEA + Constantes.TABULACION + "§9 "
+									+ match.getAuxLocation2().getWorld().getName() + match.getAuxLocation2().getX()
+									+ ", " + match.getAuxLocation2().getY() + ", " + match.getAuxLocation2().getZ();
+						}
+						break;
 					case ARROW_LOCATION2:
 					case GEM_LOCATION2:
 					case KOTH_LOCATION2:
@@ -2340,6 +2354,18 @@ public class UtilsRandomEvents {
 			case GOAL_LOCATION1:
 			case MAP_LOCATION1:
 				if (match.getLocation1() == null) {
+					res = Boolean.FALSE;
+
+				}
+				break;
+			case GLASS_LOCATION1:
+				if (match.getAuxLocation1() == null) {
+					res = Boolean.FALSE;
+
+				}
+				break;
+			case GLASS_LOCATION2:
+				if (match.getAuxLocation2() == null) {
 					res = Boolean.FALSE;
 
 				}
@@ -2581,6 +2607,11 @@ public class UtilsRandomEvents {
 
 			lines = prepareLinesDeadAlive(lines, matchActive, plugin, playersDead);
 			break;
+		case GLASS_WALK:
+			lines = prepareLinesTime(lines, plugin, matchActive);
+			lines.add("");
+			lines = prepareLinesDeadAlive(lines, matchActive, plugin, playersDead);
+			break;
 		case BATTLE_ROYALE:
 		case BATTLE_ROYALE_CABALLO:
 		case ESCAPE_ARROW:
@@ -2737,7 +2768,7 @@ public class UtilsRandomEvents {
 	}
 
 	private static List<String> prepareLinesRounds(List<String> lines, RandomEvents plugin, MatchActive matchActive) {
-		lines.add(plugin.getLanguage().getScoreboardRound().replaceAll("%round%", ""+matchActive.getRounds()));
+		lines.add(plugin.getLanguage().getScoreboardRound().replaceAll("%round%", "" + matchActive.getRounds()));
 		return lines;
 	}
 
@@ -3549,6 +3580,215 @@ public class UtilsRandomEvents {
 			}
 
 		}
+
+	}
+
+	public static Map<String, List<Location>> getGlassLocation(Location start, Location end, RandomEvents plugin) {
+
+		Map<String, List<Location>> glassLocations = new HashMap<String, List<Location>>();
+
+		int topBlockX = (start.getBlockX() < end.getBlockX() ? end.getBlockX() : start.getBlockX());
+		int bottomBlockX = (start.getBlockX() > end.getBlockX() ? end.getBlockX() : start.getBlockX());
+
+		int topBlockY = (start.getBlockY() < end.getBlockY() ? end.getBlockY() : start.getBlockY());
+		int bottomBlockY = (start.getBlockY() > end.getBlockY() ? end.getBlockY() : start.getBlockY());
+
+		int topBlockZ = (start.getBlockZ() < end.getBlockZ() ? end.getBlockZ() : start.getBlockZ());
+		int bottomBlockZ = (start.getBlockZ() > end.getBlockZ() ? end.getBlockZ() : start.getBlockZ());
+
+		// mine.getAirBlocks().clear();
+		String color = "";
+		for (int x = bottomBlockX; x <= topBlockX; x++) {
+			for (int z = bottomBlockZ; z <= topBlockZ; z++) {
+				for (int y = bottomBlockY; y <= topBlockY; y++) {
+					Block block = start.getWorld().getBlockAt(x, y, z);
+					if (block != null && block.getType() != null) {
+						// XMaterial.WHITE_STAINED_GLASS
+						XMaterial material = XMaterial.matchXMaterial(block.getType());
+						switch (material) {
+						case WHITE_STAINED_GLASS:
+							color = "WHITE";
+							if (glassLocations.containsKey(color)) {
+								glassLocations.get(color).add(block.getLocation());
+							} else {
+								List<Location> locations = new ArrayList<Location>();
+								locations.add(block.getLocation());
+								glassLocations.put(color, locations);
+							}
+							break;
+						case TINTED_GLASS:
+							color = "TINTED";
+							if (glassLocations.containsKey(color)) {
+								glassLocations.get(color).add(block.getLocation());
+							} else {
+								List<Location> locations = new ArrayList<Location>();
+								locations.add(block.getLocation());
+								glassLocations.put(color, locations);
+							}
+							break;
+						case BLACK_STAINED_GLASS:
+							color = "BLACK";
+							if (glassLocations.containsKey(color)) {
+								glassLocations.get(color).add(block.getLocation());
+							} else {
+								List<Location> locations = new ArrayList<Location>();
+								locations.add(block.getLocation());
+								glassLocations.put(color, locations);
+							}
+							break;
+						case BLUE_STAINED_GLASS:
+							color = "BLUE";
+							if (glassLocations.containsKey(color)) {
+								glassLocations.get(color).add(block.getLocation());
+							} else {
+								List<Location> locations = new ArrayList<Location>();
+								locations.add(block.getLocation());
+								glassLocations.put(color, locations);
+							}
+							break;
+						case BROWN_STAINED_GLASS:
+							color = "BROWN";
+							if (glassLocations.containsKey(color)) {
+								glassLocations.get(color).add(block.getLocation());
+							} else {
+								List<Location> locations = new ArrayList<Location>();
+								locations.add(block.getLocation());
+								glassLocations.put(color, locations);
+							}
+							break;
+						case CYAN_STAINED_GLASS:
+							color = "CYAN";
+							if (glassLocations.containsKey(color)) {
+								glassLocations.get(color).add(block.getLocation());
+							} else {
+								List<Location> locations = new ArrayList<Location>();
+								locations.add(block.getLocation());
+								glassLocations.put(color, locations);
+							}
+							break;
+						case GRAY_STAINED_GLASS:
+							color = "GRAY";
+							if (glassLocations.containsKey(color)) {
+								glassLocations.get(color).add(block.getLocation());
+							} else {
+								List<Location> locations = new ArrayList<Location>();
+								locations.add(block.getLocation());
+								glassLocations.put(color, locations);
+							}
+							break;
+						case GREEN_STAINED_GLASS:
+							color = "GREEN";
+							if (glassLocations.containsKey(color)) {
+								glassLocations.get(color).add(block.getLocation());
+							} else {
+								List<Location> locations = new ArrayList<Location>();
+								locations.add(block.getLocation());
+								glassLocations.put(color, locations);
+							}
+							break;
+						case LIGHT_BLUE_STAINED_GLASS:
+							color = "LIGHT_BLUE";
+							if (glassLocations.containsKey(color)) {
+								glassLocations.get(color).add(block.getLocation());
+							} else {
+								List<Location> locations = new ArrayList<Location>();
+								locations.add(block.getLocation());
+								glassLocations.put(color, locations);
+							}
+							break;
+						case LIGHT_GRAY_STAINED_GLASS:
+							color = "LIGHT_GRAY";
+							if (glassLocations.containsKey(color)) {
+								glassLocations.get(color).add(block.getLocation());
+							} else {
+								List<Location> locations = new ArrayList<Location>();
+								locations.add(block.getLocation());
+								glassLocations.put(color, locations);
+							}
+							break;
+						case LIME_STAINED_GLASS:
+							color = "LIME";
+							if (glassLocations.containsKey(color)) {
+								glassLocations.get(color).add(block.getLocation());
+							} else {
+								List<Location> locations = new ArrayList<Location>();
+								locations.add(block.getLocation());
+								glassLocations.put(color, locations);
+							}
+							break;
+						case MAGENTA_STAINED_GLASS:
+							color = "MAGENTA";
+							if (glassLocations.containsKey(color)) {
+								glassLocations.get(color).add(block.getLocation());
+							} else {
+								List<Location> locations = new ArrayList<Location>();
+								locations.add(block.getLocation());
+								glassLocations.put(color, locations);
+							}
+							break;
+						case ORANGE_STAINED_GLASS:
+							color = "ORANGE";
+							if (glassLocations.containsKey(color)) {
+								glassLocations.get(color).add(block.getLocation());
+							} else {
+								List<Location> locations = new ArrayList<Location>();
+								locations.add(block.getLocation());
+								glassLocations.put(color, locations);
+							}
+							break;
+						case PINK_STAINED_GLASS:
+							color = "PINK";
+							if (glassLocations.containsKey(color)) {
+								glassLocations.get(color).add(block.getLocation());
+							} else {
+								List<Location> locations = new ArrayList<Location>();
+								locations.add(block.getLocation());
+								glassLocations.put(color, locations);
+							}
+							break;
+						case PURPLE_STAINED_GLASS:
+							color = "PURPLE";
+							if (glassLocations.containsKey(color)) {
+								glassLocations.get(color).add(block.getLocation());
+							} else {
+								List<Location> locations = new ArrayList<Location>();
+								locations.add(block.getLocation());
+								glassLocations.put(color, locations);
+							}
+							break;
+						case RED_STAINED_GLASS:
+							color = "RED";
+							if (glassLocations.containsKey(color)) {
+								glassLocations.get(color).add(block.getLocation());
+							} else {
+								List<Location> locations = new ArrayList<Location>();
+								locations.add(block.getLocation());
+								glassLocations.put(color, locations);
+							}
+							break;
+						case YELLOW_STAINED_GLASS:
+							color = "YELLOW";
+							if (glassLocations.containsKey(color)) {
+								glassLocations.get(color).add(block.getLocation());
+							} else {
+								List<Location> locations = new ArrayList<Location>();
+								locations.add(block.getLocation());
+								glassLocations.put(color, locations);
+							}
+							break;
+						default:
+							break;
+						}
+						// && block.getType() ==
+						// plugin.getReventConfig().getMaterialBlockParty()) {
+
+					}
+
+				}
+			}
+		}
+
+		return glassLocations;
 
 	}
 

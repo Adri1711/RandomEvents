@@ -47,7 +47,7 @@ public enum Creacion {
 			""),
 
 	PLAY_TIME(15,"Match Time", "§6§lChoose the play time in seconds",
-			"TKLL,QUAKE,OITC,TKLLT2,KOTH,FISHSLAP,HOE,SPLATOON,TKLLTEAMS,PBALLTK,HIDEANDSEEK"),
+			"TKLL,QUAKE,OITC,TKLLT2,KOTH,FISHSLAP,HOE,SPLATOON,TKLLTEAMS,PBALLTK,HIDEANDSEEK,GLASSWALK"),
 
 	ARROW_LOCATION1(16,"Arrow Region Location 1", "§6§lSet the first location of the cuboid of spawn of arrows, say 'Done'", "EARR"),
 
@@ -79,10 +79,10 @@ public enum Creacion {
 	ANOTHER_ENTITY_SPAWNS(28,"Another Entity Spawns", "§6§lPut another entity spawn, say 'Done' . (%entities%/%maxPlayers%)", ""),
 
 	GOAL_LOCATION1(29,"Goal Region Location 1", "§6§lSet the first location of the cuboid of the goal, say 'Done'",
-			"BOAT_RUN,HORSE_RUN,ESCAPE_FROM_BEAST,RACE,REDGREEN"),
+			"BOAT_RUN,HORSE_RUN,ESCAPE_FROM_BEAST,RACE,REDGREEN,GLASSWALK"),
 
 	GOAL_LOCATION2(30,"Goal Region Location 2", "§6§lSet the second location of the cuboid of the goal, say 'Done'",
-			"BOAT_RUN,HORSE_RUN,ESCAPE_FROM_BEAST,RACE,REDGREEN"),
+			"BOAT_RUN,HORSE_RUN,ESCAPE_FROM_BEAST,RACE,REDGREEN,GLASSWALK"),
 
 	MATERIAL_SPLEEF(31,"Spleef Material", "§6§lGet the block you want to set mineable for spleef on your hand and say 'Done'",
 			"SPLEEF,SPLEGG,ANVIL_SPLEEF"),
@@ -156,6 +156,11 @@ public enum Creacion {
 	
 	NUMBER_OF_SEEKERS(59,"Amount of Seekers","§6§lWrite the number of players that will be seekers", "HIDEANDSEEK"),
 	
+	GLASS_LOCATION1(60,"Glass Region Location 1", "§6§lSet the first location of the cuboid of the map, say 'Done'",
+			"GLASSWALK"),
+
+	GLASS_LOCATION2(61,"Glass Region Location 2", "§6§lSet the second location of the cuboid of the map, say 'Done'",
+			"GLASSWALK"),
 	
 	COMMANDS_ON_START_OPTIONAL(900,"Commands on start (Optional)", "§6§lSet a command for the start of the game or just put 'Done' to stop setting commands", "ALLMINIGAMES"),
 
