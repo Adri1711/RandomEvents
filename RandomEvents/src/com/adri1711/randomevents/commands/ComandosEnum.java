@@ -62,6 +62,8 @@ public enum ComandosEnum {
 
 	CMD_GIVE_CREDITS_SPECIFIC("givecredits", 4, "randomevent.give.credits", "getGiveCreditsSpecific", "giveCredits", true, true),
 	
+	CMD_TOGGLE_ANNOUNCEMENT("toggleannouncement", 1, "randomevent.announcement.toggle", "getToggleAnnouncement", "toggleAnnouncement", true, false),
+	
 	CMD_BAL_CREDITS("credits", 1, "randomevent.bal.credits", "getCreditsBalOwn", "balCredits", true, true),
 
 	CMD_BAL_CREDITS_OTHER("credits", 2, "randomevent.bal.credits.other", "getCreditsBalOther", "balCredits", true, true),

@@ -229,6 +229,7 @@ public class Use implements Listener {
 							UtilsRandomEvents.teleportaPlayer(player,
 									plugin.getMatchActive().getMapHandler().getCheckpoints().get(player.getName()),
 									plugin);
+							if(plugin.getReventConfig().getRaceSlowEffect())
 							player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 99));
 
 						} else if (player.getItemInHand().equals(plugin.getReventConfig().getEndVanishItem())) {

@@ -155,6 +155,15 @@ public class Death implements Listener {
 									}
 									break;
 								case GLASS_WALK:
+									if (!plugin.getMatchActive().getAllowDamagePVP() && !plugin.getReventConfig().isAllowGlassWalkPvP()) {
+										ev.setCancelled(true);
+									} else {
+										ev.setDamage(0);
+										if (plugin.getReventConfig().isHighestPriorityDamageEvents()) {
+											ev.setCancelled(false);
+										}
+									}
+									break;
 								case KNOCKBACK_DUEL:
 								case BLOCK_PARTY:
 									if (!cancelled) {
@@ -193,7 +202,9 @@ public class Death implements Listener {
 											plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()),
 											false, false, false);
 									plugin.getMatchActive().hazComandosDeMuerte(null, player);
+									ev.setDamage(0);
 									plugin.getMatchActive().reiniciaPlayer(player);
+									ev.setDamage(0);
 									UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 
 									break;
@@ -203,11 +214,13 @@ public class Death implements Listener {
 											plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()),
 											false, false, false);
 									plugin.getMatchActive().hazComandosDeMuerte(null, player);
+									ev.setDamage(0);
 									plugin.getMatchActive().reiniciaPlayer(player);
 									UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 									break;
 								case WDROP:
 									plugin.getMatchActive().hazComandosDeMuerte(null, player);
+									ev.setDamage(0);
 									plugin.getMatchActive().reiniciaPlayer(player);
 									UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_BAT_HURT);
 									break;
@@ -238,6 +251,7 @@ public class Death implements Listener {
 							case WDROP:
 								ev.setCancelled(true);
 								plugin.getMatchActive().hazComandosDeMuerte(null, player);
+								ev.setDamage(0);
 								plugin.getMatchActive().reiniciaPlayer(player);
 								UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 								break;
@@ -479,6 +493,15 @@ public class Death implements Listener {
 				player.setHealth(player.getMaxHealth());
 				break;
 			case GLASS_WALK:
+				if (!plugin.getMatchActive().getAllowDamagePVP() && !plugin.getReventConfig().isAllowGlassWalkPvP()) {
+					ev.setCancelled(true);
+				} else {
+					ev.setDamage(0);
+					if (plugin.getReventConfig().isHighestPriorityDamageEvents()) {
+						ev.setCancelled(false);
+					}
+				}
+				break;
 			case KNOCKBACK_DUEL:
 			case BOMB_TAG:
 			case FISH_SLAP:
@@ -522,6 +545,7 @@ public class Death implements Listener {
 							plugin.getMatchActive().hazComandosDeMuerte(p, player);
 
 							UtilsRandomEvents.playSound(plugin, p, XSound.ENTITY_PLAYER_LEVELUP);
+							ev.setDamage(0);
 							plugin.getMatchActive().reiniciaPlayer(player);
 							if (plugin.getMatchActive().getPuntuacion().containsKey(p.getName())) {
 								plugin.getMatchActive().getPuntuacion().put(p.getName(),
@@ -548,6 +572,7 @@ public class Death implements Listener {
 								plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false,
 								false, false);
 					}
+					ev.setDamage(0);
 					plugin.getMatchActive().reiniciaPlayer(player);
 				} else {
 					UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
@@ -557,6 +582,7 @@ public class Death implements Listener {
 							false);
 					plugin.getMatchActive().hazComandosDeMuerte(null, player);
 				}
+				ev.setDamage(0);
 				plugin.getMatchActive().reiniciaPlayer(player);
 
 				break;
@@ -573,6 +599,7 @@ public class Death implements Listener {
 
 						if (plugin.getMatchActive().getPlayerHandler().getPlayers().contains(damager.getName())
 								&& !player.getName().equals(damager.getName())) {
+							ev.setDamage(0);
 							plugin.getMatchActive().reiniciaPlayer(player);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 
@@ -604,6 +631,7 @@ public class Death implements Listener {
 									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false,
 									false, false);
 							plugin.getMatchActive().hazComandosDeMuerte(damager, player);
+							ev.setDamage(0);
 							plugin.getMatchActive().reiniciaPlayer(player);
 						}
 					} else {
@@ -613,6 +641,7 @@ public class Death implements Listener {
 								plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false,
 								false, false);
 						plugin.getMatchActive().hazComandosDeMuerte(null, player);
+						ev.setDamage(0);
 						plugin.getMatchActive().reiniciaPlayer(player);
 					}
 				} else {
@@ -622,6 +651,7 @@ public class Death implements Listener {
 							plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false, false,
 							false);
 					plugin.getMatchActive().hazComandosDeMuerte(null, player);
+					ev.setDamage(0);
 					plugin.getMatchActive().reiniciaPlayer(player);
 
 				}
@@ -636,6 +666,7 @@ public class Death implements Listener {
 
 						if (plugin.getMatchActive().getPlayerHandler().getPlayers().contains(damager.getName())
 								&& !player.getName().equals(damager.getName())) {
+							ev.setDamage(0);
 							plugin.getMatchActive().reiniciaPlayer(player);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 
@@ -655,6 +686,7 @@ public class Death implements Listener {
 									plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false,
 									false, false);
 							plugin.getMatchActive().hazComandosDeMuerte(damager, player);
+							ev.setDamage(0);
 							plugin.getMatchActive().reiniciaPlayer(player);
 						}
 					} else {
@@ -664,6 +696,7 @@ public class Death implements Listener {
 								plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false,
 								false, false);
 						plugin.getMatchActive().hazComandosDeMuerte(null, player);
+						ev.setDamage(0);
 						plugin.getMatchActive().reiniciaPlayer(player);
 					}
 				} else {
@@ -673,6 +706,7 @@ public class Death implements Listener {
 							plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false, false,
 							false);
 					plugin.getMatchActive().hazComandosDeMuerte(null, player);
+					ev.setDamage(0);
 					plugin.getMatchActive().reiniciaPlayer(player);
 
 				}
@@ -685,6 +719,7 @@ public class Death implements Listener {
 						plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false, false,
 						false);
 				plugin.getMatchActive().hazComandosDeMuerte(null, player);
+				ev.setDamage(0);
 				plugin.getMatchActive().reiniciaPlayer(player);
 
 				break;
@@ -731,6 +766,7 @@ public class Death implements Listener {
 									false, false, false);
 							UtilsRandomEvents.doCommandsKill(p, plugin);
 							plugin.getMatchActive().hazComandosDeMuerte(p, player);
+							ev.setDamage(0);
 							plugin.getMatchActive().reiniciaPlayer(player);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 							UtilsRandomEvents.playSound(plugin, p, XSound.ENTITY_PLAYER_LEVELUP);
@@ -797,6 +833,15 @@ public class Death implements Listener {
 				break;
 
 			case GLASS_WALK:
+				if (!plugin.getMatchActive().getAllowDamagePVP() && !plugin.getReventConfig().isAllowGlassWalkPvP()) {
+					ev.setCancelled(true);
+				} else {
+					ev.setDamage(0);
+					if (plugin.getReventConfig().isHighestPriorityDamageEvents()) {
+						ev.setCancelled(false);
+					}
+				}
+				break;
 			case KNOCKBACK_DUEL:
 			case BOMB_TAG:
 			case FISH_SLAP:
@@ -882,6 +927,7 @@ public class Death implements Listener {
 				pLoc.setWorld(playerLoc.getWorld());
 				Integer distancia = Double.valueOf(pLoc.distance(playerLoc)).intValue();
 				plugin.getMatchActive().hazComandosDeMuerte(damager, player);
+				ev.setDamage(0);
 				plugin.getMatchActive().reiniciaPlayer(player);
 				UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 
@@ -1006,6 +1052,15 @@ public class Death implements Listener {
 
 							break;
 						case GLASS_WALK:
+							if (!plugin.getMatchActive().getAllowDamagePVP() && !plugin.getReventConfig().isAllowGlassWalkPvP()) {
+								ev.setCancelled(true);
+							} else {
+								ev.setDamage(0);
+								if (plugin.getReventConfig().isHighestPriorityDamageEvents()) {
+									ev.setCancelled(false);
+								}
+							}
+							break;
 						case KNOCKBACK_DUEL:
 						case FISH_SLAP:
 							if (!plugin.getMatchActive().getAllowDamagePVP()) {
@@ -1032,6 +1087,7 @@ public class Death implements Listener {
 							ev.setCancelled(true);
 							break;
 						case OITC:
+							ev.setDamage(0);
 							plugin.getMatchActive().reiniciaPlayer(player);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 
@@ -1062,6 +1118,7 @@ public class Death implements Listener {
 						case TOP_KILLER:
 						case TOP_KILLER_TEAM_2:
 						case TOP_KILLER_TEAMS:
+							ev.setDamage(0);
 							plugin.getMatchActive().reiniciaPlayer(player);
 							
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
@@ -1089,6 +1146,7 @@ public class Death implements Listener {
 							}
 							break;
 						case KOTH:
+							ev.setDamage(0);
 							plugin.getMatchActive().reiniciaPlayer(player);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 
@@ -1114,6 +1172,7 @@ public class Death implements Listener {
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 
 							UtilsRandomEvents.playSound(plugin, damager, XSound.ENTITY_PLAYER_LEVELUP);
+							ev.setDamage(0);
 							plugin.getMatchActive().reiniciaPlayer(player);
 							break;
 						case BOMB_TAG:
@@ -1253,6 +1312,15 @@ public class Death implements Listener {
 
 						break;
 					case GLASS_WALK:
+						if (!plugin.getMatchActive().getAllowDamagePVP() && !plugin.getReventConfig().isAllowGlassWalkPvP()) {
+							ev.setCancelled(true);
+						} else {
+							ev.setDamage(0);
+							if (plugin.getReventConfig().isHighestPriorityDamageEvents()) {
+								ev.setCancelled(false);
+							}
+						}
+						break;
 					case KNOCKBACK_DUEL:
 					case ESCAPE_ARROW:
 					case FISH_SLAP:
@@ -1402,8 +1470,17 @@ public class Death implements Listener {
 						player.setHealth(player.getMaxHealth());
 
 						break;
-					case KNOCKBACK_DUEL:
 					case GLASS_WALK:
+						if (!plugin.getMatchActive().getAllowDamagePVP() && !plugin.getReventConfig().isAllowGlassWalkPvP()) {
+							ev.setCancelled(true);
+						} else {
+							ev.setDamage(0);
+							if (plugin.getReventConfig().isHighestPriorityDamageEvents()) {
+								ev.setCancelled(false);
+							}
+						}
+						break;
+					case KNOCKBACK_DUEL:
 					case FISH_SLAP:
 
 						if (!plugin.getMatchActive().getAllowDamagePVP()) {
@@ -1430,6 +1507,7 @@ public class Death implements Listener {
 						ev.setCancelled(true);
 						break;
 					case OITC:
+						ev.setDamage(0);
 						plugin.getMatchActive().reiniciaPlayer(player);
 						UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 
@@ -1461,6 +1539,7 @@ public class Death implements Listener {
 					case TOP_KILLER:
 					case TOP_KILLER_TEAM_2:
 					case TOP_KILLER_TEAMS:
+						ev.setDamage(0);
 						plugin.getMatchActive().reiniciaPlayer(player);
 						UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 
@@ -1488,6 +1567,7 @@ public class Death implements Listener {
 						}
 						break;
 					case KOTH:
+						ev.setDamage(0);
 						plugin.getMatchActive().reiniciaPlayer(player);
 						UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 
@@ -1515,6 +1595,7 @@ public class Death implements Listener {
 						UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 
 						UtilsRandomEvents.playSound(plugin, damager, XSound.ENTITY_PLAYER_LEVELUP);
+						ev.setDamage(0);
 						plugin.getMatchActive().reiniciaPlayer(player);
 						break;
 					case BOMB_TAG:
@@ -1654,6 +1735,7 @@ public class Death implements Listener {
 							UtilsRandomEvents.doCommandsKill(damager, plugin);
 							plugin.getMatchActive().hazComandosDeMuerte(damager, player);
 							UtilsRandomEvents.playSound(plugin, damager, XSound.ENTITY_PLAYER_LEVELUP);
+							ev.setDamage(0);
 							plugin.getMatchActive().reiniciaPlayer(player);
 							if (plugin.getMatchActive().getPuntuacion().containsKey(damager.getName())) {
 								plugin.getMatchActive().getPuntuacion().put(damager.getName(),
@@ -1696,6 +1778,15 @@ public class Death implements Listener {
 
 						break;
 					case GLASS_WALK:
+						if (!plugin.getMatchActive().getAllowDamagePVP() && !plugin.getReventConfig().isAllowGlassWalkPvP()) {
+							ev.setCancelled(true);
+						} else {
+							ev.setDamage(0);
+							if (plugin.getReventConfig().isHighestPriorityDamageEvents()) {
+								ev.setCancelled(false);
+							}
+						}
+						break;
 					case KNOCKBACK_DUEL:
 					case ESCAPE_ARROW:
 					case FISH_SLAP:
@@ -1823,6 +1914,7 @@ public class Death implements Listener {
 						break;
 					case PAINTBALL_TOP_KILL:
 						if (((player.getHealth() - plugin.getReventConfig().getSnowballsDamage()) <= 0)) {
+							ev.setDamage(0);
 							plugin.getMatchActive().reiniciaPlayer(player);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 
@@ -1897,6 +1989,7 @@ public class Death implements Listener {
 							ev.setCancelled(true);
 						} else {
 							if (((player.getHealth() - plugin.getReventConfig().getSnowballsDamage()) <= 0)) {
+								ev.setDamage(0);
 								plugin.getMatchActive().reiniciaPlayer(player);
 								UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 

@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.match.Kit;
 import com.adri1711.randomevents.match.Match;
+import com.adri1711.randomevents.match.PlayersDisabled;
 import com.adri1711.randomevents.match.WaterDropStep;
 import com.adri1711.randomevents.match.schedule.Schedule;
 import com.adri1711.randomevents.match.utils.BannedPlayers;
@@ -188,6 +189,31 @@ public class UtilidadesJson {
 		} catch (Exception e) {
 			plugin.getLoggerP().info(e.getMessage());
 			plugin.getLoggerP().info("Error :: Error at loading banned players: " + br);
+		}
+		return bp;
+	}
+	
+	public static String fromDisabledPlayersToJSON(RandomEvents plugin, PlayersDisabled bp) {
+		String resultado = null;
+
+		try {
+			resultado = plugin.getApi().toJson(bp);
+
+		} catch (Exception e) {
+			plugin.getLoggerP().info(e.getMessage());
+			plugin.getLoggerP().info("Error :: Error at creating disabled players");
+		}
+		return resultado;
+
+	}
+	public static PlayersDisabled fromJSONToDisabledPlayers(RandomEvents plugin, BufferedReader br) {
+		PlayersDisabled bp = null;
+		try {
+			bp = (PlayersDisabled) plugin.getApi().fromJson(br, PlayersDisabled.class);
+
+		} catch (Exception e) {
+			plugin.getLoggerP().info(e.getMessage());
+			plugin.getLoggerP().info("Error :: Error at loading disabled players: " + br);
 		}
 		return bp;
 	}

@@ -15,6 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.language.LanguageMessages;
 import com.adri1711.randomevents.match.Match;
+import com.adri1711.randomevents.match.PlayersDisabled;
 import com.adri1711.randomevents.match.Tournament;
 import com.adri1711.randomevents.match.utils.BannedPlayers;
 import com.adri1711.randomevents.metrics.Metrics;
@@ -40,6 +41,8 @@ public class ReventConfig {
 	private ItemStack powerUpItem;
 	private ItemStack checkpointItem;
 
+	private Boolean raceSlowEffect;
+	
 	private Integer invincibleAfterGame;
 
 	private Boolean avoidSpectatorTp;
@@ -50,6 +53,7 @@ public class ReventConfig {
 
 	private boolean avoidSnowballKnockback;
 	private boolean avoidEggKnockback;
+	private boolean allowGlassWalkPvP;
 
 	private boolean mysqlEnabled;
 
@@ -70,10 +74,13 @@ public class ReventConfig {
 	private Integer secondsCheckPlayers;
 
 	private List<String> allowedCmds;
+	private List<String> minPlayersBlackList;
 
 	private boolean forceEmptyInventoryToJoin;
 
 	private BannedPlayers bannedPlayers;
+	
+	private PlayersDisabled disabledPlayers;
 
 	private Integer idleTimeForDamage;
 
@@ -456,7 +463,8 @@ public class ReventConfig {
 		this.inventoryManagement = plugin.getConfig().getBoolean("inventoryManagement");
 		this.avoidSnowballKnockback = plugin.getConfig().getBoolean("avoidSnowballKnockback");
 		this.avoidEggKnockback = plugin.getConfig().getBoolean("avoidEggKnockback");
-
+		this.allowGlassWalkPvP = plugin.getConfig().getBoolean("allowGlassWalkPvP");
+		
 		this.dropItemsAfterDie = plugin.getConfig().getBoolean("dropItemsAfterDie");
 		this.advancedSpectatorMode = plugin.getConfig().getBoolean("advancedSpectatorMode");
 		this.materialBlockParty = Material.getMaterial(plugin.getConfig().getString("blockPartyMaterial"));
@@ -650,6 +658,7 @@ public class ReventConfig {
 		this.statsSize = plugin.getConfig().getInt("statsmenu.size");
 
 		this.allowedCmds = (List<String>) plugin.getConfig().getStringList("allowedCmds");
+		this.minPlayersBlackList = (List<String>) plugin.getConfig().getStringList("minPlayersBlackList");
 
 		this.maxItemOnChests = Integer.valueOf(plugin.getConfig().getInt("maxItemOnChests"));
 		this.minItemOnChests = Integer.valueOf(plugin.getConfig().getInt("minItemOnChests"));
@@ -701,6 +710,8 @@ public class ReventConfig {
 		this.randomDisguisePlayers = plugin.getConfig().getBoolean("randomDisguisePlayers");
 		this.useLastLocation = plugin.getConfig().getBoolean("useLastLocation");
 		this.avoidSpectatorTp = plugin.getConfig().getBoolean("avoidSpectatorTp");
+		
+		this.raceSlowEffect = plugin.getConfig().getBoolean("raceSlowEffect");
 
 		this.optionalTitles = plugin.getConfig().getBoolean("optionalTitles");
 		this.showBorders = plugin.getConfig().getBoolean("showBorders");
@@ -726,6 +737,13 @@ public class ReventConfig {
 		if (bannedPlayers == null || bannedPlayers.getBannedPlayers() == null) {
 			bannedPlayers = new BannedPlayers();
 		}
+		
+		this.disabledPlayers = UtilsRandomEvents.cargarDisabledPlayers(plugin);
+		if (disabledPlayers == null || disabledPlayers.getPlayersDisabled() == null) {
+			disabledPlayers = new PlayersDisabled();
+		}
+		
+		
 		plugin.setSchedules(UtilsRandomEvents.cargarSchedules(plugin));
 
 		Date now = new Date();
@@ -953,6 +971,14 @@ public class ReventConfig {
 
 	public void setBannedPlayers(BannedPlayers bannedPlayers) {
 		this.bannedPlayers = bannedPlayers;
+	}
+
+	public PlayersDisabled getDisabledPlayers() {
+		return disabledPlayers;
+	}
+
+	public void setDisabledPlayers(PlayersDisabled disabledPlayers) {
+		this.disabledPlayers = disabledPlayers;
 	}
 
 	public Integer getIdleTimeForDamage() {
@@ -2135,6 +2161,14 @@ public class ReventConfig {
 		this.avoidSpectatorTp = avoidSpectatorTp;
 	}
 
+	public Boolean getRaceSlowEffect() {
+		return raceSlowEffect;
+	}
+
+	public void setRaceSlowEffect(Boolean raceSlowEffect) {
+		this.raceSlowEffect = raceSlowEffect;
+	}
+
 	public Integer getSgAreaShrinkBlocks() {
 		return sgAreaShrinkBlocks;
 	}
@@ -2170,5 +2204,22 @@ public class ReventConfig {
 	public void setStatsGLASSWALK(int statsGLASSWALK) {
 		this.statsGLASSWALK = statsGLASSWALK;
 	}
+
+	public boolean isAllowGlassWalkPvP() {
+		return allowGlassWalkPvP;
+	}
+
+	public void setAllowGlassWalkPvP(boolean allowGlassWalkPvP) {
+		this.allowGlassWalkPvP = allowGlassWalkPvP;
+	}
+
+	public List<String> getMinPlayersBlackList() {
+		return minPlayersBlackList;
+	}
+
+	public void setMinPlayersBlackList(List<String> minPlayersBlackList) {
+		this.minPlayersBlackList = minPlayersBlackList;
+	}
+	
 
 }

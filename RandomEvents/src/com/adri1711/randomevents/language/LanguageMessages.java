@@ -57,6 +57,9 @@ public class LanguageMessages {
 	private String winners;
 	private String winnersPoints;
 	private String disposeLeatherItems;
+	private String announcementDisabled;
+	private String announcementEnabled;
+	private String toggleAnnouncement;
 	private String showAlone;
 	private String showTeam;
 	private String timeRemaining;
@@ -1226,6 +1229,84 @@ public class LanguageMessages {
 
 	public void setWinnersPoints(String winnersPoints) {
 		this.winnersPoints = winnersPoints;
+	}
+
+	public String getAnnouncementDisabled() {
+		String s = announcementDisabled;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		s = s.replaceAll("\\\\n", Constantes.SALTO_LINEA);
+		return s;
+	}
+
+	public void setAnnouncementDisabled(String announcementDisabled) {
+		this.announcementDisabled = announcementDisabled;
+	}
+
+	public String getAnnouncementEnabled() {
+		String s = announcementEnabled;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		s = s.replaceAll("\\\\n", Constantes.SALTO_LINEA);
+		return s;
+	}
+
+	public void setAnnouncementEnabled(String announcementEnabled) {
+		this.announcementEnabled = announcementEnabled;
+	}
+
+	public String getToggleAnnouncement() {
+		String s = toggleAnnouncement;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+		s = s.replaceAll("\\\\n", Constantes.SALTO_LINEA);
+		return s;
+	}
+
+	public void setToggleAnnouncement(String toggleAnnouncement) {
+		this.toggleAnnouncement = toggleAnnouncement;
 	}
 
 	public String getDisposeLeatherItems() {

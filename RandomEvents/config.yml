@@ -38,6 +38,10 @@ secondsCheckPlayers: 15
 ##Minimum amount of players to begin checking for random events
 minPlayers: 0
 
+##These players wont count for the minPlayers config
+minPlayersBlackList:
+    - 'examplePlayerName'
+
 ##Minimum time to begin the match if the min players are already inside
 minNumberOfTriesBeforeBeginning: 0
 
@@ -283,6 +287,9 @@ checkpointItem: 'BLAZE_ROD'
 ##Item material for vanish item
 vanishItem: 'ENDER_EYE'
 
+##Slow effect applied after going back to checkpoint
+raceSlowEffect: true
+
 ##################################################################
 ##					     QUAKECRAFT    	  	        	    	##
 ##################################################################
@@ -388,6 +395,13 @@ blockPartyBlocks:
     - 'PINK_TERRACOTTA'
     - 'PURPLE_TERRACOTTA'
     - 'RED_TERRACOTTA'
+
+##################################################################
+##					     GLASS WALK 	    	  	    		##
+##################################################################
+
+##Is pvp allowed on GlassWalk
+allowGlassWalkPvP: true
 
 ##################################################################
 ##					 GREEN LIGHT RED LIGHT 	    				##

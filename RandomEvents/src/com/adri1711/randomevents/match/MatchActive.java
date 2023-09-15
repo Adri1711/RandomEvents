@@ -806,7 +806,8 @@ public class MatchActive {
 
 			}
 			if (getPlayerHandler().getPlayersObj().size() == 1
-					&& getMatch().getMinigame() != MinigameType.RED_GREEN_LIGHT) {
+					&& getMatch().getMinigame() != MinigameType.RED_GREEN_LIGHT
+					&& getMatch().getMinigame() != MinigameType.GLASS_WALK) {
 				if (getTournament()) {
 					tournamentObj.nextGame(getCopia(getPlayerHandler().getPlayers()),
 							getCopiaP(getPlayerHandler().getPlayersObj()),
@@ -3644,7 +3645,7 @@ public class MatchActive {
 							reiniciaDefault(p);
 							invincibility(p);
 
-							if (getEquipo(p) != null)
+							if (getEquipo(p) != null && p.getInventory().getChestplate()==null)
 								p.getInventory().setChestplate(Petos.getPeto(getEquipo(p)).getPeto());
 							if (plugin.getReventConfig().isQuakeGiveDefaultWeapon()) {
 								p.getInventory().addItem(XMaterial.STONE_HOE.parseItem());
@@ -3660,7 +3661,7 @@ public class MatchActive {
 				reiniciaDefault(p);
 				invincibility(p);
 
-				if (getEquipo(p) != null)
+				if (getEquipo(p) != null && p.getInventory().getChestplate()==null)
 					p.getInventory().setChestplate(Petos.getPeto(getEquipo(p)).getPeto());
 				if (plugin.getReventConfig().isQuakeGiveDefaultWeapon()) {
 					p.getInventory().addItem(XMaterial.STONE_HOE.parseItem());
@@ -3868,7 +3869,7 @@ public class MatchActive {
 					}
 				}
 			}
-			if (getEquipo(p) != null)
+			if (getEquipo(p) != null && p.getInventory().getChestplate()==null)
 				p.getInventory().setChestplate(Petos.getPeto(getEquipo(p)).getPeto());
 			if (plugin.getReventConfig().isForceGamemodeSurvival())
 				p.setGameMode(GameMode.SURVIVAL);
@@ -3950,7 +3951,7 @@ public class MatchActive {
 				if (!getStarted()) {
 					if (plugin.getReventConfig().isForcePlayersToEnter()) {
 						for (Player p : Bukkit.getOnlinePlayers()) {
-							if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())
+							if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission()) && !plugin.getReventConfig().getDisabledPlayers().getPlayersDisabled().contains(p.getName())
 									&& (getMatch().getPermission() == null
 											|| p.hasPermission(getMatch().getPermission()))
 									&& !getPlayerHandler().getPlayersObj().contains(p)) {
@@ -3972,7 +3973,7 @@ public class MatchActive {
 							String startingMatch = plugin.getLanguage().getStartingMatch().replaceAll("%time%",
 									startTime.toString());
 							for (Player p : Bukkit.getOnlinePlayers()) {
-								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())
+								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission()) && !plugin.getReventConfig().getDisabledPlayers().getPlayersDisabled().contains(p.getName())
 										&& (getMatch().getPermission() == null
 												|| p.hasPermission(getMatch().getPermission()))
 										&& (!plugin.getReventConfig().getRestrictWorlds() || (p.getWorld() != null
@@ -4053,7 +4054,7 @@ public class MatchActive {
 						// ultimasPartes.remove(0);
 
 						for (Player p : Bukkit.getOnlinePlayers()) {
-							if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())
+							if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission()) && !plugin.getReventConfig().getDisabledPlayers().getPlayersDisabled().contains(p.getName())
 									&& (getMatch().getPermission() == null
 											|| p.hasPermission(getMatch().getPermission()))
 									&& (!plugin.getReventConfig().getRestrictWorlds() || (p.getWorld() != null
@@ -4119,7 +4120,7 @@ public class MatchActive {
 					if (!getStarted()) {
 						if (plugin.getReventConfig().isForcePlayersToEnter()) {
 							for (Player p : Bukkit.getOnlinePlayers()) {
-								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())
+								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission()) && !plugin.getReventConfig().getDisabledPlayers().getPlayersDisabled().contains(p.getName())
 										&& (getMatch().getPermission() == null
 												|| p.hasPermission(getMatch().getPermission()))
 										&& !getPlayerHandler().getPlayersObj().contains(p)) {
@@ -4141,7 +4142,7 @@ public class MatchActive {
 								String startingMatch = plugin.getLanguage().getStartingMatch().replaceAll("%time%",
 										startTime.toString());
 								for (Player p : Bukkit.getOnlinePlayers()) {
-									if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())
+									if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission()) && !plugin.getReventConfig().getDisabledPlayers().getPlayersDisabled().contains(p.getName())
 											&& (getMatch().getPermission() == null
 													|| p.hasPermission(getMatch().getPermission()))
 											&& (!plugin.getReventConfig().getRestrictWorlds() || (p.getWorld() != null
@@ -4221,7 +4222,7 @@ public class MatchActive {
 							// ultimasPartes.remove(0);
 
 							for (Player p : Bukkit.getOnlinePlayers()) {
-								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission()) && (
+								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission()) && !plugin.getReventConfig().getDisabledPlayers().getPlayersDisabled().contains(p.getName()) && (
 
 								getMatch().getPermission() == null || p.hasPermission(getMatch().getPermission()))
 										&& (!plugin.getReventConfig().getRestrictWorlds() || (p.getWorld() != null

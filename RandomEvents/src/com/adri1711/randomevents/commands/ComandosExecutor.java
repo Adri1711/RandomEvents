@@ -191,6 +191,18 @@ public class ComandosExecutor {
 
 	}
 
+	public void toggleAnnouncement(RandomEvents plugin, Player player) {
+		if (plugin.getReventConfig().getDisabledPlayers().getPlayersDisabled().contains(player.getName())) {
+			plugin.getReventConfig().getDisabledPlayers().getPlayersDisabled().remove(player.getName());
+			player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getAnnouncementEnabled());
+
+		} else {
+			plugin.getReventConfig().getDisabledPlayers().getPlayersDisabled().add(player.getName());
+			player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getAnnouncementDisabled());
+
+		}
+	}
+
 	public void banPlayer(RandomEvents plugin, Player player, String namePlayer, String time, String reason) {
 		try {
 			Calendar c = Calendar.getInstance();
@@ -635,6 +647,7 @@ public class ComandosExecutor {
 
 						UtilsRandomEvents.teleportaPlayer(player,
 								plugin.getMatchActive().getMapHandler().getCheckpoints().get(player.getName()), plugin);
+						if(plugin.getReventConfig().getRaceSlowEffect())
 						player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 99));
 
 					}

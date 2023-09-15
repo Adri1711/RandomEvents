@@ -34,7 +34,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.logging.log4j.core.Core;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -62,6 +61,7 @@ import com.adri1711.randomevents.RandomEvents;
 import com.adri1711.randomevents.match.Kit;
 import com.adri1711.randomevents.match.Match;
 import com.adri1711.randomevents.match.MatchActive;
+import com.adri1711.randomevents.match.PlayersDisabled;
 import com.adri1711.randomevents.match.WaterDropStep;
 import com.adri1711.randomevents.match.enums.Creacion;
 import com.adri1711.randomevents.match.enums.CreacionKit;
@@ -79,9 +79,6 @@ import com.adri1711.util.enums.ParticleDisplay;
 import com.adri1711.util.enums.XMaterial;
 import com.adri1711.util.enums.XParticle;
 import com.adri1711.util.enums.XSound;
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.google.common.io.Files;
 
 public class UtilsRandomEvents {
@@ -1737,6 +1734,36 @@ public class UtilsRandomEvents {
 		}
 		return banned;
 	}
+	
+	public static PlayersDisabled cargarDisabledPlayers(RandomEvents plugin) {
+
+		PlayersDisabled disabledPlayers = new PlayersDisabled();
+		File file = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//disabled-players.json");
+		if (file.exists()) {
+
+			BufferedReader br = null;
+			FileReader fr = null;
+			try {
+				fr = new FileReader(file);
+				br = new BufferedReader(fr);
+				disabledPlayers = UtilidadesJson.fromJSONToDisabledPlayers(plugin, br);
+
+			} catch (FileNotFoundException e) {
+				plugin.getLoggerP().info(e.getMessage());
+			} finally {
+				try {
+					if (fr != null)
+						fr.close();
+					if (br != null)
+						br.close();
+				} catch (IOException e) {
+					plugin.getLoggerP().info(e.getMessage());
+				}
+			}
+
+		}
+		return disabledPlayers;
+	}
 
 	public static void terminaCreacionBannedPlayers(RandomEvents plugin, BannedPlayers banned) {
 		try {
@@ -1744,6 +1771,37 @@ public class UtilsRandomEvents {
 			if (json != null) {
 
 				File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//banned-players.json");
+				if (bossFile.exists()) {
+					bossFile.delete();
+				}
+				bossFile.createNewFile();
+
+				FileWriter fw = new FileWriter(bossFile, true);
+
+				PrintWriter pw = new PrintWriter(fw);
+
+				pw.println(json);
+
+				pw.flush();
+
+				pw.close();
+
+			} else {
+				plugin.getLoggerP().info("JSON was null.");
+			}
+		} catch (Exception e) {
+			plugin.getLoggerP().info(e.getMessage());
+
+		}
+
+	}
+	
+	public static void terminaCreacionDisabledPlayers(RandomEvents plugin, PlayersDisabled banned) {
+		try {
+			String json = UtilidadesJson.fromDisabledPlayersToJSON(plugin, banned);
+			if (json != null) {
+
+				File bossFile = new File(String.valueOf(plugin.getDataFolder().getPath()) + "//disabled-players.json");
 				if (bossFile.exists()) {
 					bossFile.delete();
 				}

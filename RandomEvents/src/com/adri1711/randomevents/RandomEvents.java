@@ -78,6 +78,8 @@ public class RandomEvents extends JavaPlugin {
 	private List<Kit> kits;
 	private List<Match> matchesAvailable;
 	private List<Match> matchesAvailableSchedule;
+	
+	
 
 	private Tournament tournament;
 
@@ -269,6 +271,8 @@ public class RandomEvents extends JavaPlugin {
 
 	public void onDisable() {
 		UtilsRandomEvents.terminaCreacionBannedPlayers(this, reventConfig.getBannedPlayers());
+		UtilsRandomEvents.terminaCreacionDisabledPlayers(this, reventConfig.getDisabledPlayers());
+		
 		if (reventConfig.isMysqlEnabled() && hikari != null) {
 			hikari.close();
 		}
@@ -300,8 +304,16 @@ public class RandomEvents extends JavaPlugin {
 			Bukkit.getServer().getScheduler().runTaskLater((Plugin) this, new Runnable() {
 				public void run() {
 					if (matchActive == null) {
+						Integer blackList=0;
+						for(Player play2:Bukkit.getOnlinePlayers()){
+							if(play2!=null && play2.getName()!=null){
+								if(getReventConfig().getMinPlayersBlackList()!=null && getReventConfig().getMinPlayersBlackList().contains(play2.getName())){
+									blackList++;
+								}
+							}
+						}
 						if (matchesAvailable != null && !matchesAvailable.isEmpty()
-								&& Bukkit.getOnlinePlayers().size() >= reventConfig.getMinPlayers()) {
+								&& (Bukkit.getOnlinePlayers().size()-blackList) >= reventConfig.getMinPlayers()) {
 							if (!forzado) {
 
 								if (reventConfig.getProbabilityRandomEvent() > random.nextInt(100)) {

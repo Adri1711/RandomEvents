@@ -146,6 +146,9 @@ public class Constantes {
 
 		CMD_TP("tp", "menu.admin.tp", "   &6/revent tp <number>:\n          &e-> Teleport to a Random Event"),
 
+		CMD_TOGGLE_ANNOUNCEMENT("toggleAnnouncement", "menu.toggleAnnouncement",
+				"   &6/revent toggleannouncement:\n          &e-> Toggle the announcement of a Random Event spawning"),
+		
 		CMD_CANCEL("cancel", "menu.admin.cancel",
 				"   &6/revent cancel:\n          &e-> Cancels the creation of a Random Event"),
 
@@ -201,6 +204,10 @@ public class Constantes {
 		NO_SCHEDULED_EVENTS("noScheduledEvents", "comun.noScheduledEvents", "&c&lThere are not RandomEvents scheduled"),
 
 		NEXT_EVENT("nextEvent", "comun.nextEvent", "&c&lNext RandomEvent:"),
+		
+		ANNOUNCEMENT_DISABLED("announcementDisabled", "comun.announcementDisabled", "&a&lYou have disabled the announcements"),
+		
+		ANNOUNCEMENT_ENABLED("announcementEnabled", "comun.announcementEnabled", "&a&lYour announcements are enabled again!"),
 
 		NEXT_EVENT_RANDOM("nextEventIsRandom", "comun.nextEventIsRandom", "&6&lRandomEvent"),
 
