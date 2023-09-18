@@ -21,6 +21,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Arrow;
@@ -488,11 +490,11 @@ public class MatchActive {
 	}
 
 	public void echaDePartida(Player player, Boolean comprueba, Boolean sacaInv, Boolean sacaSpectator) {
-		echaDePartida(player, comprueba, sacaInv, sacaSpectator, true, false);
+		echaDePartida(player, comprueba, sacaInv, sacaSpectator, true, false,false);
 	}
 
 	public void echaDePartida(Player player, Boolean comprueba, Boolean sacaInv, Boolean sacaSpectator,
-			Boolean compruebaSpectator, Boolean forzado) {
+			Boolean compruebaSpectator, Boolean forzado,Boolean disconnect) {
 		Location lastLocation = player.getLocation();
 		getPlayerHandler().getLocationsBeforeExitting().add(lastLocation);
 		dropItems(player, forzado);
@@ -607,7 +609,7 @@ public class MatchActive {
 					&& (sacaSpectator || match.getSpectatorSpawns() == null || match.getSpectatorSpawns().isEmpty())) {
 				hazComandosDeSalir(player);
 				borraScoreboard(player);
-				if (plugin.getReventConfig().isInventoryManagement() && !getMatch().getUseOwnInventory() && res)
+				if (plugin.getReventConfig().isInventoryManagement() && !getMatch().getUseOwnInventory() && res && !disconnect)
 					UtilsRandomEvents.sacaInventario(plugin, player);
 			}
 		}
@@ -662,7 +664,7 @@ public class MatchActive {
 	}
 
 	public void echaDePartida(List<Player> players, Boolean comprueba, Boolean sacaInv, Boolean sacaSpectator,
-			Boolean compruebaSpectator) {
+			Boolean compruebaSpectator,Boolean disconnect) {
 
 		if (comprueba) {
 			if (!getPlayerHandler().getPlayersObj().remove(players)) {
@@ -1229,7 +1231,7 @@ public class MatchActive {
 				} catch (Exception e) {
 
 				}
-				echaDePartida(p, false, true, true, false, false);
+				echaDePartida(p, false, true, true, false, false,false);
 			}
 			for (Player player : ganadores) {
 				// UtilsStats.aumentaStats(player.getName(),
@@ -2503,6 +2505,7 @@ public class MatchActive {
 		Map<String, List<Location>> glasses = UtilsRandomEvents.getGlassLocation(getMatch().getAuxLocation1(),
 				getMatch().getAuxLocation2(), plugin);
 		for (List<Location> loc : glasses.values()) {
+			Location correcto=loc.get(plugin.getRandom().nextInt(loc.size()));
 			for (Location l : loc) {
 				try {
 					getMapHandler().getBlockDisappeared().put(l.getBlock().getLocation(),
@@ -2512,8 +2515,62 @@ public class MatchActive {
 							l.getBlock().getState().getData().clone());
 				}
 				l.getBlock().setType(XMaterial.GLASS.parseMaterial());
+				if(plugin.getReventConfig().isBiggerPlatform()){
+					List<Location> listaPlataformas=new ArrayList<>();
+					Block east		=l.getBlock().getRelative(BlockFace.EAST,1);
+					Block northEast =l.getBlock().getRelative(BlockFace.NORTH_EAST,1);
+					Block southEast =l.getBlock().getRelative(BlockFace.SOUTH_EAST,1);
+					Block north		=l.getBlock().getRelative(BlockFace.NORTH,1);
+					Block west		=l.getBlock().getRelative(BlockFace.WEST,1);
+					Block northWest =l.getBlock().getRelative(BlockFace.NORTH_WEST,1);
+					Block south		=l.getBlock().getRelative(BlockFace.SOUTH,1);
+					Block southWest =l.getBlock().getRelative(BlockFace.SOUTH_WEST,1);
+					
+					getMapHandler().getBlockPlaced().put(east.getLocation(),east.getState().getData().clone());
+					getMapHandler().getBlockPlaced().put(northEast.getLocation(),northEast.getState().getData().clone());
+					getMapHandler().getBlockPlaced().put(southEast.getLocation(),southEast.getState().getData().clone());
+					getMapHandler().getBlockPlaced().put(north.getLocation(),north.getState().getData().clone());
+					getMapHandler().getBlockPlaced().put(west.getLocation(),west.getState().getData().clone());
+					getMapHandler().getBlockPlaced().put(northWest.getLocation(),northWest.getState().getData().clone());
+					getMapHandler().getBlockPlaced().put(south.getLocation(),south.getState().getData().clone());
+					getMapHandler().getBlockPlaced().put(southWest.getLocation(),southWest.getState().getData().clone());
+
+					east.setType(XMaterial.GLASS.parseMaterial());		
+					northEast.setType(XMaterial.GLASS.parseMaterial());
+					southEast.setType(XMaterial.GLASS.parseMaterial());
+					north.setType(XMaterial.GLASS.parseMaterial());		
+					west.setType(XMaterial.GLASS.parseMaterial());		
+					northWest.setType(XMaterial.GLASS.parseMaterial());
+					south.setType(XMaterial.GLASS.parseMaterial());		
+					southWest.setType(XMaterial.GLASS.parseMaterial());
+					
+					if(l.equals(correcto)){
+						getMapHandler().getLocationsGlasses().add(east		.getLocation());
+						getMapHandler().getLocationsGlasses().add(northEast .getLocation());
+						getMapHandler().getLocationsGlasses().add(southEast .getLocation());
+						getMapHandler().getLocationsGlasses().add(north		.getLocation());
+						getMapHandler().getLocationsGlasses().add(west		.getLocation());
+						getMapHandler().getLocationsGlasses().add(northWest .getLocation());
+						getMapHandler().getLocationsGlasses().add(south		.getLocation());
+						getMapHandler().getLocationsGlasses().add(southWest .getLocation());
+								
+					}else{
+						listaPlataformas.add(l);
+						listaPlataformas.add(east		.getLocation());
+						listaPlataformas.add(northEast .getLocation());
+						listaPlataformas.add(southEast .getLocation());
+						listaPlataformas.add(north		.getLocation());
+						listaPlataformas.add(west		.getLocation());
+						listaPlataformas.add(northWest .getLocation());
+						listaPlataformas.add(south		.getLocation());
+						listaPlataformas.add(southWest .getLocation());	
+						getMapHandler().getLocationsPlatforms().add(listaPlataformas);
+					}
+					
+				}
 			}
-			getMapHandler().getLocationsGlasses().add(loc.get(plugin.getRandom().nextInt(loc.size())));
+
+			getMapHandler().getLocationsGlasses().add(correcto);
 		}
 
 		partidaPorTiempo();
@@ -2867,7 +2924,7 @@ public class MatchActive {
 		}
 		for (Player p : playersEchar) {
 			plugin.getMatchActive().hazComandosDeMuerte(null, p);
-			echaDePartida(p, true, true, false, true, true);
+			echaDePartida(p, true, true, false, true, true,false);
 
 		}
 	}
@@ -3138,7 +3195,7 @@ public class MatchActive {
 							plugin.getLanguage().getBombExplode().replace("%player%", p.getName()), true);
 					hazComandosDeMuerte(null, p);
 				}
-				echaDePartida(muertos, true, true, false, true);
+				echaDePartida(muertos, true, true, false, true,false);
 				if (getPlayerHandler().getPlayersObj().size() > limitPlayers) {
 					bombRandom();
 				} else {

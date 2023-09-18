@@ -37,6 +37,8 @@ public class MatchMapDataHandler {
 	private List<Location> blockPartyBlocks;
 
 	private List<Location> locationsGlasses;
+	
+	private List<List<Location>> locationsPlatforms;
 
 	public MatchMapDataHandler() {
 		super();
@@ -49,7 +51,16 @@ public class MatchMapDataHandler {
 		this.fireballs = new HashSet<Fireball>();
 		this.blockPartyBlocks = new ArrayList<Location>();
 		this.locationsGlasses = new ArrayList<Location>();
+		this.locationsPlatforms = new ArrayList<>();
 
+	}
+
+	public List<List<Location>> getLocationsPlatforms() {
+		return locationsPlatforms;
+	}
+
+	public void setLocationsPlatforms(List<List<Location>> locationsPlatforms) {
+		this.locationsPlatforms = locationsPlatforms;
 	}
 
 	public List<Location> getLocationsGlasses() {

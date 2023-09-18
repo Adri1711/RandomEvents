@@ -73,7 +73,7 @@ public class WeaponShoot implements Listener {
 											UtilsRandomEvents.playSound(plugin,damager, XSound.ENTITY_PLAYER_LEVELUP);
 											plugin.getMatchActive().hazComandosDeMuerte(damager,player);
 											plugin.getMatchActive().echaDePartida(player, true, true, false, true,
-													true);
+													true,false);
 											player.setHealth(player.getMaxHealth());
 
 										}
@@ -429,7 +429,7 @@ public class WeaponShoot implements Listener {
 
 									UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_VILLAGER_DEATH);
 									plugin.getMatchActive().hazComandosDeMuerte(null,player);
-									plugin.getMatchActive().echaDePartida(player, true, true, false, true, true);
+									plugin.getMatchActive().echaDePartida(player, true, true, false, true, true,false);
 									player.setHealth(player.getMaxHealth());
 								}
 

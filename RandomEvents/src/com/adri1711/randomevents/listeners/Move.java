@@ -1,5 +1,7 @@
 package com.adri1711.randomevents.listeners;
 
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -271,8 +273,21 @@ public class Move implements Listener {
 					} else if (evt.getTo().getBlock() != null && evt.getTo().getBlock().getType() != null
 							&& (evt.getTo().getBlock().getType() == XMaterial.GLASS.parseMaterial())) {
 						if (!plugin.getMatchActive().getMapHandler().getLocationsGlasses()
-								.contains(evt.getTo().getBlock().getLocation()))
-							evt.getTo().getBlock().breakNaturally();
+								.contains(evt.getTo().getBlock().getLocation())) {
+							if (plugin.getMatchActive().getMapHandler().getLocationsPlatforms().isEmpty()) {
+								evt.getTo().getBlock().breakNaturally();
+							} else {
+								for (List<Location> locations : plugin.getMatchActive().getMapHandler()
+										.getLocationsPlatforms()) {
+									if (locations.contains(evt.getTo().getBlock().getLocation())) {
+										for (Location loc : locations) {
+											loc.getBlock().breakNaturally();
+										}
+									}
+								}
+							}
+						}
+
 						UtilsRandomEvents.mandaMensaje(plugin,
 								plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 								plugin.getLanguage().getPvpDeath().replaceAll("%victim%", player.getName()), false);
@@ -284,7 +299,18 @@ public class Move implements Listener {
 							&& player.getVelocity().length() < 1.5) {
 						if (!plugin.getMatchActive().getMapHandler().getLocationsGlasses()
 								.contains(glass.getLocation())) {
-							glass.breakNaturally();
+							if (plugin.getMatchActive().getMapHandler().getLocationsPlatforms().isEmpty()) {
+								glass.breakNaturally();
+							} else {
+								for (List<Location> locations : plugin.getMatchActive().getMapHandler()
+										.getLocationsPlatforms()) {
+									if (locations.contains(glass.getLocation())) {
+										for (Location loc : locations) {
+											loc.getBlock().breakNaturally();
+										}
+									}
+								}
+							}
 							// UtilsRandomEvents.mandaMensaje(plugin,
 							// plugin.getMatchActive().getPlayerHandler().getPlayersSpectators(),
 							// plugin.getLanguage().getPvpDeath().replaceAll("%victim%",

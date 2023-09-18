@@ -55,7 +55,7 @@ public class Join implements Listener {
 			
 		} else {
 
-			UtilsRandomEvents.sacaInventario(plugin, player);
+			UtilsRandomEvents.sacaInventario(plugin, player,true);
 		}
 		if (plugin.getMatchActive() != null && plugin.getReventConfig().isForcePlayersToSpectate()) {
 

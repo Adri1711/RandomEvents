@@ -403,6 +403,9 @@ blockPartyBlocks:
 ##Is pvp allowed on GlassWalk
 allowGlassWalkPvP: true
 
+##Convert the glasses platform on 3x3 platform (The configuration map doesnt change, just put 1 glass it will convert to 3x3 square platform when match begin
+biggerPlatform: false
+
 ##################################################################
 ##					 GREEN LIGHT RED LIGHT 	    				##
 ##################################################################

@@ -705,8 +705,10 @@ public class UtilsRandomEvents {
 		return exitoso;
 
 	}
-
 	public static void sacaInventario(RandomEvents plugin, Player player) {
+		UtilsRandomEvents.sacaInventario(plugin, player,false);
+	}
+	public static void sacaInventario(RandomEvents plugin, Player player,Boolean join) {
 		if (plugin.getReventConfig().isInventoryManagement()
 				&& (plugin.getMatchActive() == null || !plugin.getMatchActive().getMatch().getUseOwnInventory())) {
 
@@ -770,7 +772,10 @@ public class UtilsRandomEvents {
 						if (plugin.getReventConfig().getUseLastLocation()) {
 							if (inventario.getLastLocation() != null) {
 								teleportaPlayer(player, inventario.getLastLocation(), plugin);
-							}
+							} 
+						}else if(join){
+							UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin, true);
+
 						}
 						GameMode gm = GameMode.valueOf(inventario.getGamemode());
 						if (gm == null) {

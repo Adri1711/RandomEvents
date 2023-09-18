@@ -128,7 +128,7 @@ public class Death implements Listener {
 														player.getName()),
 												false, false, false);
 										plugin.getMatchActive().hazComandosDeMuerte(null, player);
-										plugin.getMatchActive().echaDePartida(player, true, true, false, true, true);
+										plugin.getMatchActive().echaDePartida(player, true, true, false, true, true,false);
 										UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 									}
 									break;
@@ -155,15 +155,6 @@ public class Death implements Listener {
 									}
 									break;
 								case GLASS_WALK:
-									if (!plugin.getMatchActive().getAllowDamagePVP() && !plugin.getReventConfig().isAllowGlassWalkPvP()) {
-										ev.setCancelled(true);
-									} else {
-										ev.setDamage(0);
-										if (plugin.getReventConfig().isHighestPriorityDamageEvents()) {
-											ev.setCancelled(false);
-										}
-									}
-									break;
 								case KNOCKBACK_DUEL:
 								case BLOCK_PARTY:
 									if (!cancelled) {
@@ -456,7 +447,7 @@ public class Death implements Listener {
 
 					UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 					plugin.getMatchActive().hazComandosDeMuerte(null, player);
-					plugin.getMatchActive().echaDePartida(player, true, true, false, true, true);
+					plugin.getMatchActive().echaDePartida(player, true, true, false, true, true,false);
 					player.setHealth(player.getMaxHealth());
 				}
 
@@ -493,7 +484,7 @@ public class Death implements Listener {
 				player.setHealth(player.getMaxHealth());
 				break;
 			case GLASS_WALK:
-				if (!plugin.getMatchActive().getAllowDamagePVP() && !plugin.getReventConfig().isAllowGlassWalkPvP()) {
+				if (!plugin.getMatchActive().getAllowDamagePVP()) {
 					ev.setCancelled(true);
 				} else {
 					ev.setDamage(0);
@@ -833,7 +824,7 @@ public class Death implements Listener {
 				break;
 
 			case GLASS_WALK:
-				if (!plugin.getMatchActive().getAllowDamagePVP() && !plugin.getReventConfig().isAllowGlassWalkPvP()) {
+				if (!plugin.getMatchActive().getAllowDamagePVP()) {
 					ev.setCancelled(true);
 				} else {
 					ev.setDamage(0);
@@ -1027,7 +1018,7 @@ public class Death implements Listener {
 								UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 								UtilsRandomEvents.playSound(plugin, damager, XSound.ENTITY_PLAYER_LEVELUP);
 								plugin.getMatchActive().hazComandosDeMuerte(damager, player);
-								plugin.getMatchActive().echaDePartida(player, true, true, false, true, true);
+								plugin.getMatchActive().echaDePartida(player, true, true, false, true, true,false);
 								player.setHealth(player.getMaxHealth());
 
 							}
@@ -1445,7 +1436,7 @@ public class Death implements Listener {
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 							UtilsRandomEvents.playSound(plugin, damager, XSound.ENTITY_PLAYER_LEVELUP);
 							plugin.getMatchActive().hazComandosDeMuerte(damager, player);
-							plugin.getMatchActive().echaDePartida(player, true, true, false, true, true);
+							plugin.getMatchActive().echaDePartida(player, true, true, false, true, true,false);
 							player.setHealth(player.getMaxHealth());
 
 						}
@@ -1903,7 +1894,7 @@ public class Death implements Listener {
 								UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 								UtilsRandomEvents.playSound(plugin, damager, XSound.ENTITY_PLAYER_LEVELUP);
 								plugin.getMatchActive().hazComandosDeMuerte(damager, player);
-								plugin.getMatchActive().echaDePartida(player, true, true, false, true, false);
+								plugin.getMatchActive().echaDePartida(player, true, true, false, true, false,false);
 								player.setHealth(player.getMaxHealth());
 							} else {
 								ev.setCancelled(true);
@@ -1969,7 +1960,7 @@ public class Death implements Listener {
 								UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_DEATH);
 								UtilsRandomEvents.playSound(plugin, damager, XSound.ENTITY_PLAYER_LEVELUP);
 								plugin.getMatchActive().hazComandosDeMuerte(damager, player);
-								plugin.getMatchActive().echaDePartida(player, true, true, false, true, false);
+								plugin.getMatchActive().echaDePartida(player, true, true, false, true, false,false);
 								player.setHealth(player.getMaxHealth());
 							} else {
 								ev.setCancelled(true);

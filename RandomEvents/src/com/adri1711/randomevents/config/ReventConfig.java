@@ -42,7 +42,7 @@ public class ReventConfig {
 	private ItemStack checkpointItem;
 
 	private Boolean raceSlowEffect;
-	
+
 	private Integer invincibleAfterGame;
 
 	private Boolean avoidSpectatorTp;
@@ -54,6 +54,7 @@ public class ReventConfig {
 	private boolean avoidSnowballKnockback;
 	private boolean avoidEggKnockback;
 	private boolean allowGlassWalkPvP;
+	private boolean biggerPlatform;
 
 	private boolean mysqlEnabled;
 
@@ -79,7 +80,7 @@ public class ReventConfig {
 	private boolean forceEmptyInventoryToJoin;
 
 	private BannedPlayers bannedPlayers;
-	
+
 	private PlayersDisabled disabledPlayers;
 
 	private Integer idleTimeForDamage;
@@ -464,7 +465,8 @@ public class ReventConfig {
 		this.avoidSnowballKnockback = plugin.getConfig().getBoolean("avoidSnowballKnockback");
 		this.avoidEggKnockback = plugin.getConfig().getBoolean("avoidEggKnockback");
 		this.allowGlassWalkPvP = plugin.getConfig().getBoolean("allowGlassWalkPvP");
-		
+		this.biggerPlatform = plugin.getConfig().getBoolean("biggerPlatform");
+
 		this.dropItemsAfterDie = plugin.getConfig().getBoolean("dropItemsAfterDie");
 		this.advancedSpectatorMode = plugin.getConfig().getBoolean("advancedSpectatorMode");
 		this.materialBlockParty = Material.getMaterial(plugin.getConfig().getString("blockPartyMaterial"));
@@ -710,7 +712,7 @@ public class ReventConfig {
 		this.randomDisguisePlayers = plugin.getConfig().getBoolean("randomDisguisePlayers");
 		this.useLastLocation = plugin.getConfig().getBoolean("useLastLocation");
 		this.avoidSpectatorTp = plugin.getConfig().getBoolean("avoidSpectatorTp");
-		
+
 		this.raceSlowEffect = plugin.getConfig().getBoolean("raceSlowEffect");
 
 		this.optionalTitles = plugin.getConfig().getBoolean("optionalTitles");
@@ -737,13 +739,12 @@ public class ReventConfig {
 		if (bannedPlayers == null || bannedPlayers.getBannedPlayers() == null) {
 			bannedPlayers = new BannedPlayers();
 		}
-		
+
 		this.disabledPlayers = UtilsRandomEvents.cargarDisabledPlayers(plugin);
 		if (disabledPlayers == null || disabledPlayers.getPlayersDisabled() == null) {
 			disabledPlayers = new PlayersDisabled();
 		}
-		
-		
+
 		plugin.setSchedules(UtilsRandomEvents.cargarSchedules(plugin));
 
 		Date now = new Date();
@@ -2213,6 +2214,14 @@ public class ReventConfig {
 		this.allowGlassWalkPvP = allowGlassWalkPvP;
 	}
 
+	public boolean isBiggerPlatform() {
+		return biggerPlatform;
+	}
+
+	public void setBiggerPlatform(boolean biggerPlatform) {
+		this.biggerPlatform = biggerPlatform;
+	}
+
 	public List<String> getMinPlayersBlackList() {
 		return minPlayersBlackList;
 	}
@@ -2220,6 +2229,5 @@ public class ReventConfig {
 	public void setMinPlayersBlackList(List<String> minPlayersBlackList) {
 		this.minPlayersBlackList = minPlayersBlackList;
 	}
-	
 
 }
