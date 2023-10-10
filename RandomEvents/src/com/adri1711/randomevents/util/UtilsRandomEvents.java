@@ -3855,4 +3855,16 @@ public class UtilsRandomEvents {
 
 	}
 
+	public static Match buscaPartidaPorFichero(RandomEvents plugin, String number) {
+		Match m=null;
+		for(Match match:plugin.getMatches()){
+			String s=match.getMinigame().getCodigo() + "_"
+					+ ChatColor.stripColor(match.getName().replaceAll("<color>", "§")).replaceAll(" ", "_");
+			if(s.toUpperCase().equals(number.toUpperCase())){
+				m=match;
+			}
+		}
+		return m;
+	}
+
 }

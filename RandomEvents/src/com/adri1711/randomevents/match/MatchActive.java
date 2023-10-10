@@ -92,6 +92,8 @@ public class MatchActive {
 
 	private Map<Player, Integer> step;
 
+	private Boolean starting;
+
 	private Boolean playing;
 
 	private Boolean started;
@@ -195,6 +197,7 @@ public class MatchActive {
 			getMapHandler().setCuboid(new Cuboid(match.getLocation1(), match.getLocation2()));
 		this.limitPlayers = 1;
 		this.playing = Boolean.FALSE;
+		this.starting = Boolean.FALSE;
 		this.started = Boolean.FALSE;
 		this.canBreak = Boolean.FALSE;
 		this.activated = Boolean.FALSE;
@@ -286,6 +289,7 @@ public class MatchActive {
 			break;
 		}
 		this.playing = Boolean.FALSE;
+		this.starting = Boolean.FALSE;
 		this.started = Boolean.FALSE;
 		this.canBreak = Boolean.FALSE;
 		this.activated = Boolean.FALSE;
@@ -490,11 +494,11 @@ public class MatchActive {
 	}
 
 	public void echaDePartida(Player player, Boolean comprueba, Boolean sacaInv, Boolean sacaSpectator) {
-		echaDePartida(player, comprueba, sacaInv, sacaSpectator, true, false,false);
+		echaDePartida(player, comprueba, sacaInv, sacaSpectator, true, false, false);
 	}
 
 	public void echaDePartida(Player player, Boolean comprueba, Boolean sacaInv, Boolean sacaSpectator,
-			Boolean compruebaSpectator, Boolean forzado,Boolean disconnect) {
+			Boolean compruebaSpectator, Boolean forzado, Boolean disconnect) {
 		Location lastLocation = player.getLocation();
 		getPlayerHandler().getLocationsBeforeExitting().add(lastLocation);
 		dropItems(player, forzado);
@@ -609,7 +613,8 @@ public class MatchActive {
 					&& (sacaSpectator || match.getSpectatorSpawns() == null || match.getSpectatorSpawns().isEmpty())) {
 				hazComandosDeSalir(player);
 				borraScoreboard(player);
-				if (plugin.getReventConfig().isInventoryManagement() && !getMatch().getUseOwnInventory() && res && !disconnect)
+				if (plugin.getReventConfig().isInventoryManagement() && !getMatch().getUseOwnInventory() && res
+						&& !disconnect)
 					UtilsRandomEvents.sacaInventario(plugin, player);
 			}
 		}
@@ -664,7 +669,7 @@ public class MatchActive {
 	}
 
 	public void echaDePartida(List<Player> players, Boolean comprueba, Boolean sacaInv, Boolean sacaSpectator,
-			Boolean compruebaSpectator,Boolean disconnect) {
+			Boolean compruebaSpectator, Boolean disconnect) {
 
 		if (comprueba) {
 			if (!getPlayerHandler().getPlayersObj().remove(players)) {
@@ -1102,7 +1107,8 @@ public class MatchActive {
 			}
 		}
 		for (Player play : Bukkit.getOnlinePlayers()) {
-			if (tiempo && match.getMinigame() != MinigameType.HIDE_AND_SEEK && match.getMinigame() != MinigameType.GLASS_WALK) {
+			if (tiempo && match.getMinigame() != MinigameType.HIDE_AND_SEEK
+					&& match.getMinigame() != MinigameType.GLASS_WALK) {
 				play.sendMessage(plugin.getLanguage().getTagPlugin() + " "
 						+ plugin.getLanguage().getWinnersPoints().replace("%points%", maximo.toString())
 								.replace("%type%", match.getMinigame().getMessage(plugin))
@@ -1231,7 +1237,7 @@ public class MatchActive {
 				} catch (Exception e) {
 
 				}
-				echaDePartida(p, false, true, true, false, false,false);
+				echaDePartida(p, false, true, true, false, false, false);
 			}
 			for (Player player : ganadores) {
 				// UtilsStats.aumentaStats(player.getName(),
@@ -1434,18 +1440,21 @@ public class MatchActive {
 		// UtilsStats.aumentaStats(player.getName(), getMatch().getName(),
 		// StatsEnum.PARTIDAS_JUGADAS, plugin);
 		// }
-		if (!plugin.getReventConfig().isShowInfoMinigameOnJoin()) {
-			mandaDescripcion();
-		}
-		try {
-			Bukkit.getPluginManager().callEvent(new ReventBeginEvent(this));
-		} catch (Exception e) {
-			plugin.getLoggerP().info("[RandomEvents] WARN :: Couldnt fire the ReventBeginEvent.");
-		}
-		cuentaAtras(Boolean.TRUE);
-		if (plugin.getReventConfig().isRandomDisguisePlayers()) {
-			for (Player p : getPlayerHandler().getPlayersObj()) {
-				UtilsDisguises.disguisePlayer(p, plugin);
+		if (!getStarting()) {
+			setStarting(Boolean.TRUE);
+			if (!plugin.getReventConfig().isShowInfoMinigameOnJoin()) {
+				mandaDescripcion();
+			}
+			try {
+				Bukkit.getPluginManager().callEvent(new ReventBeginEvent(this));
+			} catch (Exception e) {
+				plugin.getLoggerP().info("[RandomEvents] WARN :: Couldnt fire the ReventBeginEvent.");
+			}
+			cuentaAtras(Boolean.TRUE);
+			if (plugin.getReventConfig().isRandomDisguisePlayers()) {
+				for (Player p : getPlayerHandler().getPlayersObj()) {
+					UtilsDisguises.disguisePlayer(p, plugin);
+				}
 			}
 		}
 	}
@@ -2505,7 +2514,7 @@ public class MatchActive {
 		Map<String, List<Location>> glasses = UtilsRandomEvents.getGlassLocation(getMatch().getAuxLocation1(),
 				getMatch().getAuxLocation2(), plugin);
 		for (List<Location> loc : glasses.values()) {
-			Location correcto=loc.get(plugin.getRandom().nextInt(loc.size()));
+			Location correcto = loc.get(plugin.getRandom().nextInt(loc.size()));
 			for (Location l : loc) {
 				try {
 					getMapHandler().getBlockDisappeared().put(l.getBlock().getLocation(),
@@ -2515,58 +2524,62 @@ public class MatchActive {
 							l.getBlock().getState().getData().clone());
 				}
 				l.getBlock().setType(XMaterial.GLASS.parseMaterial());
-				if(plugin.getReventConfig().isBiggerPlatform()){
-					List<Location> listaPlataformas=new ArrayList<>();
-					Block east		=l.getBlock().getRelative(BlockFace.EAST,1);
-					Block northEast =l.getBlock().getRelative(BlockFace.NORTH_EAST,1);
-					Block southEast =l.getBlock().getRelative(BlockFace.SOUTH_EAST,1);
-					Block north		=l.getBlock().getRelative(BlockFace.NORTH,1);
-					Block west		=l.getBlock().getRelative(BlockFace.WEST,1);
-					Block northWest =l.getBlock().getRelative(BlockFace.NORTH_WEST,1);
-					Block south		=l.getBlock().getRelative(BlockFace.SOUTH,1);
-					Block southWest =l.getBlock().getRelative(BlockFace.SOUTH_WEST,1);
-					
-					getMapHandler().getBlockPlaced().put(east.getLocation(),east.getState().getData().clone());
-					getMapHandler().getBlockPlaced().put(northEast.getLocation(),northEast.getState().getData().clone());
-					getMapHandler().getBlockPlaced().put(southEast.getLocation(),southEast.getState().getData().clone());
-					getMapHandler().getBlockPlaced().put(north.getLocation(),north.getState().getData().clone());
-					getMapHandler().getBlockPlaced().put(west.getLocation(),west.getState().getData().clone());
-					getMapHandler().getBlockPlaced().put(northWest.getLocation(),northWest.getState().getData().clone());
-					getMapHandler().getBlockPlaced().put(south.getLocation(),south.getState().getData().clone());
-					getMapHandler().getBlockPlaced().put(southWest.getLocation(),southWest.getState().getData().clone());
+				if (plugin.getReventConfig().isBiggerPlatform()) {
+					List<Location> listaPlataformas = new ArrayList<>();
+					Block east = l.getBlock().getRelative(BlockFace.EAST, 1);
+					Block northEast = l.getBlock().getRelative(BlockFace.NORTH_EAST, 1);
+					Block southEast = l.getBlock().getRelative(BlockFace.SOUTH_EAST, 1);
+					Block north = l.getBlock().getRelative(BlockFace.NORTH, 1);
+					Block west = l.getBlock().getRelative(BlockFace.WEST, 1);
+					Block northWest = l.getBlock().getRelative(BlockFace.NORTH_WEST, 1);
+					Block south = l.getBlock().getRelative(BlockFace.SOUTH, 1);
+					Block southWest = l.getBlock().getRelative(BlockFace.SOUTH_WEST, 1);
 
-					east.setType(XMaterial.GLASS.parseMaterial());		
+					getMapHandler().getBlockPlaced().put(east.getLocation(), east.getState().getData().clone());
+					getMapHandler().getBlockPlaced().put(northEast.getLocation(),
+							northEast.getState().getData().clone());
+					getMapHandler().getBlockPlaced().put(southEast.getLocation(),
+							southEast.getState().getData().clone());
+					getMapHandler().getBlockPlaced().put(north.getLocation(), north.getState().getData().clone());
+					getMapHandler().getBlockPlaced().put(west.getLocation(), west.getState().getData().clone());
+					getMapHandler().getBlockPlaced().put(northWest.getLocation(),
+							northWest.getState().getData().clone());
+					getMapHandler().getBlockPlaced().put(south.getLocation(), south.getState().getData().clone());
+					getMapHandler().getBlockPlaced().put(southWest.getLocation(),
+							southWest.getState().getData().clone());
+
+					east.setType(XMaterial.GLASS.parseMaterial());
 					northEast.setType(XMaterial.GLASS.parseMaterial());
 					southEast.setType(XMaterial.GLASS.parseMaterial());
-					north.setType(XMaterial.GLASS.parseMaterial());		
-					west.setType(XMaterial.GLASS.parseMaterial());		
+					north.setType(XMaterial.GLASS.parseMaterial());
+					west.setType(XMaterial.GLASS.parseMaterial());
 					northWest.setType(XMaterial.GLASS.parseMaterial());
-					south.setType(XMaterial.GLASS.parseMaterial());		
+					south.setType(XMaterial.GLASS.parseMaterial());
 					southWest.setType(XMaterial.GLASS.parseMaterial());
-					
-					if(l.equals(correcto)){
-						getMapHandler().getLocationsGlasses().add(east		.getLocation());
-						getMapHandler().getLocationsGlasses().add(northEast .getLocation());
-						getMapHandler().getLocationsGlasses().add(southEast .getLocation());
-						getMapHandler().getLocationsGlasses().add(north		.getLocation());
-						getMapHandler().getLocationsGlasses().add(west		.getLocation());
-						getMapHandler().getLocationsGlasses().add(northWest .getLocation());
-						getMapHandler().getLocationsGlasses().add(south		.getLocation());
-						getMapHandler().getLocationsGlasses().add(southWest .getLocation());
-								
-					}else{
+
+					if (l.equals(correcto)) {
+						getMapHandler().getLocationsGlasses().add(east.getLocation());
+						getMapHandler().getLocationsGlasses().add(northEast.getLocation());
+						getMapHandler().getLocationsGlasses().add(southEast.getLocation());
+						getMapHandler().getLocationsGlasses().add(north.getLocation());
+						getMapHandler().getLocationsGlasses().add(west.getLocation());
+						getMapHandler().getLocationsGlasses().add(northWest.getLocation());
+						getMapHandler().getLocationsGlasses().add(south.getLocation());
+						getMapHandler().getLocationsGlasses().add(southWest.getLocation());
+
+					} else {
 						listaPlataformas.add(l);
-						listaPlataformas.add(east		.getLocation());
-						listaPlataformas.add(northEast .getLocation());
-						listaPlataformas.add(southEast .getLocation());
-						listaPlataformas.add(north		.getLocation());
-						listaPlataformas.add(west		.getLocation());
-						listaPlataformas.add(northWest .getLocation());
-						listaPlataformas.add(south		.getLocation());
-						listaPlataformas.add(southWest .getLocation());	
+						listaPlataformas.add(east.getLocation());
+						listaPlataformas.add(northEast.getLocation());
+						listaPlataformas.add(southEast.getLocation());
+						listaPlataformas.add(north.getLocation());
+						listaPlataformas.add(west.getLocation());
+						listaPlataformas.add(northWest.getLocation());
+						listaPlataformas.add(south.getLocation());
+						listaPlataformas.add(southWest.getLocation());
 						getMapHandler().getLocationsPlatforms().add(listaPlataformas);
 					}
-					
+
 				}
 			}
 
@@ -2594,8 +2607,10 @@ public class MatchActive {
 		}
 		task = new BukkitRunnable() {
 			public void run() {
-				updateScoreboards();
-				checkBlockParty();
+				if (getPlaying()) {
+					updateScoreboards();
+					checkBlockParty();
+				}
 			}
 		};
 		task.runTaskTimerAsynchronously(plugin, 20L, 20L);
@@ -2630,27 +2645,29 @@ public class MatchActive {
 		} else if (checkDate < now && !itemAppear) {
 			List<XMaterial> materiales = new ArrayList<XMaterial>();
 			materiales.addAll(mapaMateriales.keySet());
-			material = materiales.get(random.nextInt(materiales.size()));
-			Bukkit.getScheduler().runTask(plugin, new Runnable() {
+			if (materiales != null && !materiales.isEmpty()) {
+				material = materiales.get(random.nextInt(materiales.size()));
+				Bukkit.getScheduler().runTask(plugin, new Runnable() {
 
-				public void run() {
-					UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
-							XSound.ENTITY_PLAYER_LEVELUP);
-					for (Player p : getPlayerHandler().getPlayersObj()) {
-						p.getInventory().setItem(0, material.parseItem());
-						p.getInventory().setItem(1, material.parseItem());
-						p.getInventory().setItem(2, material.parseItem());
-						p.getInventory().setItem(3, material.parseItem());
-						p.getInventory().setItem(4, material.parseItem());
-						p.getInventory().setItem(5, material.parseItem());
-						p.getInventory().setItem(6, material.parseItem());
-						p.getInventory().setItem(7, material.parseItem());
-						p.getInventory().setItem(8, material.parseItem());
-						p.updateInventory();
+					public void run() {
+						UtilsRandomEvents.playSound(plugin, getPlayerHandler().getPlayersSpectators(),
+								XSound.ENTITY_PLAYER_LEVELUP);
+						for (Player p : getPlayerHandler().getPlayersObj()) {
+							p.getInventory().setItem(0, material.parseItem());
+							p.getInventory().setItem(1, material.parseItem());
+							p.getInventory().setItem(2, material.parseItem());
+							p.getInventory().setItem(3, material.parseItem());
+							p.getInventory().setItem(4, material.parseItem());
+							p.getInventory().setItem(5, material.parseItem());
+							p.getInventory().setItem(6, material.parseItem());
+							p.getInventory().setItem(7, material.parseItem());
+							p.getInventory().setItem(8, material.parseItem());
+							p.updateInventory();
+						}
 					}
-				}
-			});
-			itemAppear = true;
+				});
+				itemAppear = true;
+			}
 		} else if (endDate < now && !blocksDisappear) {
 			for (
 
@@ -2924,7 +2941,7 @@ public class MatchActive {
 		}
 		for (Player p : playersEchar) {
 			plugin.getMatchActive().hazComandosDeMuerte(null, p);
-			echaDePartida(p, true, true, false, true, true,false);
+			echaDePartida(p, true, true, false, true, true, false);
 
 		}
 	}
@@ -3195,7 +3212,7 @@ public class MatchActive {
 							plugin.getLanguage().getBombExplode().replace("%player%", p.getName()), true);
 					hazComandosDeMuerte(null, p);
 				}
-				echaDePartida(muertos, true, true, false, true,false);
+				echaDePartida(muertos, true, true, false, true, false);
 				if (getPlayerHandler().getPlayersObj().size() > limitPlayers) {
 					bombRandom();
 				} else {
@@ -3702,7 +3719,7 @@ public class MatchActive {
 							reiniciaDefault(p);
 							invincibility(p);
 
-							if (getEquipo(p) != null && p.getInventory().getChestplate()==null)
+							if (getEquipo(p) != null && p.getInventory().getChestplate() == null)
 								p.getInventory().setChestplate(Petos.getPeto(getEquipo(p)).getPeto());
 							if (plugin.getReventConfig().isQuakeGiveDefaultWeapon()) {
 								p.getInventory().addItem(XMaterial.STONE_HOE.parseItem());
@@ -3718,7 +3735,7 @@ public class MatchActive {
 				reiniciaDefault(p);
 				invincibility(p);
 
-				if (getEquipo(p) != null && p.getInventory().getChestplate()==null)
+				if (getEquipo(p) != null && p.getInventory().getChestplate() == null)
 					p.getInventory().setChestplate(Petos.getPeto(getEquipo(p)).getPeto());
 				if (plugin.getReventConfig().isQuakeGiveDefaultWeapon()) {
 					p.getInventory().addItem(XMaterial.STONE_HOE.parseItem());
@@ -3926,7 +3943,7 @@ public class MatchActive {
 					}
 				}
 			}
-			if (getEquipo(p) != null && p.getInventory().getChestplate()==null)
+			if (getEquipo(p) != null && p.getInventory().getChestplate() == null)
 				p.getInventory().setChestplate(Petos.getPeto(getEquipo(p)).getPeto());
 			if (plugin.getReventConfig().isForceGamemodeSurvival())
 				p.setGameMode(GameMode.SURVIVAL);
@@ -4008,7 +4025,9 @@ public class MatchActive {
 				if (!getStarted()) {
 					if (plugin.getReventConfig().isForcePlayersToEnter()) {
 						for (Player p : Bukkit.getOnlinePlayers()) {
-							if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission()) && !plugin.getReventConfig().getDisabledPlayers().getPlayersDisabled().contains(p.getName())
+							if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())
+									&& !plugin.getReventConfig().getDisabledPlayers().getPlayersDisabled()
+											.contains(p.getName())
 									&& (getMatch().getPermission() == null
 											|| p.hasPermission(getMatch().getPermission()))
 									&& !getPlayerHandler().getPlayersObj().contains(p)) {
@@ -4030,7 +4049,9 @@ public class MatchActive {
 							String startingMatch = plugin.getLanguage().getStartingMatch().replaceAll("%time%",
 									startTime.toString());
 							for (Player p : Bukkit.getOnlinePlayers()) {
-								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission()) && !plugin.getReventConfig().getDisabledPlayers().getPlayersDisabled().contains(p.getName())
+								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())
+										&& !plugin.getReventConfig().getDisabledPlayers().getPlayersDisabled()
+												.contains(p.getName())
 										&& (getMatch().getPermission() == null
 												|| p.hasPermission(getMatch().getPermission()))
 										&& (!plugin.getReventConfig().getRestrictWorlds() || (p.getWorld() != null
@@ -4111,7 +4132,9 @@ public class MatchActive {
 						// ultimasPartes.remove(0);
 
 						for (Player p : Bukkit.getOnlinePlayers()) {
-							if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission()) && !plugin.getReventConfig().getDisabledPlayers().getPlayersDisabled().contains(p.getName())
+							if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())
+									&& !plugin.getReventConfig().getDisabledPlayers().getPlayersDisabled()
+											.contains(p.getName())
 									&& (getMatch().getPermission() == null
 											|| p.hasPermission(getMatch().getPermission()))
 									&& (!plugin.getReventConfig().getRestrictWorlds() || (p.getWorld() != null
@@ -4177,7 +4200,9 @@ public class MatchActive {
 					if (!getStarted()) {
 						if (plugin.getReventConfig().isForcePlayersToEnter()) {
 							for (Player p : Bukkit.getOnlinePlayers()) {
-								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission()) && !plugin.getReventConfig().getDisabledPlayers().getPlayersDisabled().contains(p.getName())
+								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())
+										&& !plugin.getReventConfig().getDisabledPlayers().getPlayersDisabled()
+												.contains(p.getName())
 										&& (getMatch().getPermission() == null
 												|| p.hasPermission(getMatch().getPermission()))
 										&& !getPlayerHandler().getPlayersObj().contains(p)) {
@@ -4199,7 +4224,9 @@ public class MatchActive {
 								String startingMatch = plugin.getLanguage().getStartingMatch().replaceAll("%time%",
 										startTime.toString());
 								for (Player p : Bukkit.getOnlinePlayers()) {
-									if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission()) && !plugin.getReventConfig().getDisabledPlayers().getPlayersDisabled().contains(p.getName())
+									if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission())
+											&& !plugin.getReventConfig().getDisabledPlayers().getPlayersDisabled()
+													.contains(p.getName())
 											&& (getMatch().getPermission() == null
 													|| p.hasPermission(getMatch().getPermission()))
 											&& (!plugin.getReventConfig().getRestrictWorlds() || (p.getWorld() != null
@@ -4279,7 +4306,8 @@ public class MatchActive {
 							// ultimasPartes.remove(0);
 
 							for (Player p : Bukkit.getOnlinePlayers()) {
-								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission()) && !plugin.getReventConfig().getDisabledPlayers().getPlayersDisabled().contains(p.getName()) && (
+								if (p.hasPermission(ComandosEnum.CMD_JOIN.getPermission()) && !plugin.getReventConfig()
+										.getDisabledPlayers().getPlayersDisabled().contains(p.getName()) && (
 
 								getMatch().getPermission() == null || p.hasPermission(getMatch().getPermission()))
 										&& (!plugin.getReventConfig().getRestrictWorlds() || (p.getWorld() != null
@@ -4910,6 +4938,14 @@ public class MatchActive {
 
 	public void setRounds(Integer rounds) {
 		this.rounds = rounds;
+	}
+
+	public Boolean getStarting() {
+		return starting;
+	}
+
+	public void setStarting(Boolean starting) {
+		this.starting = starting;
 	}
 
 }

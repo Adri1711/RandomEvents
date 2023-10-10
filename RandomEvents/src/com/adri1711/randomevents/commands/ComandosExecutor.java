@@ -498,8 +498,36 @@ public class ComandosExecutor {
 				}
 
 			} catch (Exception e) {
-				if (player != null)
-					player.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());
+				try {
+					Match m = UtilsRandomEvents.buscaPartidaPorFichero(plugin, number);
+					if (m != null) {
+						if (m.getEnabled() == null || m.getEnabled()) {
+							plugin.setForzado(Boolean.TRUE);
+							plugin.setMatchActive(new MatchActive(m, plugin, true));
+							try {
+								Bukkit.getPluginManager()
+										.callEvent(new ReventSpawnEvent(plugin.getMatchActive(), true));
+							} catch (Exception e3) {
+								plugin.getLoggerP().info("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+							}
+							if (player != null)
+								player.sendMessage(
+										plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getMatchBeginSoon());
+						} else {
+							if (player != null)
+								player.sendMessage(plugin.getLanguage().getTagPlugin()
+										+ plugin.getLanguage().getEventIsDisabled());
+						}
+					} else {
+						player.sendMessage(
+								plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());
+
+					}
+				} catch (Exception e2) {
+					if (player != null)
+						player.sendMessage(
+								plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());
+				}
 			}
 		} else {
 			if (player != null)
@@ -647,8 +675,8 @@ public class ComandosExecutor {
 
 						UtilsRandomEvents.teleportaPlayer(player,
 								plugin.getMatchActive().getMapHandler().getCheckpoints().get(player.getName()), plugin);
-						if(plugin.getReventConfig().getRaceSlowEffect())
-						player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 99));
+						if (plugin.getReventConfig().getRaceSlowEffect())
+							player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 99));
 
 					}
 				} else {

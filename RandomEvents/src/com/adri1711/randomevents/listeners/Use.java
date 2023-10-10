@@ -775,6 +775,10 @@ public class Use implements Listener {
 				if (plugin.getMatchActive().getPlaying()) {
 					if (plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.ANVIL_SPLEEF)
 							|| plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.SPLATOON)
+							|| plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.GLASS_WALK)
+							|| plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.HIDE_AND_SEEK)
+							|| plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.ESCAPE_FROM_BEAST)
+							|| plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.RED_GREEN_LIGHT)
 							|| plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.BOAT_RUN)
 							|| plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.HORSE_RUN)
 							|| plugin.getMatchActive().getMatch().getMinigame().equals(MinigameType.HOEHOEHOE)

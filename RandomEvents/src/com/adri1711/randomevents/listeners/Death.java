@@ -484,7 +484,7 @@ public class Death implements Listener {
 				player.setHealth(player.getMaxHealth());
 				break;
 			case GLASS_WALK:
-				if (!plugin.getMatchActive().getAllowDamagePVP()) {
+				if (!plugin.getMatchActive().getAllowDamagePVP() || !plugin.getReventConfig().isAllowGlassWalkPvP()) {
 					ev.setCancelled(true);
 				} else {
 					ev.setDamage(0);
@@ -824,7 +824,7 @@ public class Death implements Listener {
 				break;
 
 			case GLASS_WALK:
-				if (!plugin.getMatchActive().getAllowDamagePVP()) {
+				if (!plugin.getMatchActive().getAllowDamagePVP() || !plugin.getReventConfig().isAllowGlassWalkPvP()) {
 					ev.setCancelled(true);
 				} else {
 					ev.setDamage(0);
@@ -1043,7 +1043,7 @@ public class Death implements Listener {
 
 							break;
 						case GLASS_WALK:
-							if (!plugin.getMatchActive().getAllowDamagePVP() && !plugin.getReventConfig().isAllowGlassWalkPvP()) {
+							if (!plugin.getMatchActive().getAllowDamagePVP() || !plugin.getReventConfig().isAllowGlassWalkPvP()) {
 								ev.setCancelled(true);
 							} else {
 								ev.setDamage(0);
@@ -1303,7 +1303,7 @@ public class Death implements Listener {
 
 						break;
 					case GLASS_WALK:
-						if (!plugin.getMatchActive().getAllowDamagePVP() && !plugin.getReventConfig().isAllowGlassWalkPvP()) {
+						if (!plugin.getMatchActive().getAllowDamagePVP() || !plugin.getReventConfig().isAllowGlassWalkPvP()) {
 							ev.setCancelled(true);
 						} else {
 							ev.setDamage(0);
@@ -1462,7 +1462,7 @@ public class Death implements Listener {
 
 						break;
 					case GLASS_WALK:
-						if (!plugin.getMatchActive().getAllowDamagePVP() && !plugin.getReventConfig().isAllowGlassWalkPvP()) {
+						if (!plugin.getMatchActive().getAllowDamagePVP() || !plugin.getReventConfig().isAllowGlassWalkPvP()) {
 							ev.setCancelled(true);
 						} else {
 							ev.setDamage(0);
@@ -1769,7 +1769,7 @@ public class Death implements Listener {
 
 						break;
 					case GLASS_WALK:
-						if (!plugin.getMatchActive().getAllowDamagePVP() && !plugin.getReventConfig().isAllowGlassWalkPvP()) {
+						if (!plugin.getMatchActive().getAllowDamagePVP() || !plugin.getReventConfig().isAllowGlassWalkPvP()) {
 							ev.setCancelled(true);
 						} else {
 							ev.setDamage(0);
