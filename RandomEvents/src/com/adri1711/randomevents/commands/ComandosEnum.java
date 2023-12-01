@@ -39,6 +39,8 @@ public enum ComandosEnum {
 	CMD_KITS_EDIT("kitedit", 2, "randomevent.kits.edit", "getKitsEditCmd", "editKit", true, true),
 
 	CMD_NEXT("next", 1, "randomevent.next", "getNext", "nextRandomEvents", true, true),
+	
+	CMD_NEXT_TIMER("nexttimer", 1, "randomevent.nextTimer", "getNextTimer", "nextTimerRandomEvents", true, true),
 
 	CMD_CURRENT_DATE("date", 1, "randomevent.admin.schedule", "getDate", "currentDate", true, false),
 

@@ -98,6 +98,10 @@ highestPriorityDamageEvents: false
 ##If true this will show the description of the minigame on player join instead of on match begin
 showInfoMinigameOnJoin: true
 
+##If true if you have permissions to start revents you will still need the permission to start an specific revent. 
+##For example, a revent called "Test Match" will need randomevent.start.Test_Match
+needSpecificPermissionStartRevent: false
+
 ##Optional titles for some messages such as the seconds remaining to begin a match, turn this to true if you want to see titles instead of messages in chat.
 optionalTitles: false
 
@@ -133,6 +137,48 @@ restrictWorlds: false
 ##Allowed worlds for broadcast (DONT USE CAPS HERE)
 allowedWorlds:
     - 'world'
+
+guigameblocks:
+  ALLTIME: 'NETHER_STAR'
+  BR: 'STONE_SWORD'
+  BRT2: 'STONE_SWORD'
+  LJ: 'IRON_HORSE_ARMOR'
+  TKLL: 'IRON_SWORD'
+  TKLLT2: 'IRON_SWORD'
+  KBD: 'WOODEN_SWORD'
+  EARR: 'ARROW'
+  GEMC: 'EMERALD'
+  BOMB: 'TNT'
+  BOAT_RUN: 'OAK_BOAT'
+  HORSE_RUN: 'IRON_HORSE_ARMOR'
+  ESCAPE_FROM_BEAST: 'SKELETON_SKULL'
+  RACE: 'IRON_BOOTS'
+  TNTRUN: 'TNT'
+  SPLEEF: 'IRON_SHOVEL'
+  SPLEGG: 'EGG'
+  OITC: 'BOW'
+  SG: 'BEEF'
+  TSG: 'COOKED_BEEF'
+  SW: 'DIRT'
+  TSW: 'STONE'
+  ANVIL_SPLEEF: 'ANVIL'
+  WDROP: 'WATER_BUCKET'
+  QUAKE: 'STONE_HOE'
+  PBALL: 'SNOWBALL'
+  KOTH: 'GOLDEN_HELMET'
+  FISHSLAP: 'TROPICAL_FISH'
+  HOE: 'WOODEN_HOE'
+  SPLATOON: 'RED_DYE'
+  BOMBARDMENT: 'COAL_BLOCK'
+  BRTEAMS: 'ORANGE_DYE'
+  TKLLTEAMS: 'GOLDEN_SWORD'
+  PBALLTK: 'SNOW'
+  TSGTEAMS: 'COOKED_PORKCHOP'
+  TSWTEAMS: 'BEDROCK'
+  REDGREEN: 'EMERALD_BLOCK'
+  BLOCKPARTY: 'YELLOW_TERRACOTTA'
+  HIDEANDSEEK: 'MAP'
+  GLASSWALK: 'GLASS'
 
 ##################################################################
 ##					 SOME MINIGAMES SETUP       				##
@@ -536,7 +582,7 @@ statsmenu:
   BLOCKPARTY: -1
   HIDEANDSEEK: -1
   GLASSWALK: -1
-
+  
 ##################################################################
 ##					     MYSQL CONFIG   	    				##
 ##################################################################

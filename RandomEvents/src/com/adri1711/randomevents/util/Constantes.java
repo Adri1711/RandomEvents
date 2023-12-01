@@ -83,7 +83,9 @@ public class Constantes {
 				"   &6/revent checkpoint:\n          &e-> Makes the user go back to the checkpoint"),
 
 		CMD_NEXT("next", "menu.next", "   &6/revent next:\n          &e-> Show next scheduled Random Events"),
-
+		
+		CMD_NEXT_TIMER("nextTimer", "menu.nextTimer", "   &6/revent nexttimer:\n          &e-> Show next timed Random Events"),
+		
 		CMD_CURRENT_DATE("date", "menu.admin.currentdate",
 				"   &6/revent date:\n          &e-> Shows the current date for the schedule"),
 

@@ -705,10 +705,12 @@ public class UtilsRandomEvents {
 		return exitoso;
 
 	}
+
 	public static void sacaInventario(RandomEvents plugin, Player player) {
-		UtilsRandomEvents.sacaInventario(plugin, player,false);
+		UtilsRandomEvents.sacaInventario(plugin, player, false);
 	}
-	public static void sacaInventario(RandomEvents plugin, Player player,Boolean join) {
+
+	public static void sacaInventario(RandomEvents plugin, Player player, Boolean join) {
 		if (plugin.getReventConfig().isInventoryManagement()
 				&& (plugin.getMatchActive() == null || !plugin.getMatchActive().getMatch().getUseOwnInventory())) {
 
@@ -772,8 +774,8 @@ public class UtilsRandomEvents {
 						if (plugin.getReventConfig().getUseLastLocation()) {
 							if (inventario.getLastLocation() != null) {
 								teleportaPlayer(player, inventario.getLastLocation(), plugin);
-							} 
-						}else if(join){
+							}
+						} else if (join) {
 							UtilsRandomEvents.teleportaPlayer(player, plugin.getSpawn(), plugin, true);
 
 						}
@@ -1594,7 +1596,22 @@ public class UtilsRandomEvents {
 
 			if (position >= 0) {
 
-				ItemStack item = new ItemStack(minigame.getMaterial());
+				ItemStack item = null;
+				try {
+					try {
+						Method method = plugin.getReventConfig().getClass()
+								.getDeclaredMethod("getBlock" + minigame.getCodigo());
+						item = (ItemStack) method.invoke(plugin.getReventConfig());
+					} catch (NoSuchMethodException | SecurityException | IllegalAccessException
+							| IllegalArgumentException | InvocationTargetException e) {
+						e.printStackTrace();
+					}
+
+					if (item == null)
+						item = new ItemStack(minigame.getMaterial());
+				} catch (Exception e2) {
+					item = new ItemStack(minigame.getMaterial());
+				}
 				ItemMeta itemMeta = item.getItemMeta();
 				itemMeta.setDisplayName("§6§l" + minigame.getMessage(plugin));
 				List<String> lore = new ArrayList<String>();
@@ -1739,7 +1756,7 @@ public class UtilsRandomEvents {
 		}
 		return banned;
 	}
-	
+
 	public static PlayersDisabled cargarDisabledPlayers(RandomEvents plugin) {
 
 		PlayersDisabled disabledPlayers = new PlayersDisabled();
@@ -1800,7 +1817,7 @@ public class UtilsRandomEvents {
 		}
 
 	}
-	
+
 	public static void terminaCreacionDisabledPlayers(RandomEvents plugin, PlayersDisabled banned) {
 		try {
 			String json = UtilidadesJson.fromDisabledPlayersToJSON(plugin, banned);
@@ -3244,7 +3261,23 @@ public class UtilsRandomEvents {
 
 		for (int i = page * 36; i < (page + 1) * 36 && i < plugin.getMatchesAvailable().size(); i++) {
 			Match match = plugin.getMatchesAvailable().get(i);
-			ItemStack cabeza = new ItemStack(match.getMinigame().getMaterial());
+			//ItemStack cabeza = new ItemStack(match.getMinigame().getMaterial());
+			ItemStack cabeza = null;
+			try {
+				try {
+					Method method = plugin.getReventConfig().getClass()
+							.getDeclaredMethod("getBlock" + match.getMinigame().getCodigo());
+					cabeza = (ItemStack) method.invoke(plugin.getReventConfig());
+				} catch (NoSuchMethodException | SecurityException | IllegalAccessException
+						| IllegalArgumentException | InvocationTargetException e) {
+					e.printStackTrace();
+				}
+
+				if (cabeza == null)
+					cabeza = new ItemStack(match.getMinigame().getMaterial());
+			} catch (Exception e2) {
+				cabeza = new ItemStack(match.getMinigame().getMaterial());
+			}
 			ItemMeta cabezaMeta = cabeza.getItemMeta();
 			cabezaMeta.setDisplayName("§e§l" + match.getName());
 
@@ -3856,15 +3889,19 @@ public class UtilsRandomEvents {
 	}
 
 	public static Match buscaPartidaPorFichero(RandomEvents plugin, String number) {
-		Match m=null;
-		for(Match match:plugin.getMatches()){
-			String s=match.getMinigame().getCodigo() + "_"
-					+ ChatColor.stripColor(match.getName().replaceAll("<color>", "§")).replaceAll(" ", "_");
-			if(s.toUpperCase().equals(number.toUpperCase())){
-				m=match;
+		Match m = null;
+		for (Match match : plugin.getMatches()) {
+			String s = getMatchNameByMatch(match);
+			if (s.toUpperCase().equals(number.toUpperCase())) {
+				m = match;
 			}
 		}
 		return m;
+	}
+
+	public static String getMatchNameByMatch(Match match) {
+		return match.getMinigame().getCodigo() + "_"
+				+ ChatColor.stripColor(match.getName().replaceAll("<color>", "§")).replaceAll(" ", "_");
 	}
 
 }

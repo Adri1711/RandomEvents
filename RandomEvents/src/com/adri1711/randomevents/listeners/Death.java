@@ -43,6 +43,14 @@ public class Death implements Listener {
 	{
 		Boolean cancelled = false;
 		Long now = (new Date()).getTime();
+		if (ev.getEntity() instanceof Player) {
+			Player p6 = (Player) ev.getEntity();
+
+			if (plugin.getMatchActive() != null
+					&& plugin.getMatchActive().getPlayerHandler().getPlayers().contains(p6.getName())) {
+				plugin.getMatchActive().setDamageCounter(0);
+			}
+		}
 		if (ev.getCause() != DamageCause.ENTITY_ATTACK && ev.getCause() != DamageCause.PROJECTILE) {
 
 			if (ev.getEntity() instanceof Player) {

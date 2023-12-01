@@ -80,7 +80,7 @@ public class RandomEvents extends JavaPlugin {
 	private List<Match> matchesAvailableSchedule;
 	
 	
-
+	private Date lastCheck;
 	private Tournament tournament;
 
 	private Map<String, Date> cooldowns;
@@ -125,6 +125,7 @@ public class RandomEvents extends JavaPlugin {
 
 	public void onEnable() {
 		this.api = new API1711("%%__USER__%%", "RandomEvents");
+		this.lastCheck=new Date();
 		logger=getLogger();
 		logger.info("Loading config...");
 		loadConfig();
@@ -298,11 +299,15 @@ public class RandomEvents extends JavaPlugin {
 	}
 
 	public void comienzaTemporizador() {
+		lastCheck=new Date();
+
 		if (!forzado) {
 			matchActive = null;
 			tournamentActive = null;
+			
 			Bukkit.getServer().getScheduler().runTaskLater((Plugin) this, new Runnable() {
 				public void run() {
+					//lastCheck=new Date();
 					if (matchActive == null) {
 						Integer blackList=0;
 						for(Player play2:Bukkit.getOnlinePlayers()){
@@ -746,5 +751,14 @@ public class RandomEvents extends JavaPlugin {
 	public void setLogger(Logger logger) {
 		this.logger = logger;
 	}
+
+	public Date getLastCheck() {
+		return lastCheck;
+	}
+
+	public void setLastCheck(Date lastCheck) {
+		this.lastCheck = lastCheck;
+	}
+	
 
 }

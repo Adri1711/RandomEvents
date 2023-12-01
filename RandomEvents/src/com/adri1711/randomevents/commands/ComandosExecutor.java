@@ -429,6 +429,22 @@ public class ComandosExecutor {
 		}
 
 	}
+
+	public void nextTimerRandomEvents(RandomEvents plugin, Player player) {
+		if (plugin.getLastCheck() != null) {
+			if ((plugin.getReventConfig().getSecondsTimer() * 1000 + plugin.getLastCheck().getTime()
+					- new Date().getTime()) / 1000 > 0) {
+				player.sendMessage(
+						plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getNextEvent()
+								+ Constantes.SALTO_LINEA
+								+ UtilsRandomEvents.calculateTime(
+										(plugin.getReventConfig().getSecondsTimer() * 1000
+												+ plugin.getLastCheck().getTime() - new Date().getTime()) / 1000,
+										plugin));
+			} 
+		}
+
+	}
 	// TODO max players
 
 	public void currentDate(RandomEvents plugin, Player player) {
@@ -481,16 +497,23 @@ public class ComandosExecutor {
 
 				Match m = plugin.getMatches().get(Integer.valueOf(number));
 				if (m.getEnabled() == null || m.getEnabled()) {
-					plugin.setForzado(Boolean.TRUE);
-					plugin.setMatchActive(new MatchActive(m, plugin, true));
-					try {
-						Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(plugin.getMatchActive(), true));
-					} catch (Exception e) {
-						plugin.getLoggerP().info("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+					if (!plugin.getReventConfig().getNeedSpecificPermissionStartRevent()
+							|| player.hasPermission("randomevent.start." + UtilsRandomEvents.getMatchNameByMatch(m))) {
+						plugin.setForzado(Boolean.TRUE);
+						plugin.setMatchActive(new MatchActive(m, plugin, true));
+						try {
+							Bukkit.getPluginManager().callEvent(new ReventSpawnEvent(plugin.getMatchActive(), true));
+						} catch (Exception e) {
+							plugin.getLoggerP().info("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+						}
+						if (player != null)
+							player.sendMessage(
+									plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getMatchBeginSoon());
+					} else {
+						if (player != null)
+							player.sendMessage(
+									plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getNoPermission());
 					}
-					if (player != null)
-						player.sendMessage(
-								plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getMatchBeginSoon());
 				} else {
 					if (player != null)
 						player.sendMessage(
@@ -502,17 +525,25 @@ public class ComandosExecutor {
 					Match m = UtilsRandomEvents.buscaPartidaPorFichero(plugin, number);
 					if (m != null) {
 						if (m.getEnabled() == null || m.getEnabled()) {
-							plugin.setForzado(Boolean.TRUE);
-							plugin.setMatchActive(new MatchActive(m, plugin, true));
-							try {
-								Bukkit.getPluginManager()
-										.callEvent(new ReventSpawnEvent(plugin.getMatchActive(), true));
-							} catch (Exception e3) {
-								plugin.getLoggerP().info("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+							if (!plugin.getReventConfig().getNeedSpecificPermissionStartRevent() || player
+									.hasPermission("randomevent.start." + UtilsRandomEvents.getMatchNameByMatch(m))) {
+								plugin.setForzado(Boolean.TRUE);
+								plugin.setMatchActive(new MatchActive(m, plugin, true));
+								try {
+									Bukkit.getPluginManager()
+											.callEvent(new ReventSpawnEvent(plugin.getMatchActive(), true));
+								} catch (Exception e3) {
+									plugin.getLoggerP()
+											.info("[RandomEvents] WARN :: Couldnt fire the ReventSpawnEvent.");
+								}
+								if (player != null)
+									player.sendMessage(plugin.getLanguage().getTagPlugin()
+											+ plugin.getLanguage().getMatchBeginSoon());
+							} else {
+								if (player != null)
+									player.sendMessage(plugin.getLanguage().getTagPlugin()
+											+ plugin.getLanguage().getNoPermission());
 							}
-							if (player != null)
-								player.sendMessage(
-										plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getMatchBeginSoon());
 						} else {
 							if (player != null)
 								player.sendMessage(plugin.getLanguage().getTagPlugin()

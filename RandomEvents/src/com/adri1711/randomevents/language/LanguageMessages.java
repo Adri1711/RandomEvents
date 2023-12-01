@@ -1,3 +1,4 @@
+
 package com.adri1711.randomevents.language;
 
 import java.io.File;
@@ -112,7 +113,8 @@ public class LanguageMessages {
 
 	private String noScheduledEvents;
 	private String nextEvent;
-
+	private String nextTimer;
+	
 	private String nextEventIsRandom;
 
 	private String nextEventName;
@@ -6933,6 +6935,34 @@ public class LanguageMessages {
 
 		s = s.replaceAll("\\\\n", Constantes.SALTO_LINEA);
 		return s;
+	}
+
+	public String getNextTimer() {
+		String s = nextTimer;
+		try {
+			Matcher match = pattern.matcher(s);
+			Map<String, ChatColor> mapa = new HashMap<String, ChatColor>();
+			while (match.find()) {
+				String color = s.substring(match.start() + 1, match.end());
+				Method method = ChatColor.class.getMethod("of", String.class);
+				ChatColor chatc = (ChatColor) method.invoke(null, color);
+				mapa.put("&" + color, chatc);
+			}
+			for (Entry<String, ChatColor> ent : mapa.entrySet()) {
+				s = s.replaceAll(ent.getKey(), ent.getValue() + "");
+			}
+
+			s = ChatColor.translateAlternateColorCodes('&', s);
+		} catch (Exception e) {
+			s = s.replaceAll("&", "§");
+		}
+
+		s = s.replaceAll("\\\\n", Constantes.SALTO_LINEA);
+		return s;
+	}
+
+	public void setNextTimer(String nextTimer) {
+		this.nextTimer = nextTimer;
 	}
 
 	public void setGreenRedLightStop(String greenRedLightStop) {
