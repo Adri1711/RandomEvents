@@ -430,6 +430,8 @@ public class Constantes {
 		SCOREBOARD_TIME_FORMAT("scoreboardTime", "scoreboard.time", "&b%time%"),
 
 		STATS_GUI_NAME("statsGuiName", "stats.guiname", "&bRandomEvents_Stats "),
+		
+		STATS_GUI_ALLTIME("statsGuiAllTime", "stats.alltime", "&6&lAll_Time"),
 
 		CREDITS_GUI_NAME("creditsGuiName", "credits.guiname", "&bRandomEvents_Available"),
 

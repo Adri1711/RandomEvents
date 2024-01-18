@@ -1647,7 +1647,7 @@ public class UtilsRandomEvents {
 
 			ItemStack item = new ItemStack(XMaterial.NETHER_STAR.parseMaterial());
 			ItemMeta itemMeta = item.getItemMeta();
-			itemMeta.setDisplayName("§6§lAll_Time");
+			itemMeta.setDisplayName(plugin.getLanguage().getStatsGuiAllTime());
 			List<String> lore = new ArrayList<String>();
 
 			Integer wins = 0;

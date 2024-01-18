@@ -504,6 +504,7 @@ public class Death implements Listener {
 			case KNOCKBACK_DUEL:
 			case BOMB_TAG:
 			case FISH_SLAP:
+			case BLOCK_PARTY:
 				if (!plugin.getMatchActive().getAllowDamagePVP()) {
 					ev.setCancelled(true);
 				} else {
@@ -844,6 +845,7 @@ public class Death implements Listener {
 			case KNOCKBACK_DUEL:
 			case BOMB_TAG:
 			case FISH_SLAP:
+			case BLOCK_PARTY:
 				if (!plugin.getMatchActive().getAllowDamagePVP()) {
 					ev.setCancelled(true);
 				} else {
@@ -1062,6 +1064,7 @@ public class Death implements Listener {
 							break;
 						case KNOCKBACK_DUEL:
 						case FISH_SLAP:
+						case BLOCK_PARTY:
 							if (!plugin.getMatchActive().getAllowDamagePVP()) {
 								ev.setCancelled(true);
 							} else {
@@ -1180,7 +1183,7 @@ public class Death implements Listener {
 								UtilsRandomEvents.borraInventario(damager, plugin);
 								UtilsRandomEvents.playSound(plugin, damager, XSound.ENTITY_PLAYER_LEVELUP);
 								UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_HURT);
-								plugin.getMatchActive().ponInventarioMatch(player);
+								plugin.getMatchActive().ponInventarioMatch(player,false);
 								plugin.getMatchActive().getPlayerHandler().setPlayerContador(player);
 
 								if (plugin.getReventConfig().getTntTagSpeedHolder() > 0) {
@@ -1323,6 +1326,7 @@ public class Death implements Listener {
 					case KNOCKBACK_DUEL:
 					case ESCAPE_ARROW:
 					case FISH_SLAP:
+					case BLOCK_PARTY:
 
 						if (!plugin.getMatchActive().getAllowDamagePVP()) {
 							ev.setCancelled(true);
@@ -1350,7 +1354,7 @@ public class Death implements Listener {
 							UtilsRandomEvents.borraInventario(damager, plugin);
 							UtilsRandomEvents.playSound(plugin, damager, XSound.ENTITY_PLAYER_LEVELUP);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_HURT);
-							plugin.getMatchActive().ponInventarioMatch(player);
+							plugin.getMatchActive().ponInventarioMatch(player,false);
 							plugin.getMatchActive().getPlayerHandler().setPlayerContador(player);
 							if (plugin.getReventConfig().getTntTagSpeedHolder() > 0) {
 								if (player.hasPotionEffect(PotionEffectType.SPEED)) {
@@ -1481,6 +1485,7 @@ public class Death implements Listener {
 						break;
 					case KNOCKBACK_DUEL:
 					case FISH_SLAP:
+					case BLOCK_PARTY:
 
 						if (!plugin.getMatchActive().getAllowDamagePVP()) {
 							ev.setCancelled(true);
@@ -1603,7 +1608,7 @@ public class Death implements Listener {
 							UtilsRandomEvents.borraInventario(damager, plugin);
 							UtilsRandomEvents.playSound(plugin, damager, XSound.ENTITY_PLAYER_LEVELUP);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_HURT);
-							plugin.getMatchActive().ponInventarioMatch(player);
+							plugin.getMatchActive().ponInventarioMatch(player,false);
 							plugin.getMatchActive().getPlayerHandler().setPlayerContador(player);
 
 							if (plugin.getReventConfig().getTntTagSpeedHolder() > 0) {
@@ -1789,6 +1794,7 @@ public class Death implements Listener {
 					case KNOCKBACK_DUEL:
 					case ESCAPE_ARROW:
 					case FISH_SLAP:
+					case BLOCK_PARTY:
 						if (!plugin.getMatchActive().getAllowDamagePVP()) {
 							ev.setCancelled(true);
 						} else {
@@ -1815,7 +1821,7 @@ public class Death implements Listener {
 							UtilsRandomEvents.borraInventario(damager, plugin);
 							UtilsRandomEvents.playSound(plugin, damager, XSound.ENTITY_PLAYER_LEVELUP);
 							UtilsRandomEvents.playSound(plugin, player, XSound.ENTITY_VILLAGER_HURT);
-							plugin.getMatchActive().ponInventarioMatch(player);
+							plugin.getMatchActive().ponInventarioMatch(player,false);
 							plugin.getMatchActive().getPlayerHandler().setPlayerContador(player);
 							if (plugin.getReventConfig().getTntTagSpeedHolder() > 0) {
 								if (player.hasPotionEffect(PotionEffectType.SPEED)) {

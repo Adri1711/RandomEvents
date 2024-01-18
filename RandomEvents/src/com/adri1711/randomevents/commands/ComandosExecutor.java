@@ -45,7 +45,13 @@ public class ComandosExecutor {
 															.get(player.getName()) - (new Date()).getTime()) / 1000,
 													plugin)));
 						} else {
-							plugin.getMatchActive().uneAPlayer(player);
+							if (plugin.getMatchActive().getMatch().getPermission() != null
+									&& !plugin.getMatchActive().getMatch().getPermission().isEmpty()
+									&& !player.hasPermission(plugin.getMatchActive().getMatch().getPermission())) {
+								player.sendMessage(plugin.getLanguage().getNoPermission());
+							} else {
+								plugin.getMatchActive().uneAPlayer(player);
+							}
 						}
 					} else {
 						player.sendMessage(
@@ -80,7 +86,13 @@ public class ComandosExecutor {
 															.get(player.getName()) - (new Date()).getTime()) / 1000,
 													plugin)));
 						} else {
-							plugin.getMatchActive().uneAPlayer(player);
+							if (plugin.getMatchActive().getMatch().getPermission() != null
+									&& !plugin.getMatchActive().getMatch().getPermission().isEmpty()
+									&& !player.hasPermission(plugin.getMatchActive().getMatch().getPermission())) {
+								player.sendMessage(plugin.getLanguage().getNoPermission());
+							} else {
+								plugin.getMatchActive().uneAPlayer(player);
+							}
 						}
 					} else {
 						player.sendMessage(
@@ -441,7 +453,7 @@ public class ComandosExecutor {
 										(plugin.getReventConfig().getSecondsTimer() * 1000
 												+ plugin.getLastCheck().getTime() - new Date().getTime()) / 1000,
 										plugin));
-			} 
+			}
 		}
 
 	}
@@ -550,8 +562,9 @@ public class ComandosExecutor {
 										+ plugin.getLanguage().getEventIsDisabled());
 						}
 					} else {
-						player.sendMessage(
-								plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());
+						if (player != null)
+							player.sendMessage(
+									plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getInvalidInput());
 
 					}
 				} catch (Exception e2) {

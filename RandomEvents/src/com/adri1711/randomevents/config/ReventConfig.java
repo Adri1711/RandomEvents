@@ -1,3 +1,4 @@
+
 package com.adri1711.randomevents.config;
 
 import java.util.ArrayList;
@@ -56,7 +57,10 @@ public class ReventConfig {
 	private boolean avoidSnowballKnockback;
 	private boolean avoidEggKnockback;
 	private boolean allowGlassWalkPvP;
+	private boolean allowBlockPartyPvP;
 	private boolean biggerPlatform;
+	private boolean useTeamChestplate;
+	
 
 	private boolean mysqlEnabled;
 
@@ -471,8 +475,11 @@ public class ReventConfig {
 		this.avoidSnowballKnockback = plugin.getConfig().getBoolean("avoidSnowballKnockback");
 		this.avoidEggKnockback = plugin.getConfig().getBoolean("avoidEggKnockback");
 		this.allowGlassWalkPvP = plugin.getConfig().getBoolean("allowGlassWalkPvP");
+		this.allowBlockPartyPvP = plugin.getConfig().getBoolean("allowBlockPartyPvP");
+		
 		this.biggerPlatform = plugin.getConfig().getBoolean("biggerPlatform");
-
+		this.useTeamChestplate = plugin.getConfig().getBoolean("useTeamChestplate");
+		
 		this.dropItemsAfterDie = plugin.getConfig().getBoolean("dropItemsAfterDie");
 		this.advancedSpectatorMode = plugin.getConfig().getBoolean("advancedSpectatorMode");
 		this.materialBlockParty = Material.getMaterial(plugin.getConfig().getString("blockPartyMaterial"));
@@ -3108,8 +3115,24 @@ public class ReventConfig {
 		this.allowGlassWalkPvP = allowGlassWalkPvP;
 	}
 
+	public boolean isAllowBlockPartyPvP() {
+		return allowBlockPartyPvP;
+	}
+
+	public void setAllowBlockPartyPvP(boolean allowBlockPartyPvP) {
+		this.allowBlockPartyPvP = allowBlockPartyPvP;
+	}
+
 	public boolean isBiggerPlatform() {
 		return biggerPlatform;
+	}
+
+	public boolean isUseTeamChestplate() {
+		return useTeamChestplate;
+	}
+
+	public void setUseTeamChestplate(boolean useTeamChestplate) {
+		this.useTeamChestplate = useTeamChestplate;
 	}
 
 	public void setBiggerPlatform(boolean biggerPlatform) {
@@ -3443,5 +3466,6 @@ public class ReventConfig {
 	public void setBlockGLASSWALK(ItemStack blockGLASSWALK) {
 		this.blockGLASSWALK = blockGLASSWALK;
 	}
+
 
 }

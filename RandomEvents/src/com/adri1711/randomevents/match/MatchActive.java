@@ -1382,7 +1382,16 @@ public class MatchActive {
 			break;
 		case RED_GREEN_LIGHT:
 			UtilsCitizen.forceLastTurnAroundNPC(getMatch().getNPCId(), plugin);
-
+			break;
+		case BOMBARDMENT:
+			if (getMapHandler().getFireballs() != null && !getMapHandler().getFireballs().isEmpty()) {
+				for (Fireball fb : getMapHandler().getFireballs()) {
+					if (fb != null) {
+						fb.remove();
+					}
+				}
+			}
+			break;
 		default:
 			break;
 		}
@@ -1600,7 +1609,7 @@ public class MatchActive {
 		switch (match.getMinigame()) {
 		case BLOCK_PARTY:
 			this.allowDamage = true;
-			this.allowDamagePVP = false;
+			this.allowDamagePVP = plugin.getReventConfig().isAllowBlockPartyPvP();
 			for (Player p : getPlayerHandler().getPlayersSpectators()) {
 				if (!getPlayerHandler().getPlayersObj().contains(p)) {
 					mandaSpectatorPlayer(p);
@@ -2740,7 +2749,7 @@ public class MatchActive {
 						Integer random = getRandom().nextInt(100);
 						if (random < plugin.getReventConfig().getProbabilityPerCheckToStopSound()) {
 							UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersObj(),
-									plugin.getLanguage().getGreenRedLightStop(), false, true, false);
+									plugin.getLanguage().getGreenRedLightStop(), false, true, true);
 
 							Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 								public void run() {
@@ -2761,7 +2770,7 @@ public class MatchActive {
 								allowDamage = false;
 								UtilsCitizen.turnAroundNPC(getMatch().getNPCId(), plugin);
 								UtilsRandomEvents.mandaMensaje(plugin, getPlayerHandler().getPlayersObj(),
-										plugin.getLanguage().getGreenRedLightMove(), false, true, false);
+										plugin.getLanguage().getGreenRedLightMove(), false, true, true);
 								if (plugin.getReventConfig().getIsNoteBlockAPI())
 									SongUtils.playRecord(getPlayerHandler().getPlayersObj(), true, plugin);
 
@@ -3117,7 +3126,7 @@ public class MatchActive {
 		}
 		getPlayerHandler().setPlayerContador(
 				getPlayerHandler().getPlayersObj().get(getRandom().nextInt(getPlayerHandler().getPlayersObj().size())));
-		ponInventarioMatch(getPlayerHandler().getPlayerContador());
+		ponInventarioMatch(getPlayerHandler().getPlayerContador(), false);
 		removePotionsEffects(getPlayerHandler().getPlayerContador());
 		if (getPlayerHandler().getPlayerContador() != null) {
 			UtilsRandomEvents.addGlow(plugin, getPlayerHandler().getPlayerContador(),
@@ -3523,8 +3532,9 @@ public class MatchActive {
 	public void iniciaPlayerTeam(Player p) {
 		teleportaPlayer(p);
 		ponInventarioMatch(p);
-
-		p.getInventory().setChestplate(Petos.getPeto(getEquipo(p)).getPeto());
+		if (plugin.getReventConfig().isUseTeamChestplate()) {
+			p.getInventory().setChestplate(Petos.getPeto(getEquipo(p)).getPeto());
+		}
 		p.updateInventory();
 		crearTeam(p);
 		UtilsSQL.updateTries(p, match.getMinigame(), plugin);
@@ -3554,11 +3564,11 @@ public class MatchActive {
 		UtilsRandomEvents.teleportaPlayer(p, getMatch().getBeastSpawn(), plugin);
 		p.sendMessage(plugin.getLanguage().getTagPlugin() + plugin.getLanguage().getYouBeast());
 		UtilsSQL.updateTries(p, match.getMinigame(), plugin);
+		ponInventarioBeast(p);
 
 		Bukkit.getServer().getScheduler().runTaskLater((Plugin) getPlugin(), new Runnable() {
 			public void run() {
 				teleportaPlayer(p);
-				ponInventarioBeast(p);
 			}
 		}, Double.valueOf(20 * plugin.getMatchActive().getMatch().getSecondsMobSpawn()).longValue());
 
@@ -3719,8 +3729,11 @@ public class MatchActive {
 							reiniciaDefault(p);
 							invincibility(p);
 
-							if (getEquipo(p) != null && p.getInventory().getChestplate() == null)
-								p.getInventory().setChestplate(Petos.getPeto(getEquipo(p)).getPeto());
+							if (getEquipo(p) != null && p.getInventory().getChestplate() == null) {
+								if (plugin.getReventConfig().isUseTeamChestplate()) {
+									p.getInventory().setChestplate(Petos.getPeto(getEquipo(p)).getPeto());
+								}
+							}
 							if (plugin.getReventConfig().isQuakeGiveDefaultWeapon()) {
 								p.getInventory().addItem(XMaterial.STONE_HOE.parseItem());
 
@@ -3735,8 +3748,11 @@ public class MatchActive {
 				reiniciaDefault(p);
 				invincibility(p);
 
-				if (getEquipo(p) != null && p.getInventory().getChestplate() == null)
+				if (getEquipo(p) != null && p.getInventory().getChestplate() == null
+						&& plugin.getReventConfig().isUseTeamChestplate()) {
+
 					p.getInventory().setChestplate(Petos.getPeto(getEquipo(p)).getPeto());
+				}
 				if (plugin.getReventConfig().isQuakeGiveDefaultWeapon()) {
 					p.getInventory().addItem(XMaterial.STONE_HOE.parseItem());
 
@@ -3909,6 +3925,10 @@ public class MatchActive {
 	}
 
 	public void ponInventarioMatch(Player p) {
+		ponInventarioMatch(p, true);
+	}
+
+	public void ponInventarioMatch(Player p, Boolean borraEfectos) {
 		if (plugin.getReventConfig().isInventoryManagement() && !getMatch().getUseOwnInventory()) {
 
 			p.getInventory().clear();
@@ -3943,16 +3963,20 @@ public class MatchActive {
 					}
 				}
 			}
-			if (getEquipo(p) != null && p.getInventory().getChestplate() == null)
-				p.getInventory().setChestplate(Petos.getPeto(getEquipo(p)).getPeto());
+			if (getEquipo(p) != null && p.getInventory().getChestplate() == null) {
+				if (plugin.getReventConfig().isUseTeamChestplate()) {
+					p.getInventory().setChestplate(Petos.getPeto(getEquipo(p)).getPeto());
+				}
+			}
 			if (plugin.getReventConfig().isForceGamemodeSurvival())
 				p.setGameMode(GameMode.SURVIVAL);
 			p.updateInventory();
 			p.setHealth(p.getMaxHealth());
 			p.setFoodLevel(20);
 			p.setFireTicks(0);
-
-			removePotionsEffects(p);
+			if (borraEfectos) {
+				removePotionsEffects(p);
+			}
 
 			p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20, 2));
 

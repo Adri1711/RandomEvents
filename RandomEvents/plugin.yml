@@ -1,6 +1,6 @@
 name: RandomEvents
 main: com.adri1711.randomevents.RandomEvents
-version: 2.9.3
+version: 2.9.4
 api-version: 1.13
 depend: [Lib1711]
 softdepend: [CrackShot, PlaceholderAPI, WorldEdit, WorldGuard, Multiworld, Multiverse-Core, NametagEdit, LibsDisguises, NoteBlockAPI, Citizens]

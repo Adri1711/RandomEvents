@@ -101,6 +101,7 @@ public class WeaponShoot implements Listener {
 									case GLASS_WALK:
 									case KNOCKBACK_DUEL:
 									case ESCAPE_ARROW:
+									case BLOCK_PARTY:
 
 										ev.setDamage(0);
 										break;
@@ -208,7 +209,7 @@ public class WeaponShoot implements Listener {
 											UtilsRandomEvents.borraInventario(damager, plugin);
 											UtilsRandomEvents.playSound(plugin,damager, XSound.ENTITY_PLAYER_LEVELUP);
 											UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_VILLAGER_HURT);
-											plugin.getMatchActive().ponInventarioMatch(player);
+											plugin.getMatchActive().ponInventarioMatch(player,false);
 											plugin.getMatchActive().getPlayerHandler().setPlayerContador(player);
 
 											if (plugin.getReventConfig().getTntTagSpeedHolder() > 0) {
@@ -336,6 +337,7 @@ public class WeaponShoot implements Listener {
 									case GLASS_WALK:
 									case KNOCKBACK_DUEL:
 									case ESCAPE_ARROW:
+									case BLOCK_PARTY:
 										ev.setDamage(0);
 										if (plugin.getReventConfig().isHighestPriorityDamageEvents()) {
 											ev.setCancelled(false);
@@ -359,7 +361,7 @@ public class WeaponShoot implements Listener {
 											UtilsRandomEvents.borraInventario(damager, plugin);
 											UtilsRandomEvents.playSound(plugin,damager, XSound.ENTITY_PLAYER_LEVELUP);
 											UtilsRandomEvents.playSound(plugin,player, XSound.ENTITY_VILLAGER_HURT);
-											plugin.getMatchActive().ponInventarioMatch(player);
+											plugin.getMatchActive().ponInventarioMatch(player,false);
 											plugin.getMatchActive().getPlayerHandler().setPlayerContador(player);
 											if (plugin.getReventConfig().getTntTagSpeedHolder() > 0) {
 												if (player.hasPotionEffect(PotionEffectType.SPEED)) {
@@ -468,6 +470,7 @@ public class WeaponShoot implements Listener {
 							case GLASS_WALK:
 							case KNOCKBACK_DUEL:
 							case BOMB_TAG:
+							case BLOCK_PARTY:
 								ev.setDamage(0);
 								if (plugin.getReventConfig().isHighestPriorityDamageEvents()) {
 									ev.setCancelled(false);
@@ -780,6 +783,7 @@ public class WeaponShoot implements Listener {
 							case GLASS_WALK:
 							case KNOCKBACK_DUEL:
 							case BOMB_TAG:
+							case BLOCK_PARTY:
 								ev.setDamage(0);
 								if (plugin.getReventConfig().isHighestPriorityDamageEvents()) {
 									ev.setCancelled(false);

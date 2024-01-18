@@ -78,6 +78,10 @@ forcePlayersToSpectate: false
 ##Respawn on a random spawn in team games
 teamMatchRandomRespawn: false
 
+##If true, on RandomEvents team matches each player will have a chestplate with the team color. (With NameTagEdit plugin u can set this to false)
+useTeamChestplate: true
+
+
 ##CAUTION. IT IS HIGHLY RECOMMENDED to let it true. If false, the plugin will not manage the items so players will join with own items and can lose them there.
 ##Some minigames might not work if its set to false (Splegg, TNT Tag...) as they need special items to work
 inventoryManagement: true
@@ -421,6 +425,9 @@ splatoonEggDamage: 5
 ##################################################################
 ##					     BLOCK PARTY	    	  	    		##
 ##################################################################
+
+##If true, there will be PvP in block party games
+allowBlockPartyPvP: false
 
 ##Material on the map that will be replaced by the blockPartyBlocks
 blockPartyMaterial: 'WHITE_WOOL'
